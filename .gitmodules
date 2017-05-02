@@ -1,0 +1,6 @@
+[submodule "third_party"]
+	path = third_party
+	url = https://github.com/tensorflow/tensorflow
+[submodule "tensorflow"]
+	path = tensorflow
+	url = https://github.com/tensorflow/tensorflow
