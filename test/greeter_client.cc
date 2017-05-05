@@ -31,8 +31,13 @@ class GreeterClient {
     Tensor x(tensorflow::DT_FLOAT, TensorShape({2, 1}));
     auto x_flat = x.flat<float>();
     x_flat.setRandom();
+    std::cout << x_flat(0) << " " << x_flat(1) << std::endl;
+    tensorflow::TensorProto tp;
+    x.AsProtoField(&tp);
+
     HelloRequest request;
     request.set_name(user);
+    request.set_allocated_tensor_proto(&tp);
     
 
     // Container for the data we expect from the server.
@@ -45,6 +50,8 @@ class GreeterClient {
     // The actual RPC.
     Status status = stub_->SayHello(&context, request, &reply);
 
+    request.release_tensor_proto();
+    
     // Act upon its status.
     if (status.ok()) {
       return reply.message();
