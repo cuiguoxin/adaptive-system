@@ -6,6 +6,9 @@
 
 #include "helloworld.grpc.pb.h"
 
+#include "tensorflow/core/framework/tensor.h"
+#include "tensorflow/core/platform/types.h"
+
 using grpc::Server;
 using grpc::ServerBuilder;
 using grpc::ServerContext;
@@ -13,6 +16,8 @@ using grpc::Status;
 using tensorflow::HelloRequest;
 using tensorflow::HelloReply;
 using tensorflow::Greeter;
+using tensorflow::Tensor;
+using tensorflow::TensorShape;
 
 // Logic and data behind the server's behavior.
 class GreeterServiceImpl final : public Greeter::Service {
@@ -20,6 +25,11 @@ class GreeterServiceImpl final : public Greeter::Service {
                   HelloReply* reply) override {
     std::string prefix("Hello ");
     reply->set_message(prefix + request->name());
+    tensorflow::TensorProto* tp = request->mutable_tensor_proto();
+    Tensor tensor(tensorflow::DT_FLOAT, TensorShape({2, 1}));
+    tensor.formProto(tp);
+    auto x_flat = tensor.flat<float>();
+    std::cout << x_flat(0) << " " << x_flat(1) << std::endl;
     return Status::OK;
   }
 };
