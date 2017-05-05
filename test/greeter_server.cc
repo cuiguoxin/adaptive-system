@@ -25,9 +25,9 @@ class GreeterServiceImpl final : public Greeter::Service {
                   HelloReply* reply) override {
     std::string prefix("Hello ");
     reply->set_message(prefix + request->name());
-    tensorflow::TensorProto* tp = request->mutable_tensor_proto();
+    const tensorflow::TensorProto& tp = request->tensor_proto();
     Tensor tensor(tensorflow::DT_FLOAT, TensorShape({2, 1}));
-    tensor.formProto(tp);
+    tensor.FromProto(tp);
     auto x_flat = tensor.flat<float>();
     std::cout << x_flat(0) << " " << x_flat(1) << std::endl;
     return Status::OK;
