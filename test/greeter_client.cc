@@ -5,7 +5,7 @@
 #include <grpc++/grpc++.h>
 
 
-#include "test/helloworld.grpc.pb.h"
+#include "helloworld.grpc.pb.h"
 
 #include "tensorflow/core/framework/tensor.h"
 #include "tensorflow/core/platform/types.h"
@@ -16,6 +16,8 @@ using grpc::Status;
 using tensorflow::HelloRequest;
 using tensorflow::HelloReply;
 using tensorflow::Greeter;
+using tensorflow::Tensor;
+using tensorflow::TensorShape;
 
 class GreeterClient {
  public:
@@ -26,7 +28,7 @@ class GreeterClient {
   // from the server.
   std::string SayHello(const std::string& user) {
     // Data we are sending to the server.
-    Tensor x(DT_FLOAT, TensorShape({2, 1}));
+    Tensor x(tensorflow::DT_FLOAT, TensorShape({2, 1}));
     auto x_flat = x.flat<float>();
     x_flat.setRandom();
     HelloRequest request;

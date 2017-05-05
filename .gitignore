@@ -5,3 +5,4 @@ tensorflow/
 resources/
 *.swp
 *.json
+eigen-eigen/
