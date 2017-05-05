@@ -4,3 +4,4 @@ bazel*/
 tensorflow/
 resources/
 *.swp
+*.json
