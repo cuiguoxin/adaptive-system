@@ -17,7 +17,7 @@
 #include <google/protobuf/wire_format.h>
 // @@protoc_insertion_point(includes)
 
-namespace tensorflow {
+namespace hw {
 class HelloRequestDefaultTypeInternal : public ::google::protobuf::internal::ExplicitlyConstructed<HelloRequest> {
 } _HelloRequest_default_instance_;
 class HelloReplyDefaultTypeInternal : public ::google::protobuf::internal::ExplicitlyConstructed<HelloReply> {
@@ -104,17 +104,17 @@ void InitDefaults() {
 void AddDescriptorsImpl() {
   InitDefaults();
   static const char descriptor[] = {
-      "\n\020helloworld.proto\022\ntensorflow\032&tensorfl"
-      "ow/core/framework/tensor.proto\"K\n\014HelloR"
-      "equest\022\014\n\004name\030\001 \001(\t\022-\n\014tensor_proto\030\002 \001"
-      "(\0132\027.tensorflow.TensorProto\"\035\n\nHelloRepl"
-      "y\022\017\n\007message\030\001 \001(\t2I\n\007Greeter\022>\n\010SayHell"
-      "o\022\030.tensorflow.HelloRequest\032\026.tensorflow"
-      ".HelloReply\"\000B6\n\033io.grpc.examples.hellow"
-      "orldB\017HelloWorldProtoP\001\242\002\003HLWb\006proto3"
+      "\n\020helloworld.proto\022\002hw\032&tensorflow/core/"
+      "framework/tensor.proto\"K\n\014HelloRequest\022\014"
+      "\n\004name\030\001 \001(\t\022-\n\014tensor_proto\030\002 \001(\0132\027.ten"
+      "sorflow.TensorProto\"\035\n\nHelloReply\022\017\n\007mes"
+      "sage\030\001 \001(\t29\n\007Greeter\022.\n\010SayHello\022\020.hw.H"
+      "elloRequest\032\016.hw.HelloReply\"\000B6\n\033io.grpc"
+      ".examples.helloworldB\017HelloWorldProtoP\001\242"
+      "\002\003HLWb\006proto3"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 317);
+      descriptor, 293);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "helloworld.proto", &protobuf_RegisterTypes);
   ::tensorflow::protobuf_tensorflow_2fcore_2fframework_2ftensor_2eproto::AddDescriptors();
@@ -148,7 +148,7 @@ HelloRequest::HelloRequest()
     protobuf_helloworld_2eproto::InitDefaults();
   }
   SharedCtor();
-  // @@protoc_insertion_point(constructor:tensorflow.HelloRequest)
+  // @@protoc_insertion_point(constructor:hw.HelloRequest)
 }
 HelloRequest::HelloRequest(const HelloRequest& from)
   : ::google::protobuf::Message(),
@@ -164,7 +164,7 @@ HelloRequest::HelloRequest(const HelloRequest& from)
   } else {
     tensor_proto_ = NULL;
   }
-  // @@protoc_insertion_point(copy_constructor:tensorflow.HelloRequest)
+  // @@protoc_insertion_point(copy_constructor:hw.HelloRequest)
 }
 
 void HelloRequest::SharedCtor() {
@@ -174,7 +174,7 @@ void HelloRequest::SharedCtor() {
 }
 
 HelloRequest::~HelloRequest() {
-  // @@protoc_insertion_point(destructor:tensorflow.HelloRequest)
+  // @@protoc_insertion_point(destructor:hw.HelloRequest)
   SharedDtor();
 }
 
@@ -209,7 +209,7 @@ HelloRequest* HelloRequest::New(::google::protobuf::Arena* arena) const {
 }
 
 void HelloRequest::Clear() {
-// @@protoc_insertion_point(message_clear_start:tensorflow.HelloRequest)
+// @@protoc_insertion_point(message_clear_start:hw.HelloRequest)
   name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (GetArenaNoVirtual() == NULL && tensor_proto_ != NULL) {
     delete tensor_proto_;
@@ -221,7 +221,7 @@ bool HelloRequest::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:tensorflow.HelloRequest)
+  // @@protoc_insertion_point(parse_start:hw.HelloRequest)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
@@ -236,7 +236,7 @@ bool HelloRequest::MergePartialFromCodedStream(
           DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
             this->name().data(), this->name().length(),
             ::google::protobuf::internal::WireFormatLite::PARSE,
-            "tensorflow.HelloRequest.name"));
+            "hw.HelloRequest.name"));
         } else {
           goto handle_unusual;
         }
@@ -268,23 +268,23 @@ bool HelloRequest::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:tensorflow.HelloRequest)
+  // @@protoc_insertion_point(parse_success:hw.HelloRequest)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:tensorflow.HelloRequest)
+  // @@protoc_insertion_point(parse_failure:hw.HelloRequest)
   return false;
 #undef DO_
 }
 
 void HelloRequest::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:tensorflow.HelloRequest)
+  // @@protoc_insertion_point(serialize_start:hw.HelloRequest)
   // string name = 1;
   if (this->name().size() > 0) {
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->name().data(), this->name().length(),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "tensorflow.HelloRequest.name");
+      "hw.HelloRequest.name");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       1, this->name(), output);
   }
@@ -295,19 +295,19 @@ void HelloRequest::SerializeWithCachedSizes(
       2, *this->tensor_proto_, output);
   }
 
-  // @@protoc_insertion_point(serialize_end:tensorflow.HelloRequest)
+  // @@protoc_insertion_point(serialize_end:hw.HelloRequest)
 }
 
 ::google::protobuf::uint8* HelloRequest::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic;  // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:tensorflow.HelloRequest)
+  // @@protoc_insertion_point(serialize_to_array_start:hw.HelloRequest)
   // string name = 1;
   if (this->name().size() > 0) {
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->name().data(), this->name().length(),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "tensorflow.HelloRequest.name");
+      "hw.HelloRequest.name");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         1, this->name(), target);
@@ -320,12 +320,12 @@ void HelloRequest::SerializeWithCachedSizes(
         2, *this->tensor_proto_, false, target);
   }
 
-  // @@protoc_insertion_point(serialize_to_array_end:tensorflow.HelloRequest)
+  // @@protoc_insertion_point(serialize_to_array_end:hw.HelloRequest)
   return target;
 }
 
 size_t HelloRequest::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:tensorflow.HelloRequest)
+// @@protoc_insertion_point(message_byte_size_start:hw.HelloRequest)
   size_t total_size = 0;
 
   // string name = 1;
@@ -350,22 +350,22 @@ size_t HelloRequest::ByteSizeLong() const {
 }
 
 void HelloRequest::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:tensorflow.HelloRequest)
+// @@protoc_insertion_point(generalized_merge_from_start:hw.HelloRequest)
   GOOGLE_DCHECK_NE(&from, this);
   const HelloRequest* source =
       ::google::protobuf::internal::DynamicCastToGenerated<const HelloRequest>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:tensorflow.HelloRequest)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:hw.HelloRequest)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:tensorflow.HelloRequest)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:hw.HelloRequest)
     MergeFrom(*source);
   }
 }
 
 void HelloRequest::MergeFrom(const HelloRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:tensorflow.HelloRequest)
+// @@protoc_insertion_point(class_specific_merge_from_start:hw.HelloRequest)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   if (from.name().size() > 0) {
@@ -378,14 +378,14 @@ void HelloRequest::MergeFrom(const HelloRequest& from) {
 }
 
 void HelloRequest::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:tensorflow.HelloRequest)
+// @@protoc_insertion_point(generalized_copy_from_start:hw.HelloRequest)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void HelloRequest::CopyFrom(const HelloRequest& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:tensorflow.HelloRequest)
+// @@protoc_insertion_point(class_specific_copy_from_start:hw.HelloRequest)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -418,40 +418,40 @@ void HelloRequest::clear_name() {
   name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 const ::std::string& HelloRequest::name() const {
-  // @@protoc_insertion_point(field_get:tensorflow.HelloRequest.name)
+  // @@protoc_insertion_point(field_get:hw.HelloRequest.name)
   return name_.GetNoArena();
 }
 void HelloRequest::set_name(const ::std::string& value) {
   
   name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:tensorflow.HelloRequest.name)
+  // @@protoc_insertion_point(field_set:hw.HelloRequest.name)
 }
 #if LANG_CXX11
 void HelloRequest::set_name(::std::string&& value) {
   
   name_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:tensorflow.HelloRequest.name)
+  // @@protoc_insertion_point(field_set_rvalue:hw.HelloRequest.name)
 }
 #endif
 void HelloRequest::set_name(const char* value) {
   
   name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:tensorflow.HelloRequest.name)
+  // @@protoc_insertion_point(field_set_char:hw.HelloRequest.name)
 }
 void HelloRequest::set_name(const char* value, size_t size) {
   
   name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:tensorflow.HelloRequest.name)
+  // @@protoc_insertion_point(field_set_pointer:hw.HelloRequest.name)
 }
 ::std::string* HelloRequest::mutable_name() {
   
-  // @@protoc_insertion_point(field_mutable:tensorflow.HelloRequest.name)
+  // @@protoc_insertion_point(field_mutable:hw.HelloRequest.name)
   return name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 ::std::string* HelloRequest::release_name() {
-  // @@protoc_insertion_point(field_release:tensorflow.HelloRequest.name)
+  // @@protoc_insertion_point(field_release:hw.HelloRequest.name)
   
   return name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -462,7 +462,7 @@ void HelloRequest::set_allocated_name(::std::string* name) {
     
   }
   name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), name);
-  // @@protoc_insertion_point(field_set_allocated:tensorflow.HelloRequest.name)
+  // @@protoc_insertion_point(field_set_allocated:hw.HelloRequest.name)
 }
 
 // .tensorflow.TensorProto tensor_proto = 2;
@@ -474,7 +474,7 @@ void HelloRequest::clear_tensor_proto() {
   tensor_proto_ = NULL;
 }
 const ::tensorflow::TensorProto& HelloRequest::tensor_proto() const {
-  // @@protoc_insertion_point(field_get:tensorflow.HelloRequest.tensor_proto)
+  // @@protoc_insertion_point(field_get:hw.HelloRequest.tensor_proto)
   return tensor_proto_ != NULL ? *tensor_proto_
                          : *::tensorflow::TensorProto::internal_default_instance();
 }
@@ -483,11 +483,11 @@ const ::tensorflow::TensorProto& HelloRequest::tensor_proto() const {
   if (tensor_proto_ == NULL) {
     tensor_proto_ = new ::tensorflow::TensorProto;
   }
-  // @@protoc_insertion_point(field_mutable:tensorflow.HelloRequest.tensor_proto)
+  // @@protoc_insertion_point(field_mutable:hw.HelloRequest.tensor_proto)
   return tensor_proto_;
 }
 ::tensorflow::TensorProto* HelloRequest::release_tensor_proto() {
-  // @@protoc_insertion_point(field_release:tensorflow.HelloRequest.tensor_proto)
+  // @@protoc_insertion_point(field_release:hw.HelloRequest.tensor_proto)
   
   ::tensorflow::TensorProto* temp = tensor_proto_;
   tensor_proto_ = NULL;
@@ -506,7 +506,7 @@ void HelloRequest::set_allocated_tensor_proto(::tensorflow::TensorProto* tensor_
   } else {
     
   }
-  // @@protoc_insertion_point(field_set_allocated:tensorflow.HelloRequest.tensor_proto)
+  // @@protoc_insertion_point(field_set_allocated:hw.HelloRequest.tensor_proto)
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
@@ -523,7 +523,7 @@ HelloReply::HelloReply()
     protobuf_helloworld_2eproto::InitDefaults();
   }
   SharedCtor();
-  // @@protoc_insertion_point(constructor:tensorflow.HelloReply)
+  // @@protoc_insertion_point(constructor:hw.HelloReply)
 }
 HelloReply::HelloReply(const HelloReply& from)
   : ::google::protobuf::Message(),
@@ -534,7 +534,7 @@ HelloReply::HelloReply(const HelloReply& from)
   if (from.message().size() > 0) {
     message_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.message_);
   }
-  // @@protoc_insertion_point(copy_constructor:tensorflow.HelloReply)
+  // @@protoc_insertion_point(copy_constructor:hw.HelloReply)
 }
 
 void HelloReply::SharedCtor() {
@@ -543,7 +543,7 @@ void HelloReply::SharedCtor() {
 }
 
 HelloReply::~HelloReply() {
-  // @@protoc_insertion_point(destructor:tensorflow.HelloReply)
+  // @@protoc_insertion_point(destructor:hw.HelloReply)
   SharedDtor();
 }
 
@@ -575,7 +575,7 @@ HelloReply* HelloReply::New(::google::protobuf::Arena* arena) const {
 }
 
 void HelloReply::Clear() {
-// @@protoc_insertion_point(message_clear_start:tensorflow.HelloReply)
+// @@protoc_insertion_point(message_clear_start:hw.HelloReply)
   message_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
@@ -583,7 +583,7 @@ bool HelloReply::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:tensorflow.HelloReply)
+  // @@protoc_insertion_point(parse_start:hw.HelloReply)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
@@ -598,7 +598,7 @@ bool HelloReply::MergePartialFromCodedStream(
           DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
             this->message().data(), this->message().length(),
             ::google::protobuf::internal::WireFormatLite::PARSE,
-            "tensorflow.HelloReply.message"));
+            "hw.HelloReply.message"));
         } else {
           goto handle_unusual;
         }
@@ -618,51 +618,51 @@ bool HelloReply::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:tensorflow.HelloReply)
+  // @@protoc_insertion_point(parse_success:hw.HelloReply)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:tensorflow.HelloReply)
+  // @@protoc_insertion_point(parse_failure:hw.HelloReply)
   return false;
 #undef DO_
 }
 
 void HelloReply::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:tensorflow.HelloReply)
+  // @@protoc_insertion_point(serialize_start:hw.HelloReply)
   // string message = 1;
   if (this->message().size() > 0) {
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->message().data(), this->message().length(),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "tensorflow.HelloReply.message");
+      "hw.HelloReply.message");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       1, this->message(), output);
   }
 
-  // @@protoc_insertion_point(serialize_end:tensorflow.HelloReply)
+  // @@protoc_insertion_point(serialize_end:hw.HelloReply)
 }
 
 ::google::protobuf::uint8* HelloReply::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic;  // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:tensorflow.HelloReply)
+  // @@protoc_insertion_point(serialize_to_array_start:hw.HelloReply)
   // string message = 1;
   if (this->message().size() > 0) {
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->message().data(), this->message().length(),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "tensorflow.HelloReply.message");
+      "hw.HelloReply.message");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         1, this->message(), target);
   }
 
-  // @@protoc_insertion_point(serialize_to_array_end:tensorflow.HelloReply)
+  // @@protoc_insertion_point(serialize_to_array_end:hw.HelloReply)
   return target;
 }
 
 size_t HelloReply::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:tensorflow.HelloReply)
+// @@protoc_insertion_point(message_byte_size_start:hw.HelloReply)
   size_t total_size = 0;
 
   // string message = 1;
@@ -680,22 +680,22 @@ size_t HelloReply::ByteSizeLong() const {
 }
 
 void HelloReply::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:tensorflow.HelloReply)
+// @@protoc_insertion_point(generalized_merge_from_start:hw.HelloReply)
   GOOGLE_DCHECK_NE(&from, this);
   const HelloReply* source =
       ::google::protobuf::internal::DynamicCastToGenerated<const HelloReply>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:tensorflow.HelloReply)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:hw.HelloReply)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:tensorflow.HelloReply)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:hw.HelloReply)
     MergeFrom(*source);
   }
 }
 
 void HelloReply::MergeFrom(const HelloReply& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:tensorflow.HelloReply)
+// @@protoc_insertion_point(class_specific_merge_from_start:hw.HelloReply)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   if (from.message().size() > 0) {
@@ -705,14 +705,14 @@ void HelloReply::MergeFrom(const HelloReply& from) {
 }
 
 void HelloReply::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:tensorflow.HelloReply)
+// @@protoc_insertion_point(generalized_copy_from_start:hw.HelloReply)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void HelloReply::CopyFrom(const HelloReply& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:tensorflow.HelloReply)
+// @@protoc_insertion_point(class_specific_copy_from_start:hw.HelloReply)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -744,40 +744,40 @@ void HelloReply::clear_message() {
   message_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 const ::std::string& HelloReply::message() const {
-  // @@protoc_insertion_point(field_get:tensorflow.HelloReply.message)
+  // @@protoc_insertion_point(field_get:hw.HelloReply.message)
   return message_.GetNoArena();
 }
 void HelloReply::set_message(const ::std::string& value) {
   
   message_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:tensorflow.HelloReply.message)
+  // @@protoc_insertion_point(field_set:hw.HelloReply.message)
 }
 #if LANG_CXX11
 void HelloReply::set_message(::std::string&& value) {
   
   message_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:tensorflow.HelloReply.message)
+  // @@protoc_insertion_point(field_set_rvalue:hw.HelloReply.message)
 }
 #endif
 void HelloReply::set_message(const char* value) {
   
   message_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:tensorflow.HelloReply.message)
+  // @@protoc_insertion_point(field_set_char:hw.HelloReply.message)
 }
 void HelloReply::set_message(const char* value, size_t size) {
   
   message_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:tensorflow.HelloReply.message)
+  // @@protoc_insertion_point(field_set_pointer:hw.HelloReply.message)
 }
 ::std::string* HelloReply::mutable_message() {
   
-  // @@protoc_insertion_point(field_mutable:tensorflow.HelloReply.message)
+  // @@protoc_insertion_point(field_mutable:hw.HelloReply.message)
   return message_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 ::std::string* HelloReply::release_message() {
-  // @@protoc_insertion_point(field_release:tensorflow.HelloReply.message)
+  // @@protoc_insertion_point(field_release:hw.HelloReply.message)
   
   return message_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -788,13 +788,13 @@ void HelloReply::set_allocated_message(::std::string* message) {
     
   }
   message_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), message);
-  // @@protoc_insertion_point(field_set_allocated:tensorflow.HelloReply.message)
+  // @@protoc_insertion_point(field_set_allocated:hw.HelloReply.message)
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
 
 // @@protoc_insertion_point(namespace_scope)
 
-}  // namespace tensorflow
+}  // namespace hw
 
 // @@protoc_insertion_point(global_scope)

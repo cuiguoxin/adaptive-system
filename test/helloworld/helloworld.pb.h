@@ -30,19 +30,21 @@
 #include <google/protobuf/unknown_field_set.h>
 #include "tensorflow/core/framework/tensor.pb.h"
 // @@protoc_insertion_point(includes)
-namespace tensorflow {
+namespace hw {
 class HelloReply;
 class HelloReplyDefaultTypeInternal;
 extern HelloReplyDefaultTypeInternal _HelloReply_default_instance_;
 class HelloRequest;
 class HelloRequestDefaultTypeInternal;
 extern HelloRequestDefaultTypeInternal _HelloRequest_default_instance_;
+}  // namespace hw
+namespace tensorflow {
 class TensorProto;
 class TensorProtoDefaultTypeInternal;
 extern TensorProtoDefaultTypeInternal _TensorProto_default_instance_;
 }  // namespace tensorflow
 
-namespace tensorflow {
+namespace hw {
 
 namespace protobuf_helloworld_2eproto {
 // Internal implementation detail -- do not call these.
@@ -57,7 +59,7 @@ void InitDefaults();
 
 // ===================================================================
 
-class HelloRequest : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tensorflow.HelloRequest) */ {
+class HelloRequest : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:hw.HelloRequest) */ {
  public:
   HelloRequest();
   virtual ~HelloRequest();
@@ -147,7 +149,7 @@ class HelloRequest : public ::google::protobuf::Message /* @@protoc_insertion_po
   ::tensorflow::TensorProto* release_tensor_proto();
   void set_allocated_tensor_proto(::tensorflow::TensorProto* tensor_proto);
 
-  // @@protoc_insertion_point(class_scope:tensorflow.HelloRequest)
+  // @@protoc_insertion_point(class_scope:hw.HelloRequest)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -158,7 +160,7 @@ class HelloRequest : public ::google::protobuf::Message /* @@protoc_insertion_po
 };
 // -------------------------------------------------------------------
 
-class HelloReply : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:tensorflow.HelloReply) */ {
+class HelloReply : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:hw.HelloReply) */ {
  public:
   HelloReply();
   virtual ~HelloReply();
@@ -239,7 +241,7 @@ class HelloReply : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::std::string* release_message();
   void set_allocated_message(::std::string* message);
 
-  // @@protoc_insertion_point(class_scope:tensorflow.HelloReply)
+  // @@protoc_insertion_point(class_scope:hw.HelloReply)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -260,40 +262,40 @@ inline void HelloRequest::clear_name() {
   name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline const ::std::string& HelloRequest::name() const {
-  // @@protoc_insertion_point(field_get:tensorflow.HelloRequest.name)
+  // @@protoc_insertion_point(field_get:hw.HelloRequest.name)
   return name_.GetNoArena();
 }
 inline void HelloRequest::set_name(const ::std::string& value) {
   
   name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:tensorflow.HelloRequest.name)
+  // @@protoc_insertion_point(field_set:hw.HelloRequest.name)
 }
 #if LANG_CXX11
 inline void HelloRequest::set_name(::std::string&& value) {
   
   name_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:tensorflow.HelloRequest.name)
+  // @@protoc_insertion_point(field_set_rvalue:hw.HelloRequest.name)
 }
 #endif
 inline void HelloRequest::set_name(const char* value) {
   
   name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:tensorflow.HelloRequest.name)
+  // @@protoc_insertion_point(field_set_char:hw.HelloRequest.name)
 }
 inline void HelloRequest::set_name(const char* value, size_t size) {
   
   name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:tensorflow.HelloRequest.name)
+  // @@protoc_insertion_point(field_set_pointer:hw.HelloRequest.name)
 }
 inline ::std::string* HelloRequest::mutable_name() {
   
-  // @@protoc_insertion_point(field_mutable:tensorflow.HelloRequest.name)
+  // @@protoc_insertion_point(field_mutable:hw.HelloRequest.name)
   return name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* HelloRequest::release_name() {
-  // @@protoc_insertion_point(field_release:tensorflow.HelloRequest.name)
+  // @@protoc_insertion_point(field_release:hw.HelloRequest.name)
   
   return name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -304,7 +306,7 @@ inline void HelloRequest::set_allocated_name(::std::string* name) {
     
   }
   name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), name);
-  // @@protoc_insertion_point(field_set_allocated:tensorflow.HelloRequest.name)
+  // @@protoc_insertion_point(field_set_allocated:hw.HelloRequest.name)
 }
 
 // .tensorflow.TensorProto tensor_proto = 2;
@@ -316,7 +318,7 @@ inline void HelloRequest::clear_tensor_proto() {
   tensor_proto_ = NULL;
 }
 inline const ::tensorflow::TensorProto& HelloRequest::tensor_proto() const {
-  // @@protoc_insertion_point(field_get:tensorflow.HelloRequest.tensor_proto)
+  // @@protoc_insertion_point(field_get:hw.HelloRequest.tensor_proto)
   return tensor_proto_ != NULL ? *tensor_proto_
                          : *::tensorflow::TensorProto::internal_default_instance();
 }
@@ -325,11 +327,11 @@ inline ::tensorflow::TensorProto* HelloRequest::mutable_tensor_proto() {
   if (tensor_proto_ == NULL) {
     tensor_proto_ = new ::tensorflow::TensorProto;
   }
-  // @@protoc_insertion_point(field_mutable:tensorflow.HelloRequest.tensor_proto)
+  // @@protoc_insertion_point(field_mutable:hw.HelloRequest.tensor_proto)
   return tensor_proto_;
 }
 inline ::tensorflow::TensorProto* HelloRequest::release_tensor_proto() {
-  // @@protoc_insertion_point(field_release:tensorflow.HelloRequest.tensor_proto)
+  // @@protoc_insertion_point(field_release:hw.HelloRequest.tensor_proto)
   
   ::tensorflow::TensorProto* temp = tensor_proto_;
   tensor_proto_ = NULL;
@@ -348,7 +350,7 @@ inline void HelloRequest::set_allocated_tensor_proto(::tensorflow::TensorProto* 
   } else {
     
   }
-  // @@protoc_insertion_point(field_set_allocated:tensorflow.HelloRequest.tensor_proto)
+  // @@protoc_insertion_point(field_set_allocated:hw.HelloRequest.tensor_proto)
 }
 
 // -------------------------------------------------------------------
@@ -360,40 +362,40 @@ inline void HelloReply::clear_message() {
   message_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline const ::std::string& HelloReply::message() const {
-  // @@protoc_insertion_point(field_get:tensorflow.HelloReply.message)
+  // @@protoc_insertion_point(field_get:hw.HelloReply.message)
   return message_.GetNoArena();
 }
 inline void HelloReply::set_message(const ::std::string& value) {
   
   message_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:tensorflow.HelloReply.message)
+  // @@protoc_insertion_point(field_set:hw.HelloReply.message)
 }
 #if LANG_CXX11
 inline void HelloReply::set_message(::std::string&& value) {
   
   message_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:tensorflow.HelloReply.message)
+  // @@protoc_insertion_point(field_set_rvalue:hw.HelloReply.message)
 }
 #endif
 inline void HelloReply::set_message(const char* value) {
   
   message_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:tensorflow.HelloReply.message)
+  // @@protoc_insertion_point(field_set_char:hw.HelloReply.message)
 }
 inline void HelloReply::set_message(const char* value, size_t size) {
   
   message_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:tensorflow.HelloReply.message)
+  // @@protoc_insertion_point(field_set_pointer:hw.HelloReply.message)
 }
 inline ::std::string* HelloReply::mutable_message() {
   
-  // @@protoc_insertion_point(field_mutable:tensorflow.HelloReply.message)
+  // @@protoc_insertion_point(field_mutable:hw.HelloReply.message)
   return message_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* HelloReply::release_message() {
-  // @@protoc_insertion_point(field_release:tensorflow.HelloReply.message)
+  // @@protoc_insertion_point(field_release:hw.HelloReply.message)
   
   return message_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -404,7 +406,7 @@ inline void HelloReply::set_allocated_message(::std::string* message) {
     
   }
   message_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), message);
-  // @@protoc_insertion_point(field_set_allocated:tensorflow.HelloReply.message)
+  // @@protoc_insertion_point(field_set_allocated:hw.HelloReply.message)
 }
 
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS
@@ -414,7 +416,7 @@ inline void HelloReply::set_allocated_message(::std::string* message) {
 // @@protoc_insertion_point(namespace_scope)
 
 
-}  // namespace tensorflow
+}  // namespace hw
 
 // @@protoc_insertion_point(global_scope)
 
