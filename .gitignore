@@ -6,3 +6,4 @@ resources/
 *.swp
 *.json
 eigen-eigen/
+bin/
