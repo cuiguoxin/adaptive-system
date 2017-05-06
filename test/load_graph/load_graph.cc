@@ -17,7 +17,7 @@ int main(int argc, char* argv[]) {
   // when using `bazel run` since the cwd isn't where you call
   // `bazel run` but from inside a temp folder.)
   GraphDef graph_def;
-  status = ReadBinaryProto(Env::Default(), "models/graph.pb", &graph_def);
+  status = ReadBinaryProto(Env::Default(), "graph_pb/graph.pb", &graph_def);
   if (!status.ok()) {
     std::cout << status.ToString() << "\n";
     return 1;
@@ -30,26 +30,12 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-  // Setup inputs and outputs:
-
-  // Our graph doesn't require any inputs, since it specifies default values,
-  // but we'll change an input to demonstrate.
-  Tensor a(DT_FLOAT, TensorShape());
-  a.scalar<float>()() = 3.0;
-
-  Tensor b(DT_FLOAT, TensorShape());
-  b.scalar<float>()() = 2.0;
-
-  std::vector<std::pair<string, tensorflow::Tensor>> inputs = {
-    { "a", a },
-    { "b", b },
-  };
-
   // The session will initialize the outputs
   std::vector<tensorflow::Tensor> outputs;
 
   // Run the session, evaluating our "c" operation from the graph
-  status = session->Run(inputs, {"c"}, {}, &outputs);
+  status = session->Run({}, {}, {"init"}, {});
+  status = session->Run({}, {"c", "gradients/c_grad/tuple/control_dependency:0", "gradients/c_grad/tuple/control_dependency_1:0"}, {}, &outputs);
   if (!status.ok()) {
     std::cout << status.ToString() << "\n";
     return 1;
@@ -58,6 +44,8 @@ int main(int argc, char* argv[]) {
   // Grab the first output (we only evaluated one graph node: "c")
   // and convert the node to a scalar representation.
   auto output_c = outputs[0].scalar<float>();
+  auto output_grad_a = outputs[1].scalar<float>();
+  auto output_grad_b = outputs[2].scalar<float>();
 
   // (There are similar methods for vectors and matrices here:
   // https://github.com/tensorflow/tensorflow/blob/master/tensorflow/core/public/tensor.h)
@@ -65,6 +53,8 @@ int main(int argc, char* argv[]) {
   // Print the results
   std::cout << outputs[0].DebugString() << "\n"; // Tensor<type: float shape: [] values: 30>
   std::cout << output_c() << "\n"; // 30
+  std::cout << output_grad_a() << "\n"; // 6
+  std::cout << output_grad_b() << "\n"; // 5
 
   // Free any resources used by the session
   session->Close();
