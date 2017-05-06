@@ -8,9 +8,11 @@ with tf.Session() as sess:
 
     init = tf.global_variables_initializer()
     print init.name
+    print a.name
+    sess.run(init)
 
     print a.eval() # 5.0
     print b.eval() # 6.0
     print c.eval() # 30.0
     
-    tf.train.write_graph(sess.graph_def, 'models/', 'graph.pb', as_text=False)
+    tf.train.write_graph(sess.graph_def, '../load_graph/graph_pb/', 'graph.pb', as_text=False)
