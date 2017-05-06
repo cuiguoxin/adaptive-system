@@ -13,9 +13,9 @@
 using grpc::Channel;
 using grpc::ClientContext;
 using grpc::Status;
-using tensorflow::HelloRequest;
-using tensorflow::HelloReply;
-using tensorflow::Greeter;
+using hw::HelloRequest;
+using hw::HelloReply;
+using hw::Greeter;
 using tensorflow::Tensor;
 using tensorflow::TensorShape;
 
