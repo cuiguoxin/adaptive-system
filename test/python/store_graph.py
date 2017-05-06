@@ -6,7 +6,7 @@ with tf.Session() as sess:
     b = tf.Variable(6.0, name='b')
     c = tf.multiply(a, b, name="c")
 
-    opt = tf.GradientDescentOptimizer(learning_rate=0.1)
+    opt = tf.train.GradientDescentOptimizer(learning_rate=0.1)
     grads_and_vars = opt.compute_gradients(c, [a, b])
    
     init = tf.global_variables_initializer()
