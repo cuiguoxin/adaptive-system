@@ -5,9 +5,10 @@ option java_package = "io.grpc.examples.helloworld";
 option java_outer_classname = "HelloWorldProto";
 option objc_class_prefix = "HLW";
 
-package tensorflow;
+package hw;
 
 import "tensorflow/core/framework/tensor.proto";
+
 // The greeting service definition.
 service Greeter {
   // Sends a greeting
@@ -17,7 +18,7 @@ service Greeter {
 // The request message containing the user's name.
 message HelloRequest {
   string name = 1;
-  TensorProto tensor_proto = 2;
+  tensorflow.TensorProto tensor_proto = 2;
 }
 
 // The response message containing the greetings
