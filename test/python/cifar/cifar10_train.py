@@ -43,7 +43,7 @@ import cifar10
 
 FLAGS = tf.app.flags.FLAGS
 
-tf.app.flags.DEFINE_string('train_dir', '~/cifar-10-train',
+tf.app.flags.DEFINE_string('train_dir', '/home/cgx/git_project/adaptive-system/resources/cifar-10-train',
                            """Directory where to write event logs """
                            """and checkpoint.""")
 tf.app.flags.DEFINE_integer('max_steps', 1000000,
@@ -118,4 +118,8 @@ def main(argv=None):  # pylint: disable=unused-argument
 
 
 if __name__ == '__main__':
+<<<<<<< HEAD
   tf.app.run()
+=======
+  tf.app.run()
+>>>>>>> 30d62f42aaa33e3711d4ac564a4a611eda7a9263

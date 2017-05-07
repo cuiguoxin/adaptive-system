@@ -45,7 +45,9 @@ FLAGS = tf.app.flags.FLAGS
 # Basic model parameters.
 tf.app.flags.DEFINE_integer('batch_size', 128,
                             """Number of images to process in a batch.""")
-tf.app.flags.DEFINE_string('data_dir', '/Users/cui/cifar-10-batches-bin',
+
+tf.app.flags.DEFINE_string('data_dir', '/home/cgx/git_project/adaptive-system/resources/cifar-10-batches-bin',
+
                            """Path to the CIFAR-10 data directory.""")
 tf.app.flags.DEFINE_boolean('use_fp16', False,
                             """Train the model using fp16.""")
@@ -341,4 +343,8 @@ def maybe_download_and_extract():
     statinfo = os.stat(filepath)
     print('Successfully downloaded', filename, statinfo.st_size, 'bytes.')
 
+<<<<<<< HEAD
   tarfile.open(filepath, 'r:gz').extractall(dest_directory)
+=======
+  tarfile.open(filepath, 'r:gz').extractall(dest_directory)
+>>>>>>> 30d62f42aaa33e3711d4ac564a4a611eda7a9263
