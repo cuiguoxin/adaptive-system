@@ -9,3 +9,4 @@ resources/
 eigen-eigen/
 bin/
 *.pb
+*.pyc
