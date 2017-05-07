@@ -8,7 +8,6 @@ int main(int argc, char* argv[]) {
   Session* session;
   Status status = NewSession(SessionOptions(), &session);
   if (!status.ok()) {
-    std::cout << "first" << std::endl;
     std::cout << status.ToString() << "\n";
     return 1;
   }
@@ -20,7 +19,6 @@ int main(int argc, char* argv[]) {
   GraphDef graph_def;
   status = ReadBinaryProto(Env::Default(), "../graph_pb/graph.pb", &graph_def);
   if (!status.ok()) {
-    std::cout << "second" << std::endl;
     std::cout << status.ToString() << "\n";
     return 1;
   }
@@ -28,7 +26,6 @@ int main(int argc, char* argv[]) {
   // Add the graph to the session
   status = session->Create(graph_def);
   if (!status.ok()) {
-    std::cout << "second" << std::endl;
     std::cout << status.ToString() << "\n";
     return 1;
   }
