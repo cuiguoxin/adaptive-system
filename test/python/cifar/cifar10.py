@@ -341,4 +341,8 @@ def maybe_download_and_extract():
     statinfo = os.stat(filepath)
     print('Successfully downloaded', filename, statinfo.st_size, 'bytes.')
 
+<<<<<<< HEAD
   tarfile.open(filepath, 'r:gz').extractall(dest_directory)
+=======
+  tarfile.open(filepath, 'r:gz').extractall(dest_directory)
+>>>>>>> 30d62f42aaa33e3711d4ac564a4a611eda7a9263

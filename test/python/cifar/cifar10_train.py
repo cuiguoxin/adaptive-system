@@ -118,4 +118,8 @@ def main(argv=None):  # pylint: disable=unused-argument
 
 
 if __name__ == '__main__':
+<<<<<<< HEAD
   tf.app.run()
+=======
+  tf.app.run()
+>>>>>>> 30d62f42aaa33e3711d4ac564a4a611eda7a9263
