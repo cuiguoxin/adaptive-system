@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+package adaptive_system;
+
+import "tensorflow/core/framework/resource_handle.proto";
+import "tensorflow/core/framework/tensor_shape.proto";
+import "tensorflow/core/framework/types.proto";
+import "tensorflow/core/framework/tensor.proto";
+
+
+message Empty {
+
+}
+
+message TuplePaLrItv {
+    tensorflow.TensorProto parameter = 1;
+    float lr = 2;
+    int32 interval = 3;
+}
+
+
+
+enum GRAD_QUANT_LEVEL{
+        TWO = 0;
+        FOUR = 1;
+        EIGHT = 2;
+        SIXTEEN = 3;
+        NONE = 4;
+}
+
+message QuantizationLevel {
+    
+    GRAD_QUANT_LEVEL level = 1;    
+}
+
+message Gradient {
+    GRAD_QUANT_LEVEL level = 1;
+    tensorflow.TensorProto tensor_ge_8 = 2;
+    bytes tensor_le_8 = 3;
+    float max = 4;
+    float min = 5;
+}
+
+message PartialState {
+    tensorflow.TensorProto tensor = 1;
+}
+
+message GradientAndLoss {
+    Gradient grad = 1;
+    float loss = 2;
+}
+
+message PartialStateAndLoss {
+    PartialState ps = 1;
+    float loss = 2;
+}
+
+service SystemControl {
+
+    rpc retrieveTuple(Empty) returns (TuplePaLrItv);
+    rpc sendGradient(GradientAndLoss) returns (Gradient);
+    rpc sendState(PartialStateAndLoss) returns (QuantizationLevel);
+
+}
