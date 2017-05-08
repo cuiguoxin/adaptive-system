@@ -3,6 +3,7 @@
 namespace adaptive_system {
 
     namespace {
+	const float eps = 0.000001f;
         void quantize_less_8_bits(const QUANTIZATION_TYPE type,
                                 float* raw_data, 
                                 const float max_value,
@@ -13,9 +14,10 @@ namespace adaptive_system {
                                 ) {
             const int q_type = static_cast<int>(type); //for example 2
             const int scope = std::pow(2, q_type);
-            const float multiplizer = scope / (max_value - min_value);
+            const float multiplizer = scope / (max_value + eps - min_value);
             std::for_each(raw_data, raw_data + raw_data_length, [multiplizer, min_value](float& ref){
-                                                                             ref = (ref - min_value) * multiplizer; 
+                                                                             ref = (ref - min_value) * multiplizer;
+										 
                                                                              });
             const int length_per_iter = 8 / q_type; //for example 4
             quantized_data_length = static_cast<size_t>(std::ceil(raw_data_length / 
@@ -29,7 +31,7 @@ namespace adaptive_system {
                     if (index_for_raw >= raw_data_length) {
                         break;
                     }
-                    int value_raw = raw_data[index_for_raw];
+                    tensorflow::uint8 value_raw = raw_data[index_for_raw];
                     output[i] = output[i] | (value_raw << (q_type * j));
                 }
             }
@@ -45,9 +47,11 @@ namespace adaptive_system {
                     ) {
             static const tensorflow::uint8 mask_2_bits = 3, mask_4_bits = 15, mask_8_bits = 255;
             const int q_type = static_cast<int>(type); //for example 2
+	    std::cout << "q type is " << q_type << std::endl;
             const int scope = std::pow(2, q_type);
             const int length_per_iter = 8 / q_type; //for example 4
             const float multiplier = (max_value - min_value) / scope;
+	    std::cout << "multiplier is " << multiplier << std::endl;
             int i = 0; 
             std::function<void(float&)> func = [=, &i](float& ref) {
                 const int index_for_q_data = i / length_per_iter;

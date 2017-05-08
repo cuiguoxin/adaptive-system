@@ -1,1 +1,0 @@
-g++ -std=c++11 --shared -fPIC -I/home/cgx/git_project/adaptive-system/ -I/home/cgx/include/ -I/home/cgx/git_project/adaptive-system/tensorflow/ -I/home/cgx/git_project/adaptive-system/eigen-eigen algorithms.cc  -o libalgorithms.so
