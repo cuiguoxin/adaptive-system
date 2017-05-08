@@ -2,9 +2,6 @@ syntax = "proto3";
 
 package adaptive_system;
 
-import "tensorflow/core/framework/resource_handle.proto";
-import "tensorflow/core/framework/tensor_shape.proto";
-import "tensorflow/core/framework/types.proto";
 import "tensorflow/core/framework/tensor.proto";
 
 
