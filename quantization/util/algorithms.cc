@@ -63,7 +63,8 @@ namespace adaptive_system {
                     case 8: q_data &= mask_8_bits;
                             break;
                 }
-                ref = q_data * multiplier + min_value * 1.5;
+                ref = q_data * multiplier + min_value + multiplier * 0.5;
+                i++;
             };
             std::for_each(raw_data, raw_data + raw_data_length, func);
         }  
