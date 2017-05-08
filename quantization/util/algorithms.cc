@@ -1,4 +1,4 @@
-#include "quantization/util/algorithm.h"
+#include "quantization/util/algorithms.h"
 
 namespace adaptive_system {
 
@@ -35,7 +35,7 @@ namespace adaptive_system {
             }
             *quantized_data = output;
         } 
-        void dequantize_less_8_bits(const QUANTIZATON_TYPE type,
+        void dequantize_less_8_bits(const QUANTIZATION_TYPE type,
                     const tensorflow::uint8* quantized_data,
                     const size_t quantized_data_length,
                     const size_t raw_data_length,
@@ -50,7 +50,7 @@ namespace adaptive_system {
             const float multiplier = (max_value - min_value) / scope;
             int i = 0; 
             std::function<void(float&)> func = [=, &i](float& ref) {
-                const int index_for_q_data = i / lenth_per_iter;
+                const int index_for_q_data = i / length_per_iter;
                 const int index_in_iter = i - index_for_q_data * length_per_iter;
                 tensorflow::uint8 q_data = quantized_data[index_for_q_data];
                 const int move_right = q_type * index_in_iter;
@@ -80,7 +80,7 @@ namespace adaptive_system {
          quantize_less_8_bits(type, raw_data, max_value, min_value, raw_data_length, quantized_data, quantized_data_length);          
     }
     //raw data must be allocated outside this function
-    void dequantize(const QUANTIZATON_TYPE type,
+    void dequantize(const QUANTIZATION_TYPE type,
                     const tensorflow::uint8* quantized_data,
                     const size_t quantized_data_length,
                     const size_t raw_data_length,
