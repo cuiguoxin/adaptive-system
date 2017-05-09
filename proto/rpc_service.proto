@@ -3,16 +3,19 @@ syntax = "proto3";
 package adaptive_system;
 
 import "tensorflow/core/framework/tensor.proto";
+import "tensorflow/core/framework/graph.proto";
 
 
 message Empty {
 
 }
 
-message TuplePaLrItv {
+message Tuple {
     tensorflow.TensorProto parameter = 1;
     float lr = 2;
     int32 interval = 3;
+    tensorflow.GraphDef graph = 4;
+    map<string, string> action_to_node_name = 5;
 }
 
 
@@ -54,7 +57,7 @@ message PartialStateAndLoss {
 
 service SystemControl {
 
-    rpc retrieveTuple(Empty) returns (TuplePaLrItv);
+    rpc retrieveTuple(Empty) returns (Tuple);
     rpc sendGradient(GradientAndLoss) returns (Gradient);
     rpc sendState(PartialStateAndLoss) returns (QuantizationLevel);
 

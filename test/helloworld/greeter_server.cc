@@ -21,11 +21,11 @@ using tensorflow::TensorShape;
 
 // Logic and data behind the server's behavior.
 class GreeterServiceImpl final : public Greeter::Service {
-  Status SayHello(ServerContext* context, const HelloRequest* request,
-                  HelloReply* reply) override {
+  Status SayHello(ServerContext *context, const HelloRequest *request,
+                  HelloReply *reply) override {
     std::string prefix("Hello ");
     reply->set_message(prefix + request->name());
-    const tensorflow::TensorProto& tp = request->tensor_proto();
+    const tensorflow::TensorProto &tp = request->tensor_proto();
     Tensor tensor(tensorflow::DT_FLOAT, TensorShape({2, 1}));
     tensor.FromProto(tp);
     auto x_flat = tensor.flat<float>();
@@ -53,7 +53,7 @@ void RunServer() {
   server->Wait();
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   RunServer();
 
   return 0;
