@@ -20,8 +20,8 @@
 namespace adaptive_system {
 class EmptyDefaultTypeInternal : public ::google::protobuf::internal::ExplicitlyConstructed<Empty> {
 } _Empty_default_instance_;
-class TuplePaLrItvDefaultTypeInternal : public ::google::protobuf::internal::ExplicitlyConstructed<TuplePaLrItv> {
-} _TuplePaLrItv_default_instance_;
+class TupleDefaultTypeInternal : public ::google::protobuf::internal::ExplicitlyConstructed<Tuple> {
+} _Tuple_default_instance_;
 class QuantizationLevelDefaultTypeInternal : public ::google::protobuf::internal::ExplicitlyConstructed<QuantizationLevel> {
 } _QuantizationLevel_default_instance_;
 class GradientDefaultTypeInternal : public ::google::protobuf::internal::ExplicitlyConstructed<Gradient> {
@@ -38,7 +38,7 @@ namespace protobuf_rpc_5fservice_2eproto {
 
 namespace {
 
-::google::protobuf::Metadata file_level_metadata[7];
+::google::protobuf::Metadata file_level_metadata[8];
 const ::google::protobuf::EnumDescriptor* file_level_enum_descriptors[1];
 
 }  // namespace
@@ -49,12 +49,14 @@ const ::google::protobuf::uint32 TableStruct::offsets[] = {
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TuplePaLrItv, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tuple, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TuplePaLrItv, parameter_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TuplePaLrItv, lr_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TuplePaLrItv, interval_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tuple, parameter_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tuple, lr_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tuple, interval_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tuple, graph_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tuple, action_to_node_name_),
   ~0u,  // no _has_bits_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(QuantizationLevel, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -90,17 +92,17 @@ const ::google::protobuf::uint32 TableStruct::offsets[] = {
 
 static const ::google::protobuf::internal::MigrationSchema schemas[] = {
   { 0, -1, sizeof(Empty)},
-  { 4, -1, sizeof(TuplePaLrItv)},
-  { 11, -1, sizeof(QuantizationLevel)},
-  { 16, -1, sizeof(Gradient)},
-  { 25, -1, sizeof(PartialState)},
-  { 30, -1, sizeof(GradientAndLoss)},
-  { 36, -1, sizeof(PartialStateAndLoss)},
+  { 4, -1, sizeof(Tuple)},
+  { 13, -1, sizeof(QuantizationLevel)},
+  { 18, -1, sizeof(Gradient)},
+  { 27, -1, sizeof(PartialState)},
+  { 32, -1, sizeof(GradientAndLoss)},
+  { 38, -1, sizeof(PartialStateAndLoss)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
   reinterpret_cast<const ::google::protobuf::Message*>(&_Empty_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&_TuplePaLrItv_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&_Tuple_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&_QuantizationLevel_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&_Gradient_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&_PartialState_default_instance_),
@@ -126,7 +128,17 @@ void protobuf_AssignDescriptorsOnce() {
 void protobuf_RegisterTypes(const ::std::string&) GOOGLE_ATTRIBUTE_COLD;
 void protobuf_RegisterTypes(const ::std::string&) {
   protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 7);
+  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 8);
+  const ::google::protobuf::Descriptor* Tuple_ActionToNodeNameEntry_descriptor = protobuf_rpc_5fservice_2eproto::file_level_metadata[1].descriptor;
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+        Tuple_ActionToNodeNameEntry_descriptor,
+        ::google::protobuf::internal::MapEntry<
+            ::std::string,
+            ::std::string,
+            ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+            ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+            0>::CreateDefaultInstance(
+                Tuple_ActionToNodeNameEntry_descriptor));
 }
 
 }  // namespace
@@ -134,18 +146,18 @@ void protobuf_RegisterTypes(const ::std::string&) {
 void TableStruct::Shutdown() {
   _Empty_default_instance_.Shutdown();
   delete file_level_metadata[0].reflection;
-  _TuplePaLrItv_default_instance_.Shutdown();
-  delete file_level_metadata[1].reflection;
-  _QuantizationLevel_default_instance_.Shutdown();
+  _Tuple_default_instance_.Shutdown();
   delete file_level_metadata[2].reflection;
-  _Gradient_default_instance_.Shutdown();
+  _QuantizationLevel_default_instance_.Shutdown();
   delete file_level_metadata[3].reflection;
-  _PartialState_default_instance_.Shutdown();
+  _Gradient_default_instance_.Shutdown();
   delete file_level_metadata[4].reflection;
-  _GradientAndLoss_default_instance_.Shutdown();
+  _PartialState_default_instance_.Shutdown();
   delete file_level_metadata[5].reflection;
-  _PartialStateAndLoss_default_instance_.Shutdown();
+  _GradientAndLoss_default_instance_.Shutdown();
   delete file_level_metadata[6].reflection;
+  _PartialStateAndLoss_default_instance_.Shutdown();
+  delete file_level_metadata[7].reflection;
 }
 
 void TableStruct::InitDefaultsImpl() {
@@ -153,15 +165,18 @@ void TableStruct::InitDefaultsImpl() {
 
   ::google::protobuf::internal::InitProtobufDefaults();
   ::tensorflow::protobuf_tensorflow_2fcore_2fframework_2ftensor_2eproto::InitDefaults();
+  ::tensorflow::protobuf_tensorflow_2fcore_2fframework_2fgraph_2eproto::InitDefaults();
   _Empty_default_instance_.DefaultConstruct();
-  _TuplePaLrItv_default_instance_.DefaultConstruct();
+  _Tuple_default_instance_.DefaultConstruct();
   _QuantizationLevel_default_instance_.DefaultConstruct();
   _Gradient_default_instance_.DefaultConstruct();
   _PartialState_default_instance_.DefaultConstruct();
   _GradientAndLoss_default_instance_.DefaultConstruct();
   _PartialStateAndLoss_default_instance_.DefaultConstruct();
-  _TuplePaLrItv_default_instance_.get_mutable()->parameter_ = const_cast< ::tensorflow::TensorProto*>(
+  _Tuple_default_instance_.get_mutable()->parameter_ = const_cast< ::tensorflow::TensorProto*>(
       ::tensorflow::TensorProto::internal_default_instance());
+  _Tuple_default_instance_.get_mutable()->graph_ = const_cast< ::tensorflow::GraphDef*>(
+      ::tensorflow::GraphDef::internal_default_instance());
   _Gradient_default_instance_.get_mutable()->tensor_ge_8_ = const_cast< ::tensorflow::TensorProto*>(
       ::tensorflow::TensorProto::internal_default_instance());
   _PartialState_default_instance_.get_mutable()->tensor_ = const_cast< ::tensorflow::TensorProto*>(
@@ -180,35 +195,41 @@ void AddDescriptorsImpl() {
   InitDefaults();
   static const char descriptor[] = {
       "\n\021rpc_service.proto\022\017adaptive_system\032&te"
-      "nsorflow/core/framework/tensor.proto\"\007\n\005"
-      "Empty\"X\n\014TuplePaLrItv\022*\n\tparameter\030\001 \001(\013"
-      "2\027.tensorflow.TensorProto\022\n\n\002lr\030\002 \001(\002\022\020\n"
-      "\010interval\030\003 \001(\005\"E\n\021QuantizationLevel\0220\n\005"
-      "level\030\001 \001(\0162!.adaptive_system.GRAD_QUANT"
-      "_LEVEL\"\231\001\n\010Gradient\0220\n\005level\030\001 \001(\0162!.ada"
-      "ptive_system.GRAD_QUANT_LEVEL\022,\n\013tensor_"
-      "ge_8\030\002 \001(\0132\027.tensorflow.TensorProto\022\023\n\013t"
-      "ensor_le_8\030\003 \001(\014\022\013\n\003max\030\004 \001(\002\022\013\n\003min\030\005 \001"
-      "(\002\"7\n\014PartialState\022\'\n\006tensor\030\001 \001(\0132\027.ten"
-      "sorflow.TensorProto\"H\n\017GradientAndLoss\022\'"
-      "\n\004grad\030\001 \001(\0132\031.adaptive_system.Gradient\022"
-      "\014\n\004loss\030\002 \001(\002\"N\n\023PartialStateAndLoss\022)\n\002"
-      "ps\030\001 \001(\0132\035.adaptive_system.PartialState\022"
-      "\014\n\004loss\030\002 \001(\002*G\n\020GRAD_QUANT_LEVEL\022\007\n\003TWO"
-      "\020\000\022\010\n\004FOUR\020\001\022\t\n\005EIGHT\020\002\022\013\n\007SIXTEEN\020\003\022\010\n\004"
-      "NONE\020\0042\373\001\n\rSystemControl\022F\n\rretrieveTupl"
-      "e\022\026.adaptive_system.Empty\032\035.adaptive_sys"
-      "tem.TuplePaLrItv\022K\n\014sendGradient\022 .adapt"
-      "ive_system.GradientAndLoss\032\031.adaptive_sy"
-      "stem.Gradient\022U\n\tsendState\022$.adaptive_sy"
-      "stem.PartialStateAndLoss\032\".adaptive_syst"
-      "em.QuantizationLevelb\006proto3"
+      "nsorflow/core/framework/tensor.proto\032%te"
+      "nsorflow/core/framework/graph.proto\"\007\n\005E"
+      "mpty\"\372\001\n\005Tuple\022*\n\tparameter\030\001 \001(\0132\027.tens"
+      "orflow.TensorProto\022\n\n\002lr\030\002 \001(\002\022\020\n\010interv"
+      "al\030\003 \001(\005\022#\n\005graph\030\004 \001(\0132\024.tensorflow.Gra"
+      "phDef\022I\n\023action_to_node_name\030\005 \003(\0132,.ada"
+      "ptive_system.Tuple.ActionToNodeNameEntry"
+      "\0327\n\025ActionToNodeNameEntry\022\013\n\003key\030\001 \001(\t\022\r"
+      "\n\005value\030\002 \001(\t:\0028\001\"E\n\021QuantizationLevel\0220"
+      "\n\005level\030\001 \001(\0162!.adaptive_system.GRAD_QUA"
+      "NT_LEVEL\"\231\001\n\010Gradient\0220\n\005level\030\001 \001(\0162!.a"
+      "daptive_system.GRAD_QUANT_LEVEL\022,\n\013tenso"
+      "r_ge_8\030\002 \001(\0132\027.tensorflow.TensorProto\022\023\n"
+      "\013tensor_le_8\030\003 \001(\014\022\013\n\003max\030\004 \001(\002\022\013\n\003min\030\005"
+      " \001(\002\"7\n\014PartialState\022\'\n\006tensor\030\001 \001(\0132\027.t"
+      "ensorflow.TensorProto\"H\n\017GradientAndLoss"
+      "\022\'\n\004grad\030\001 \001(\0132\031.adaptive_system.Gradien"
+      "t\022\014\n\004loss\030\002 \001(\002\"N\n\023PartialStateAndLoss\022)"
+      "\n\002ps\030\001 \001(\0132\035.adaptive_system.PartialStat"
+      "e\022\014\n\004loss\030\002 \001(\002*G\n\020GRAD_QUANT_LEVEL\022\007\n\003T"
+      "WO\020\000\022\010\n\004FOUR\020\001\022\t\n\005EIGHT\020\002\022\013\n\007SIXTEEN\020\003\022\010"
+      "\n\004NONE\020\0042\364\001\n\rSystemControl\022\?\n\rretrieveTu"
+      "ple\022\026.adaptive_system.Empty\032\026.adaptive_s"
+      "ystem.Tuple\022K\n\014sendGradient\022 .adaptive_s"
+      "ystem.GradientAndLoss\032\031.adaptive_system."
+      "Gradient\022U\n\tsendState\022$.adaptive_system."
+      "PartialStateAndLoss\032\".adaptive_system.Qu"
+      "antizationLevelb\006proto3"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 948);
+      descriptor, 1143);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "rpc_service.proto", &protobuf_RegisterTypes);
   ::tensorflow::protobuf_tensorflow_2fcore_2fframework_2ftensor_2eproto::AddDescriptors();
+  ::tensorflow::protobuf_tensorflow_2fcore_2fframework_2fgraph_2eproto::AddDescriptors();
   ::google::protobuf::internal::OnShutdown(&TableStruct::Shutdown);
 }
 
@@ -413,91 +434,122 @@ void Empty::InternalSwap(Empty* other) {
 
 // ===================================================================
 
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
+
+// ===================================================================
+
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int TuplePaLrItv::kParameterFieldNumber;
-const int TuplePaLrItv::kLrFieldNumber;
-const int TuplePaLrItv::kIntervalFieldNumber;
+const int Tuple::kParameterFieldNumber;
+const int Tuple::kLrFieldNumber;
+const int Tuple::kIntervalFieldNumber;
+const int Tuple::kGraphFieldNumber;
+const int Tuple::kActionToNodeNameFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
-TuplePaLrItv::TuplePaLrItv()
+Tuple::Tuple()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
   if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
     protobuf_rpc_5fservice_2eproto::InitDefaults();
   }
   SharedCtor();
-  // @@protoc_insertion_point(constructor:adaptive_system.TuplePaLrItv)
+  // @@protoc_insertion_point(constructor:adaptive_system.Tuple)
 }
-TuplePaLrItv::TuplePaLrItv(const TuplePaLrItv& from)
+Tuple::Tuple(const Tuple& from)
   : ::google::protobuf::Message(),
       _internal_metadata_(NULL),
       _cached_size_(0) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
+  const ::google::protobuf::Descriptor*& Tuple_ActionToNodeNameEntry_descriptor = protobuf_rpc_5fservice_2eproto::file_level_metadata[1].descriptor;
+  action_to_node_name_.SetAssignDescriptorCallback(
+      protobuf_rpc_5fservice_2eproto::protobuf_AssignDescriptorsOnce);
+  action_to_node_name_.SetEntryDescriptor(
+      &Tuple_ActionToNodeNameEntry_descriptor);
+  action_to_node_name_.MergeFrom(from.action_to_node_name_);
   if (from.has_parameter()) {
     parameter_ = new ::tensorflow::TensorProto(*from.parameter_);
   } else {
     parameter_ = NULL;
   }
+  if (from.has_graph()) {
+    graph_ = new ::tensorflow::GraphDef(*from.graph_);
+  } else {
+    graph_ = NULL;
+  }
   ::memcpy(&lr_, &from.lr_,
     reinterpret_cast<char*>(&interval_) -
     reinterpret_cast<char*>(&lr_) + sizeof(interval_));
-  // @@protoc_insertion_point(copy_constructor:adaptive_system.TuplePaLrItv)
+  // @@protoc_insertion_point(copy_constructor:adaptive_system.Tuple)
 }
 
-void TuplePaLrItv::SharedCtor() {
+void Tuple::SharedCtor() {
+  const ::google::protobuf::Descriptor*& Tuple_ActionToNodeNameEntry_descriptor = protobuf_rpc_5fservice_2eproto::file_level_metadata[1].descriptor;
+  action_to_node_name_.SetAssignDescriptorCallback(
+      protobuf_rpc_5fservice_2eproto::protobuf_AssignDescriptorsOnce);
+  action_to_node_name_.SetEntryDescriptor(
+      &Tuple_ActionToNodeNameEntry_descriptor);
   ::memset(&parameter_, 0, reinterpret_cast<char*>(&interval_) -
     reinterpret_cast<char*>(&parameter_) + sizeof(interval_));
   _cached_size_ = 0;
 }
 
-TuplePaLrItv::~TuplePaLrItv() {
-  // @@protoc_insertion_point(destructor:adaptive_system.TuplePaLrItv)
+Tuple::~Tuple() {
+  // @@protoc_insertion_point(destructor:adaptive_system.Tuple)
   SharedDtor();
 }
 
-void TuplePaLrItv::SharedDtor() {
+void Tuple::SharedDtor() {
   if (this != internal_default_instance()) {
     delete parameter_;
   }
+  if (this != internal_default_instance()) {
+    delete graph_;
+  }
 }
 
-void TuplePaLrItv::SetCachedSize(int size) const {
+void Tuple::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* TuplePaLrItv::descriptor() {
+const ::google::protobuf::Descriptor* Tuple::descriptor() {
   protobuf_rpc_5fservice_2eproto::protobuf_AssignDescriptorsOnce();
-  return protobuf_rpc_5fservice_2eproto::file_level_metadata[1].descriptor;
+  return protobuf_rpc_5fservice_2eproto::file_level_metadata[2].descriptor;
 }
 
-const TuplePaLrItv& TuplePaLrItv::default_instance() {
+const Tuple& Tuple::default_instance() {
   protobuf_rpc_5fservice_2eproto::InitDefaults();
   return *internal_default_instance();
 }
 
-TuplePaLrItv* TuplePaLrItv::New(::google::protobuf::Arena* arena) const {
-  TuplePaLrItv* n = new TuplePaLrItv;
+Tuple* Tuple::New(::google::protobuf::Arena* arena) const {
+  Tuple* n = new Tuple;
   if (arena != NULL) {
     arena->Own(n);
   }
   return n;
 }
 
-void TuplePaLrItv::Clear() {
-// @@protoc_insertion_point(message_clear_start:adaptive_system.TuplePaLrItv)
+void Tuple::Clear() {
+// @@protoc_insertion_point(message_clear_start:adaptive_system.Tuple)
+  action_to_node_name_.Clear();
   if (GetArenaNoVirtual() == NULL && parameter_ != NULL) {
     delete parameter_;
   }
   parameter_ = NULL;
+  if (GetArenaNoVirtual() == NULL && graph_ != NULL) {
+    delete graph_;
+  }
+  graph_ = NULL;
   ::memset(&lr_, 0, reinterpret_cast<char*>(&interval_) -
     reinterpret_cast<char*>(&lr_) + sizeof(interval_));
 }
 
-bool TuplePaLrItv::MergePartialFromCodedStream(
+bool Tuple::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:adaptive_system.TuplePaLrItv)
+  // @@protoc_insertion_point(parse_start:adaptive_system.Tuple)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
@@ -543,6 +595,46 @@ bool TuplePaLrItv::MergePartialFromCodedStream(
         break;
       }
 
+      // .tensorflow.GraphDef graph = 4;
+      case 4: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(34u)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_graph()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // map<string, string> action_to_node_name = 5;
+      case 5: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(42u)) {
+          DO_(input->IncrementRecursionDepth());
+          Tuple_ActionToNodeNameEntry::Parser< ::google::protobuf::internal::MapField<
+              ::std::string, ::std::string,
+              ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+              ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+              0 >,
+            ::google::protobuf::Map< ::std::string, ::std::string > > parser(&action_to_node_name_);
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+              input, &parser));
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+            parser.key().data(), parser.key().length(),
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "adaptive_system.Tuple.ActionToNodeNameEntry.key"));
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+            parser.value().data(), parser.value().length(),
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "adaptive_system.Tuple.ActionToNodeNameEntry.value"));
+        } else {
+          goto handle_unusual;
+        }
+        input->UnsafeDecrementRecursionDepth();
+        break;
+      }
+
       default: {
       handle_unusual:
         if (tag == 0 ||
@@ -556,17 +648,17 @@ bool TuplePaLrItv::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:adaptive_system.TuplePaLrItv)
+  // @@protoc_insertion_point(parse_success:adaptive_system.Tuple)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:adaptive_system.TuplePaLrItv)
+  // @@protoc_insertion_point(parse_failure:adaptive_system.Tuple)
   return false;
 #undef DO_
 }
 
-void TuplePaLrItv::SerializeWithCachedSizes(
+void Tuple::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:adaptive_system.TuplePaLrItv)
+  // @@protoc_insertion_point(serialize_start:adaptive_system.Tuple)
   // .tensorflow.TensorProto parameter = 1;
   if (this->has_parameter()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
@@ -583,13 +675,72 @@ void TuplePaLrItv::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->interval(), output);
   }
 
-  // @@protoc_insertion_point(serialize_end:adaptive_system.TuplePaLrItv)
+  // .tensorflow.GraphDef graph = 4;
+  if (this->has_graph()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      4, *this->graph_, output);
+  }
+
+  // map<string, string> action_to_node_name = 5;
+  if (!this->action_to_node_name().empty()) {
+    typedef ::google::protobuf::Map< ::std::string, ::std::string >::const_pointer
+        ConstPtr;
+    typedef ConstPtr SortItem;
+    typedef ::google::protobuf::internal::CompareByDerefFirst<SortItem> Less;
+    struct Utf8Check {
+      static void Check(ConstPtr p) {
+        ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          p->first.data(), p->first.length(),
+          ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+          "adaptive_system.Tuple.ActionToNodeNameEntry.key");
+        ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          p->second.data(), p->second.length(),
+          ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+          "adaptive_system.Tuple.ActionToNodeNameEntry.value");
+      }
+    };
+
+    if (output->IsSerializationDeterministic() &&
+        this->action_to_node_name().size() > 1) {
+      ::google::protobuf::scoped_array<SortItem> items(
+          new SortItem[this->action_to_node_name().size()]);
+      typedef ::google::protobuf::Map< ::std::string, ::std::string >::size_type size_type;
+      size_type n = 0;
+      for (::google::protobuf::Map< ::std::string, ::std::string >::const_iterator
+          it = this->action_to_node_name().begin();
+          it != this->action_to_node_name().end(); ++it, ++n) {
+        items[n] = SortItem(&*it);
+      }
+      ::std::sort(&items[0], &items[n], Less());
+      ::google::protobuf::scoped_ptr<Tuple_ActionToNodeNameEntry> entry;
+      for (size_type i = 0; i < n; i++) {
+        entry.reset(action_to_node_name_.NewEntryWrapper(
+            items[i]->first, items[i]->second));
+        ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+            5, *entry, output);
+        Utf8Check::Check(items[i]);
+      }
+    } else {
+      ::google::protobuf::scoped_ptr<Tuple_ActionToNodeNameEntry> entry;
+      for (::google::protobuf::Map< ::std::string, ::std::string >::const_iterator
+          it = this->action_to_node_name().begin();
+          it != this->action_to_node_name().end(); ++it) {
+        entry.reset(action_to_node_name_.NewEntryWrapper(
+            it->first, it->second));
+        ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+            5, *entry, output);
+        Utf8Check::Check(&*it);
+      }
+    }
+  }
+
+  // @@protoc_insertion_point(serialize_end:adaptive_system.Tuple)
 }
 
-::google::protobuf::uint8* TuplePaLrItv::InternalSerializeWithCachedSizesToArray(
+::google::protobuf::uint8* Tuple::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic;  // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:adaptive_system.TuplePaLrItv)
+  // @@protoc_insertion_point(serialize_to_array_start:adaptive_system.Tuple)
   // .tensorflow.TensorProto parameter = 1;
   if (this->has_parameter()) {
     target = ::google::protobuf::internal::WireFormatLite::
@@ -607,19 +758,104 @@ void TuplePaLrItv::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(3, this->interval(), target);
   }
 
-  // @@protoc_insertion_point(serialize_to_array_end:adaptive_system.TuplePaLrItv)
+  // .tensorflow.GraphDef graph = 4;
+  if (this->has_graph()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      InternalWriteMessageNoVirtualToArray(
+        4, *this->graph_, false, target);
+  }
+
+  // map<string, string> action_to_node_name = 5;
+  if (!this->action_to_node_name().empty()) {
+    typedef ::google::protobuf::Map< ::std::string, ::std::string >::const_pointer
+        ConstPtr;
+    typedef ConstPtr SortItem;
+    typedef ::google::protobuf::internal::CompareByDerefFirst<SortItem> Less;
+    struct Utf8Check {
+      static void Check(ConstPtr p) {
+        ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          p->first.data(), p->first.length(),
+          ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+          "adaptive_system.Tuple.ActionToNodeNameEntry.key");
+        ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          p->second.data(), p->second.length(),
+          ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+          "adaptive_system.Tuple.ActionToNodeNameEntry.value");
+      }
+    };
+
+    if (deterministic &&
+        this->action_to_node_name().size() > 1) {
+      ::google::protobuf::scoped_array<SortItem> items(
+          new SortItem[this->action_to_node_name().size()]);
+      typedef ::google::protobuf::Map< ::std::string, ::std::string >::size_type size_type;
+      size_type n = 0;
+      for (::google::protobuf::Map< ::std::string, ::std::string >::const_iterator
+          it = this->action_to_node_name().begin();
+          it != this->action_to_node_name().end(); ++it, ++n) {
+        items[n] = SortItem(&*it);
+      }
+      ::std::sort(&items[0], &items[n], Less());
+      ::google::protobuf::scoped_ptr<Tuple_ActionToNodeNameEntry> entry;
+      for (size_type i = 0; i < n; i++) {
+        entry.reset(action_to_node_name_.NewEntryWrapper(
+            items[i]->first, items[i]->second));
+        target = ::google::protobuf::internal::WireFormatLite::
+                   InternalWriteMessageNoVirtualToArray(
+                       5, *entry, deterministic, target);
+;
+        Utf8Check::Check(items[i]);
+      }
+    } else {
+      ::google::protobuf::scoped_ptr<Tuple_ActionToNodeNameEntry> entry;
+      for (::google::protobuf::Map< ::std::string, ::std::string >::const_iterator
+          it = this->action_to_node_name().begin();
+          it != this->action_to_node_name().end(); ++it) {
+        entry.reset(action_to_node_name_.NewEntryWrapper(
+            it->first, it->second));
+        target = ::google::protobuf::internal::WireFormatLite::
+                   InternalWriteMessageNoVirtualToArray(
+                       5, *entry, deterministic, target);
+;
+        Utf8Check::Check(&*it);
+      }
+    }
+  }
+
+  // @@protoc_insertion_point(serialize_to_array_end:adaptive_system.Tuple)
   return target;
 }
 
-size_t TuplePaLrItv::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:adaptive_system.TuplePaLrItv)
+size_t Tuple::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:adaptive_system.Tuple)
   size_t total_size = 0;
+
+  // map<string, string> action_to_node_name = 5;
+  total_size += 1 *
+      ::google::protobuf::internal::FromIntSize(this->action_to_node_name_size());
+  {
+    ::google::protobuf::scoped_ptr<Tuple_ActionToNodeNameEntry> entry;
+    for (::google::protobuf::Map< ::std::string, ::std::string >::const_iterator
+        it = this->action_to_node_name().begin();
+        it != this->action_to_node_name().end(); ++it) {
+      entry.reset(action_to_node_name_.NewEntryWrapper(it->first, it->second));
+      total_size += ::google::protobuf::internal::WireFormatLite::
+          MessageSizeNoVirtual(*entry);
+    }
+  }
 
   // .tensorflow.TensorProto parameter = 1;
   if (this->has_parameter()) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
         *this->parameter_);
+  }
+
+  // .tensorflow.GraphDef graph = 4;
+  if (this->has_graph()) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        *this->graph_);
   }
 
   // float lr = 2;
@@ -641,27 +877,31 @@ size_t TuplePaLrItv::ByteSizeLong() const {
   return total_size;
 }
 
-void TuplePaLrItv::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:adaptive_system.TuplePaLrItv)
+void Tuple::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:adaptive_system.Tuple)
   GOOGLE_DCHECK_NE(&from, this);
-  const TuplePaLrItv* source =
-      ::google::protobuf::internal::DynamicCastToGenerated<const TuplePaLrItv>(
+  const Tuple* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const Tuple>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:adaptive_system.TuplePaLrItv)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:adaptive_system.Tuple)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:adaptive_system.TuplePaLrItv)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:adaptive_system.Tuple)
     MergeFrom(*source);
   }
 }
 
-void TuplePaLrItv::MergeFrom(const TuplePaLrItv& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:adaptive_system.TuplePaLrItv)
+void Tuple::MergeFrom(const Tuple& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:adaptive_system.Tuple)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
+  action_to_node_name_.MergeFrom(from.action_to_node_name_);
   if (from.has_parameter()) {
     mutable_parameter()->::tensorflow::TensorProto::MergeFrom(from.parameter());
+  }
+  if (from.has_graph()) {
+    mutable_graph()->::tensorflow::GraphDef::MergeFrom(from.graph());
   }
   if (from.lr() != 0) {
     set_lr(from.lr());
@@ -671,72 +911,74 @@ void TuplePaLrItv::MergeFrom(const TuplePaLrItv& from) {
   }
 }
 
-void TuplePaLrItv::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:adaptive_system.TuplePaLrItv)
+void Tuple::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:adaptive_system.Tuple)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void TuplePaLrItv::CopyFrom(const TuplePaLrItv& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:adaptive_system.TuplePaLrItv)
+void Tuple::CopyFrom(const Tuple& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:adaptive_system.Tuple)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool TuplePaLrItv::IsInitialized() const {
+bool Tuple::IsInitialized() const {
   return true;
 }
 
-void TuplePaLrItv::Swap(TuplePaLrItv* other) {
+void Tuple::Swap(Tuple* other) {
   if (other == this) return;
   InternalSwap(other);
 }
-void TuplePaLrItv::InternalSwap(TuplePaLrItv* other) {
+void Tuple::InternalSwap(Tuple* other) {
+  action_to_node_name_.Swap(&other->action_to_node_name_);
   std::swap(parameter_, other->parameter_);
+  std::swap(graph_, other->graph_);
   std::swap(lr_, other->lr_);
   std::swap(interval_, other->interval_);
   std::swap(_cached_size_, other->_cached_size_);
 }
 
-::google::protobuf::Metadata TuplePaLrItv::GetMetadata() const {
+::google::protobuf::Metadata Tuple::GetMetadata() const {
   protobuf_rpc_5fservice_2eproto::protobuf_AssignDescriptorsOnce();
-  return protobuf_rpc_5fservice_2eproto::file_level_metadata[1];
+  return protobuf_rpc_5fservice_2eproto::file_level_metadata[2];
 }
 
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
-// TuplePaLrItv
+// Tuple
 
 // .tensorflow.TensorProto parameter = 1;
-bool TuplePaLrItv::has_parameter() const {
+bool Tuple::has_parameter() const {
   return this != internal_default_instance() && parameter_ != NULL;
 }
-void TuplePaLrItv::clear_parameter() {
+void Tuple::clear_parameter() {
   if (GetArenaNoVirtual() == NULL && parameter_ != NULL) delete parameter_;
   parameter_ = NULL;
 }
-const ::tensorflow::TensorProto& TuplePaLrItv::parameter() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.TuplePaLrItv.parameter)
+const ::tensorflow::TensorProto& Tuple::parameter() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.Tuple.parameter)
   return parameter_ != NULL ? *parameter_
                          : *::tensorflow::TensorProto::internal_default_instance();
 }
-::tensorflow::TensorProto* TuplePaLrItv::mutable_parameter() {
+::tensorflow::TensorProto* Tuple::mutable_parameter() {
   
   if (parameter_ == NULL) {
     parameter_ = new ::tensorflow::TensorProto;
   }
-  // @@protoc_insertion_point(field_mutable:adaptive_system.TuplePaLrItv.parameter)
+  // @@protoc_insertion_point(field_mutable:adaptive_system.Tuple.parameter)
   return parameter_;
 }
-::tensorflow::TensorProto* TuplePaLrItv::release_parameter() {
-  // @@protoc_insertion_point(field_release:adaptive_system.TuplePaLrItv.parameter)
+::tensorflow::TensorProto* Tuple::release_parameter() {
+  // @@protoc_insertion_point(field_release:adaptive_system.Tuple.parameter)
   
   ::tensorflow::TensorProto* temp = parameter_;
   parameter_ = NULL;
   return temp;
 }
-void TuplePaLrItv::set_allocated_parameter(::tensorflow::TensorProto* parameter) {
+void Tuple::set_allocated_parameter(::tensorflow::TensorProto* parameter) {
   delete parameter_;
   if (parameter != NULL && parameter->GetArena() != NULL) {
     ::tensorflow::TensorProto* new_parameter = new ::tensorflow::TensorProto;
@@ -749,35 +991,97 @@ void TuplePaLrItv::set_allocated_parameter(::tensorflow::TensorProto* parameter)
   } else {
     
   }
-  // @@protoc_insertion_point(field_set_allocated:adaptive_system.TuplePaLrItv.parameter)
+  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Tuple.parameter)
 }
 
 // float lr = 2;
-void TuplePaLrItv::clear_lr() {
+void Tuple::clear_lr() {
   lr_ = 0;
 }
-float TuplePaLrItv::lr() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.TuplePaLrItv.lr)
+float Tuple::lr() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.Tuple.lr)
   return lr_;
 }
-void TuplePaLrItv::set_lr(float value) {
+void Tuple::set_lr(float value) {
   
   lr_ = value;
-  // @@protoc_insertion_point(field_set:adaptive_system.TuplePaLrItv.lr)
+  // @@protoc_insertion_point(field_set:adaptive_system.Tuple.lr)
 }
 
 // int32 interval = 3;
-void TuplePaLrItv::clear_interval() {
+void Tuple::clear_interval() {
   interval_ = 0;
 }
-::google::protobuf::int32 TuplePaLrItv::interval() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.TuplePaLrItv.interval)
+::google::protobuf::int32 Tuple::interval() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.Tuple.interval)
   return interval_;
 }
-void TuplePaLrItv::set_interval(::google::protobuf::int32 value) {
+void Tuple::set_interval(::google::protobuf::int32 value) {
   
   interval_ = value;
-  // @@protoc_insertion_point(field_set:adaptive_system.TuplePaLrItv.interval)
+  // @@protoc_insertion_point(field_set:adaptive_system.Tuple.interval)
+}
+
+// .tensorflow.GraphDef graph = 4;
+bool Tuple::has_graph() const {
+  return this != internal_default_instance() && graph_ != NULL;
+}
+void Tuple::clear_graph() {
+  if (GetArenaNoVirtual() == NULL && graph_ != NULL) delete graph_;
+  graph_ = NULL;
+}
+const ::tensorflow::GraphDef& Tuple::graph() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.Tuple.graph)
+  return graph_ != NULL ? *graph_
+                         : *::tensorflow::GraphDef::internal_default_instance();
+}
+::tensorflow::GraphDef* Tuple::mutable_graph() {
+  
+  if (graph_ == NULL) {
+    graph_ = new ::tensorflow::GraphDef;
+  }
+  // @@protoc_insertion_point(field_mutable:adaptive_system.Tuple.graph)
+  return graph_;
+}
+::tensorflow::GraphDef* Tuple::release_graph() {
+  // @@protoc_insertion_point(field_release:adaptive_system.Tuple.graph)
+  
+  ::tensorflow::GraphDef* temp = graph_;
+  graph_ = NULL;
+  return temp;
+}
+void Tuple::set_allocated_graph(::tensorflow::GraphDef* graph) {
+  delete graph_;
+  if (graph != NULL && graph->GetArena() != NULL) {
+    ::tensorflow::GraphDef* new_graph = new ::tensorflow::GraphDef;
+    new_graph->CopyFrom(*graph);
+    graph = new_graph;
+  }
+  graph_ = graph;
+  if (graph) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Tuple.graph)
+}
+
+// map<string, string> action_to_node_name = 5;
+int Tuple::action_to_node_name_size() const {
+  return action_to_node_name_.size();
+}
+void Tuple::clear_action_to_node_name() {
+  action_to_node_name_.Clear();
+}
+ const ::google::protobuf::Map< ::std::string, ::std::string >&
+Tuple::action_to_node_name() const {
+  // @@protoc_insertion_point(field_map:adaptive_system.Tuple.action_to_node_name)
+  return action_to_node_name_.GetMap();
+}
+ ::google::protobuf::Map< ::std::string, ::std::string >*
+Tuple::mutable_action_to_node_name() {
+  // @@protoc_insertion_point(field_mutable_map:adaptive_system.Tuple.action_to_node_name)
+  return action_to_node_name_.MutableMap();
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
@@ -825,7 +1129,7 @@ void QuantizationLevel::SetCachedSize(int size) const {
 }
 const ::google::protobuf::Descriptor* QuantizationLevel::descriptor() {
   protobuf_rpc_5fservice_2eproto::protobuf_AssignDescriptorsOnce();
-  return protobuf_rpc_5fservice_2eproto::file_level_metadata[2].descriptor;
+  return protobuf_rpc_5fservice_2eproto::file_level_metadata[3].descriptor;
 }
 
 const QuantizationLevel& QuantizationLevel::default_instance() {
@@ -988,7 +1292,7 @@ void QuantizationLevel::InternalSwap(QuantizationLevel* other) {
 
 ::google::protobuf::Metadata QuantizationLevel::GetMetadata() const {
   protobuf_rpc_5fservice_2eproto::protobuf_AssignDescriptorsOnce();
-  return protobuf_rpc_5fservice_2eproto::file_level_metadata[2];
+  return protobuf_rpc_5fservice_2eproto::file_level_metadata[3];
 }
 
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
@@ -1074,7 +1378,7 @@ void Gradient::SetCachedSize(int size) const {
 }
 const ::google::protobuf::Descriptor* Gradient::descriptor() {
   protobuf_rpc_5fservice_2eproto::protobuf_AssignDescriptorsOnce();
-  return protobuf_rpc_5fservice_2eproto::file_level_metadata[3].descriptor;
+  return protobuf_rpc_5fservice_2eproto::file_level_metadata[4].descriptor;
 }
 
 const Gradient& Gradient::default_instance() {
@@ -1382,7 +1686,7 @@ void Gradient::InternalSwap(Gradient* other) {
 
 ::google::protobuf::Metadata Gradient::GetMetadata() const {
   protobuf_rpc_5fservice_2eproto::protobuf_AssignDescriptorsOnce();
-  return protobuf_rpc_5fservice_2eproto::file_level_metadata[3];
+  return protobuf_rpc_5fservice_2eproto::file_level_metadata[4];
 }
 
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
@@ -1578,7 +1882,7 @@ void PartialState::SetCachedSize(int size) const {
 }
 const ::google::protobuf::Descriptor* PartialState::descriptor() {
   protobuf_rpc_5fservice_2eproto::protobuf_AssignDescriptorsOnce();
-  return protobuf_rpc_5fservice_2eproto::file_level_metadata[4].descriptor;
+  return protobuf_rpc_5fservice_2eproto::file_level_metadata[5].descriptor;
 }
 
 const PartialState& PartialState::default_instance() {
@@ -1743,7 +2047,7 @@ void PartialState::InternalSwap(PartialState* other) {
 
 ::google::protobuf::Metadata PartialState::GetMetadata() const {
   protobuf_rpc_5fservice_2eproto::protobuf_AssignDescriptorsOnce();
-  return protobuf_rpc_5fservice_2eproto::file_level_metadata[4];
+  return protobuf_rpc_5fservice_2eproto::file_level_metadata[5];
 }
 
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
@@ -1848,7 +2152,7 @@ void GradientAndLoss::SetCachedSize(int size) const {
 }
 const ::google::protobuf::Descriptor* GradientAndLoss::descriptor() {
   protobuf_rpc_5fservice_2eproto::protobuf_AssignDescriptorsOnce();
-  return protobuf_rpc_5fservice_2eproto::file_level_metadata[5].descriptor;
+  return protobuf_rpc_5fservice_2eproto::file_level_metadata[6].descriptor;
 }
 
 const GradientAndLoss& GradientAndLoss::default_instance() {
@@ -2047,7 +2351,7 @@ void GradientAndLoss::InternalSwap(GradientAndLoss* other) {
 
 ::google::protobuf::Metadata GradientAndLoss::GetMetadata() const {
   protobuf_rpc_5fservice_2eproto::protobuf_AssignDescriptorsOnce();
-  return protobuf_rpc_5fservice_2eproto::file_level_metadata[5];
+  return protobuf_rpc_5fservice_2eproto::file_level_metadata[6];
 }
 
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
@@ -2161,7 +2465,7 @@ void PartialStateAndLoss::SetCachedSize(int size) const {
 }
 const ::google::protobuf::Descriptor* PartialStateAndLoss::descriptor() {
   protobuf_rpc_5fservice_2eproto::protobuf_AssignDescriptorsOnce();
-  return protobuf_rpc_5fservice_2eproto::file_level_metadata[6].descriptor;
+  return protobuf_rpc_5fservice_2eproto::file_level_metadata[7].descriptor;
 }
 
 const PartialStateAndLoss& PartialStateAndLoss::default_instance() {
@@ -2360,7 +2664,7 @@ void PartialStateAndLoss::InternalSwap(PartialStateAndLoss* other) {
 
 ::google::protobuf::Metadata PartialStateAndLoss::GetMetadata() const {
   protobuf_rpc_5fservice_2eproto::protobuf_AssignDescriptorsOnce();
-  return protobuf_rpc_5fservice_2eproto::file_level_metadata[6];
+  return protobuf_rpc_5fservice_2eproto::file_level_metadata[7];
 }
 
 #if PROTOBUF_INLINE_NOT_IN_HEADERS

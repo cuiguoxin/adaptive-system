@@ -27,9 +27,12 @@
 #include <google/protobuf/message.h>
 #include <google/protobuf/repeated_field.h>  // IWYU pragma: export
 #include <google/protobuf/extension_set.h>  // IWYU pragma: export
+#include <google/protobuf/map.h>
+#include <google/protobuf/map_field_inl.h>
 #include <google/protobuf/generated_enum_reflection.h>
 #include <google/protobuf/unknown_field_set.h>
 #include "tensorflow/core/framework/tensor.pb.h"
+#include "tensorflow/core/framework/graph.pb.h"
 // @@protoc_insertion_point(includes)
 namespace adaptive_system {
 class Empty;
@@ -50,11 +53,14 @@ extern PartialStateAndLossDefaultTypeInternal _PartialStateAndLoss_default_insta
 class QuantizationLevel;
 class QuantizationLevelDefaultTypeInternal;
 extern QuantizationLevelDefaultTypeInternal _QuantizationLevel_default_instance_;
-class TuplePaLrItv;
-class TuplePaLrItvDefaultTypeInternal;
-extern TuplePaLrItvDefaultTypeInternal _TuplePaLrItv_default_instance_;
+class Tuple;
+class TupleDefaultTypeInternal;
+extern TupleDefaultTypeInternal _Tuple_default_instance_;
 }  // namespace adaptive_system
 namespace tensorflow {
+class GraphDef;
+class GraphDefDefaultTypeInternal;
+extern GraphDefDefaultTypeInternal _GraphDef_default_instance_;
 class TensorProto;
 class TensorProtoDefaultTypeInternal;
 extern TensorProtoDefaultTypeInternal _TensorProto_default_instance_;
@@ -175,37 +181,40 @@ class Empty : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
 };
 // -------------------------------------------------------------------
 
-class TuplePaLrItv : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:adaptive_system.TuplePaLrItv) */ {
+
+// -------------------------------------------------------------------
+
+class Tuple : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:adaptive_system.Tuple) */ {
  public:
-  TuplePaLrItv();
-  virtual ~TuplePaLrItv();
+  Tuple();
+  virtual ~Tuple();
 
-  TuplePaLrItv(const TuplePaLrItv& from);
+  Tuple(const Tuple& from);
 
-  inline TuplePaLrItv& operator=(const TuplePaLrItv& from) {
+  inline Tuple& operator=(const Tuple& from) {
     CopyFrom(from);
     return *this;
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const TuplePaLrItv& default_instance();
+  static const Tuple& default_instance();
 
-  static inline const TuplePaLrItv* internal_default_instance() {
-    return reinterpret_cast<const TuplePaLrItv*>(
-               &_TuplePaLrItv_default_instance_);
+  static inline const Tuple* internal_default_instance() {
+    return reinterpret_cast<const Tuple*>(
+               &_Tuple_default_instance_);
   }
 
-  void Swap(TuplePaLrItv* other);
+  void Swap(Tuple* other);
 
   // implements Message ----------------------------------------------
 
-  inline TuplePaLrItv* New() const PROTOBUF_FINAL { return New(NULL); }
+  inline Tuple* New() const PROTOBUF_FINAL { return New(NULL); }
 
-  TuplePaLrItv* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
+  Tuple* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
   void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
   void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
-  void CopyFrom(const TuplePaLrItv& from);
-  void MergeFrom(const TuplePaLrItv& from);
+  void CopyFrom(const Tuple& from);
+  void MergeFrom(const Tuple& from);
   void Clear() PROTOBUF_FINAL;
   bool IsInitialized() const PROTOBUF_FINAL;
 
@@ -226,7 +235,7 @@ class TuplePaLrItv : public ::google::protobuf::Message /* @@protoc_insertion_po
   void SharedCtor();
   void SharedDtor();
   void SetCachedSize(int size) const PROTOBUF_FINAL;
-  void InternalSwap(TuplePaLrItv* other);
+  void InternalSwap(Tuple* other);
   private:
   inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
     return NULL;
@@ -240,7 +249,17 @@ class TuplePaLrItv : public ::google::protobuf::Message /* @@protoc_insertion_po
 
   // nested types ----------------------------------------------------
 
+
   // accessors -------------------------------------------------------
+
+  // map<string, string> action_to_node_name = 5;
+  int action_to_node_name_size() const;
+  void clear_action_to_node_name();
+  static const int kActionToNodeNameFieldNumber = 5;
+  const ::google::protobuf::Map< ::std::string, ::std::string >&
+      action_to_node_name() const;
+  ::google::protobuf::Map< ::std::string, ::std::string >*
+      mutable_action_to_node_name();
 
   // .tensorflow.TensorProto parameter = 1;
   bool has_parameter() const;
@@ -250,6 +269,15 @@ class TuplePaLrItv : public ::google::protobuf::Message /* @@protoc_insertion_po
   ::tensorflow::TensorProto* mutable_parameter();
   ::tensorflow::TensorProto* release_parameter();
   void set_allocated_parameter(::tensorflow::TensorProto* parameter);
+
+  // .tensorflow.GraphDef graph = 4;
+  bool has_graph() const;
+  void clear_graph();
+  static const int kGraphFieldNumber = 4;
+  const ::tensorflow::GraphDef& graph() const;
+  ::tensorflow::GraphDef* mutable_graph();
+  ::tensorflow::GraphDef* release_graph();
+  void set_allocated_graph(::tensorflow::GraphDef* graph);
 
   // float lr = 2;
   void clear_lr();
@@ -263,11 +291,23 @@ class TuplePaLrItv : public ::google::protobuf::Message /* @@protoc_insertion_po
   ::google::protobuf::int32 interval() const;
   void set_interval(::google::protobuf::int32 value);
 
-  // @@protoc_insertion_point(class_scope:adaptive_system.TuplePaLrItv)
+  // @@protoc_insertion_point(class_scope:adaptive_system.Tuple)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  typedef ::google::protobuf::internal::MapEntryLite<
+      ::std::string, ::std::string,
+      ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+      ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+      0 >
+      Tuple_ActionToNodeNameEntry;
+  ::google::protobuf::internal::MapField<
+      ::std::string, ::std::string,
+      ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+      ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+      0 > action_to_node_name_;
   ::tensorflow::TensorProto* parameter_;
+  ::tensorflow::GraphDef* graph_;
   float lr_;
   ::google::protobuf::int32 interval_;
   mutable int _cached_size_;
@@ -760,37 +800,39 @@ class PartialStateAndLoss : public ::google::protobuf::Message /* @@protoc_inser
 
 // -------------------------------------------------------------------
 
-// TuplePaLrItv
+// -------------------------------------------------------------------
+
+// Tuple
 
 // .tensorflow.TensorProto parameter = 1;
-inline bool TuplePaLrItv::has_parameter() const {
+inline bool Tuple::has_parameter() const {
   return this != internal_default_instance() && parameter_ != NULL;
 }
-inline void TuplePaLrItv::clear_parameter() {
+inline void Tuple::clear_parameter() {
   if (GetArenaNoVirtual() == NULL && parameter_ != NULL) delete parameter_;
   parameter_ = NULL;
 }
-inline const ::tensorflow::TensorProto& TuplePaLrItv::parameter() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.TuplePaLrItv.parameter)
+inline const ::tensorflow::TensorProto& Tuple::parameter() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.Tuple.parameter)
   return parameter_ != NULL ? *parameter_
                          : *::tensorflow::TensorProto::internal_default_instance();
 }
-inline ::tensorflow::TensorProto* TuplePaLrItv::mutable_parameter() {
+inline ::tensorflow::TensorProto* Tuple::mutable_parameter() {
   
   if (parameter_ == NULL) {
     parameter_ = new ::tensorflow::TensorProto;
   }
-  // @@protoc_insertion_point(field_mutable:adaptive_system.TuplePaLrItv.parameter)
+  // @@protoc_insertion_point(field_mutable:adaptive_system.Tuple.parameter)
   return parameter_;
 }
-inline ::tensorflow::TensorProto* TuplePaLrItv::release_parameter() {
-  // @@protoc_insertion_point(field_release:adaptive_system.TuplePaLrItv.parameter)
+inline ::tensorflow::TensorProto* Tuple::release_parameter() {
+  // @@protoc_insertion_point(field_release:adaptive_system.Tuple.parameter)
   
   ::tensorflow::TensorProto* temp = parameter_;
   parameter_ = NULL;
   return temp;
 }
-inline void TuplePaLrItv::set_allocated_parameter(::tensorflow::TensorProto* parameter) {
+inline void Tuple::set_allocated_parameter(::tensorflow::TensorProto* parameter) {
   delete parameter_;
   if (parameter != NULL && parameter->GetArena() != NULL) {
     ::tensorflow::TensorProto* new_parameter = new ::tensorflow::TensorProto;
@@ -803,35 +845,97 @@ inline void TuplePaLrItv::set_allocated_parameter(::tensorflow::TensorProto* par
   } else {
     
   }
-  // @@protoc_insertion_point(field_set_allocated:adaptive_system.TuplePaLrItv.parameter)
+  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Tuple.parameter)
 }
 
 // float lr = 2;
-inline void TuplePaLrItv::clear_lr() {
+inline void Tuple::clear_lr() {
   lr_ = 0;
 }
-inline float TuplePaLrItv::lr() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.TuplePaLrItv.lr)
+inline float Tuple::lr() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.Tuple.lr)
   return lr_;
 }
-inline void TuplePaLrItv::set_lr(float value) {
+inline void Tuple::set_lr(float value) {
   
   lr_ = value;
-  // @@protoc_insertion_point(field_set:adaptive_system.TuplePaLrItv.lr)
+  // @@protoc_insertion_point(field_set:adaptive_system.Tuple.lr)
 }
 
 // int32 interval = 3;
-inline void TuplePaLrItv::clear_interval() {
+inline void Tuple::clear_interval() {
   interval_ = 0;
 }
-inline ::google::protobuf::int32 TuplePaLrItv::interval() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.TuplePaLrItv.interval)
+inline ::google::protobuf::int32 Tuple::interval() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.Tuple.interval)
   return interval_;
 }
-inline void TuplePaLrItv::set_interval(::google::protobuf::int32 value) {
+inline void Tuple::set_interval(::google::protobuf::int32 value) {
   
   interval_ = value;
-  // @@protoc_insertion_point(field_set:adaptive_system.TuplePaLrItv.interval)
+  // @@protoc_insertion_point(field_set:adaptive_system.Tuple.interval)
+}
+
+// .tensorflow.GraphDef graph = 4;
+inline bool Tuple::has_graph() const {
+  return this != internal_default_instance() && graph_ != NULL;
+}
+inline void Tuple::clear_graph() {
+  if (GetArenaNoVirtual() == NULL && graph_ != NULL) delete graph_;
+  graph_ = NULL;
+}
+inline const ::tensorflow::GraphDef& Tuple::graph() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.Tuple.graph)
+  return graph_ != NULL ? *graph_
+                         : *::tensorflow::GraphDef::internal_default_instance();
+}
+inline ::tensorflow::GraphDef* Tuple::mutable_graph() {
+  
+  if (graph_ == NULL) {
+    graph_ = new ::tensorflow::GraphDef;
+  }
+  // @@protoc_insertion_point(field_mutable:adaptive_system.Tuple.graph)
+  return graph_;
+}
+inline ::tensorflow::GraphDef* Tuple::release_graph() {
+  // @@protoc_insertion_point(field_release:adaptive_system.Tuple.graph)
+  
+  ::tensorflow::GraphDef* temp = graph_;
+  graph_ = NULL;
+  return temp;
+}
+inline void Tuple::set_allocated_graph(::tensorflow::GraphDef* graph) {
+  delete graph_;
+  if (graph != NULL && graph->GetArena() != NULL) {
+    ::tensorflow::GraphDef* new_graph = new ::tensorflow::GraphDef;
+    new_graph->CopyFrom(*graph);
+    graph = new_graph;
+  }
+  graph_ = graph;
+  if (graph) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Tuple.graph)
+}
+
+// map<string, string> action_to_node_name = 5;
+inline int Tuple::action_to_node_name_size() const {
+  return action_to_node_name_.size();
+}
+inline void Tuple::clear_action_to_node_name() {
+  action_to_node_name_.Clear();
+}
+inline const ::google::protobuf::Map< ::std::string, ::std::string >&
+Tuple::action_to_node_name() const {
+  // @@protoc_insertion_point(field_map:adaptive_system.Tuple.action_to_node_name)
+  return action_to_node_name_.GetMap();
+}
+inline ::google::protobuf::Map< ::std::string, ::std::string >*
+Tuple::mutable_action_to_node_name() {
+  // @@protoc_insertion_point(field_mutable_map:adaptive_system.Tuple.action_to_node_name)
+  return action_to_node_name_.MutableMap();
 }
 
 // -------------------------------------------------------------------
@@ -1157,6 +1261,8 @@ inline void PartialStateAndLoss::set_loss(float value) {
 }
 
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

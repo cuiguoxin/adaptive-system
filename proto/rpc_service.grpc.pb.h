@@ -31,9 +31,9 @@ class SystemControl final {
   class StubInterface {
    public:
     virtual ~StubInterface() {}
-    virtual ::grpc::Status retrieveTuple(::grpc::ClientContext* context, const ::adaptive_system::Empty& request, ::adaptive_system::TuplePaLrItv* response) = 0;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::TuplePaLrItv>> AsyncretrieveTuple(::grpc::ClientContext* context, const ::adaptive_system::Empty& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::TuplePaLrItv>>(AsyncretrieveTupleRaw(context, request, cq));
+    virtual ::grpc::Status retrieveTuple(::grpc::ClientContext* context, const ::adaptive_system::Empty& request, ::adaptive_system::Tuple* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::Tuple>> AsyncretrieveTuple(::grpc::ClientContext* context, const ::adaptive_system::Empty& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::Tuple>>(AsyncretrieveTupleRaw(context, request, cq));
     }
     virtual ::grpc::Status sendGradient(::grpc::ClientContext* context, const ::adaptive_system::GradientAndLoss& request, ::adaptive_system::Gradient* response) = 0;
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::Gradient>> AsyncsendGradient(::grpc::ClientContext* context, const ::adaptive_system::GradientAndLoss& request, ::grpc::CompletionQueue* cq) {
@@ -44,16 +44,16 @@ class SystemControl final {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::QuantizationLevel>>(AsyncsendStateRaw(context, request, cq));
     }
   private:
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::TuplePaLrItv>* AsyncretrieveTupleRaw(::grpc::ClientContext* context, const ::adaptive_system::Empty& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::Tuple>* AsyncretrieveTupleRaw(::grpc::ClientContext* context, const ::adaptive_system::Empty& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::Gradient>* AsyncsendGradientRaw(::grpc::ClientContext* context, const ::adaptive_system::GradientAndLoss& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::QuantizationLevel>* AsyncsendStateRaw(::grpc::ClientContext* context, const ::adaptive_system::PartialStateAndLoss& request, ::grpc::CompletionQueue* cq) = 0;
   };
   class Stub final : public StubInterface {
    public:
     Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel);
-    ::grpc::Status retrieveTuple(::grpc::ClientContext* context, const ::adaptive_system::Empty& request, ::adaptive_system::TuplePaLrItv* response) override;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::adaptive_system::TuplePaLrItv>> AsyncretrieveTuple(::grpc::ClientContext* context, const ::adaptive_system::Empty& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::adaptive_system::TuplePaLrItv>>(AsyncretrieveTupleRaw(context, request, cq));
+    ::grpc::Status retrieveTuple(::grpc::ClientContext* context, const ::adaptive_system::Empty& request, ::adaptive_system::Tuple* response) override;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::adaptive_system::Tuple>> AsyncretrieveTuple(::grpc::ClientContext* context, const ::adaptive_system::Empty& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::adaptive_system::Tuple>>(AsyncretrieveTupleRaw(context, request, cq));
     }
     ::grpc::Status sendGradient(::grpc::ClientContext* context, const ::adaptive_system::GradientAndLoss& request, ::adaptive_system::Gradient* response) override;
     std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::adaptive_system::Gradient>> AsyncsendGradient(::grpc::ClientContext* context, const ::adaptive_system::GradientAndLoss& request, ::grpc::CompletionQueue* cq) {
@@ -66,7 +66,7 @@ class SystemControl final {
 
    private:
     std::shared_ptr< ::grpc::ChannelInterface> channel_;
-    ::grpc::ClientAsyncResponseReader< ::adaptive_system::TuplePaLrItv>* AsyncretrieveTupleRaw(::grpc::ClientContext* context, const ::adaptive_system::Empty& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::adaptive_system::Tuple>* AsyncretrieveTupleRaw(::grpc::ClientContext* context, const ::adaptive_system::Empty& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::adaptive_system::Gradient>* AsyncsendGradientRaw(::grpc::ClientContext* context, const ::adaptive_system::GradientAndLoss& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::adaptive_system::QuantizationLevel>* AsyncsendStateRaw(::grpc::ClientContext* context, const ::adaptive_system::PartialStateAndLoss& request, ::grpc::CompletionQueue* cq) override;
     const ::grpc::RpcMethod rpcmethod_retrieveTuple_;
@@ -79,7 +79,7 @@ class SystemControl final {
    public:
     Service();
     virtual ~Service();
-    virtual ::grpc::Status retrieveTuple(::grpc::ServerContext* context, const ::adaptive_system::Empty* request, ::adaptive_system::TuplePaLrItv* response);
+    virtual ::grpc::Status retrieveTuple(::grpc::ServerContext* context, const ::adaptive_system::Empty* request, ::adaptive_system::Tuple* response);
     virtual ::grpc::Status sendGradient(::grpc::ServerContext* context, const ::adaptive_system::GradientAndLoss* request, ::adaptive_system::Gradient* response);
     virtual ::grpc::Status sendState(::grpc::ServerContext* context, const ::adaptive_system::PartialStateAndLoss* request, ::adaptive_system::QuantizationLevel* response);
   };
@@ -95,11 +95,11 @@ class SystemControl final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status retrieveTuple(::grpc::ServerContext* context, const ::adaptive_system::Empty* request, ::adaptive_system::TuplePaLrItv* response) final override {
+    ::grpc::Status retrieveTuple(::grpc::ServerContext* context, const ::adaptive_system::Empty* request, ::adaptive_system::Tuple* response) final override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    void RequestretrieveTuple(::grpc::ServerContext* context, ::adaptive_system::Empty* request, ::grpc::ServerAsyncResponseWriter< ::adaptive_system::TuplePaLrItv>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+    void RequestretrieveTuple(::grpc::ServerContext* context, ::adaptive_system::Empty* request, ::grpc::ServerAsyncResponseWriter< ::adaptive_system::Tuple>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
       ::grpc::Service::RequestAsyncUnary(0, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
@@ -156,7 +156,7 @@ class SystemControl final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status retrieveTuple(::grpc::ServerContext* context, const ::adaptive_system::Empty* request, ::adaptive_system::TuplePaLrItv* response) final override {
+    ::grpc::Status retrieveTuple(::grpc::ServerContext* context, const ::adaptive_system::Empty* request, ::adaptive_system::Tuple* response) final override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
@@ -202,18 +202,18 @@ class SystemControl final {
    public:
     WithStreamedUnaryMethod_retrieveTuple() {
       ::grpc::Service::MarkMethodStreamed(0,
-        new ::grpc::StreamedUnaryHandler< ::adaptive_system::Empty, ::adaptive_system::TuplePaLrItv>(std::bind(&WithStreamedUnaryMethod_retrieveTuple<BaseClass>::StreamedretrieveTuple, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::StreamedUnaryHandler< ::adaptive_system::Empty, ::adaptive_system::Tuple>(std::bind(&WithStreamedUnaryMethod_retrieveTuple<BaseClass>::StreamedretrieveTuple, this, std::placeholders::_1, std::placeholders::_2)));
     }
     ~WithStreamedUnaryMethod_retrieveTuple() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable regular version of this method
-    ::grpc::Status retrieveTuple(::grpc::ServerContext* context, const ::adaptive_system::Empty* request, ::adaptive_system::TuplePaLrItv* response) final override {
+    ::grpc::Status retrieveTuple(::grpc::ServerContext* context, const ::adaptive_system::Empty* request, ::adaptive_system::Tuple* response) final override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     // replace default version of method with streamed unary
-    virtual ::grpc::Status StreamedretrieveTuple(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::adaptive_system::Empty,::adaptive_system::TuplePaLrItv>* server_unary_streamer) = 0;
+    virtual ::grpc::Status StreamedretrieveTuple(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::adaptive_system::Empty,::adaptive_system::Tuple>* server_unary_streamer) = 0;
   };
   template <class BaseClass>
   class WithStreamedUnaryMethod_sendGradient : public BaseClass {

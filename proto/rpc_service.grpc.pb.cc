@@ -32,12 +32,12 @@ SystemControl::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& chan
   , rpcmethod_sendState_(SystemControl_method_names[2], ::grpc::RpcMethod::NORMAL_RPC, channel)
   {}
 
-::grpc::Status SystemControl::Stub::retrieveTuple(::grpc::ClientContext* context, const ::adaptive_system::Empty& request, ::adaptive_system::TuplePaLrItv* response) {
+::grpc::Status SystemControl::Stub::retrieveTuple(::grpc::ClientContext* context, const ::adaptive_system::Empty& request, ::adaptive_system::Tuple* response) {
   return ::grpc::BlockingUnaryCall(channel_.get(), rpcmethod_retrieveTuple_, context, request, response);
 }
 
-::grpc::ClientAsyncResponseReader< ::adaptive_system::TuplePaLrItv>* SystemControl::Stub::AsyncretrieveTupleRaw(::grpc::ClientContext* context, const ::adaptive_system::Empty& request, ::grpc::CompletionQueue* cq) {
-  return new ::grpc::ClientAsyncResponseReader< ::adaptive_system::TuplePaLrItv>(channel_.get(), cq, rpcmethod_retrieveTuple_, context, request);
+::grpc::ClientAsyncResponseReader< ::adaptive_system::Tuple>* SystemControl::Stub::AsyncretrieveTupleRaw(::grpc::ClientContext* context, const ::adaptive_system::Empty& request, ::grpc::CompletionQueue* cq) {
+  return new ::grpc::ClientAsyncResponseReader< ::adaptive_system::Tuple>(channel_.get(), cq, rpcmethod_retrieveTuple_, context, request);
 }
 
 ::grpc::Status SystemControl::Stub::sendGradient(::grpc::ClientContext* context, const ::adaptive_system::GradientAndLoss& request, ::adaptive_system::Gradient* response) {
@@ -60,7 +60,7 @@ SystemControl::Service::Service() {
   AddMethod(new ::grpc::RpcServiceMethod(
       SystemControl_method_names[0],
       ::grpc::RpcMethod::NORMAL_RPC,
-      new ::grpc::RpcMethodHandler< SystemControl::Service, ::adaptive_system::Empty, ::adaptive_system::TuplePaLrItv>(
+      new ::grpc::RpcMethodHandler< SystemControl::Service, ::adaptive_system::Empty, ::adaptive_system::Tuple>(
           std::mem_fn(&SystemControl::Service::retrieveTuple), this)));
   AddMethod(new ::grpc::RpcServiceMethod(
       SystemControl_method_names[1],
@@ -77,7 +77,7 @@ SystemControl::Service::Service() {
 SystemControl::Service::~Service() {
 }
 
-::grpc::Status SystemControl::Service::retrieveTuple(::grpc::ServerContext* context, const ::adaptive_system::Empty* request, ::adaptive_system::TuplePaLrItv* response) {
+::grpc::Status SystemControl::Service::retrieveTuple(::grpc::ServerContext* context, const ::adaptive_system::Empty* request, ::adaptive_system::Tuple* response) {
   (void) context;
   (void) request;
   (void) response;
