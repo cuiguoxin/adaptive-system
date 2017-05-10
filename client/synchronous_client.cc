@@ -1,7 +1,9 @@
+#include <exception>
 #include <iostream>
+#include <map>
 #include <memory>
 #include <string>
-#include <exception>
+
 
 #include <grpc++/grpc++.h>
 
@@ -21,55 +23,65 @@
 
 using grpc::Channel;
 using grpc::ClientContext;
-using grpc::Status;
 
 namespace adaptive_system {
 namespace {
 
 std::unique_ptr<SystemControl::Stub> stub;
+float lr = 0.0;
+std::map<std::string, std::vector<std::string>> action_to_node_name;
 
-tensorflow::Session* getSession() {
+tensorflow::Session* get_session() {
   static tensorflow::Session* session =
       tensorflow::NewSession(tensorflow::SessionOptions());
   return session;
 }
 
-void printError(const Status& status) {
+void print_error(const grpc::Status& status) {
   std::cout << __LINE__ << " line error: error code is " << status.error_code()
+            << ", error message is " << status.error_message() << std::endl;
+  std::terminate();
+}
+void print_error(const tensorflow::Status& status) {
+  std::cout << __LINE__ << " line error: error code is " << status.code()
             << ", error message is " << status.error_message() << std::endl;
   std::terminate();
 }
 }
 // called in the main
-void initStub(std::string const& ip) {
+void init_stub(std::string const& ip) {
   stub = SystemControl::NewStub(
       grpc::CreateChannel(ip, grpc::InsecureChannelCredentials()));
   std::cout << "init stub ok" << std::endl;
 }
 
-void initEverything() {
+void init_everything() {
   Tuple tuple;
   Empty empty;
   ClientContext context;
-  Status status = stub->retrieveTuple(&context, empty, &tuple);
-  if (!status.ok()) {
-    printError(status);
+  grpc::Status grpc_status = stub->retrieveTuple(&context, empty, &tuple);
+  if (!grpc_status.ok()) {
+    print_error(grpc_status);
   }
   tensorflow::TensorProto const& parameter = tuple.parameter();
   tensorflow::GraphDef const& graph_def = tuple.graph();
-  const float lr = tuple.lr();
+  lr = tuple.lr();
   const int interval = tuple.interval();
   const google::protobuf::Map<std::string, std::string> action_to_node_name =
       tuple.action_to_node_name();
+  tensorflow::Status tf_status = getSession()->Create(graph_def);
+  if (!tf_status.ok()) {
+    print_error(tf_status);
+  }
 }
-void closeSession() {
-  getSession()->Close();
-}
-void RunLogic() {}
+
+void close_session() { get_session()->Close(); }
+
+void run_logic() {}
 }
 
 int main(int argc, char* argv[]) {
   std::string ip_port = argv[1];
-  adaptive_system::initStub(ip_port);
-  adaptive_system::RunLogic();
+  adaptive_system::init_stub(ip_port);
+  adaptive_system::run_logic();
 }

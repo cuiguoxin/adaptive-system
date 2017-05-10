@@ -40,13 +40,15 @@ message Gradient {
     float max = 4;
     float min = 5;
 }
-
+message NamedGradients {
+    map<string, Gradient> name_to_gradient = 1;
+}
 message PartialState {
     tensorflow.TensorProto tensor = 1;
 }
 
-message GradientAndLoss {
-    Gradient grad = 1;
+message NamedGradientsAndLoss {
+    NamedGradients named_gradients = 1;
     float loss = 2;
 }
 
@@ -58,7 +60,7 @@ message PartialStateAndLoss {
 service SystemControl {
 
     rpc retrieveTuple(Empty) returns (Tuple);
-    rpc sendGradient(GradientAndLoss) returns (Gradient);
+    rpc sendGradient(NamedGradientsAndLoss) returns (NamedGradients);
     rpc sendState(PartialStateAndLoss) returns (QuantizationLevel);
 
 }
