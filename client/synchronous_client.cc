@@ -1,8 +1,12 @@
+#include <algorithm>
 #include <exception>
+#include <functional>
 #include <iostream>
 #include <map>
 #include <memory>
 #include <string>
+#include <utility>
+#include <vector>
 
 #include <grpc++/grpc++.h>
 
@@ -28,7 +32,11 @@ namespace {
 
 std::unique_ptr<SystemControl::Stub> stub;
 float lr = 0.0;
-std::map<std::string, std::vector<std::string>> action_to_node_name;
+int interval = 0;
+std::map<std::string, Names>* get_map_names() {
+  static std::map<std::string, Names> map_names;
+  return &map_names;
+}
 
 tensorflow::Session* get_session() {
   static tensorflow::Session* session =
@@ -62,13 +70,42 @@ void init_everything() {
   if (!grpc_status.ok()) {
     print_error(grpc_status);
   }
-  tensorflow::TensorProto const& parameter = tuple.parameter();
+  // init map_names
+  google::protobuf::Map<std::string, Names> const& map_names =
+      tuple.map_names();
+  std::for_each(map_names.cbegin(), map_names.cend(),
+                [](google::protobuf::MapPair<std::string, Names> const& p) {
+                  get_map_names()->insert(p);
+                });
+
   tensorflow::GraphDef const& graph_def = tuple.graph();
   lr = tuple.lr();
-  const int interval = tuple.interval();
-  const google::protobuf::Map<std::string, std::string> action_to_node_name =
-      tuple.action_to_node_name();
+  interval = tuple.interval();
   tensorflow::Status tf_status = getSession()->Create(graph_def);
+  if (!tf_status.ok()) {
+    print_error(tf_status);
+  }
+  // init all the variables
+  google::protobuf::Map<std::string, tensorflow::TensorProto> const&
+      map_parameters = tuple.map_parameters();
+  std::vector<std::string> assign_names;
+  std::vector<std::pair<std::string, tensorflow::Tensor>> feeds;
+  std::for_each(
+      map_parameters.cbegin(), map_parameters.cend,
+      [&assign_names, &feeds](
+          google::protobuf::MapPair<std::string, tensorflow::TensorProto> const&
+              pair) {
+        tensorflow::Tensor tensor;
+        tensor.FromProto(pair.second);
+        auto iter = get_map_names()->find(pair.first);
+        std::string assign_name = iter->assign_name;
+        std::string placeholder_name = iter->placeholder_assign_name;
+        assign_names.push_back(assign_name);
+        feeds.push_back(std::pair(placeholder_name, tensor));
+
+      });
+  std::vector<tensorflow::Tensor> outputs;
+  tf_status = getSession()->Run(feeds, {}, assign_names, &outputs);
   if (!tf_status.ok()) {
     print_error(tf_status);
   }
