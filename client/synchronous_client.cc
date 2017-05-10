@@ -4,7 +4,6 @@
 #include <memory>
 #include <string>
 
-
 #include <grpc++/grpc++.h>
 
 #include "proto/rpc_service.grpc.pb.h"
