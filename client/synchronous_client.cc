@@ -12,7 +12,6 @@
 
 #include "proto/rpc_service.grpc.pb.h"
 
-#include "tensorflow/cc/ops/standard_ops.h"
 #include "tensorflow/core/framework/graph.pb.h"
 #include "tensorflow/core/framework/tensor.h"
 #include "tensorflow/core/graph/default_device.h"
@@ -81,7 +80,7 @@ void init_everything() {
   tensorflow::GraphDef const& graph_def = tuple.graph();
   lr = tuple.lr();
   interval = tuple.interval();
-  tensorflow::Status tf_status = getSession()->Create(graph_def);
+  tensorflow::Status tf_status = get_session()->Create(graph_def);
   if (!tf_status.ok()) {
     print_error(tf_status);
   }
@@ -91,21 +90,24 @@ void init_everything() {
   std::vector<std::string> assign_names;
   std::vector<std::pair<std::string, tensorflow::Tensor>> feeds;
   std::for_each(
-      map_parameters.cbegin(), map_parameters.cend,
+      map_parameters.cbegin(), map_parameters.cend(),
       [&assign_names, &feeds](
           google::protobuf::MapPair<std::string, tensorflow::TensorProto> const&
               pair) {
         tensorflow::Tensor tensor;
-        tensor.FromProto(pair.second);
+	bool is_success = tensor.FromProto(pair.second);
+        if (!is_success) {
+          std::terminate();
+        }
         auto iter = get_map_names()->find(pair.first);
-        std::string assign_name = iter->assign_name;
-        std::string placeholder_name = iter->placeholder_assign_name;
+        std::string assign_name = (iter->second).assign_name();
+        std::string placeholder_name = (iter->second).placeholder_assign_name();
         assign_names.push_back(assign_name);
-        feeds.push_back(std::pair(placeholder_name, tensor));
+        feeds.push_back(std::make_pair(placeholder_name, tensor));
 
       });
   std::vector<tensorflow::Tensor> outputs;
-  tf_status = getSession()->Run(feeds, {}, assign_names, &outputs);
+  tf_status = get_session()->Run(feeds, {}, assign_names, &outputs);
   if (!tf_status.ok()) {
     print_error(tf_status);
   }
