@@ -47,6 +47,9 @@ extern NamedGradientsDefaultTypeInternal _NamedGradients_default_instance_;
 class NamedGradientsAndLoss;
 class NamedGradientsAndLossDefaultTypeInternal;
 extern NamedGradientsAndLossDefaultTypeInternal _NamedGradientsAndLoss_default_instance_;
+class Names;
+class NamesDefaultTypeInternal;
+extern NamesDefaultTypeInternal _Names_default_instance_;
 class PartialState;
 class PartialStateDefaultTypeInternal;
 extern PartialStateDefaultTypeInternal _PartialState_default_instance_;
@@ -184,6 +187,175 @@ class Empty : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
 };
 // -------------------------------------------------------------------
 
+class Names : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:adaptive_system.Names) */ {
+ public:
+  Names();
+  virtual ~Names();
+
+  Names(const Names& from);
+
+  inline Names& operator=(const Names& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Names& default_instance();
+
+  static inline const Names* internal_default_instance() {
+    return reinterpret_cast<const Names*>(
+               &_Names_default_instance_);
+  }
+
+  void Swap(Names* other);
+
+  // implements Message ----------------------------------------------
+
+  inline Names* New() const PROTOBUF_FINAL { return New(NULL); }
+
+  Names* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
+  void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void CopyFrom(const Names& from);
+  void MergeFrom(const Names& from);
+  void Clear() PROTOBUF_FINAL;
+  bool IsInitialized() const PROTOBUF_FINAL;
+
+  size_t ByteSizeLong() const PROTOBUF_FINAL;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output)
+      const PROTOBUF_FINAL {
+    return InternalSerializeWithCachedSizesToArray(
+        ::google::protobuf::io::CodedOutputStream::IsDefaultSerializationDeterministic(), output);
+  }
+  int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const PROTOBUF_FINAL;
+  void InternalSwap(Names* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // string variable_name = 1;
+  void clear_variable_name();
+  static const int kVariableNameFieldNumber = 1;
+  const ::std::string& variable_name() const;
+  void set_variable_name(const ::std::string& value);
+  #if LANG_CXX11
+  void set_variable_name(::std::string&& value);
+  #endif
+  void set_variable_name(const char* value);
+  void set_variable_name(const char* value, size_t size);
+  ::std::string* mutable_variable_name();
+  ::std::string* release_variable_name();
+  void set_allocated_variable_name(::std::string* variable_name);
+
+  // string gradient_name = 2;
+  void clear_gradient_name();
+  static const int kGradientNameFieldNumber = 2;
+  const ::std::string& gradient_name() const;
+  void set_gradient_name(const ::std::string& value);
+  #if LANG_CXX11
+  void set_gradient_name(::std::string&& value);
+  #endif
+  void set_gradient_name(const char* value);
+  void set_gradient_name(const char* value, size_t size);
+  ::std::string* mutable_gradient_name();
+  ::std::string* release_gradient_name();
+  void set_allocated_gradient_name(::std::string* gradient_name);
+
+  // string assign_name = 3;
+  void clear_assign_name();
+  static const int kAssignNameFieldNumber = 3;
+  const ::std::string& assign_name() const;
+  void set_assign_name(const ::std::string& value);
+  #if LANG_CXX11
+  void set_assign_name(::std::string&& value);
+  #endif
+  void set_assign_name(const char* value);
+  void set_assign_name(const char* value, size_t size);
+  ::std::string* mutable_assign_name();
+  ::std::string* release_assign_name();
+  void set_allocated_assign_name(::std::string* assign_name);
+
+  // string assign_add_name = 4;
+  void clear_assign_add_name();
+  static const int kAssignAddNameFieldNumber = 4;
+  const ::std::string& assign_add_name() const;
+  void set_assign_add_name(const ::std::string& value);
+  #if LANG_CXX11
+  void set_assign_add_name(::std::string&& value);
+  #endif
+  void set_assign_add_name(const char* value);
+  void set_assign_add_name(const char* value, size_t size);
+  ::std::string* mutable_assign_add_name();
+  ::std::string* release_assign_add_name();
+  void set_allocated_assign_add_name(::std::string* assign_add_name);
+
+  // string placeholder_assign_name = 5;
+  void clear_placeholder_assign_name();
+  static const int kPlaceholderAssignNameFieldNumber = 5;
+  const ::std::string& placeholder_assign_name() const;
+  void set_placeholder_assign_name(const ::std::string& value);
+  #if LANG_CXX11
+  void set_placeholder_assign_name(::std::string&& value);
+  #endif
+  void set_placeholder_assign_name(const char* value);
+  void set_placeholder_assign_name(const char* value, size_t size);
+  ::std::string* mutable_placeholder_assign_name();
+  ::std::string* release_placeholder_assign_name();
+  void set_allocated_placeholder_assign_name(::std::string* placeholder_assign_name);
+
+  // string placeholder_assign_add_name = 6;
+  void clear_placeholder_assign_add_name();
+  static const int kPlaceholderAssignAddNameFieldNumber = 6;
+  const ::std::string& placeholder_assign_add_name() const;
+  void set_placeholder_assign_add_name(const ::std::string& value);
+  #if LANG_CXX11
+  void set_placeholder_assign_add_name(::std::string&& value);
+  #endif
+  void set_placeholder_assign_add_name(const char* value);
+  void set_placeholder_assign_add_name(const char* value, size_t size);
+  ::std::string* mutable_placeholder_assign_add_name();
+  ::std::string* release_placeholder_assign_add_name();
+  void set_allocated_placeholder_assign_add_name(::std::string* placeholder_assign_add_name);
+
+  // @@protoc_insertion_point(class_scope:adaptive_system.Names)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::internal::ArenaStringPtr variable_name_;
+  ::google::protobuf::internal::ArenaStringPtr gradient_name_;
+  ::google::protobuf::internal::ArenaStringPtr assign_name_;
+  ::google::protobuf::internal::ArenaStringPtr assign_add_name_;
+  ::google::protobuf::internal::ArenaStringPtr placeholder_assign_name_;
+  ::google::protobuf::internal::ArenaStringPtr placeholder_assign_add_name_;
+  mutable int _cached_size_;
+  friend struct protobuf_rpc_5fservice_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
+
+// -------------------------------------------------------------------
+
 
 // -------------------------------------------------------------------
 
@@ -255,42 +427,42 @@ class Tuple : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
 
   // accessors -------------------------------------------------------
 
-  // map<string, string> action_to_node_name = 5;
-  int action_to_node_name_size() const;
-  void clear_action_to_node_name();
-  static const int kActionToNodeNameFieldNumber = 5;
-  const ::google::protobuf::Map< ::std::string, ::std::string >&
-      action_to_node_name() const;
-  ::google::protobuf::Map< ::std::string, ::std::string >*
-      mutable_action_to_node_name();
+  // map<string, .adaptive_system.Names> map_names = 1;
+  int map_names_size() const;
+  void clear_map_names();
+  static const int kMapNamesFieldNumber = 1;
+  const ::google::protobuf::Map< ::std::string, ::adaptive_system::Names >&
+      map_names() const;
+  ::google::protobuf::Map< ::std::string, ::adaptive_system::Names >*
+      mutable_map_names();
 
-  // .tensorflow.TensorProto parameter = 1;
-  bool has_parameter() const;
-  void clear_parameter();
-  static const int kParameterFieldNumber = 1;
-  const ::tensorflow::TensorProto& parameter() const;
-  ::tensorflow::TensorProto* mutable_parameter();
-  ::tensorflow::TensorProto* release_parameter();
-  void set_allocated_parameter(::tensorflow::TensorProto* parameter);
+  // map<string, .tensorflow.TensorProto> map_parameters = 2;
+  int map_parameters_size() const;
+  void clear_map_parameters();
+  static const int kMapParametersFieldNumber = 2;
+  const ::google::protobuf::Map< ::std::string, ::tensorflow::TensorProto >&
+      map_parameters() const;
+  ::google::protobuf::Map< ::std::string, ::tensorflow::TensorProto >*
+      mutable_map_parameters();
 
-  // .tensorflow.GraphDef graph = 4;
+  // .tensorflow.GraphDef graph = 5;
   bool has_graph() const;
   void clear_graph();
-  static const int kGraphFieldNumber = 4;
+  static const int kGraphFieldNumber = 5;
   const ::tensorflow::GraphDef& graph() const;
   ::tensorflow::GraphDef* mutable_graph();
   ::tensorflow::GraphDef* release_graph();
   void set_allocated_graph(::tensorflow::GraphDef* graph);
 
-  // float lr = 2;
+  // float lr = 3;
   void clear_lr();
-  static const int kLrFieldNumber = 2;
+  static const int kLrFieldNumber = 3;
   float lr() const;
   void set_lr(float value);
 
-  // int32 interval = 3;
+  // int32 interval = 4;
   void clear_interval();
-  static const int kIntervalFieldNumber = 3;
+  static const int kIntervalFieldNumber = 4;
   ::google::protobuf::int32 interval() const;
   void set_interval(::google::protobuf::int32 value);
 
@@ -299,17 +471,27 @@ class Tuple : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   typedef ::google::protobuf::internal::MapEntryLite<
-      ::std::string, ::std::string,
+      ::std::string, ::adaptive_system::Names,
       ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
-      ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+      ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE,
       0 >
-      Tuple_ActionToNodeNameEntry;
+      Tuple_MapNamesEntry;
   ::google::protobuf::internal::MapField<
-      ::std::string, ::std::string,
+      ::std::string, ::adaptive_system::Names,
       ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+      ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE,
+      0 > map_names_;
+  typedef ::google::protobuf::internal::MapEntryLite<
+      ::std::string, ::tensorflow::TensorProto,
       ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
-      0 > action_to_node_name_;
-  ::tensorflow::TensorProto* parameter_;
+      ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE,
+      0 >
+      Tuple_MapParametersEntry;
+  ::google::protobuf::internal::MapField<
+      ::std::string, ::tensorflow::TensorProto,
+      ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+      ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE,
+      0 > map_parameters_;
   ::tensorflow::GraphDef* graph_;
   float lr_;
   ::google::protobuf::int32 interval_;
@@ -903,55 +1085,365 @@ class PartialStateAndLoss : public ::google::protobuf::Message /* @@protoc_inser
 
 // -------------------------------------------------------------------
 
-// -------------------------------------------------------------------
+// Names
 
-// Tuple
-
-// .tensorflow.TensorProto parameter = 1;
-inline bool Tuple::has_parameter() const {
-  return this != internal_default_instance() && parameter_ != NULL;
+// string variable_name = 1;
+inline void Names::clear_variable_name() {
+  variable_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline void Tuple::clear_parameter() {
-  if (GetArenaNoVirtual() == NULL && parameter_ != NULL) delete parameter_;
-  parameter_ = NULL;
+inline const ::std::string& Names::variable_name() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.Names.variable_name)
+  return variable_name_.GetNoArena();
 }
-inline const ::tensorflow::TensorProto& Tuple::parameter() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.Tuple.parameter)
-  return parameter_ != NULL ? *parameter_
-                         : *::tensorflow::TensorProto::internal_default_instance();
-}
-inline ::tensorflow::TensorProto* Tuple::mutable_parameter() {
+inline void Names::set_variable_name(const ::std::string& value) {
   
-  if (parameter_ == NULL) {
-    parameter_ = new ::tensorflow::TensorProto;
-  }
-  // @@protoc_insertion_point(field_mutable:adaptive_system.Tuple.parameter)
-  return parameter_;
+  variable_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:adaptive_system.Names.variable_name)
 }
-inline ::tensorflow::TensorProto* Tuple::release_parameter() {
-  // @@protoc_insertion_point(field_release:adaptive_system.Tuple.parameter)
+#if LANG_CXX11
+inline void Names::set_variable_name(::std::string&& value) {
   
-  ::tensorflow::TensorProto* temp = parameter_;
-  parameter_ = NULL;
-  return temp;
+  variable_name_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Names.variable_name)
 }
-inline void Tuple::set_allocated_parameter(::tensorflow::TensorProto* parameter) {
-  delete parameter_;
-  if (parameter != NULL && parameter->GetArena() != NULL) {
-    ::tensorflow::TensorProto* new_parameter = new ::tensorflow::TensorProto;
-    new_parameter->CopyFrom(*parameter);
-    parameter = new_parameter;
-  }
-  parameter_ = parameter;
-  if (parameter) {
+#endif
+inline void Names::set_variable_name(const char* value) {
+  
+  variable_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:adaptive_system.Names.variable_name)
+}
+inline void Names::set_variable_name(const char* value, size_t size) {
+  
+  variable_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:adaptive_system.Names.variable_name)
+}
+inline ::std::string* Names::mutable_variable_name() {
+  
+  // @@protoc_insertion_point(field_mutable:adaptive_system.Names.variable_name)
+  return variable_name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* Names::release_variable_name() {
+  // @@protoc_insertion_point(field_release:adaptive_system.Names.variable_name)
+  
+  return variable_name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Names::set_allocated_variable_name(::std::string* variable_name) {
+  if (variable_name != NULL) {
     
   } else {
     
   }
-  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Tuple.parameter)
+  variable_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), variable_name);
+  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Names.variable_name)
 }
 
-// float lr = 2;
+// string gradient_name = 2;
+inline void Names::clear_gradient_name() {
+  gradient_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& Names::gradient_name() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.Names.gradient_name)
+  return gradient_name_.GetNoArena();
+}
+inline void Names::set_gradient_name(const ::std::string& value) {
+  
+  gradient_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:adaptive_system.Names.gradient_name)
+}
+#if LANG_CXX11
+inline void Names::set_gradient_name(::std::string&& value) {
+  
+  gradient_name_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Names.gradient_name)
+}
+#endif
+inline void Names::set_gradient_name(const char* value) {
+  
+  gradient_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:adaptive_system.Names.gradient_name)
+}
+inline void Names::set_gradient_name(const char* value, size_t size) {
+  
+  gradient_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:adaptive_system.Names.gradient_name)
+}
+inline ::std::string* Names::mutable_gradient_name() {
+  
+  // @@protoc_insertion_point(field_mutable:adaptive_system.Names.gradient_name)
+  return gradient_name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* Names::release_gradient_name() {
+  // @@protoc_insertion_point(field_release:adaptive_system.Names.gradient_name)
+  
+  return gradient_name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Names::set_allocated_gradient_name(::std::string* gradient_name) {
+  if (gradient_name != NULL) {
+    
+  } else {
+    
+  }
+  gradient_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), gradient_name);
+  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Names.gradient_name)
+}
+
+// string assign_name = 3;
+inline void Names::clear_assign_name() {
+  assign_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& Names::assign_name() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.Names.assign_name)
+  return assign_name_.GetNoArena();
+}
+inline void Names::set_assign_name(const ::std::string& value) {
+  
+  assign_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:adaptive_system.Names.assign_name)
+}
+#if LANG_CXX11
+inline void Names::set_assign_name(::std::string&& value) {
+  
+  assign_name_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Names.assign_name)
+}
+#endif
+inline void Names::set_assign_name(const char* value) {
+  
+  assign_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:adaptive_system.Names.assign_name)
+}
+inline void Names::set_assign_name(const char* value, size_t size) {
+  
+  assign_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:adaptive_system.Names.assign_name)
+}
+inline ::std::string* Names::mutable_assign_name() {
+  
+  // @@protoc_insertion_point(field_mutable:adaptive_system.Names.assign_name)
+  return assign_name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* Names::release_assign_name() {
+  // @@protoc_insertion_point(field_release:adaptive_system.Names.assign_name)
+  
+  return assign_name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Names::set_allocated_assign_name(::std::string* assign_name) {
+  if (assign_name != NULL) {
+    
+  } else {
+    
+  }
+  assign_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), assign_name);
+  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Names.assign_name)
+}
+
+// string assign_add_name = 4;
+inline void Names::clear_assign_add_name() {
+  assign_add_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& Names::assign_add_name() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.Names.assign_add_name)
+  return assign_add_name_.GetNoArena();
+}
+inline void Names::set_assign_add_name(const ::std::string& value) {
+  
+  assign_add_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:adaptive_system.Names.assign_add_name)
+}
+#if LANG_CXX11
+inline void Names::set_assign_add_name(::std::string&& value) {
+  
+  assign_add_name_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Names.assign_add_name)
+}
+#endif
+inline void Names::set_assign_add_name(const char* value) {
+  
+  assign_add_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:adaptive_system.Names.assign_add_name)
+}
+inline void Names::set_assign_add_name(const char* value, size_t size) {
+  
+  assign_add_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:adaptive_system.Names.assign_add_name)
+}
+inline ::std::string* Names::mutable_assign_add_name() {
+  
+  // @@protoc_insertion_point(field_mutable:adaptive_system.Names.assign_add_name)
+  return assign_add_name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* Names::release_assign_add_name() {
+  // @@protoc_insertion_point(field_release:adaptive_system.Names.assign_add_name)
+  
+  return assign_add_name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Names::set_allocated_assign_add_name(::std::string* assign_add_name) {
+  if (assign_add_name != NULL) {
+    
+  } else {
+    
+  }
+  assign_add_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), assign_add_name);
+  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Names.assign_add_name)
+}
+
+// string placeholder_assign_name = 5;
+inline void Names::clear_placeholder_assign_name() {
+  placeholder_assign_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& Names::placeholder_assign_name() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.Names.placeholder_assign_name)
+  return placeholder_assign_name_.GetNoArena();
+}
+inline void Names::set_placeholder_assign_name(const ::std::string& value) {
+  
+  placeholder_assign_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:adaptive_system.Names.placeholder_assign_name)
+}
+#if LANG_CXX11
+inline void Names::set_placeholder_assign_name(::std::string&& value) {
+  
+  placeholder_assign_name_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Names.placeholder_assign_name)
+}
+#endif
+inline void Names::set_placeholder_assign_name(const char* value) {
+  
+  placeholder_assign_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:adaptive_system.Names.placeholder_assign_name)
+}
+inline void Names::set_placeholder_assign_name(const char* value, size_t size) {
+  
+  placeholder_assign_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:adaptive_system.Names.placeholder_assign_name)
+}
+inline ::std::string* Names::mutable_placeholder_assign_name() {
+  
+  // @@protoc_insertion_point(field_mutable:adaptive_system.Names.placeholder_assign_name)
+  return placeholder_assign_name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* Names::release_placeholder_assign_name() {
+  // @@protoc_insertion_point(field_release:adaptive_system.Names.placeholder_assign_name)
+  
+  return placeholder_assign_name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Names::set_allocated_placeholder_assign_name(::std::string* placeholder_assign_name) {
+  if (placeholder_assign_name != NULL) {
+    
+  } else {
+    
+  }
+  placeholder_assign_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), placeholder_assign_name);
+  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Names.placeholder_assign_name)
+}
+
+// string placeholder_assign_add_name = 6;
+inline void Names::clear_placeholder_assign_add_name() {
+  placeholder_assign_add_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& Names::placeholder_assign_add_name() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.Names.placeholder_assign_add_name)
+  return placeholder_assign_add_name_.GetNoArena();
+}
+inline void Names::set_placeholder_assign_add_name(const ::std::string& value) {
+  
+  placeholder_assign_add_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:adaptive_system.Names.placeholder_assign_add_name)
+}
+#if LANG_CXX11
+inline void Names::set_placeholder_assign_add_name(::std::string&& value) {
+  
+  placeholder_assign_add_name_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Names.placeholder_assign_add_name)
+}
+#endif
+inline void Names::set_placeholder_assign_add_name(const char* value) {
+  
+  placeholder_assign_add_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:adaptive_system.Names.placeholder_assign_add_name)
+}
+inline void Names::set_placeholder_assign_add_name(const char* value, size_t size) {
+  
+  placeholder_assign_add_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:adaptive_system.Names.placeholder_assign_add_name)
+}
+inline ::std::string* Names::mutable_placeholder_assign_add_name() {
+  
+  // @@protoc_insertion_point(field_mutable:adaptive_system.Names.placeholder_assign_add_name)
+  return placeholder_assign_add_name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* Names::release_placeholder_assign_add_name() {
+  // @@protoc_insertion_point(field_release:adaptive_system.Names.placeholder_assign_add_name)
+  
+  return placeholder_assign_add_name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Names::set_allocated_placeholder_assign_add_name(::std::string* placeholder_assign_add_name) {
+  if (placeholder_assign_add_name != NULL) {
+    
+  } else {
+    
+  }
+  placeholder_assign_add_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), placeholder_assign_add_name);
+  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Names.placeholder_assign_add_name)
+}
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// Tuple
+
+// map<string, .adaptive_system.Names> map_names = 1;
+inline int Tuple::map_names_size() const {
+  return map_names_.size();
+}
+inline void Tuple::clear_map_names() {
+  map_names_.Clear();
+}
+inline const ::google::protobuf::Map< ::std::string, ::adaptive_system::Names >&
+Tuple::map_names() const {
+  // @@protoc_insertion_point(field_map:adaptive_system.Tuple.map_names)
+  return map_names_.GetMap();
+}
+inline ::google::protobuf::Map< ::std::string, ::adaptive_system::Names >*
+Tuple::mutable_map_names() {
+  // @@protoc_insertion_point(field_mutable_map:adaptive_system.Tuple.map_names)
+  return map_names_.MutableMap();
+}
+
+// map<string, .tensorflow.TensorProto> map_parameters = 2;
+inline int Tuple::map_parameters_size() const {
+  return map_parameters_.size();
+}
+inline void Tuple::clear_map_parameters() {
+  map_parameters_.Clear();
+}
+inline const ::google::protobuf::Map< ::std::string, ::tensorflow::TensorProto >&
+Tuple::map_parameters() const {
+  // @@protoc_insertion_point(field_map:adaptive_system.Tuple.map_parameters)
+  return map_parameters_.GetMap();
+}
+inline ::google::protobuf::Map< ::std::string, ::tensorflow::TensorProto >*
+Tuple::mutable_map_parameters() {
+  // @@protoc_insertion_point(field_mutable_map:adaptive_system.Tuple.map_parameters)
+  return map_parameters_.MutableMap();
+}
+
+// float lr = 3;
 inline void Tuple::clear_lr() {
   lr_ = 0;
 }
@@ -965,7 +1457,7 @@ inline void Tuple::set_lr(float value) {
   // @@protoc_insertion_point(field_set:adaptive_system.Tuple.lr)
 }
 
-// int32 interval = 3;
+// int32 interval = 4;
 inline void Tuple::clear_interval() {
   interval_ = 0;
 }
@@ -979,7 +1471,7 @@ inline void Tuple::set_interval(::google::protobuf::int32 value) {
   // @@protoc_insertion_point(field_set:adaptive_system.Tuple.interval)
 }
 
-// .tensorflow.GraphDef graph = 4;
+// .tensorflow.GraphDef graph = 5;
 inline bool Tuple::has_graph() const {
   return this != internal_default_instance() && graph_ != NULL;
 }
@@ -1021,24 +1513,6 @@ inline void Tuple::set_allocated_graph(::tensorflow::GraphDef* graph) {
     
   }
   // @@protoc_insertion_point(field_set_allocated:adaptive_system.Tuple.graph)
-}
-
-// map<string, string> action_to_node_name = 5;
-inline int Tuple::action_to_node_name_size() const {
-  return action_to_node_name_.size();
-}
-inline void Tuple::clear_action_to_node_name() {
-  action_to_node_name_.Clear();
-}
-inline const ::google::protobuf::Map< ::std::string, ::std::string >&
-Tuple::action_to_node_name() const {
-  // @@protoc_insertion_point(field_map:adaptive_system.Tuple.action_to_node_name)
-  return action_to_node_name_.GetMap();
-}
-inline ::google::protobuf::Map< ::std::string, ::std::string >*
-Tuple::mutable_action_to_node_name() {
-  // @@protoc_insertion_point(field_mutable_map:adaptive_system.Tuple.action_to_node_name)
-  return action_to_node_name_.MutableMap();
 }
 
 // -------------------------------------------------------------------
@@ -1388,6 +1862,10 @@ inline void PartialStateAndLoss::set_loss(float value) {
 }
 
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
