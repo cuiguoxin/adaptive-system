@@ -1,71 +1,75 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <exception>
 
 #include <grpc++/grpc++.h>
 
-#include "helloworld.grpc.pb.h"
+#include "proto/rpc_service.grpc.pb.h"
 
+#include "tensorflow/cc/ops/standard_ops.h"
+#include "tensorflow/core/framework/graph.pb.h"
 #include "tensorflow/core/framework/tensor.h"
+#include "tensorflow/core/graph/default_device.h"
+#include "tensorflow/core/graph/graph_def_builder.h"
+#include "tensorflow/core/lib/core/threadpool.h"
+#include "tensorflow/core/lib/strings/stringprintf.h"
+#include "tensorflow/core/platform/init_main.h"
+#include "tensorflow/core/platform/logging.h"
 #include "tensorflow/core/platform/types.h"
+#include "tensorflow/core/public/session.h"
 
-class GreeterClient {
- public:
-  GreeterClient(std::shared_ptr<Channel> channel)
-      : stub_(Greeter::NewStub(channel)) {}
+using grpc::Channel;
+using grpc::ClientContext;
+using grpc::Status;
 
-  // Assembles the client's payload, sends it and presents the response back
-  // from the server.
-  std::string SayHello(const std::string& user) {
-    // Data we are sending to the server.
-    Tensor x(tensorflow::DT_FLOAT, TensorShape({2, 1}));
-    auto x_flat = x.flat<float>();
-    x_flat.setRandom();
-    std::cout << x_flat(0) << " " << x_flat(1) << std::endl;
-    tensorflow::TensorProto tp;
-    x.AsProtoField(&tp);
+namespace adaptive_system {
+namespace {
 
-    HelloRequest request;
-    request.set_name(user);
+std::unique_ptr<SystemControl::Stub> stub;
 
-    request.set_allocated_tensor_proto(&tp);
+tensorflow::Session* getSession() {
+  static tensorflow::Session* session =
+      tensorflow::NewSession(tensorflow::SessionOptions());
+  return session;
+}
 
-    // Container for the data we expect from the server.
-    HelloReply reply;
+void printError(const Status& status) {
+  std::cout << __LINE__ << " line error: error code is " << status.error_code()
+            << ", error message is " << status.error_message() << std::endl;
+  std::terminate();
+}
+}
+// called in the main
+void initStub(std::string const& ip) {
+  stub = SystemControl::NewStub(
+      grpc::CreateChannel(ip, grpc::InsecureChannelCredentials()));
+  std::cout << "init stub ok" << std::endl;
+}
 
-    // Context for the client. It could be used to convey extra information to
-    // the server and/or tweak certain RPC behaviors.
-    ClientContext context;
-
-    // The actual RPC.
-    Status status = stub_->SayHello(&context, request, &reply);
-
-    request.release_tensor_proto();
-
-    // Act upon its status.
-    if (status.ok()) {
-      return reply.message();
-    } else {
-      std::cout << status.error_code() << ": " << status.error_message()
-                << std::endl;
-      return "RPC failed";
-    }
+void initEverything() {
+  Tuple tuple;
+  Empty empty;
+  ClientContext context;
+  Status status = stub->retrieveTuple(&context, empty, &tuple);
+  if (!status.ok()) {
+    printError(status);
   }
+  tensorflow::TensorProto const& parameter = tuple.parameter();
+  tensorflow::GraphDef const& graph_def = tuple.graph();
+  const float lr = tuple.lr();
+  const int interval = tuple.interval();
+  const google::protobuf::Map<std::string, std::string> action_to_node_name =
+      tuple.action_to_node_name();
+}
+void closeSession() {
+  getSession()->Close();
+}
+void RunLogic() {}
+}
 
- private:
-  std::unique_ptr<Greeter::Stub> stub_;
-};
-
-int main(int argc, char** argv) {
-  // Instantiate the client. It requires a channel, out of which the actual RPCs
-  // are created. This channel models a connection to an endpoint (in this case,
-  // localhost at port 50051). We indicate that the channel isn't authenticated
-  // (use of InsecureChannelCredentials()).
-  GreeterClient greeter(grpc::CreateChannel(
-      "localhost:50051", grpc::InsecureChannelCredentials()));
-  std::string user("world");
-  std::string reply = greeter.SayHello(user);
-  std::cout << "Greeter received: " << reply << std::endl;
-
-  return 0;
+int main(int argc, char* argv[]) {
+  std::string ip_port = argv[1];
+  adaptive_system::initStub(ip_port);
+  adaptive_system::RunLogic();
 }

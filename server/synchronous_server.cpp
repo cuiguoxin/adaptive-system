@@ -17,8 +17,8 @@ using grpc::Status;
 namespace adaptive_system {
 class RPCServiceImpl final : public SystemControl::Service {
   Status retrieveTuple(ServerContext* context,
-                       const HelloRequest* request,
-                       HelloReply* reply) override {
+                       const Empty* request,
+                       Tuple* reply) override {
     return Status::OK;
   }
 
