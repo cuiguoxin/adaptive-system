@@ -56,15 +56,34 @@ class RPCServiceImpl final : public SystemControl::Service {
     std::map<std::string, tensorflow::Tensor> map_gradient;
     convert_named_gradient_to_map_gradient(named_gradients, map_gradient);
     std::unique_lock<std::mutex> lk(_mutex_gradient);
+    _bool_gradient = false;
+    _vector_loss.push_back(loss);
     _vector_map_gradient.push_back(map_gradient);
-    _condition_variable_gradient.wait(lk, [this] {
-      return _vector_map_gradient.size() == _number_of_workers;
-    });
+    if (_vector_map_gradient.size() == _number_of_workers) {
+      map_gradient.clear();
+      aggregate_gradients_and_losses(_vector_map_gradient, map_gradient);
+      do_quantization(map_gradient, &_store_named_gradient);
+      apply_quantized_gradient_to_model(_store_named_gradient);
+      _vector_map_gradient.clear();
+      _bool_gradient = true;
+      _condition_variable_gradient.notify_all();
+    } else {
+      _condition_variable_gradient.wait(lk, [this] { return _bool_gradient; });
+    }
+    copy_named_gradients(_store_named_gradient, *response);
     return Status::OK;
   }
 
   Status sendState(ServerContext* context, const PartialStateAndLoss* request,
                    QuantizationLevel* response) {
+    std::unique_lock<std::mutex> lk(_mutex_state);
+    _vector_partial_state_and_loss.push_back(*request);
+    if (_vector_partial_state_and_loss.size() == _number_of_workers) {
+      adjust_rl_model(_vector_partial_state_and_loss);
+    } else {
+      _condition_variable_state.wait(lk, [this] { return _bool_state; });
+    }
+    response->set_level(_grad_quant_level);
     return Status::OK;
   }
 
@@ -74,6 +93,21 @@ class RPCServiceImpl final : public SystemControl::Service {
       const NamedGradients& named_gradients,
       std::map<std::string, tensorflow::Tensor>& map_gradient) {}
 
+  void aggregate_gradients_and_losses(
+      std::vector<std::map<std::string, tensorflow::Tensor> const&> const&
+          vector_map_gradient,
+      std::map<std::string, tensorflow::Tensor>& map_gradient) {}
+
+  void do_quantization(
+      std::map<std::string, tensorflow::Tensor> const& map_gradient,
+      NamedGradients* named_gradients) {}
+
+  void apply_quantized_gradient_to_model(
+      NamedGradients const& named_gradients) {}
+  void copy_named_gradients(NamedGradients const& from, NamedGradients& to) {}
+
+  void adjust_rl_model(std::vector<PartialStateAndLoss const&> const&
+                           vector_partial_state_and_loss) {}
   // private data member
  private:
   const int _interval;
@@ -86,11 +120,15 @@ class RPCServiceImpl final : public SystemControl::Service {
   std::mutex _mutex_state;
   std::condition_variable _condition_variable_gradient;
   std::condition_variable _condition_variable_state;
-  std::vector<std::map<std::string, tensorflow::Tensor>> _vector_map_gradient;
-  std::vector<PartialStateAndLoss> _vector_partial_state_and_loss;
+  std::vector<std::map<std::string, tensorflow::Tensor> const&>
+      _vector_map_gradient;
+  std::vector<PartialStateAndLoss const&> _vector_partial_state_and_loss;
   float _last_loss;
   std::vector<float> _vector_loss;
   std::string _tuple_local_path;
+  bool _bool_gradient;
+  bool _bool_state;
+  NamedGradients _store_named_gradient;
 };
 }
 
