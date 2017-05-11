@@ -103,7 +103,6 @@ void dequantize_greater_8_bits(const QUANTIZATION_TYPE type,
 }
 void dequantize_less_8_bits(const QUANTIZATION_TYPE type,
                             const tensorflow::uint8* quantized_data,
-                            const size_t quantized_data_length,
                             const size_t raw_data_length, const float max_value,
                             const float min_value, float* raw_data) {
   static const tensorflow::uint8 mask_2_bits = 3, mask_4_bits = 15,
@@ -133,7 +132,7 @@ void dequantize_less_8_bits(const QUANTIZATION_TYPE type,
         break;
     }
     ref = q_data * multiplier + min_value + multiplier * 0.5;
-    i++;
+    ++i;
   };
   std::for_each(raw_data, raw_data + raw_data_length, func);
 }
@@ -178,7 +177,7 @@ void quantize(const QUANTIZATION_TYPE type,
     quantize_less_8_bits(type, raw_ptr, max_value, min_value, num_elements,
                          &out_ptr, out_ptr_length);
     grad.set_tensor_le_8(out_ptr, out_ptr_length);
-
+    delete[] out_ptr;
   } else if (type == QUANTIZATION_TYPE::EIGHT_BIT ||
              type == QUANTIZATION_TYPE::SIXTEEN_BIT) {
     tensorflow::Tensor tensor(cast_quantization_type_to_data_type(type),
@@ -198,6 +197,17 @@ void dequantize(const QUANTIZATION_TYPE type, Gradient& grad,
   float const min_value = grad.min();
   if (type == QUANTIZATION_TYPE::TWO_BIT ||
       type == QUANTIZATION_TYPE::FOUR_BIT) {
+    tensorflow::TensorShapeProto* tensor_shape_proto =
+        grad.mutable_tensor_shape();
+    tensorflow::TensorShape tensor_shape(tensor_shape_proto);
+    raw_tensor =
+        tensorflow::Tensor(tensorflow::DataType::DT_FLOAT, tensor_shape);
+    float* raw_ptr = raw_tensor.flat<float>().data();
+    int number_raw = raw_tensor.NumElements();
+
+    tensorflow::uint8 const* quantized_ptr = grad.mutable_le_8()->data();
+    dequantize_less_8_bits(type, quantized_ptr, number_raw, max_value,
+                           min_value, raw_ptr);
   } else if (type == QUANTIZATION_TYPE::EIGHT_BIT ||
              type == QUANTIZATION_TYPE::SIXTEEN_BIT) {
     tensorflow::TensorProto& tensor_quantized_proto =
