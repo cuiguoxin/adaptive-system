@@ -181,7 +181,7 @@ void quantize(const QUANTIZATION_TYPE type,
   } else if (type == QUANTIZATION_TYPE::EIGHT_BIT ||
              type == QUANTIZATION_TYPE::SIXTEEN_BIT) {
     tensorflow::Tensor tensor(cast_quantization_type_to_data_type(type),
-                              raw_data.shape());
+                              raw_tensor.shape());
     quantize_greater_8_bits(type, raw_tensor, max_value, min_value, tensor);
     tensorflow::TensorProto* tensor_proto = new tensorflow::TensorProto;
     tensor.AsProtoField(tensor_proto);
