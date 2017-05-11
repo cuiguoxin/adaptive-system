@@ -162,9 +162,8 @@ tensorflow::DataType cast_quantization_type_to_data_type(
 }
 }
 // raw_tensor ---->>> grad
-void quantize(const QUANTIZATION_TYPE type,
-              tensorflow::Tensor const& raw_tensor, float const max_value,
-              float const min_value, Gradient& grad) {
+void quantize(const QUANTIZATION_TYPE type, tensorflow::Tensor& raw_tensor,
+              float const max_value, float const min_value, Gradient& grad) {
   grad.set_max(max_value);
   grad.set_min(min_value);
   grad.set_level(cast_quantization_type_to_grad_quant_level(type));
