@@ -32,6 +32,9 @@ namespace {
 std::unique_ptr<SystemControl::Stub> stub;
 float lr = 0.0;
 int interval = 0;
+int total_iter = 0;
+GRAD_QUANT_LEVEL grad_quant_level = GRAD_QUANT_LEVEL::NONE;
+
 std::map<std::string, Names>* get_map_names() {
   static std::map<std::string, Names> map_names;
   return &map_names;
@@ -95,7 +98,7 @@ void init_everything() {
           google::protobuf::MapPair<std::string, tensorflow::TensorProto> const&
               pair) {
         tensorflow::Tensor tensor;
-	bool is_success = tensor.FromProto(pair.second);
+        bool is_success = tensor.FromProto(pair.second);
         if (!is_success) {
           std::terminate();
         }
@@ -112,10 +115,55 @@ void init_everything() {
     print_error(tf_status);
   }
 }
+// return loss and set gradient to the first parameter
+float compute_gradient_and_loss(
+    std::map<std::string, tensorflow::Tensor>& gradients) {}
+
+PartialState collect_partial_state(
+    std::map<std::string, tensorflow::Tensor> const& gradients, float loss) {}
+
+void quantize_gradient(
+    std::map<std::string, tensorflow::Tensor> const& map_gradients, float loss,
+    NamedGradientsAndLoss& named_gradients_and_loss) {}
+
+void apply_gradient(NamedGradients const& named_gradients) {}
+
+void do_training() {
+  for (int i = 0; i < total_iter; i++) {
+    std::map<std::string, tensorflow::Tensor> map_gradients;
+    float loss = compute_gradient_and_loss(map_gradients);
+    if (i % interval == 0) {
+      PartialState partial_state = collect_partial_state(map_gradients, loss);
+      ClientContext context;
+      QuantizationLevel quantization_level;
+      gprc::Status grpc_status =
+          stub->sendState(&context, partial_state, &quantization_level);
+      if (!grpc_status.ok()) {
+        print_error(grpc_status);
+      }
+      grad_quant_level = quantization_level.level();
+    }
+    NamedGradientsAndLoss named_gradients_and_loss;
+    quantize_gradient(map_gradients, loss, named_gradients_and_loss);
+    NamedGradients named_gradients;
+    ClientContext context;
+    grpc::Status grpc_status = stub->sendGradient(
+        &context, named_gradients_and_loss, &named_gradients);
+    if (!grpc_status.ok()) {
+      print_error(grpc_status);
+    }
+    // add the gradients to variables
+    apply_gradient(named_gradients);
+  }
+}
 
 void close_session() { get_session()->Close(); }
 
-void run_logic() {}
+void run_logic() {
+  init_everything();
+
+  close_session();
+}
 }
 
 int main(int argc, char* argv[]) {
