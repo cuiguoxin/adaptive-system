@@ -17,6 +17,8 @@
 #include "tensorflow/core/framework/tensor.h"
 #include "tensorflow/core/platform/types.h"
 
+#include "quantization/util/algorithms.h"
+
 using grpc::Server;
 using grpc::ServerBuilder;
 using grpc::ServerContext;
@@ -91,9 +93,26 @@ class RPCServiceImpl final : public SystemControl::Service {
 
   // private member functions
  private:
+  // put named quantized gradients into a dequantized tensor map
   void convert_named_gradient_to_map_gradient(
       const NamedGradients& named_gradients,
-      std::map<std::string, tensorflow::Tensor>& map_gradient) {}
+      std::map<std::string, tensorflow::Tensor>& map_gradient) {
+    auto map_quantized_gradient =
+        named_gradients.name_to_gradient();  // const reference
+    std::for_each(
+        map_quantized_gradient.cbegin(), map_quantized_gradient.cend(),
+        [&map_gradient](
+            ::google::protobuf::MapPair<std::string, Gradient> const& pair) {
+          Gradient& gradient = const_cast<Gradient&>(pair.second);
+          std::string const& variable_name = pair.first;
+          tensorflow::Tensor temp_tensor;
+          dequantize(
+              cast_grad_quant_level_to_quantization_type(gradient.level()),
+              gradient, temp_tensor);
+          map_gradient.insert(std::pair<std::string, tensorflow::Tensor>(
+              variable_name, temp_tensor));
+        });
+  }
 
   void aggregate_gradients(
       std::vector<std::map<std::string, tensorflow::Tensor> const&> const&
@@ -102,7 +121,19 @@ class RPCServiceImpl final : public SystemControl::Service {
 
   void do_quantization(
       std::map<std::string, tensorflow::Tensor> const& map_gradient,
-      NamedGradients* named_gradients) {}
+      NamedGradients* named_gradients) {
+    std::for_each(
+        map_gradient.cbegin(), map_gradient.cend(),
+        [named_gradients](
+            ::google::protobuf::MapPair<std::string, tensorflow::Tensor> const&
+                pair) {
+          std::string const& variable_name = pair.first;
+          tensorflow::Tensor const& raw_tensor = pair.second;
+          float max = 0, min = 0;
+          get_max_and_min_value(raw_tensor, max, min);
+
+        });
+  }
 
   void apply_quantized_gradient_to_model(
       NamedGradients const& named_gradients) {}
