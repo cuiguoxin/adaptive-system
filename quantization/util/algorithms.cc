@@ -91,11 +91,11 @@ void dequantize_greater_8_bits(const QUANTIZATION_TYPE type,
         (static_cast<float>(std::numeric_limits<tensorflow::uint16>::max()) -
          std::numeric_limits<tensorflow::uint16>::min());
 
-    float* out_ptr = tensor->flat<float>().data();
+    float* out_ptr = tensor.flat<float>().data();
     const tensorflow::uint16* in_ptr =
         quantized_data.flat<tensorflow::uint16>().data();
 
-    const int num_elements = input.NumElements();
+    const int num_elements = quantized_data.NumElements();
     for (int i = 0; i < num_elements; ++i) {
       out_ptr[i] = ((static_cast<int>(in_ptr[i])) * scale_factor) + min_range;
     }
@@ -167,7 +167,7 @@ void quantize(const QUANTIZATION_TYPE type,
               float const min_value, Gradient& grad) {
   grad.set_max(max_value);
   grad.set_min(min_value);
-  grad.set_level = cast_quantization_type_to_grad_quant_level(type);
+  grad.set_level(cast_quantization_type_to_grad_quant_level(type));
   if (type == QUANTIZATION_TYPE::TWO_BIT ||
       type == QUANTIZATION_TYPE::FOUR_BIT) {
     float* raw_ptr = raw_tensor.flat<float>().data();

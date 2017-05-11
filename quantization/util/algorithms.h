@@ -20,5 +20,5 @@ void quantize(const QUANTIZATION_TYPE type,
               tensorflow::Tensor const& raw_tensor, float const max_value,
               float const min_value, Gradient& grad);
 void dequantize(const QUANTIZATION_TYPE type, Gradient& grad,
-                tensorflow::Tensor& raw_tensor)
+                tensorflow::Tensor& raw_tensor);
 }
