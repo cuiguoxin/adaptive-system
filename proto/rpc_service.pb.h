@@ -33,6 +33,7 @@
 #include <google/protobuf/unknown_field_set.h>
 #include "tensorflow/core/framework/tensor.pb.h"
 #include "tensorflow/core/framework/graph.pb.h"
+#include "tensorflow/core/framework/tensor_shape.pb.h"
 // @@protoc_insertion_point(includes)
 namespace adaptive_system {
 class Empty;
@@ -70,6 +71,12 @@ extern GraphDefDefaultTypeInternal _GraphDef_default_instance_;
 class TensorProto;
 class TensorProtoDefaultTypeInternal;
 extern TensorProtoDefaultTypeInternal _TensorProto_default_instance_;
+class TensorShapeProto;
+class TensorShapeProtoDefaultTypeInternal;
+extern TensorShapeProtoDefaultTypeInternal _TensorShapeProto_default_instance_;
+class TensorShapeProto_Dim;
+class TensorShapeProto_DimDefaultTypeInternal;
+extern TensorShapeProto_DimDefaultTypeInternal _TensorShapeProto_Dim_default_instance_;
 }  // namespace tensorflow
 
 namespace adaptive_system {
@@ -673,6 +680,15 @@ class Gradient : public ::google::protobuf::Message /* @@protoc_insertion_point(
   ::tensorflow::TensorProto* release_tensor_ge_8();
   void set_allocated_tensor_ge_8(::tensorflow::TensorProto* tensor_ge_8);
 
+  // .tensorflow.TensorShapeProto tensor_shape = 6;
+  bool has_tensor_shape() const;
+  void clear_tensor_shape();
+  static const int kTensorShapeFieldNumber = 6;
+  const ::tensorflow::TensorShapeProto& tensor_shape() const;
+  ::tensorflow::TensorShapeProto* mutable_tensor_shape();
+  ::tensorflow::TensorShapeProto* release_tensor_shape();
+  void set_allocated_tensor_shape(::tensorflow::TensorShapeProto* tensor_shape);
+
   // .adaptive_system.GRAD_QUANT_LEVEL level = 1;
   void clear_level();
   static const int kLevelFieldNumber = 1;
@@ -697,6 +713,7 @@ class Gradient : public ::google::protobuf::Message /* @@protoc_insertion_point(
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::ArenaStringPtr tensor_le_8_;
   ::tensorflow::TensorProto* tensor_ge_8_;
+  ::tensorflow::TensorShapeProto* tensor_shape_;
   int level_;
   float max_;
   float min_;
@@ -881,11 +898,18 @@ class PartialState : public ::google::protobuf::Message /* @@protoc_insertion_po
   ::tensorflow::TensorProto* release_tensor();
   void set_allocated_tensor(::tensorflow::TensorProto* tensor);
 
+  // float loss = 2;
+  void clear_loss();
+  static const int kLossFieldNumber = 2;
+  float loss() const;
+  void set_loss(float value);
+
   // @@protoc_insertion_point(class_scope:adaptive_system.PartialState)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::tensorflow::TensorProto* tensor_;
+  float loss_;
   mutable int _cached_size_;
   friend struct protobuf_rpc_5fservice_2eproto::TableStruct;
 };
@@ -1675,6 +1699,50 @@ inline void Gradient::set_min(float value) {
   // @@protoc_insertion_point(field_set:adaptive_system.Gradient.min)
 }
 
+// .tensorflow.TensorShapeProto tensor_shape = 6;
+inline bool Gradient::has_tensor_shape() const {
+  return this != internal_default_instance() && tensor_shape_ != NULL;
+}
+inline void Gradient::clear_tensor_shape() {
+  if (GetArenaNoVirtual() == NULL && tensor_shape_ != NULL) delete tensor_shape_;
+  tensor_shape_ = NULL;
+}
+inline const ::tensorflow::TensorShapeProto& Gradient::tensor_shape() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.Gradient.tensor_shape)
+  return tensor_shape_ != NULL ? *tensor_shape_
+                         : *::tensorflow::TensorShapeProto::internal_default_instance();
+}
+inline ::tensorflow::TensorShapeProto* Gradient::mutable_tensor_shape() {
+  
+  if (tensor_shape_ == NULL) {
+    tensor_shape_ = new ::tensorflow::TensorShapeProto;
+  }
+  // @@protoc_insertion_point(field_mutable:adaptive_system.Gradient.tensor_shape)
+  return tensor_shape_;
+}
+inline ::tensorflow::TensorShapeProto* Gradient::release_tensor_shape() {
+  // @@protoc_insertion_point(field_release:adaptive_system.Gradient.tensor_shape)
+  
+  ::tensorflow::TensorShapeProto* temp = tensor_shape_;
+  tensor_shape_ = NULL;
+  return temp;
+}
+inline void Gradient::set_allocated_tensor_shape(::tensorflow::TensorShapeProto* tensor_shape) {
+  delete tensor_shape_;
+  if (tensor_shape != NULL && tensor_shape->GetArena() != NULL) {
+    ::tensorflow::TensorShapeProto* new_tensor_shape = new ::tensorflow::TensorShapeProto;
+    new_tensor_shape->CopyFrom(*tensor_shape);
+    tensor_shape = new_tensor_shape;
+  }
+  tensor_shape_ = tensor_shape;
+  if (tensor_shape) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Gradient.tensor_shape)
+}
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
@@ -1745,6 +1813,20 @@ inline void PartialState::set_allocated_tensor(::tensorflow::TensorProto* tensor
     
   }
   // @@protoc_insertion_point(field_set_allocated:adaptive_system.PartialState.tensor)
+}
+
+// float loss = 2;
+inline void PartialState::clear_loss() {
+  loss_ = 0;
+}
+inline float PartialState::loss() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.PartialState.loss)
+  return loss_;
+}
+inline void PartialState::set_loss(float value) {
+  
+  loss_ = value;
+  // @@protoc_insertion_point(field_set:adaptive_system.PartialState.loss)
 }
 
 // -------------------------------------------------------------------

@@ -4,7 +4,7 @@ package adaptive_system;
 
 import "tensorflow/core/framework/tensor.proto";
 import "tensorflow/core/framework/graph.proto";
-import "tensorflow/core/framework/tensor_shape.proto"
+import "tensorflow/core/framework/tensor_shape.proto";
 
 
 message Empty {

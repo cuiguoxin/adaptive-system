@@ -85,6 +85,7 @@ const ::google::protobuf::uint32 TableStruct::offsets[] = {
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Gradient, tensor_le_8_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Gradient, max_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Gradient, min_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Gradient, tensor_shape_),
   ~0u,  // no _has_bits_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NamedGradients, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -95,6 +96,7 @@ const ::google::protobuf::uint32 TableStruct::offsets[] = {
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PartialState, tensor_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PartialState, loss_),
   ~0u,  // no _has_bits_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NamedGradientsAndLoss, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -115,10 +117,10 @@ static const ::google::protobuf::internal::MigrationSchema schemas[] = {
   { 14, -1, sizeof(Tuple)},
   { 23, -1, sizeof(QuantizationLevel)},
   { 28, -1, sizeof(Gradient)},
-  { 37, -1, sizeof(NamedGradients)},
-  { 42, -1, sizeof(PartialState)},
-  { 47, -1, sizeof(NamedGradientsAndLoss)},
-  { 53, -1, sizeof(PartialStateAndLoss)},
+  { 38, -1, sizeof(NamedGradients)},
+  { 43, -1, sizeof(PartialState)},
+  { 49, -1, sizeof(NamedGradientsAndLoss)},
+  { 55, -1, sizeof(PartialStateAndLoss)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -213,6 +215,7 @@ void TableStruct::InitDefaultsImpl() {
   ::google::protobuf::internal::InitProtobufDefaults();
   ::tensorflow::protobuf_tensorflow_2fcore_2fframework_2ftensor_2eproto::InitDefaults();
   ::tensorflow::protobuf_tensorflow_2fcore_2fframework_2fgraph_2eproto::InitDefaults();
+  ::tensorflow::protobuf_tensorflow_2fcore_2fframework_2ftensor_5fshape_2eproto::InitDefaults();
   _Empty_default_instance_.DefaultConstruct();
   _Names_default_instance_.DefaultConstruct();
   _Tuple_default_instance_.DefaultConstruct();
@@ -226,6 +229,8 @@ void TableStruct::InitDefaultsImpl() {
       ::tensorflow::GraphDef::internal_default_instance());
   _Gradient_default_instance_.get_mutable()->tensor_ge_8_ = const_cast< ::tensorflow::TensorProto*>(
       ::tensorflow::TensorProto::internal_default_instance());
+  _Gradient_default_instance_.get_mutable()->tensor_shape_ = const_cast< ::tensorflow::TensorShapeProto*>(
+      ::tensorflow::TensorShapeProto::internal_default_instance());
   _PartialState_default_instance_.get_mutable()->tensor_ = const_cast< ::tensorflow::TensorProto*>(
       ::tensorflow::TensorProto::internal_default_instance());
   _NamedGradientsAndLoss_default_instance_.get_mutable()->named_gradients_ = const_cast< ::adaptive_system::NamedGradients*>(
@@ -243,52 +248,56 @@ void AddDescriptorsImpl() {
   static const char descriptor[] = {
       "\n\021rpc_service.proto\022\017adaptive_system\032&te"
       "nsorflow/core/framework/tensor.proto\032%te"
-      "nsorflow/core/framework/graph.proto\"\007\n\005E"
-      "mpty\"\251\001\n\005Names\022\025\n\rvariable_name\030\001 \001(\t\022\025\n"
-      "\rgradient_name\030\002 \001(\t\022\023\n\013assign_name\030\003 \001("
-      "\t\022\027\n\017assign_add_name\030\004 \001(\t\022\037\n\027placeholde"
-      "r_assign_name\030\005 \001(\t\022#\n\033placeholder_assig"
-      "n_add_name\030\006 \001(\t\"\336\002\n\005Tuple\0227\n\tmap_names\030"
-      "\001 \003(\0132$.adaptive_system.Tuple.MapNamesEn"
-      "try\022A\n\016map_parameters\030\002 \003(\0132).adaptive_s"
-      "ystem.Tuple.MapParametersEntry\022\n\n\002lr\030\003 \001"
-      "(\002\022\020\n\010interval\030\004 \001(\005\022#\n\005graph\030\005 \001(\0132\024.te"
-      "nsorflow.GraphDef\032G\n\rMapNamesEntry\022\013\n\003ke"
-      "y\030\001 \001(\t\022%\n\005value\030\002 \001(\0132\026.adaptive_system"
-      ".Names:\0028\001\032M\n\022MapParametersEntry\022\013\n\003key\030"
-      "\001 \001(\t\022&\n\005value\030\002 \001(\0132\027.tensorflow.Tensor"
-      "Proto:\0028\001\"E\n\021QuantizationLevel\0220\n\005level\030"
-      "\001 \001(\0162!.adaptive_system.GRAD_QUANT_LEVEL"
-      "\"\231\001\n\010Gradient\0220\n\005level\030\001 \001(\0162!.adaptive_"
-      "system.GRAD_QUANT_LEVEL\022,\n\013tensor_ge_8\030\002"
-      " \001(\0132\027.tensorflow.TensorProto\022\023\n\013tensor_"
-      "le_8\030\003 \001(\014\022\013\n\003max\030\004 \001(\002\022\013\n\003min\030\005 \001(\002\"\261\001\n"
-      "\016NamedGradients\022M\n\020name_to_gradient\030\001 \003("
-      "\01323.adaptive_system.NamedGradients.NameT"
-      "oGradientEntry\032P\n\023NameToGradientEntry\022\013\n"
-      "\003key\030\001 \001(\t\022(\n\005value\030\002 \001(\0132\031.adaptive_sys"
-      "tem.Gradient:\0028\001\"7\n\014PartialState\022\'\n\006tens"
-      "or\030\001 \001(\0132\027.tensorflow.TensorProto\"_\n\025Nam"
-      "edGradientsAndLoss\0228\n\017named_gradients\030\001 "
-      "\001(\0132\037.adaptive_system.NamedGradients\022\014\n\004"
-      "loss\030\002 \001(\002\"N\n\023PartialStateAndLoss\022)\n\002ps\030"
-      "\001 \001(\0132\035.adaptive_system.PartialState\022\014\n\004"
-      "loss\030\002 \001(\002*G\n\020GRAD_QUANT_LEVEL\022\007\n\003TWO\020\000\022"
-      "\010\n\004FOUR\020\001\022\t\n\005EIGHT\020\002\022\013\n\007SIXTEEN\020\003\022\010\n\004NON"
-      "E\020\0042\200\002\n\rSystemControl\022\?\n\rretrieveTuple\022\026"
-      ".adaptive_system.Empty\032\026.adaptive_system"
-      ".Tuple\022W\n\014sendGradient\022&.adaptive_system"
-      ".NamedGradientsAndLoss\032\037.adaptive_system"
-      ".NamedGradients\022U\n\tsendState\022$.adaptive_"
-      "system.PartialStateAndLoss\032\".adaptive_sy"
-      "stem.QuantizationLevelb\006proto3"
+      "nsorflow/core/framework/graph.proto\032,ten"
+      "sorflow/core/framework/tensor_shape.prot"
+      "o\"\007\n\005Empty\"\251\001\n\005Names\022\025\n\rvariable_name\030\001 "
+      "\001(\t\022\025\n\rgradient_name\030\002 \001(\t\022\023\n\013assign_nam"
+      "e\030\003 \001(\t\022\027\n\017assign_add_name\030\004 \001(\t\022\037\n\027plac"
+      "eholder_assign_name\030\005 \001(\t\022#\n\033placeholder"
+      "_assign_add_name\030\006 \001(\t\"\336\002\n\005Tuple\0227\n\tmap_"
+      "names\030\001 \003(\0132$.adaptive_system.Tuple.MapN"
+      "amesEntry\022A\n\016map_parameters\030\002 \003(\0132).adap"
+      "tive_system.Tuple.MapParametersEntry\022\n\n\002"
+      "lr\030\003 \001(\002\022\020\n\010interval\030\004 \001(\005\022#\n\005graph\030\005 \001("
+      "\0132\024.tensorflow.GraphDef\032G\n\rMapNamesEntry"
+      "\022\013\n\003key\030\001 \001(\t\022%\n\005value\030\002 \001(\0132\026.adaptive_"
+      "system.Names:\0028\001\032M\n\022MapParametersEntry\022\013"
+      "\n\003key\030\001 \001(\t\022&\n\005value\030\002 \001(\0132\027.tensorflow."
+      "TensorProto:\0028\001\"E\n\021QuantizationLevel\0220\n\005"
+      "level\030\001 \001(\0162!.adaptive_system.GRAD_QUANT"
+      "_LEVEL\"\315\001\n\010Gradient\0220\n\005level\030\001 \001(\0162!.ada"
+      "ptive_system.GRAD_QUANT_LEVEL\022,\n\013tensor_"
+      "ge_8\030\002 \001(\0132\027.tensorflow.TensorProto\022\023\n\013t"
+      "ensor_le_8\030\003 \001(\014\022\013\n\003max\030\004 \001(\002\022\013\n\003min\030\005 \001"
+      "(\002\0222\n\014tensor_shape\030\006 \001(\0132\034.tensorflow.Te"
+      "nsorShapeProto\"\261\001\n\016NamedGradients\022M\n\020nam"
+      "e_to_gradient\030\001 \003(\01323.adaptive_system.Na"
+      "medGradients.NameToGradientEntry\032P\n\023Name"
+      "ToGradientEntry\022\013\n\003key\030\001 \001(\t\022(\n\005value\030\002 "
+      "\001(\0132\031.adaptive_system.Gradient:\0028\001\"E\n\014Pa"
+      "rtialState\022\'\n\006tensor\030\001 \001(\0132\027.tensorflow."
+      "TensorProto\022\014\n\004loss\030\002 \001(\002\"_\n\025NamedGradie"
+      "ntsAndLoss\0228\n\017named_gradients\030\001 \001(\0132\037.ad"
+      "aptive_system.NamedGradients\022\014\n\004loss\030\002 \001"
+      "(\002\"N\n\023PartialStateAndLoss\022)\n\002ps\030\001 \001(\0132\035."
+      "adaptive_system.PartialState\022\014\n\004loss\030\002 \001"
+      "(\002*G\n\020GRAD_QUANT_LEVEL\022\007\n\003TWO\020\000\022\010\n\004FOUR\020"
+      "\001\022\t\n\005EIGHT\020\002\022\013\n\007SIXTEEN\020\003\022\010\n\004NONE\020\0042\200\002\n\r"
+      "SystemControl\022\?\n\rretrieveTuple\022\026.adaptiv"
+      "e_system.Empty\032\026.adaptive_system.Tuple\022W"
+      "\n\014sendGradient\022&.adaptive_system.NamedGr"
+      "adientsAndLoss\032\037.adaptive_system.NamedGr"
+      "adients\022U\n\tsendState\022$.adaptive_system.P"
+      "artialStateAndLoss\032\".adaptive_system.Qua"
+      "ntizationLevelb\006proto3"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 1630);
+      descriptor, 1742);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "rpc_service.proto", &protobuf_RegisterTypes);
   ::tensorflow::protobuf_tensorflow_2fcore_2fframework_2ftensor_2eproto::AddDescriptors();
   ::tensorflow::protobuf_tensorflow_2fcore_2fframework_2fgraph_2eproto::AddDescriptors();
+  ::tensorflow::protobuf_tensorflow_2fcore_2fframework_2ftensor_5fshape_2eproto::AddDescriptors();
   ::google::protobuf::internal::OnShutdown(&TableStruct::Shutdown);
 }
 
@@ -2281,6 +2290,7 @@ const int Gradient::kTensorGe8FieldNumber;
 const int Gradient::kTensorLe8FieldNumber;
 const int Gradient::kMaxFieldNumber;
 const int Gradient::kMinFieldNumber;
+const int Gradient::kTensorShapeFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 Gradient::Gradient()
@@ -2305,6 +2315,11 @@ Gradient::Gradient(const Gradient& from)
   } else {
     tensor_ge_8_ = NULL;
   }
+  if (from.has_tensor_shape()) {
+    tensor_shape_ = new ::tensorflow::TensorShapeProto(*from.tensor_shape_);
+  } else {
+    tensor_shape_ = NULL;
+  }
   ::memcpy(&level_, &from.level_,
     reinterpret_cast<char*>(&min_) -
     reinterpret_cast<char*>(&level_) + sizeof(min_));
@@ -2327,6 +2342,9 @@ void Gradient::SharedDtor() {
   tensor_le_8_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (this != internal_default_instance()) {
     delete tensor_ge_8_;
+  }
+  if (this != internal_default_instance()) {
+    delete tensor_shape_;
   }
 }
 
@@ -2360,6 +2378,10 @@ void Gradient::Clear() {
     delete tensor_ge_8_;
   }
   tensor_ge_8_ = NULL;
+  if (GetArenaNoVirtual() == NULL && tensor_shape_ != NULL) {
+    delete tensor_shape_;
+  }
+  tensor_shape_ = NULL;
   ::memset(&level_, 0, reinterpret_cast<char*>(&min_) -
     reinterpret_cast<char*>(&level_) + sizeof(min_));
 }
@@ -2441,6 +2463,18 @@ bool Gradient::MergePartialFromCodedStream(
         break;
       }
 
+      // .tensorflow.TensorShapeProto tensor_shape = 6;
+      case 6: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(50u)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_tensor_shape()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       default: {
       handle_unusual:
         if (tag == 0 ||
@@ -2493,6 +2527,12 @@ void Gradient::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteFloat(5, this->min(), output);
   }
 
+  // .tensorflow.TensorShapeProto tensor_shape = 6;
+  if (this->has_tensor_shape()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      6, *this->tensor_shape_, output);
+  }
+
   // @@protoc_insertion_point(serialize_end:adaptive_system.Gradient)
 }
 
@@ -2530,6 +2570,13 @@ void Gradient::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(5, this->min(), target);
   }
 
+  // .tensorflow.TensorShapeProto tensor_shape = 6;
+  if (this->has_tensor_shape()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      InternalWriteMessageNoVirtualToArray(
+        6, *this->tensor_shape_, false, target);
+  }
+
   // @@protoc_insertion_point(serialize_to_array_end:adaptive_system.Gradient)
   return target;
 }
@@ -2550,6 +2597,13 @@ size_t Gradient::ByteSizeLong() const {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
         *this->tensor_ge_8_);
+  }
+
+  // .tensorflow.TensorShapeProto tensor_shape = 6;
+  if (this->has_tensor_shape()) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        *this->tensor_shape_);
   }
 
   // .adaptive_system.GRAD_QUANT_LEVEL level = 1;
@@ -2601,6 +2655,9 @@ void Gradient::MergeFrom(const Gradient& from) {
   if (from.has_tensor_ge_8()) {
     mutable_tensor_ge_8()->::tensorflow::TensorProto::MergeFrom(from.tensor_ge_8());
   }
+  if (from.has_tensor_shape()) {
+    mutable_tensor_shape()->::tensorflow::TensorShapeProto::MergeFrom(from.tensor_shape());
+  }
   if (from.level() != 0) {
     set_level(from.level());
   }
@@ -2637,6 +2694,7 @@ void Gradient::Swap(Gradient* other) {
 void Gradient::InternalSwap(Gradient* other) {
   tensor_le_8_.Swap(&other->tensor_le_8_);
   std::swap(tensor_ge_8_, other->tensor_ge_8_);
+  std::swap(tensor_shape_, other->tensor_shape_);
   std::swap(level_, other->level_);
   std::swap(max_, other->max_);
   std::swap(min_, other->min_);
@@ -2787,6 +2845,50 @@ void Gradient::set_min(float value) {
   
   min_ = value;
   // @@protoc_insertion_point(field_set:adaptive_system.Gradient.min)
+}
+
+// .tensorflow.TensorShapeProto tensor_shape = 6;
+bool Gradient::has_tensor_shape() const {
+  return this != internal_default_instance() && tensor_shape_ != NULL;
+}
+void Gradient::clear_tensor_shape() {
+  if (GetArenaNoVirtual() == NULL && tensor_shape_ != NULL) delete tensor_shape_;
+  tensor_shape_ = NULL;
+}
+const ::tensorflow::TensorShapeProto& Gradient::tensor_shape() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.Gradient.tensor_shape)
+  return tensor_shape_ != NULL ? *tensor_shape_
+                         : *::tensorflow::TensorShapeProto::internal_default_instance();
+}
+::tensorflow::TensorShapeProto* Gradient::mutable_tensor_shape() {
+  
+  if (tensor_shape_ == NULL) {
+    tensor_shape_ = new ::tensorflow::TensorShapeProto;
+  }
+  // @@protoc_insertion_point(field_mutable:adaptive_system.Gradient.tensor_shape)
+  return tensor_shape_;
+}
+::tensorflow::TensorShapeProto* Gradient::release_tensor_shape() {
+  // @@protoc_insertion_point(field_release:adaptive_system.Gradient.tensor_shape)
+  
+  ::tensorflow::TensorShapeProto* temp = tensor_shape_;
+  tensor_shape_ = NULL;
+  return temp;
+}
+void Gradient::set_allocated_tensor_shape(::tensorflow::TensorShapeProto* tensor_shape) {
+  delete tensor_shape_;
+  if (tensor_shape != NULL && tensor_shape->GetArena() != NULL) {
+    ::tensorflow::TensorShapeProto* new_tensor_shape = new ::tensorflow::TensorShapeProto;
+    new_tensor_shape->CopyFrom(*tensor_shape);
+    tensor_shape = new_tensor_shape;
+  }
+  tensor_shape_ = tensor_shape;
+  if (tensor_shape) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Gradient.tensor_shape)
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
@@ -3146,6 +3248,7 @@ NamedGradients::mutable_name_to_gradient() {
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int PartialState::kTensorFieldNumber;
+const int PartialState::kLossFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 PartialState::PartialState()
@@ -3166,11 +3269,13 @@ PartialState::PartialState(const PartialState& from)
   } else {
     tensor_ = NULL;
   }
+  loss_ = from.loss_;
   // @@protoc_insertion_point(copy_constructor:adaptive_system.PartialState)
 }
 
 void PartialState::SharedCtor() {
-  tensor_ = NULL;
+  ::memset(&tensor_, 0, reinterpret_cast<char*>(&loss_) -
+    reinterpret_cast<char*>(&tensor_) + sizeof(loss_));
   _cached_size_ = 0;
 }
 
@@ -3214,6 +3319,7 @@ void PartialState::Clear() {
     delete tensor_;
   }
   tensor_ = NULL;
+  loss_ = 0;
 }
 
 bool PartialState::MergePartialFromCodedStream(
@@ -3232,6 +3338,20 @@ bool PartialState::MergePartialFromCodedStream(
             static_cast< ::google::protobuf::uint8>(10u)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_tensor()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // float loss = 2;
+      case 2: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(21u)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &loss_)));
         } else {
           goto handle_unusual;
         }
@@ -3268,6 +3388,11 @@ void PartialState::SerializeWithCachedSizes(
       1, *this->tensor_, output);
   }
 
+  // float loss = 2;
+  if (this->loss() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(2, this->loss(), output);
+  }
+
   // @@protoc_insertion_point(serialize_end:adaptive_system.PartialState)
 }
 
@@ -3280,6 +3405,11 @@ void PartialState::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageNoVirtualToArray(
         1, *this->tensor_, false, target);
+  }
+
+  // float loss = 2;
+  if (this->loss() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(2, this->loss(), target);
   }
 
   // @@protoc_insertion_point(serialize_to_array_end:adaptive_system.PartialState)
@@ -3295,6 +3425,11 @@ size_t PartialState::ByteSizeLong() const {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
         *this->tensor_);
+  }
+
+  // float loss = 2;
+  if (this->loss() != 0) {
+    total_size += 1 + 4;
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
@@ -3326,6 +3461,9 @@ void PartialState::MergeFrom(const PartialState& from) {
   if (from.has_tensor()) {
     mutable_tensor()->::tensorflow::TensorProto::MergeFrom(from.tensor());
   }
+  if (from.loss() != 0) {
+    set_loss(from.loss());
+  }
 }
 
 void PartialState::CopyFrom(const ::google::protobuf::Message& from) {
@@ -3352,6 +3490,7 @@ void PartialState::Swap(PartialState* other) {
 }
 void PartialState::InternalSwap(PartialState* other) {
   std::swap(tensor_, other->tensor_);
+  std::swap(loss_, other->loss_);
   std::swap(_cached_size_, other->_cached_size_);
 }
 
@@ -3405,6 +3544,20 @@ void PartialState::set_allocated_tensor(::tensorflow::TensorProto* tensor) {
     
   }
   // @@protoc_insertion_point(field_set_allocated:adaptive_system.PartialState.tensor)
+}
+
+// float loss = 2;
+void PartialState::clear_loss() {
+  loss_ = 0;
+}
+float PartialState::loss() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.PartialState.loss)
+  return loss_;
+}
+void PartialState::set_loss(float value) {
+  
+  loss_ = value;
+  // @@protoc_insertion_point(field_set:adaptive_system.PartialState.loss)
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
