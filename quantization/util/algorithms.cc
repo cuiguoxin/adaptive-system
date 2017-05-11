@@ -205,7 +205,8 @@ void dequantize(const QUANTIZATION_TYPE type, Gradient& grad,
     int number_raw = raw_tensor.NumElements();
 
     tensorflow::uint8 const* quantized_ptr =
-        static_cast<const unsigned char*>(grad.mutable_tensor_le_8()->data());
+        reinterpret_cast<const unsigned char*>(
+            grad.mutable_tensor_le_8()->data());
     dequantize_less_8_bits(type, quantized_ptr, number_raw, max_value,
                            min_value, raw_ptr);
   } else if (type == QUANTIZATION_TYPE::EIGHT_BIT ||
