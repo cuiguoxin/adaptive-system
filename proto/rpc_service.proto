@@ -4,6 +4,7 @@ package adaptive_system;
 
 import "tensorflow/core/framework/tensor.proto";
 import "tensorflow/core/framework/graph.proto";
+import "tensorflow/core/framework/tensor_shape.proto"
 
 
 message Empty {
@@ -29,7 +30,7 @@ message Tuple {
 
 
 
-enum GRAD_QUANT_LEVEL{
+enum GRAD_QUANT_LEVEL {
         TWO = 0;
         FOUR = 1;
         EIGHT = 2;
@@ -48,6 +49,8 @@ message Gradient {
     bytes tensor_le_8 = 3;
     float max = 4;
     float min = 5;
+    tensorflow.TensorShapeProto = 6;
+
 }
 
 message NamedGradients {

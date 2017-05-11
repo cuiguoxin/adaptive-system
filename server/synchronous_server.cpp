@@ -60,9 +60,9 @@ class RPCServiceImpl final : public SystemControl::Service {
     _vector_loss.push_back(loss);
     _vector_map_gradient.push_back(map_gradient);
     if (_vector_map_gradient.size() == _number_of_workers) {
-      map_gradient.clear();
-      aggregate_gradients_and_losses(_vector_map_gradient, map_gradient);
-      do_quantization(map_gradient, &_store_named_gradient);
+      std::map<std::string, tensorflow::Tensor> map_gradient_another;
+      aggregate_gradients(_vector_map_gradient, map_gradient_another);
+      do_quantization(map_gradient_another, &_store_named_gradient);
       apply_quantized_gradient_to_model(_store_named_gradient);
       _vector_map_gradient.clear();
       _bool_gradient = true;
@@ -70,6 +70,7 @@ class RPCServiceImpl final : public SystemControl::Service {
     } else {
       _condition_variable_gradient.wait(lk, [this] { return _bool_gradient; });
     }
+    lk.unlock();
     copy_named_gradients(_store_named_gradient, *response);
     return Status::OK;
   }
@@ -83,6 +84,7 @@ class RPCServiceImpl final : public SystemControl::Service {
     } else {
       _condition_variable_state.wait(lk, [this] { return _bool_state; });
     }
+    lk.unlock();
     response->set_level(_grad_quant_level);
     return Status::OK;
   }
@@ -93,7 +95,7 @@ class RPCServiceImpl final : public SystemControl::Service {
       const NamedGradients& named_gradients,
       std::map<std::string, tensorflow::Tensor>& map_gradient) {}
 
-  void aggregate_gradients_and_losses(
+  void aggregate_gradients(
       std::vector<std::map<std::string, tensorflow::Tensor> const&> const&
           vector_map_gradient,
       std::map<std::string, tensorflow::Tensor>& map_gradient) {}
@@ -104,6 +106,7 @@ class RPCServiceImpl final : public SystemControl::Service {
 
   void apply_quantized_gradient_to_model(
       NamedGradients const& named_gradients) {}
+
   void copy_named_gradients(NamedGradients const& from, NamedGradients& to) {}
 
   void adjust_rl_model(std::vector<PartialStateAndLoss const&> const&
