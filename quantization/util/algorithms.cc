@@ -199,13 +199,13 @@ void dequantize(const QUANTIZATION_TYPE type, Gradient& grad,
       type == QUANTIZATION_TYPE::FOUR_BIT) {
     tensorflow::TensorShapeProto* tensor_shape_proto =
         grad.mutable_tensor_shape();
-    tensorflow::TensorShape tensor_shape(tensor_shape_proto);
+    tensorflow::TensorShape tensor_shape(*tensor_shape_proto);
     raw_tensor =
         tensorflow::Tensor(tensorflow::DataType::DT_FLOAT, tensor_shape);
     float* raw_ptr = raw_tensor.flat<float>().data();
     int number_raw = raw_tensor.NumElements();
 
-    tensorflow::uint8 const* quantized_ptr = grad.mutable_le_8()->data();
+    tensorflow::uint8 const* quantized_ptr = grad.mutable_tensor_le_8()->data();
     dequantize_less_8_bits(type, quantized_ptr, number_raw, max_value,
                            min_value, raw_ptr);
   } else if (type == QUANTIZATION_TYPE::EIGHT_BIT ||
@@ -215,7 +215,8 @@ void dequantize(const QUANTIZATION_TYPE type, Gradient& grad,
     tensorflow::Tensor temp;
     temp.FromProto(tensor_quantized_proto);
     // must allocate tensor memory outside dequantize_greater_8_bits
-    raw_tensor = tensorflow::Tensor(DataType::DT_FLOAT, temp.shape());
+    raw_tensor =
+        tensorflow::Tensor(tensorflow::DataType::DT_FLOAT, temp.shape());
     dequantize_greater_8_bits(type, temp, max_value, min_value, raw_tensor);
   }
 }
