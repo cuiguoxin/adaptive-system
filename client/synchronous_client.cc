@@ -23,6 +23,8 @@
 #include "tensorflow/core/platform/types.h"
 #include "tensorflow/core/public/session.h"
 
+#include "quantization/util/algorithms.h"
+
 using grpc::Channel;
 using grpc::ClientContext;
 
@@ -122,16 +124,20 @@ void init_everything() {
 }
 // return loss and set gradient to the first parameter
 float compute_gradient_and_loss(
-    std::map<std::string, tensorflow::Tensor>& gradients) {}
+    std::map<std::string, tensorflow::Tensor>& gradients) {
+  std::vector<std::string> fetch;
+  std::string loss_name = get_tuple()->loss_name();
+  google::protobuf::Map<std::string, Names> const& map_names =
+      get_tuple()->map_names();
+  std::for_each(
+      map_names.begin(), map_names.end(),
+      [&fetch](google::protobuf::MapPair<std::string, Names>& const pair) {
+
+      });
+}
 
 PartialState collect_partial_state(
     std::map<std::string, tensorflow::Tensor> const& gradients, float loss) {}
-
-void quantize_gradient(
-    std::map<std::string, tensorflow::Tensor> const& map_gradients, float loss,
-    NamedGradientsAndLoss& named_gradients_and_loss) {}
-
-void apply_gradient(NamedGradients const& named_gradients) {}
 
 void do_training() {
   for (int i = 0; i < total_iter; i++) {
@@ -149,7 +155,10 @@ void do_training() {
       grad_quant_level = quantization_level.level();
     }
     NamedGradientsAndLoss named_gradients_and_loss;
-    quantize_gradient(map_gradients, loss, named_gradients_and_loss);
+    named_gradients_and_loss.set_loss(loss);
+    quantize_gradient(
+        map_gradients, named_gradients_and_loss.mutable_named_gradients(),
+        cast_grad_quant_level_to_quantization_type(grad_quant_level));
     NamedGradients named_gradients;
     ClientContext context;
     grpc::Status grpc_status = stub->sendGradient(
@@ -158,7 +167,8 @@ void do_training() {
       print_error(grpc_status);
     }
     // add the gradients to variables
-    apply_gradient(named_gradients);
+    apply_quantized_gradient_to_model(named_gradients, get_session(),
+                                      *get_tuple());
   }
 }
 
@@ -166,7 +176,7 @@ void close_session() { get_session()->Close(); }
 
 void run_logic() {
   init_everything();
-
+  do_training();
   close_session();
 }
 }

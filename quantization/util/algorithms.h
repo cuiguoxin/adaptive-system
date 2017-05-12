@@ -37,7 +37,7 @@ GRAD_QUANT_LEVEL cast_quantization_type_to_grad_quant_level(
   return GRAD_QUANT_LEVEL::NONE;
 }
 QUANTIZATION_TYPE cast_grad_quant_level_to_quantization_type(
-    GRAD_QUANT_LEVEL level) {
+    GRAD_QUANT_LEVEL const level) {
   switch (level) {
     case GRAD_QUANT_LEVEL::TWO:
       return QUANTIZATION_TYPE::TWO_BIT;
@@ -64,4 +64,14 @@ tensorflow::DataType cast_quantization_type_to_data_type(
 
 void get_max_and_min_value(tensorflow::Tensor const& tensor, float& max,
                            float& min);
+
+void quantize_gradient(std::map<std::string, tensorflow::Tensor>& map_gradient,
+                       NamedGradients* named_gradients, QUANTIZATION_TYPE type);
+
+void dequantize_gradient(
+    const NamedGradients& named_gradients,
+    std::map<std::string, tensorflow::Tensor>& map_gradient);
+
+void apply_quantized_gradient_to_model(NamedGradients& named_gradients,
+                                       tensorflow::Session* sess, Tuple& tuple);
 }

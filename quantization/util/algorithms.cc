@@ -215,4 +215,82 @@ void get_max_and_min_value(tensorflow::Tensor const& tensor, float& max,
                   }
                 });
 }
+// map_gradient ---->>>named_gradients
+void quantize_gradient(std::map<std::string, tensorflow::Tensor>& map_gradient,
+                       NamedGradients* named_gradients,
+                       QUANTIZATION_TYPE type) {
+  std::for_each(map_gradient.begin(), map_gradient.end(),
+                [named_gradients](
+                    std::pair<std::string const, tensorflow::Tensor>& pair) {
+                  std::string const& variable_name = pair.first;
+                  tensorflow::Tensor& raw_tensor = pair.second;
+                  float max = 0, min = 0;
+                  get_max_and_min_value(raw_tensor, max, min);
+                  Gradient grad;
+                  quantize(type, raw_tensor, max, min, grad);
+                  named_gradients->mutable_name_to_gradient()->insert(
+                      google::protobuf::MapPair<::std::string, Gradient>(
+                          variable_name, grad));
+                });
+}
+
+// put named quantized gradients into a dequantized tensor map
+void dequantize_gradient(
+    NamedGradients& named_gradients,
+    std::map<std::string, tensorflow::Tensor>& map_gradient) {
+  auto map_quantized_gradient =
+      named_gradients.mutable_name_to_gradient();  // const reference
+  std::for_each(
+      map_quantized_gradient->begin(), map_quantized_gradient->end(),
+      [&map_gradient](
+          ::google::protobuf::MapPair<std::string, Gradient> const& pair) {
+        Gradient& gradient = pair.second;
+        std::string const& variable_name = pair.first;
+        tensorflow::Tensor temp_tensor;
+        dequantize(cast_grad_quant_level_to_quantization_type(gradient.level()),
+                   gradient, temp_tensor);
+        map_gradient.insert(std::pair<std::string, tensorflow::Tensor>(
+            variable_name, temp_tensor));
+      });
+}
+
+void apply_quantized_gradient_to_model(NamedGradients& named_gradients,
+                                       tensorflow::Session* sess,
+                                       Tuple& tuple) {
+  google::protobuf::Map<std::string, Gradient>& map_gradient =
+      *named_gradients.mutable_name_to_gradient();
+  google::protobuf::Map<std::string, Names> const& map_names =
+      tuple.map_names();
+  std::vector<std::pair<std::string, tensorflow::Tensor>> feeds;
+  std::vector<std::string> actions_to_do;
+  std::for_each(
+      map_gradient.begin(), map_gradient.end(),
+      [&feeds, &actions_to_do,
+       &map_names](google::protobuf::MapPair<std::string, Gradient>& pair) {
+        std::string const& variable_name = pair.first;
+        Gradient& grad = pair.second;
+        auto iter_map_names = map_names.find(variable_name);
+        if (iter_map_names == map_names.end()) {
+          std::cout << "this is impossible Line " << __LINE__ << std::endl;
+          std::terminate();
+        } else {
+          Names& names = iter->second;
+          std::string assign_add_name = names.assign_add_name();
+
+          tensorflow::Tensor feed;  // nothing need to do to initialize feed
+                                    // tensor, dequantize function will do all
+                                    // stuff
+          dequantize(cast_grad_quant_level_to_quantization_type(grad.level()),
+                     grad, feed);
+          float* feed_ptr = feed.flat<float>().data();
+          std::for_each(feed_ptr, feed_ptr + feed.NumElements(),
+                        [this](float& ref) { ref = -ref * _lr; });
+          feeds.push_back(std::pair<std::string, tensorflow::Tensor>(
+              names.placeholder_assign_add_name(), feed));
+          actions_to_do.push_back(assign_add_name);
+        }
+      });
+  std::vector<tensorflow::Tensor> output;
+  sess->Run(feeds, {}, actions_to_do, &output);
+}
 }
