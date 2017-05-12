@@ -73,7 +73,7 @@ class RPCServiceImpl final : public SystemControl::Service {
       _condition_variable_gradient.wait(lk, [this] { return _bool_gradient; });
     }
     lk.unlock();
-    copy_named_gradients(_store_named_gradient, *response);
+    *response = _store_named_gradient;
     return Status::OK;
   }
 
@@ -117,28 +117,65 @@ class RPCServiceImpl final : public SystemControl::Service {
   void aggregate_gradients(
       std::vector<std::map<std::string, tensorflow::Tensor> const&> const&
           vector_map_gradient,
-      std::map<std::string, tensorflow::Tensor>& map_gradient) {}
-
-  void do_quantization(
-      std::map<std::string, tensorflow::Tensor> const& map_gradient,
-      NamedGradients* named_gradients) {
+      std::map<std::string, tensorflow::Tensor>& map_gradient) {
     std::for_each(
-        map_gradient.cbegin(), map_gradient.cend(),
+        vector_map_gradient.cbegin(), vector_map_gradient.cend();
+        [&map_gradient](
+            std::map<std::string, tensorflow::Tensor> const& current_map) {
+          std::for_each(
+              current_map.cbegin(), current_map.cend(),
+              [&map_gradient](
+                  std::pair<std::string, tensorflow::Tensor> const& pair) {
+                std::string const& variable_name = pair.first;
+                tensorflow::Tensor const& tensor_to_be_aggregate = pair.second;
+                const float* tensor_to_be_aggregate_ptr =
+                    tensor_to_be_aggregate.flat<float>().data();
+                auto iter = map_gradient.find(variable_name);
+                if (iter == map_gradient.end()) {
+                  Tensor new_tensor(tensorflow::DataType::DT_FLOAT,
+                                    tensor_to_be_aggregate.shape());
+                  float* new_tensor_ptr = new_tensor.flat<float>().data();
+                  size_t num_new_tensor = new_tensor.NumElements();
+                  std::copy(tensor_to_be_aggregate_ptr,
+                            tensor_to_be_aggregate_ptr + num_new_tensor,
+                            new_tensor_ptr);
+                  map_gradient.insert(
+                      std::make_pair(variable_name, new_tensor));
+                } else {
+                  tensorflow::Tensor& tensor_sum = iter->second;
+                  float* tensor_sum_ptr = tensor_sum.flat<float>().data();
+                  size_t num_new_tensor = new_tensor.NumElements();
+                  for (size_t i = 0; i < num_new_tensor; i++) {
+                    tensor_sum_ptr[i] += tensor_to_be_aggregate_ptr[i];
+                  }
+                }
+              });
+        });
+  }
+
+  void do_quantization(std::map<std::string, tensorflow::Tensor>& map_gradient,
+                       NamedGradients* named_gradients) {
+    std::for_each(
+        map_gradient.begin(), map_gradient.end(),
         [named_gradients](
-            ::google::protobuf::MapPair<std::string, tensorflow::Tensor> const&
+            ::google::protobuf::MapPair<std::string, tensorflow::Tensor>&
                 pair) {
           std::string const& variable_name = pair.first;
-          tensorflow::Tensor const& raw_tensor = pair.second;
+          tensorflow::Tensor& raw_tensor = pair.second;
           float max = 0, min = 0;
           get_max_and_min_value(raw_tensor, max, min);
-
+          Gradient grad;
+          quantize(
+              cast_grad_quant_level_to_quantization_type(_grad_quant_level),
+              raw_tensor, max, min, grad);
+          named_gradients->insert(
+              google::protobuf::MapPair<::std::string, Gradient>(variable_name,
+                                                                 grad));
         });
   }
 
   void apply_quantized_gradient_to_model(
       NamedGradients const& named_gradients) {}
-
-  void copy_named_gradients(NamedGradients const& from, NamedGradients& to) {}
 
   void adjust_rl_model(std::vector<PartialStateAndLoss const&> const&
                            vector_partial_state_and_loss) {}
