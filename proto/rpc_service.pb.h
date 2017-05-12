@@ -452,6 +452,20 @@ class Tuple : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   ::google::protobuf::Map< ::std::string, ::tensorflow::TensorProto >*
       mutable_map_parameters();
 
+  // string loss_name = 6;
+  void clear_loss_name();
+  static const int kLossNameFieldNumber = 6;
+  const ::std::string& loss_name() const;
+  void set_loss_name(const ::std::string& value);
+  #if LANG_CXX11
+  void set_loss_name(::std::string&& value);
+  #endif
+  void set_loss_name(const char* value);
+  void set_loss_name(const char* value, size_t size);
+  ::std::string* mutable_loss_name();
+  ::std::string* release_loss_name();
+  void set_allocated_loss_name(::std::string* loss_name);
+
   // .tensorflow.GraphDef graph = 5;
   bool has_graph() const;
   void clear_graph();
@@ -499,6 +513,7 @@ class Tuple : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
       ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
       ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE,
       0 > map_parameters_;
+  ::google::protobuf::internal::ArenaStringPtr loss_name_;
   ::tensorflow::GraphDef* graph_;
   float lr_;
   ::google::protobuf::int32 interval_;
@@ -1537,6 +1552,58 @@ inline void Tuple::set_allocated_graph(::tensorflow::GraphDef* graph) {
     
   }
   // @@protoc_insertion_point(field_set_allocated:adaptive_system.Tuple.graph)
+}
+
+// string loss_name = 6;
+inline void Tuple::clear_loss_name() {
+  loss_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& Tuple::loss_name() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.Tuple.loss_name)
+  return loss_name_.GetNoArena();
+}
+inline void Tuple::set_loss_name(const ::std::string& value) {
+  
+  loss_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:adaptive_system.Tuple.loss_name)
+}
+#if LANG_CXX11
+inline void Tuple::set_loss_name(::std::string&& value) {
+  
+  loss_name_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Tuple.loss_name)
+}
+#endif
+inline void Tuple::set_loss_name(const char* value) {
+  
+  loss_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:adaptive_system.Tuple.loss_name)
+}
+inline void Tuple::set_loss_name(const char* value, size_t size) {
+  
+  loss_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:adaptive_system.Tuple.loss_name)
+}
+inline ::std::string* Tuple::mutable_loss_name() {
+  
+  // @@protoc_insertion_point(field_mutable:adaptive_system.Tuple.loss_name)
+  return loss_name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* Tuple::release_loss_name() {
+  // @@protoc_insertion_point(field_release:adaptive_system.Tuple.loss_name)
+  
+  return loss_name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Tuple::set_allocated_loss_name(::std::string* loss_name) {
+  if (loss_name != NULL) {
+    
+  } else {
+    
+  }
+  loss_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), loss_name);
+  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Tuple.loss_name)
 }
 
 // -------------------------------------------------------------------
