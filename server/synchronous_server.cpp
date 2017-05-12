@@ -144,7 +144,7 @@ class RPCServiceImpl final : public SystemControl::Service {
                 } else {
                   tensorflow::Tensor& tensor_sum = iter->second;
                   float* tensor_sum_ptr = tensor_sum.flat<float>().data();
-                  size_t num_new_tensor = new_tensor.NumElements();
+                  size_t num_new_tensor = tensor_sum.NumElements();
                   for (size_t i = 0; i < num_new_tensor; i++) {
                     tensor_sum_ptr[i] += tensor_to_be_aggregate_ptr[i];
                   }
@@ -168,7 +168,7 @@ class RPCServiceImpl final : public SystemControl::Service {
           quantize(
               cast_grad_quant_level_to_quantization_type(_grad_quant_level),
               raw_tensor, max, min, grad);
-          named_gradients->insert(
+          named_gradients->mutable_name_to_gradient()->insert(
               google::protobuf::MapPair<::std::string, Gradient>(variable_name,
                                                                  grad));
         });
@@ -204,7 +204,8 @@ class RPCServiceImpl final : public SystemControl::Service {
 
 void RunServer() {
   std::string server_address("0.0.0.0:50051");
-  adaptive_system::RPCServiceImpl service;
+  adaptive_system::RPCServiceImpl service(
+      3, 0.1f, 5000, 3, adaptive_system::GRAD_QUANT_LEVEL::EIGHT, "");
 
   ServerBuilder builder;
   // Listen on the given address without any authentication mechanism.
