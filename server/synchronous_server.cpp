@@ -39,7 +39,7 @@ class RPCServiceImpl final : public SystemControl::Service {
         _tuple_local_path(tuple_local_path) {}
   Status retrieveTuple(ServerContext* context, const Empty* request,
                        Tuple* reply) override {
-    fstream input(_tuple_local_path, ios::in | ios::binary);
+    std::fstream input(_tuple_local_path, std::ios::in | std::ios::binary);
     if (!input) {
       std::cout << _tuple_local_path
                 << ": File not found.  Creating a new file." << std::endl;
@@ -177,8 +177,8 @@ class RPCServiceImpl final : public SystemControl::Service {
   void apply_quantized_gradient_to_model(
       NamedGradients const& named_gradients) {}
 
-  void adjust_rl_model(std::vector<PartialStateAndLoss const&> const&
-                           vector_partial_state_and_loss) {}
+  void adjust_rl_model(
+      std::vector<PartialStateAndLoss> const& vector_partial_state_and_loss) {}
   // private data member
  private:
   const int _interval;
@@ -192,7 +192,7 @@ class RPCServiceImpl final : public SystemControl::Service {
   std::condition_variable _condition_variable_gradient;
   std::condition_variable _condition_variable_state;
   std::vector<std::map<std::string, tensorflow::Tensor>> _vector_map_gradient;
-  std::vector<PartialStateAndLoss const&> _vector_partial_state_and_loss;
+  std::vector<PartialStateAndLoss> _vector_partial_state_and_loss;
   float _last_loss;
   std::vector<float> _vector_loss;
   std::string _tuple_local_path;
