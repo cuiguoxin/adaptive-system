@@ -13,9 +13,16 @@
 #include <grpc++/grpc++.h>
 
 #include "proto/rpc_service.grpc.pb.h"
-
+#include "tensorflow/core/framework/graph.pb.h"
 #include "tensorflow/core/framework/tensor.h"
+#include "tensorflow/core/graph/default_device.h"
+#include "tensorflow/core/graph/graph_def_builder.h"
+#include "tensorflow/core/lib/core/threadpool.h"
+#include "tensorflow/core/lib/strings/stringprintf.h"
+#include "tensorflow/core/platform/init_main.h"
+#include "tensorflow/core/platform/logging.h"
 #include "tensorflow/core/platform/types.h"
+#include "tensorflow/core/public/session.h"
 
 #include "quantization/util/algorithms.h"
 
@@ -36,17 +43,20 @@ class RPCServiceImpl final : public SystemControl::Service {
         _total_iter(total_iter),
         _number_of_workers(number_of_workers),
         _grad_quant_level(grad_quant_level),
-        _tuple_local_path(tuple_local_path) {}
-  Status retrieveTuple(ServerContext* context, const Empty* request,
-                       Tuple* reply) override {
+        _tuple_local_path(tuple_local_path) {
+    session = tensorflow::NewSession(tensorflow::SessionOptions());
     std::fstream input(_tuple_local_path, std::ios::in | std::ios::binary);
     if (!input) {
       std::cout << _tuple_local_path
                 << ": File not found.  Creating a new file." << std::endl;
-    } else if (!reply->ParseFromIstream(&input)) {
+    } else if (!tuple.ParseFromIstream(&input)) {
       std::cerr << "Failed to parse tuple." << std::endl;
       std::terminate();
     }
+  }
+  Status retrieveTuple(ServerContext* context, const Empty* request,
+                       Tuple* reply) override {
+    *reply = tuple;
     return Status::OK;
   }
 
@@ -152,7 +162,7 @@ class RPCServiceImpl final : public SystemControl::Service {
               });
         });
   }
-
+  // map_gradient---->>>named_gradients
   void do_quantization(std::map<std::string, tensorflow::Tensor>& map_gradient,
                        NamedGradients* named_gradients) {
     std::for_each(map_gradient.begin(), map_gradient.end(),
@@ -172,8 +182,41 @@ class RPCServiceImpl final : public SystemControl::Service {
                   });
   }
 
-  void apply_quantized_gradient_to_model(
-      NamedGradients const& named_gradients) {}
+  void apply_quantized_gradient_to_model(NamedGradients& named_gradients) {
+    google::protobuf::Map<std::string, Gradient>& map_gradient =
+        *named_gradients.mutable_name_to_gradient();
+    google::protobuf::Map<std::string, Names> const& map_names =
+        tuple.map_names();
+    std::vector<std::pair<std::string, tensorflow::Tensor>> feeds;
+    std::vector<std::string> actions_to_do;
+    std::for_each(
+        map_gradient.begin(), map_gradient.end(),
+        [&feeds, &actions_to_do, &map_names,
+         this](google::protobuf::MapPair<std::string, Gradient>& pair) {
+          std::string const& variable_name = pair.first;
+          Gradient& grad = pair.second;
+          auto iter_map_names = map_names.find(variable_name);
+          if (iter_map_names == map_names.end()) {
+            std::cout << "this is impossible Line " << __LINE__ << std::endl;
+            std::terminate();
+          } else {
+            Names& names = iter->second;
+            std::string assign_add_name = names.assign_add_name();
+            tensorflow::TensorShape shape(
+                tuple.map_parameters.find(variable_name)
+                    ->second.tensor_shape());
+            tensorflow::Tensor feed(tensorflow::DataType::DT_FLOAT, shape);
+            dequantize(
+                cast_grad_quant_level_to_quantization_type(_grad_quant_level),
+                grad, feed);
+            feeds.push_back(std::pair<std::string, tensorflow::Tensor>(
+                names.placeholder_assign_add_name(), feed));
+            actions_to_do.push_back(assign_add_name);
+          }
+        });
+    std::vector<tensorflow::Tensor> output;
+    session->Run(feeds, {}, actions_to_do, &output);
+  }
 
   void adjust_rl_model(
       std::vector<PartialStateAndLoss> const& vector_partial_state_and_loss) {}
@@ -197,6 +240,9 @@ class RPCServiceImpl final : public SystemControl::Service {
   bool _bool_gradient;
   bool _bool_state;
   NamedGradients _store_named_gradient;
+
+  tensorflow::Session* session;
+  Tuple tuple;
 };
 }
 

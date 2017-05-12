@@ -26,6 +26,7 @@ message Tuple {
     float lr = 3;
     int32 interval = 4;
     tensorflow.GraphDef graph = 5;
+    string loss_name = 6;
 }
 
 
