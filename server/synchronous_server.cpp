@@ -156,8 +156,8 @@ class RPCServiceImpl final : public SystemControl::Service {
   void do_quantization(std::map<std::string, tensorflow::Tensor>& map_gradient,
                        NamedGradients* named_gradients) {
     std::for_each(map_gradient.begin(), map_gradient.end(),
-                  [named_gradients,
-                   this](std::pair<std::string, tensorflow::Tensor>& pair) {
+                  [named_gradients, this](
+                      std::pair<std::string const, tensorflow::Tensor>& pair) {
                     std::string const& variable_name = pair.first;
                     tensorflow::Tensor& raw_tensor = pair.second;
                     float max = 0, min = 0;
