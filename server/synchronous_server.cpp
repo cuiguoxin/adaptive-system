@@ -119,7 +119,7 @@ class RPCServiceImpl final : public SystemControl::Service {
           vector_map_gradient,
       std::map<std::string, tensorflow::Tensor>& map_gradient) {
     std::for_each(
-        vector_map_gradient.cbegin(), vector_map_gradient.cend();
+        vector_map_gradient.cbegin(), vector_map_gradient.cend(),
         [&map_gradient](
             std::map<std::string, tensorflow::Tensor> const& current_map) {
           std::for_each(
@@ -132,8 +132,8 @@ class RPCServiceImpl final : public SystemControl::Service {
                     tensor_to_be_aggregate.flat<float>().data();
                 auto iter = map_gradient.find(variable_name);
                 if (iter == map_gradient.end()) {
-                  Tensor new_tensor(tensorflow::DataType::DT_FLOAT,
-                                    tensor_to_be_aggregate.shape());
+                  tensorflow::Tensor new_tensor(tensorflow::DataType::DT_FLOAT,
+                                                tensor_to_be_aggregate.shape());
                   float* new_tensor_ptr = new_tensor.flat<float>().data();
                   size_t num_new_tensor = new_tensor.NumElements();
                   std::copy(tensor_to_be_aggregate_ptr,
@@ -157,9 +157,9 @@ class RPCServiceImpl final : public SystemControl::Service {
                        NamedGradients* named_gradients) {
     std::for_each(
         map_gradient.begin(), map_gradient.end(),
-        [named_gradients](
-            ::google::protobuf::MapPair<std::string, tensorflow::Tensor>&
-                pair) {
+        [named_gradients,
+         this](::google::protobuf::MapPair<std::string, tensorflow::Tensor>&
+                   pair) {
           std::string const& variable_name = pair.first;
           tensorflow::Tensor& raw_tensor = pair.second;
           float max = 0, min = 0;
