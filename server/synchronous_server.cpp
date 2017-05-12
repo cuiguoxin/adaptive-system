@@ -155,23 +155,21 @@ class RPCServiceImpl final : public SystemControl::Service {
 
   void do_quantization(std::map<std::string, tensorflow::Tensor>& map_gradient,
                        NamedGradients* named_gradients) {
-    std::for_each(
-        map_gradient.begin(), map_gradient.end(),
-        [named_gradients,
-         this](::google::protobuf::MapPair<std::string, tensorflow::Tensor>&
-                   pair) {
-          std::string const& variable_name = pair.first;
-          tensorflow::Tensor& raw_tensor = pair.second;
-          float max = 0, min = 0;
-          get_max_and_min_value(raw_tensor, max, min);
-          Gradient grad;
-          quantize(
-              cast_grad_quant_level_to_quantization_type(_grad_quant_level),
-              raw_tensor, max, min, grad);
-          named_gradients->mutable_name_to_gradient()->insert(
-              google::protobuf::MapPair<::std::string, Gradient>(variable_name,
-                                                                 grad));
-        });
+    std::for_each(map_gradient.begin(), map_gradient.end(),
+                  [named_gradients,
+                   this](std::pair<std::string, tensorflow::Tensor>& pair) {
+                    std::string const& variable_name = pair.first;
+                    tensorflow::Tensor& raw_tensor = pair.second;
+                    float max = 0, min = 0;
+                    get_max_and_min_value(raw_tensor, max, min);
+                    Gradient grad;
+                    quantize(cast_grad_quant_level_to_quantization_type(
+                                 _grad_quant_level),
+                             raw_tensor, max, min, grad);
+                    named_gradients->mutable_name_to_gradient()->insert(
+                        google::protobuf::MapPair<::std::string, Gradient>(
+                            variable_name, grad));
+                  });
   }
 
   void apply_quantized_gradient_to_model(
