@@ -34,6 +34,10 @@ float lr = 0.0;
 int interval = 0;
 int total_iter = 0;
 GRAD_QUANT_LEVEL grad_quant_level = GRAD_QUANT_LEVEL::NONE;
+Tuple* get_tuple() {
+  static Tuple tuple;
+  return &tuple;
+}
 
 std::map<std::string, Names>* get_map_names() {
   static std::map<std::string, Names> map_names;
@@ -114,6 +118,7 @@ void init_everything() {
   if (!tf_status.ok()) {
     print_error(tf_status);
   }
+  *get_tuple() = tuple;
 }
 // return loss and set gradient to the first parameter
 float compute_gradient_and_loss(
