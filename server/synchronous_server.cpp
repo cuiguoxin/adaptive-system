@@ -115,7 +115,7 @@ class RPCServiceImpl final : public SystemControl::Service {
   }
 
   void aggregate_gradients(
-      std::vector<std::map<std::string, tensorflow::Tensor> const&> const&
+      std::vector<std::map<std::string, tensorflow::Tensor>> const&
           vector_map_gradient,
       std::map<std::string, tensorflow::Tensor>& map_gradient) {
     std::for_each(
@@ -191,8 +191,7 @@ class RPCServiceImpl final : public SystemControl::Service {
   std::mutex _mutex_state;
   std::condition_variable _condition_variable_gradient;
   std::condition_variable _condition_variable_state;
-  std::vector<std::map<std::string, tensorflow::Tensor> const&>
-      _vector_map_gradient;
+  std::vector<std::map<std::string, tensorflow::Tensor>> _vector_map_gradient;
   std::vector<PartialStateAndLoss const&> _vector_partial_state_and_loss;
   float _last_loss;
   std::vector<float> _vector_loss;
