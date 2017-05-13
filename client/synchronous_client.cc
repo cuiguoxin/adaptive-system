@@ -127,13 +127,32 @@ float compute_gradient_and_loss(
     std::map<std::string, tensorflow::Tensor>& gradients) {
   std::vector<std::string> fetch;
   std::string loss_name = get_tuple()->loss_name();
+  fetch.push_back(loss_name);
+  std::vector<tensorflow::Tensor> outputs;
+  std::vector<std::string> variable_names_in_order;
   google::protobuf::Map<std::string, Names> const& map_names =
       get_tuple()->map_names();
-  std::for_each(
-      map_names.begin(), map_names.end(),
-      [&fetch](google::protobuf::MapPair<std::string, Names>& const pair) {
-
-      });
+  std::for_each(map_names.begin(), map_names.end(),
+                [&fetch, &variable_names_in_order](
+                    google::protobuf::MapPair<std::string, Names>& const pair) {
+                  Names const& names = pair.second;
+                  std::string const& variable_name = pair.first;
+                  fetch.push_back(names.gradient_name());
+                  variable_names_in_order.push_back(variable_name);
+                });
+  get_session()->Run({}, fetch, {}, &outputs);
+  tensorflow::Tensor& loss_tensor = outputs[0];
+  float* loss_ptr = loss_tensor.flat<float>().data();
+  outputs.erase(outputs.begin);
+  if (outputs.size() != variable_names_in_order.size()) {
+    std::cout << "impossible in " << __LINE__ << std::endl;
+    std::terminate();
+  }
+  size_t size = outputs.size();
+  for (size_t i = 0; i < size; i++) {
+    gradients.insert(std::pair<std::string, tensorflow::Tensor>(
+        variable_names_in_order[i], outputs[i]));
+  }
 }
 
 PartialState collect_partial_state(
@@ -142,7 +161,8 @@ PartialState collect_partial_state(
 void do_training() {
   for (int i = 0; i < total_iter; i++) {
     std::map<std::string, tensorflow::Tensor> map_gradients;
-    float loss = compute_gradient_and_loss(map_gradients);
+    float loss = compute_gradient_and_loss(
+        map_gradients);  // compute gradient and loss now
     if (i % interval == 0) {
       PartialState partial_state = collect_partial_state(map_gradients, loss);
       ClientContext context;

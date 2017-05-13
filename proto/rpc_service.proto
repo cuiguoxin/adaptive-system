@@ -63,20 +63,20 @@ message PartialState {
     float loss = 2;
 }
 
-message NamedGradientsAndLoss {
-    NamedGradients named_gradients = 1;
-    float loss = 2;
-}
-
 message PartialStateAndLoss {
     PartialState ps = 1;
     float loss = 2;
 }
 
+message Loss {
+    float loss = 1;
+}
+
 service SystemControl {
 
     rpc retrieveTuple(Empty) returns (Tuple);
-    rpc sendGradient(NamedGradientsAndLoss) returns (NamedGradients);
+    rpc sendLoss(Loss) returns (Empty)
+    rpc sendGradient(NamedGradients) returns (NamedGradients);
     rpc sendState(PartialStateAndLoss) returns (QuantizationLevel);
 
 }
