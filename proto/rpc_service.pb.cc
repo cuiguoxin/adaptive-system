@@ -32,8 +32,6 @@ class NamedGradientsDefaultTypeInternal : public ::google::protobuf::internal::E
 } _NamedGradients_default_instance_;
 class PartialStateDefaultTypeInternal : public ::google::protobuf::internal::ExplicitlyConstructed<PartialState> {
 } _PartialState_default_instance_;
-class PartialStateAndLossDefaultTypeInternal : public ::google::protobuf::internal::ExplicitlyConstructed<PartialStateAndLoss> {
-} _PartialStateAndLoss_default_instance_;
 class LossDefaultTypeInternal : public ::google::protobuf::internal::ExplicitlyConstructed<Loss> {
 } _Loss_default_instance_;
 
@@ -42,7 +40,7 @@ namespace protobuf_rpc_5fservice_2eproto {
 
 namespace {
 
-::google::protobuf::Metadata file_level_metadata[12];
+::google::protobuf::Metadata file_level_metadata[11];
 const ::google::protobuf::EnumDescriptor* file_level_enum_descriptors[1];
 
 }  // namespace
@@ -99,12 +97,6 @@ const ::google::protobuf::uint32 TableStruct::offsets[] = {
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PartialState, tensor_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PartialState, loss_),
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PartialStateAndLoss, _internal_metadata_),
-  ~0u,  // no _extensions_
-  ~0u,  // no _oneof_case_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PartialStateAndLoss, ps_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PartialStateAndLoss, loss_),
-  ~0u,  // no _has_bits_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Loss, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
@@ -119,8 +111,7 @@ static const ::google::protobuf::internal::MigrationSchema schemas[] = {
   { 29, -1, sizeof(Gradient)},
   { 39, -1, sizeof(NamedGradients)},
   { 44, -1, sizeof(PartialState)},
-  { 50, -1, sizeof(PartialStateAndLoss)},
-  { 56, -1, sizeof(Loss)},
+  { 50, -1, sizeof(Loss)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -131,7 +122,6 @@ static ::google::protobuf::Message const * const file_default_instances[] = {
   reinterpret_cast<const ::google::protobuf::Message*>(&_Gradient_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&_NamedGradients_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&_PartialState_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&_PartialStateAndLoss_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&_Loss_default_instance_),
 };
 
@@ -153,7 +143,7 @@ void protobuf_AssignDescriptorsOnce() {
 void protobuf_RegisterTypes(const ::std::string&) GOOGLE_ATTRIBUTE_COLD;
 void protobuf_RegisterTypes(const ::std::string&) {
   protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 12);
+  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 11);
   const ::google::protobuf::Descriptor* Tuple_MapNamesEntry_descriptor = protobuf_rpc_5fservice_2eproto::file_level_metadata[2].descriptor;
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
         Tuple_MapNamesEntry_descriptor,
@@ -203,10 +193,8 @@ void TableStruct::Shutdown() {
   delete file_level_metadata[8].reflection;
   _PartialState_default_instance_.Shutdown();
   delete file_level_metadata[9].reflection;
-  _PartialStateAndLoss_default_instance_.Shutdown();
-  delete file_level_metadata[10].reflection;
   _Loss_default_instance_.Shutdown();
-  delete file_level_metadata[11].reflection;
+  delete file_level_metadata[10].reflection;
 }
 
 void TableStruct::InitDefaultsImpl() {
@@ -223,7 +211,6 @@ void TableStruct::InitDefaultsImpl() {
   _Gradient_default_instance_.DefaultConstruct();
   _NamedGradients_default_instance_.DefaultConstruct();
   _PartialState_default_instance_.DefaultConstruct();
-  _PartialStateAndLoss_default_instance_.DefaultConstruct();
   _Loss_default_instance_.DefaultConstruct();
   _Tuple_default_instance_.get_mutable()->graph_ = const_cast< ::tensorflow::GraphDef*>(
       ::tensorflow::GraphDef::internal_default_instance());
@@ -233,8 +220,6 @@ void TableStruct::InitDefaultsImpl() {
       ::tensorflow::TensorShapeProto::internal_default_instance());
   _PartialState_default_instance_.get_mutable()->tensor_ = const_cast< ::tensorflow::TensorProto*>(
       ::tensorflow::TensorProto::internal_default_instance());
-  _PartialStateAndLoss_default_instance_.get_mutable()->ps_ = const_cast< ::adaptive_system::PartialState*>(
-      ::adaptive_system::PartialState::internal_default_instance());
 }
 
 void InitDefaults() {
@@ -275,22 +260,20 @@ void AddDescriptorsImpl() {
       "y\030\001 \001(\t\022(\n\005value\030\002 \001(\0132\031.adaptive_system"
       ".Gradient:\0028\001\"E\n\014PartialState\022\'\n\006tensor\030"
       "\001 \001(\0132\027.tensorflow.TensorProto\022\014\n\004loss\030\002"
-      " \001(\002\"N\n\023PartialStateAndLoss\022)\n\002ps\030\001 \001(\0132"
-      "\035.adaptive_system.PartialState\022\014\n\004loss\030\002"
       " \001(\002\"\024\n\004Loss\022\014\n\004loss\030\001 \001(\002*G\n\020GRAD_QUANT"
       "_LEVEL\022\007\n\003TWO\020\000\022\010\n\004FOUR\020\001\022\t\n\005EIGHT\020\002\022\013\n\007"
-      "SIXTEEN\020\003\022\010\n\004NONE\020\0042\264\002\n\rSystemControl\022\?\n"
+      "SIXTEEN\020\003\022\010\n\004NONE\020\0042\255\002\n\rSystemControl\022\?\n"
       "\rretrieveTuple\022\026.adaptive_system.Empty\032\026"
       ".adaptive_system.Tuple\0229\n\010sendLoss\022\025.ada"
       "ptive_system.Loss\032\026.adaptive_system.Empt"
       "y\022P\n\014sendGradient\022\037.adaptive_system.Name"
       "dGradients\032\037.adaptive_system.NamedGradie"
-      "nts\022U\n\tsendState\022$.adaptive_system.Parti"
-      "alStateAndLoss\032\".adaptive_system.Quantiz"
-      "ationLevelb\006proto3"
+      "nts\022N\n\tsendState\022\035.adaptive_system.Parti"
+      "alState\032\".adaptive_system.QuantizationLe"
+      "velb\006proto3"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 1738);
+      descriptor, 1651);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "rpc_service.proto", &protobuf_RegisterTypes);
   ::tensorflow::protobuf_tensorflow_2fcore_2fframework_2ftensor_2eproto::AddDescriptors();
@@ -3672,319 +3655,6 @@ void PartialState::set_loss(float value) {
 // ===================================================================
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int PartialStateAndLoss::kPsFieldNumber;
-const int PartialStateAndLoss::kLossFieldNumber;
-#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
-
-PartialStateAndLoss::PartialStateAndLoss()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
-    protobuf_rpc_5fservice_2eproto::InitDefaults();
-  }
-  SharedCtor();
-  // @@protoc_insertion_point(constructor:adaptive_system.PartialStateAndLoss)
-}
-PartialStateAndLoss::PartialStateAndLoss(const PartialStateAndLoss& from)
-  : ::google::protobuf::Message(),
-      _internal_metadata_(NULL),
-      _cached_size_(0) {
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  if (from.has_ps()) {
-    ps_ = new ::adaptive_system::PartialState(*from.ps_);
-  } else {
-    ps_ = NULL;
-  }
-  loss_ = from.loss_;
-  // @@protoc_insertion_point(copy_constructor:adaptive_system.PartialStateAndLoss)
-}
-
-void PartialStateAndLoss::SharedCtor() {
-  ::memset(&ps_, 0, reinterpret_cast<char*>(&loss_) -
-    reinterpret_cast<char*>(&ps_) + sizeof(loss_));
-  _cached_size_ = 0;
-}
-
-PartialStateAndLoss::~PartialStateAndLoss() {
-  // @@protoc_insertion_point(destructor:adaptive_system.PartialStateAndLoss)
-  SharedDtor();
-}
-
-void PartialStateAndLoss::SharedDtor() {
-  if (this != internal_default_instance()) {
-    delete ps_;
-  }
-}
-
-void PartialStateAndLoss::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-}
-const ::google::protobuf::Descriptor* PartialStateAndLoss::descriptor() {
-  protobuf_rpc_5fservice_2eproto::protobuf_AssignDescriptorsOnce();
-  return protobuf_rpc_5fservice_2eproto::file_level_metadata[10].descriptor;
-}
-
-const PartialStateAndLoss& PartialStateAndLoss::default_instance() {
-  protobuf_rpc_5fservice_2eproto::InitDefaults();
-  return *internal_default_instance();
-}
-
-PartialStateAndLoss* PartialStateAndLoss::New(::google::protobuf::Arena* arena) const {
-  PartialStateAndLoss* n = new PartialStateAndLoss;
-  if (arena != NULL) {
-    arena->Own(n);
-  }
-  return n;
-}
-
-void PartialStateAndLoss::Clear() {
-// @@protoc_insertion_point(message_clear_start:adaptive_system.PartialStateAndLoss)
-  if (GetArenaNoVirtual() == NULL && ps_ != NULL) {
-    delete ps_;
-  }
-  ps_ = NULL;
-  loss_ = 0;
-}
-
-bool PartialStateAndLoss::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:adaptive_system.PartialStateAndLoss)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // .adaptive_system.PartialState ps = 1;
-      case 1: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(10u)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_ps()));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      // float loss = 2;
-      case 2: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(21u)) {
-
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
-                 input, &loss_)));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormatLite::SkipField(input, tag));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:adaptive_system.PartialStateAndLoss)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:adaptive_system.PartialStateAndLoss)
-  return false;
-#undef DO_
-}
-
-void PartialStateAndLoss::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:adaptive_system.PartialStateAndLoss)
-  // .adaptive_system.PartialState ps = 1;
-  if (this->has_ps()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, *this->ps_, output);
-  }
-
-  // float loss = 2;
-  if (this->loss() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(2, this->loss(), output);
-  }
-
-  // @@protoc_insertion_point(serialize_end:adaptive_system.PartialStateAndLoss)
-}
-
-::google::protobuf::uint8* PartialStateAndLoss::InternalSerializeWithCachedSizesToArray(
-    bool deterministic, ::google::protobuf::uint8* target) const {
-  (void)deterministic;  // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:adaptive_system.PartialStateAndLoss)
-  // .adaptive_system.PartialState ps = 1;
-  if (this->has_ps()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      InternalWriteMessageNoVirtualToArray(
-        1, *this->ps_, false, target);
-  }
-
-  // float loss = 2;
-  if (this->loss() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(2, this->loss(), target);
-  }
-
-  // @@protoc_insertion_point(serialize_to_array_end:adaptive_system.PartialStateAndLoss)
-  return target;
-}
-
-size_t PartialStateAndLoss::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:adaptive_system.PartialStateAndLoss)
-  size_t total_size = 0;
-
-  // .adaptive_system.PartialState ps = 1;
-  if (this->has_ps()) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        *this->ps_);
-  }
-
-  // float loss = 2;
-  if (this->loss() != 0) {
-    total_size += 1 + 4;
-  }
-
-  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = cached_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void PartialStateAndLoss::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:adaptive_system.PartialStateAndLoss)
-  GOOGLE_DCHECK_NE(&from, this);
-  const PartialStateAndLoss* source =
-      ::google::protobuf::internal::DynamicCastToGenerated<const PartialStateAndLoss>(
-          &from);
-  if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:adaptive_system.PartialStateAndLoss)
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:adaptive_system.PartialStateAndLoss)
-    MergeFrom(*source);
-  }
-}
-
-void PartialStateAndLoss::MergeFrom(const PartialStateAndLoss& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:adaptive_system.PartialStateAndLoss)
-  GOOGLE_DCHECK_NE(&from, this);
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  if (from.has_ps()) {
-    mutable_ps()->::adaptive_system::PartialState::MergeFrom(from.ps());
-  }
-  if (from.loss() != 0) {
-    set_loss(from.loss());
-  }
-}
-
-void PartialStateAndLoss::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:adaptive_system.PartialStateAndLoss)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void PartialStateAndLoss::CopyFrom(const PartialStateAndLoss& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:adaptive_system.PartialStateAndLoss)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool PartialStateAndLoss::IsInitialized() const {
-  return true;
-}
-
-void PartialStateAndLoss::Swap(PartialStateAndLoss* other) {
-  if (other == this) return;
-  InternalSwap(other);
-}
-void PartialStateAndLoss::InternalSwap(PartialStateAndLoss* other) {
-  std::swap(ps_, other->ps_);
-  std::swap(loss_, other->loss_);
-  std::swap(_cached_size_, other->_cached_size_);
-}
-
-::google::protobuf::Metadata PartialStateAndLoss::GetMetadata() const {
-  protobuf_rpc_5fservice_2eproto::protobuf_AssignDescriptorsOnce();
-  return protobuf_rpc_5fservice_2eproto::file_level_metadata[10];
-}
-
-#if PROTOBUF_INLINE_NOT_IN_HEADERS
-// PartialStateAndLoss
-
-// .adaptive_system.PartialState ps = 1;
-bool PartialStateAndLoss::has_ps() const {
-  return this != internal_default_instance() && ps_ != NULL;
-}
-void PartialStateAndLoss::clear_ps() {
-  if (GetArenaNoVirtual() == NULL && ps_ != NULL) delete ps_;
-  ps_ = NULL;
-}
-const ::adaptive_system::PartialState& PartialStateAndLoss::ps() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.PartialStateAndLoss.ps)
-  return ps_ != NULL ? *ps_
-                         : *::adaptive_system::PartialState::internal_default_instance();
-}
-::adaptive_system::PartialState* PartialStateAndLoss::mutable_ps() {
-  
-  if (ps_ == NULL) {
-    ps_ = new ::adaptive_system::PartialState;
-  }
-  // @@protoc_insertion_point(field_mutable:adaptive_system.PartialStateAndLoss.ps)
-  return ps_;
-}
-::adaptive_system::PartialState* PartialStateAndLoss::release_ps() {
-  // @@protoc_insertion_point(field_release:adaptive_system.PartialStateAndLoss.ps)
-  
-  ::adaptive_system::PartialState* temp = ps_;
-  ps_ = NULL;
-  return temp;
-}
-void PartialStateAndLoss::set_allocated_ps(::adaptive_system::PartialState* ps) {
-  delete ps_;
-  ps_ = ps;
-  if (ps) {
-    
-  } else {
-    
-  }
-  // @@protoc_insertion_point(field_set_allocated:adaptive_system.PartialStateAndLoss.ps)
-}
-
-// float loss = 2;
-void PartialStateAndLoss::clear_loss() {
-  loss_ = 0;
-}
-float PartialStateAndLoss::loss() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.PartialStateAndLoss.loss)
-  return loss_;
-}
-void PartialStateAndLoss::set_loss(float value) {
-  
-  loss_ = value;
-  // @@protoc_insertion_point(field_set:adaptive_system.PartialStateAndLoss.loss)
-}
-
-#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
-
-// ===================================================================
-
-#if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int Loss::kLossFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
@@ -4025,7 +3695,7 @@ void Loss::SetCachedSize(int size) const {
 }
 const ::google::protobuf::Descriptor* Loss::descriptor() {
   protobuf_rpc_5fservice_2eproto::protobuf_AssignDescriptorsOnce();
-  return protobuf_rpc_5fservice_2eproto::file_level_metadata[11].descriptor;
+  return protobuf_rpc_5fservice_2eproto::file_level_metadata[10].descriptor;
 }
 
 const Loss& Loss::default_instance() {
@@ -4184,7 +3854,7 @@ void Loss::InternalSwap(Loss* other) {
 
 ::google::protobuf::Metadata Loss::GetMetadata() const {
   protobuf_rpc_5fservice_2eproto::protobuf_AssignDescriptorsOnce();
-  return protobuf_rpc_5fservice_2eproto::file_level_metadata[11];
+  return protobuf_rpc_5fservice_2eproto::file_level_metadata[10];
 }
 
 #if PROTOBUF_INLINE_NOT_IN_HEADERS

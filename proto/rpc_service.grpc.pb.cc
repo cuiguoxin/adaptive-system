@@ -58,11 +58,11 @@ SystemControl::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& chan
   return new ::grpc::ClientAsyncResponseReader< ::adaptive_system::NamedGradients>(channel_.get(), cq, rpcmethod_sendGradient_, context, request);
 }
 
-::grpc::Status SystemControl::Stub::sendState(::grpc::ClientContext* context, const ::adaptive_system::PartialStateAndLoss& request, ::adaptive_system::QuantizationLevel* response) {
+::grpc::Status SystemControl::Stub::sendState(::grpc::ClientContext* context, const ::adaptive_system::PartialState& request, ::adaptive_system::QuantizationLevel* response) {
   return ::grpc::BlockingUnaryCall(channel_.get(), rpcmethod_sendState_, context, request, response);
 }
 
-::grpc::ClientAsyncResponseReader< ::adaptive_system::QuantizationLevel>* SystemControl::Stub::AsyncsendStateRaw(::grpc::ClientContext* context, const ::adaptive_system::PartialStateAndLoss& request, ::grpc::CompletionQueue* cq) {
+::grpc::ClientAsyncResponseReader< ::adaptive_system::QuantizationLevel>* SystemControl::Stub::AsyncsendStateRaw(::grpc::ClientContext* context, const ::adaptive_system::PartialState& request, ::grpc::CompletionQueue* cq) {
   return new ::grpc::ClientAsyncResponseReader< ::adaptive_system::QuantizationLevel>(channel_.get(), cq, rpcmethod_sendState_, context, request);
 }
 
@@ -85,7 +85,7 @@ SystemControl::Service::Service() {
   AddMethod(new ::grpc::RpcServiceMethod(
       SystemControl_method_names[3],
       ::grpc::RpcMethod::NORMAL_RPC,
-      new ::grpc::RpcMethodHandler< SystemControl::Service, ::adaptive_system::PartialStateAndLoss, ::adaptive_system::QuantizationLevel>(
+      new ::grpc::RpcMethodHandler< SystemControl::Service, ::adaptive_system::PartialState, ::adaptive_system::QuantizationLevel>(
           std::mem_fn(&SystemControl::Service::sendState), this)));
 }
 
@@ -113,7 +113,7 @@ SystemControl::Service::~Service() {
   return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
 }
 
-::grpc::Status SystemControl::Service::sendState(::grpc::ServerContext* context, const ::adaptive_system::PartialStateAndLoss* request, ::adaptive_system::QuantizationLevel* response) {
+::grpc::Status SystemControl::Service::sendState(::grpc::ServerContext* context, const ::adaptive_system::PartialState* request, ::adaptive_system::QuantizationLevel* response) {
   (void) context;
   (void) request;
   (void) response;

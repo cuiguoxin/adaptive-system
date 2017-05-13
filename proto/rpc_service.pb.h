@@ -54,9 +54,6 @@ extern NamesDefaultTypeInternal _Names_default_instance_;
 class PartialState;
 class PartialStateDefaultTypeInternal;
 extern PartialStateDefaultTypeInternal _PartialState_default_instance_;
-class PartialStateAndLoss;
-class PartialStateAndLossDefaultTypeInternal;
-extern PartialStateAndLossDefaultTypeInternal _PartialStateAndLoss_default_instance_;
 class QuantizationLevel;
 class QuantizationLevelDefaultTypeInternal;
 extern QuantizationLevelDefaultTypeInternal _QuantizationLevel_default_instance_;
@@ -930,99 +927,6 @@ class PartialState : public ::google::protobuf::Message /* @@protoc_insertion_po
 };
 // -------------------------------------------------------------------
 
-class PartialStateAndLoss : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:adaptive_system.PartialStateAndLoss) */ {
- public:
-  PartialStateAndLoss();
-  virtual ~PartialStateAndLoss();
-
-  PartialStateAndLoss(const PartialStateAndLoss& from);
-
-  inline PartialStateAndLoss& operator=(const PartialStateAndLoss& from) {
-    CopyFrom(from);
-    return *this;
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const PartialStateAndLoss& default_instance();
-
-  static inline const PartialStateAndLoss* internal_default_instance() {
-    return reinterpret_cast<const PartialStateAndLoss*>(
-               &_PartialStateAndLoss_default_instance_);
-  }
-
-  void Swap(PartialStateAndLoss* other);
-
-  // implements Message ----------------------------------------------
-
-  inline PartialStateAndLoss* New() const PROTOBUF_FINAL { return New(NULL); }
-
-  PartialStateAndLoss* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
-  void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
-  void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
-  void CopyFrom(const PartialStateAndLoss& from);
-  void MergeFrom(const PartialStateAndLoss& from);
-  void Clear() PROTOBUF_FINAL;
-  bool IsInitialized() const PROTOBUF_FINAL;
-
-  size_t ByteSizeLong() const PROTOBUF_FINAL;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
-  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
-      bool deterministic, ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output)
-      const PROTOBUF_FINAL {
-    return InternalSerializeWithCachedSizesToArray(
-        ::google::protobuf::io::CodedOutputStream::IsDefaultSerializationDeterministic(), output);
-  }
-  int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const PROTOBUF_FINAL;
-  void InternalSwap(PartialStateAndLoss* other);
-  private:
-  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
-    return NULL;
-  }
-  inline void* MaybeArenaPtr() const {
-    return NULL;
-  }
-  public:
-
-  ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  // .adaptive_system.PartialState ps = 1;
-  bool has_ps() const;
-  void clear_ps();
-  static const int kPsFieldNumber = 1;
-  const ::adaptive_system::PartialState& ps() const;
-  ::adaptive_system::PartialState* mutable_ps();
-  ::adaptive_system::PartialState* release_ps();
-  void set_allocated_ps(::adaptive_system::PartialState* ps);
-
-  // float loss = 2;
-  void clear_loss();
-  static const int kLossFieldNumber = 2;
-  float loss() const;
-  void set_loss(float value);
-
-  // @@protoc_insertion_point(class_scope:adaptive_system.PartialStateAndLoss)
- private:
-
-  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
-  ::adaptive_system::PartialState* ps_;
-  float loss_;
-  mutable int _cached_size_;
-  friend struct protobuf_rpc_5fservice_2eproto::TableStruct;
-};
-// -------------------------------------------------------------------
-
 class Loss : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:adaptive_system.Loss) */ {
  public:
   Loss();
@@ -1888,63 +1792,6 @@ inline void PartialState::set_loss(float value) {
 
 // -------------------------------------------------------------------
 
-// PartialStateAndLoss
-
-// .adaptive_system.PartialState ps = 1;
-inline bool PartialStateAndLoss::has_ps() const {
-  return this != internal_default_instance() && ps_ != NULL;
-}
-inline void PartialStateAndLoss::clear_ps() {
-  if (GetArenaNoVirtual() == NULL && ps_ != NULL) delete ps_;
-  ps_ = NULL;
-}
-inline const ::adaptive_system::PartialState& PartialStateAndLoss::ps() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.PartialStateAndLoss.ps)
-  return ps_ != NULL ? *ps_
-                         : *::adaptive_system::PartialState::internal_default_instance();
-}
-inline ::adaptive_system::PartialState* PartialStateAndLoss::mutable_ps() {
-  
-  if (ps_ == NULL) {
-    ps_ = new ::adaptive_system::PartialState;
-  }
-  // @@protoc_insertion_point(field_mutable:adaptive_system.PartialStateAndLoss.ps)
-  return ps_;
-}
-inline ::adaptive_system::PartialState* PartialStateAndLoss::release_ps() {
-  // @@protoc_insertion_point(field_release:adaptive_system.PartialStateAndLoss.ps)
-  
-  ::adaptive_system::PartialState* temp = ps_;
-  ps_ = NULL;
-  return temp;
-}
-inline void PartialStateAndLoss::set_allocated_ps(::adaptive_system::PartialState* ps) {
-  delete ps_;
-  ps_ = ps;
-  if (ps) {
-    
-  } else {
-    
-  }
-  // @@protoc_insertion_point(field_set_allocated:adaptive_system.PartialStateAndLoss.ps)
-}
-
-// float loss = 2;
-inline void PartialStateAndLoss::clear_loss() {
-  loss_ = 0;
-}
-inline float PartialStateAndLoss::loss() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.PartialStateAndLoss.loss)
-  return loss_;
-}
-inline void PartialStateAndLoss::set_loss(float value) {
-  
-  loss_ = value;
-  // @@protoc_insertion_point(field_set:adaptive_system.PartialStateAndLoss.loss)
-}
-
-// -------------------------------------------------------------------
-
 // Loss
 
 // float loss = 1;
@@ -1962,8 +1809,6 @@ inline void Loss::set_loss(float value) {
 }
 
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS
-// -------------------------------------------------------------------
-
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
