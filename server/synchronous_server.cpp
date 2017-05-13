@@ -7,6 +7,7 @@
 #include <map>
 #include <memory>
 #include <mutex>
+#include <numeric>
 #include <string>
 #include <vector>
 
@@ -64,10 +65,25 @@ class RPCServiceImpl final : public SystemControl::Service {
                   const ::adaptive_system::Loss* request,
                   ::adaptive_system::Empty* response) override {
     const float loss = request->loss();
-    _mutex_loss.lock();
+    std::unique_lock<std::mutex> lk(_mutex_loss);
+    _bool_loss = false;
     _vector_loss.push_back(loss);
-    _mutex_loss.unlock();
+    if (_vector_loss.size() == _number_of_workers) {
+      float sum =
+          std::accumulate(_vector_loss.begin(), _vector_loss.end(), 0.0);
+      float average = sum / _number_of_workers;
+      std::cout << "average loss is " << average << std::endl;
+      _vector_loss_history.push_back(average);
+      _vector_loss.clear();
+      _bool_loss = true;
+      _condition_variable_loss.notify_all();
+    } else {
+      _condition_variable_loss.wait(lk, [this] { return _bool_loss; });
+    }
+    lk.unlock();
+    return Status::OK;
   }
+
   Status sendGradient(ServerContext* context, const NamedGradients* request,
                       NamedGradients* response) override {
     const NamedGradients& named_gradients = *request;
@@ -96,12 +112,15 @@ class RPCServiceImpl final : public SystemControl::Service {
     return Status::OK;
   }
 
-  Status sendState(ServerContext* context, const PartialStateAndLoss* request,
+  Status sendState(ServerContext* context, const PartialState* request,
                    QuantizationLevel* response) override {
     std::unique_lock<std::mutex> lk(_mutex_state);
-    _vector_partial_state.push_back(request->);
-    if (_vector_partial_state_and_loss.size() == _number_of_workers) {
-      adjust_rl_model(_vector_partial_state_and_loss);
+    _bool_state = false;
+    _vector_partial_state.push_back(*request);
+    if (_vector_partial_state.size() == _number_of_workers) {
+      adjust_rl_model(_vector_partial_state);
+      _bool_state = true;
+      _condition_variable_state.notify_all();
     } else {
       _condition_variable_state.wait(lk, [this] { return _bool_state; });
     }
@@ -151,8 +170,7 @@ class RPCServiceImpl final : public SystemControl::Service {
         });
   }
 
-  void adjust_rl_model(
-      std::vector<PartialStateAndLoss> const& vector_partial_state_and_loss) {}
+  void adjust_rl_model(std::vector<PartialState> const& vector_partial_state) {}
   // private data member
  private:
   const int _interval;
@@ -166,14 +184,16 @@ class RPCServiceImpl final : public SystemControl::Service {
   std::mutex _mutex_loss;
   std::condition_variable _condition_variable_gradient;
   std::condition_variable _condition_variable_state;
-  // std::condition_variable _condition_variable_loss;
+  std::condition_variable _condition_variable_loss;
   std::vector<std::map<std::string, tensorflow::Tensor>> _vector_map_gradient;
   std::vector<PartialState> _vector_partial_state;
   float _last_loss;
   std::vector<float> _vector_loss;
+  std::vector<float> _vector_loss_history;
   std::string _tuple_local_path;
   bool _bool_gradient;
   bool _bool_state;
+  bool _bool_loss;
   NamedGradients _store_named_gradient;
 
   tensorflow::Session* _session;

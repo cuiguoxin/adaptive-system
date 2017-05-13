@@ -154,40 +154,44 @@ float compute_gradient_and_loss(
         variable_names_in_order[i], outputs[i]));
   }
 }
-
+// do not need session
 PartialState collect_partial_state(
-    std::map<std::string, tensorflow::Tensor> const& gradients, float loss) {}
+    std::map<std::string, tensorflow::Tensor> const& gradients,
+    const float loss) {}
 
 void do_training() {
   for (int i = 0; i < total_iter; i++) {
     std::map<std::string, tensorflow::Tensor> map_gradients;
     float loss = compute_gradient_and_loss(
         map_gradients);  // compute gradient and loss now
+    Loss loss_to_send;
+    loss_to_send.set_loss(loss);
+    Empty empty;
+    ClientContext loss_context;
+    stub->sendLoss(&loss_context, loss_to_send, &empty);
     if (i % interval == 0) {
       PartialState partial_state = collect_partial_state(map_gradients, loss);
-      ClientContext context;
+      ClientContext state_context;
       QuantizationLevel quantization_level;
       gprc::Status grpc_status =
-          stub->sendState(&context, partial_state, &quantization_level);
+          stub->sendState(&state_context, partial_state, &quantization_level);
       if (!grpc_status.ok()) {
         print_error(grpc_status);
       }
       grad_quant_level = quantization_level.level();
     }
-    NamedGradientsAndLoss named_gradients_and_loss;
-    named_gradients_and_loss.set_loss(loss);
+    NamedGradients named_gradients_send, named_gradients_receive;
     quantize_gradient(
-        map_gradients, named_gradients_and_loss.mutable_named_gradients(),
+        map_gradients, &named_gradients_send,
         cast_grad_quant_level_to_quantization_type(grad_quant_level));
-    NamedGradients named_gradients;
-    ClientContext context;
+    ClientContext gradient_context;
     grpc::Status grpc_status = stub->sendGradient(
-        &context, named_gradients_and_loss, &named_gradients);
+        &gradient_context, named_gradients_send, &named_gradients_receive);
     if (!grpc_status.ok()) {
       print_error(grpc_status);
     }
     // add the gradients to variables
-    apply_quantized_gradient_to_model(named_gradients, get_session(),
+    apply_quantized_gradient_to_model(named_gradients_receive, get_session(),
                                       *get_tuple());
   }
 }
