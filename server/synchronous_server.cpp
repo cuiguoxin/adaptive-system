@@ -60,17 +60,23 @@ class RPCServiceImpl final : public SystemControl::Service {
     return Status::OK;
   }
 
-  Status sendGradient(ServerContext* context,
-                      const NamedGradientsAndLoss* request,
-                      NamedGradients* response) override {
-    const NamedGradients& named_gradients = request->named_gradients();
+  Status sendLoss(::grpc::ServerContext* context,
+                  const ::adaptive_system::Loss* request,
+                  ::adaptive_system::Empty* response) override {
     const float loss = request->loss();
+    _mutex_loss.lock();
+    _vector_loss.push_back(loss);
+    _mutex_loss.unlock();
+  }
+  Status sendGradient(ServerContext* context, const NamedGradients* request,
+                      NamedGradients* response) override {
+    const NamedGradients& named_gradients = *request;
     std::map<std::string, tensorflow::Tensor> map_gradient;
     dequantize_gradient(named_gradients, map_gradient);
     std::unique_lock<std::mutex> lk(_mutex_gradient);
     _bool_gradient = false;
-    _vector_loss.push_back(loss);
-    _vector_map_gradient.push_back(map_gradient);
+    _vector_map_gradient.push_back(
+        map_gradient);  // result in copy which may slow down the process!!!!
     if (_vector_map_gradient.size() == _number_of_workers) {
       std::map<std::string, tensorflow::Tensor> map_gradient_another;
       aggregate_gradients(_vector_map_gradient, map_gradient_another);
@@ -91,9 +97,9 @@ class RPCServiceImpl final : public SystemControl::Service {
   }
 
   Status sendState(ServerContext* context, const PartialStateAndLoss* request,
-                   QuantizationLevel* response) {
+                   QuantizationLevel* response) override {
     std::unique_lock<std::mutex> lk(_mutex_state);
-    _vector_partial_state_and_loss.push_back(*request);
+    _vector_partial_state.push_back(request->);
     if (_vector_partial_state_and_loss.size() == _number_of_workers) {
       adjust_rl_model(_vector_partial_state_and_loss);
     } else {
@@ -157,10 +163,12 @@ class RPCServiceImpl final : public SystemControl::Service {
 
   std::mutex _mutex_gradient;
   std::mutex _mutex_state;
+  std::mutex _mutex_loss;
   std::condition_variable _condition_variable_gradient;
   std::condition_variable _condition_variable_state;
+  // std::condition_variable _condition_variable_loss;
   std::vector<std::map<std::string, tensorflow::Tensor>> _vector_map_gradient;
-  std::vector<PartialStateAndLoss> _vector_partial_state_and_loss;
+  std::vector<PartialState> _vector_partial_state;
   float _last_loss;
   std::vector<float> _vector_loss;
   std::string _tuple_local_path;
