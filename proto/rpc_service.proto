@@ -75,7 +75,7 @@ message Loss {
 service SystemControl {
 
     rpc retrieveTuple(Empty) returns (Tuple);
-    rpc sendLoss(Loss) returns (Empty)
+    rpc sendLoss(Loss) returns (Empty);
     rpc sendGradient(NamedGradients) returns (NamedGradients);
     rpc sendState(PartialStateAndLoss) returns (QuantizationLevel);
 
