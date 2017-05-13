@@ -134,7 +134,7 @@ float compute_gradient_and_loss(
       get_tuple()->map_names();
   std::for_each(map_names.begin(), map_names.end(),
                 [&fetch, &variable_names_in_order](
-                    google::protobuf::MapPair<std::string, Names>& const pair) {
+                    google::protobuf::MapPair<std::string, Names> const& pair) {
                   Names const& names = pair.second;
                   std::string const& variable_name = pair.first;
                   fetch.push_back(names.gradient_name());
@@ -143,7 +143,7 @@ float compute_gradient_and_loss(
   get_session()->Run({}, fetch, {}, &outputs);
   tensorflow::Tensor& loss_tensor = outputs[0];
   float* loss_ptr = loss_tensor.flat<float>().data();
-  outputs.erase(outputs.begin);
+  outputs.erase(outputs.begin());
   if (outputs.size() != variable_names_in_order.size()) {
     std::cout << "impossible in " << __LINE__ << std::endl;
     std::terminate();
@@ -173,7 +173,7 @@ void do_training() {
       PartialState partial_state = collect_partial_state(map_gradients, loss);
       ClientContext state_context;
       QuantizationLevel quantization_level;
-      gprc::Status grpc_status =
+      grpc::Status grpc_status =
           stub->sendState(&state_context, partial_state, &quantization_level);
       if (!grpc_status.ok()) {
         print_error(grpc_status);
