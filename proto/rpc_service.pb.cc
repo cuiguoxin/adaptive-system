@@ -32,10 +32,10 @@ class NamedGradientsDefaultTypeInternal : public ::google::protobuf::internal::E
 } _NamedGradients_default_instance_;
 class PartialStateDefaultTypeInternal : public ::google::protobuf::internal::ExplicitlyConstructed<PartialState> {
 } _PartialState_default_instance_;
-class NamedGradientsAndLossDefaultTypeInternal : public ::google::protobuf::internal::ExplicitlyConstructed<NamedGradientsAndLoss> {
-} _NamedGradientsAndLoss_default_instance_;
 class PartialStateAndLossDefaultTypeInternal : public ::google::protobuf::internal::ExplicitlyConstructed<PartialStateAndLoss> {
 } _PartialStateAndLoss_default_instance_;
+class LossDefaultTypeInternal : public ::google::protobuf::internal::ExplicitlyConstructed<Loss> {
+} _Loss_default_instance_;
 
 namespace protobuf_rpc_5fservice_2eproto {
 
@@ -99,17 +99,16 @@ const ::google::protobuf::uint32 TableStruct::offsets[] = {
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PartialState, tensor_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PartialState, loss_),
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NamedGradientsAndLoss, _internal_metadata_),
-  ~0u,  // no _extensions_
-  ~0u,  // no _oneof_case_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NamedGradientsAndLoss, named_gradients_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NamedGradientsAndLoss, loss_),
-  ~0u,  // no _has_bits_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PartialStateAndLoss, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PartialStateAndLoss, ps_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PartialStateAndLoss, loss_),
+  ~0u,  // no _has_bits_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Loss, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Loss, loss_),
 };
 
 static const ::google::protobuf::internal::MigrationSchema schemas[] = {
@@ -120,8 +119,8 @@ static const ::google::protobuf::internal::MigrationSchema schemas[] = {
   { 29, -1, sizeof(Gradient)},
   { 39, -1, sizeof(NamedGradients)},
   { 44, -1, sizeof(PartialState)},
-  { 50, -1, sizeof(NamedGradientsAndLoss)},
-  { 56, -1, sizeof(PartialStateAndLoss)},
+  { 50, -1, sizeof(PartialStateAndLoss)},
+  { 56, -1, sizeof(Loss)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -132,8 +131,8 @@ static ::google::protobuf::Message const * const file_default_instances[] = {
   reinterpret_cast<const ::google::protobuf::Message*>(&_Gradient_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&_NamedGradients_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&_PartialState_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&_NamedGradientsAndLoss_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&_PartialStateAndLoss_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&_Loss_default_instance_),
 };
 
 namespace {
@@ -204,9 +203,9 @@ void TableStruct::Shutdown() {
   delete file_level_metadata[8].reflection;
   _PartialState_default_instance_.Shutdown();
   delete file_level_metadata[9].reflection;
-  _NamedGradientsAndLoss_default_instance_.Shutdown();
-  delete file_level_metadata[10].reflection;
   _PartialStateAndLoss_default_instance_.Shutdown();
+  delete file_level_metadata[10].reflection;
+  _Loss_default_instance_.Shutdown();
   delete file_level_metadata[11].reflection;
 }
 
@@ -224,8 +223,8 @@ void TableStruct::InitDefaultsImpl() {
   _Gradient_default_instance_.DefaultConstruct();
   _NamedGradients_default_instance_.DefaultConstruct();
   _PartialState_default_instance_.DefaultConstruct();
-  _NamedGradientsAndLoss_default_instance_.DefaultConstruct();
   _PartialStateAndLoss_default_instance_.DefaultConstruct();
+  _Loss_default_instance_.DefaultConstruct();
   _Tuple_default_instance_.get_mutable()->graph_ = const_cast< ::tensorflow::GraphDef*>(
       ::tensorflow::GraphDef::internal_default_instance());
   _Gradient_default_instance_.get_mutable()->tensor_ge_8_ = const_cast< ::tensorflow::TensorProto*>(
@@ -234,8 +233,6 @@ void TableStruct::InitDefaultsImpl() {
       ::tensorflow::TensorShapeProto::internal_default_instance());
   _PartialState_default_instance_.get_mutable()->tensor_ = const_cast< ::tensorflow::TensorProto*>(
       ::tensorflow::TensorProto::internal_default_instance());
-  _NamedGradientsAndLoss_default_instance_.get_mutable()->named_gradients_ = const_cast< ::adaptive_system::NamedGradients*>(
-      ::adaptive_system::NamedGradients::internal_default_instance());
   _PartialStateAndLoss_default_instance_.get_mutable()->ps_ = const_cast< ::adaptive_system::PartialState*>(
       ::adaptive_system::PartialState::internal_default_instance());
 }
@@ -278,23 +275,22 @@ void AddDescriptorsImpl() {
       "y\030\001 \001(\t\022(\n\005value\030\002 \001(\0132\031.adaptive_system"
       ".Gradient:\0028\001\"E\n\014PartialState\022\'\n\006tensor\030"
       "\001 \001(\0132\027.tensorflow.TensorProto\022\014\n\004loss\030\002"
-      " \001(\002\"_\n\025NamedGradientsAndLoss\0228\n\017named_g"
-      "radients\030\001 \001(\0132\037.adaptive_system.NamedGr"
-      "adients\022\014\n\004loss\030\002 \001(\002\"N\n\023PartialStateAnd"
-      "Loss\022)\n\002ps\030\001 \001(\0132\035.adaptive_system.Parti"
-      "alState\022\014\n\004loss\030\002 \001(\002*G\n\020GRAD_QUANT_LEVE"
-      "L\022\007\n\003TWO\020\000\022\010\n\004FOUR\020\001\022\t\n\005EIGHT\020\002\022\013\n\007SIXTE"
-      "EN\020\003\022\010\n\004NONE\020\0042\200\002\n\rSystemControl\022\?\n\rretr"
-      "ieveTuple\022\026.adaptive_system.Empty\032\026.adap"
-      "tive_system.Tuple\022W\n\014sendGradient\022&.adap"
-      "tive_system.NamedGradientsAndLoss\032\037.adap"
-      "tive_system.NamedGradients\022U\n\tsendState\022"
-      "$.adaptive_system.PartialStateAndLoss\032\"."
-      "adaptive_system.QuantizationLevelb\006proto"
-      "3"
+      " \001(\002\"N\n\023PartialStateAndLoss\022)\n\002ps\030\001 \001(\0132"
+      "\035.adaptive_system.PartialState\022\014\n\004loss\030\002"
+      " \001(\002\"\024\n\004Loss\022\014\n\004loss\030\001 \001(\002*G\n\020GRAD_QUANT"
+      "_LEVEL\022\007\n\003TWO\020\000\022\010\n\004FOUR\020\001\022\t\n\005EIGHT\020\002\022\013\n\007"
+      "SIXTEEN\020\003\022\010\n\004NONE\020\0042\264\002\n\rSystemControl\022\?\n"
+      "\rretrieveTuple\022\026.adaptive_system.Empty\032\026"
+      ".adaptive_system.Tuple\0229\n\010sendLoss\022\025.ada"
+      "ptive_system.Loss\032\026.adaptive_system.Empt"
+      "y\022P\n\014sendGradient\022\037.adaptive_system.Name"
+      "dGradients\032\037.adaptive_system.NamedGradie"
+      "nts\022U\n\tsendState\022$.adaptive_system.Parti"
+      "alStateAndLoss\032\".adaptive_system.Quantiz"
+      "ationLevelb\006proto3"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 1761);
+      descriptor, 1738);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "rpc_service.proto", &protobuf_RegisterTypes);
   ::tensorflow::protobuf_tensorflow_2fcore_2fframework_2ftensor_2eproto::AddDescriptors();
@@ -3676,319 +3672,6 @@ void PartialState::set_loss(float value) {
 // ===================================================================
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int NamedGradientsAndLoss::kNamedGradientsFieldNumber;
-const int NamedGradientsAndLoss::kLossFieldNumber;
-#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
-
-NamedGradientsAndLoss::NamedGradientsAndLoss()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
-    protobuf_rpc_5fservice_2eproto::InitDefaults();
-  }
-  SharedCtor();
-  // @@protoc_insertion_point(constructor:adaptive_system.NamedGradientsAndLoss)
-}
-NamedGradientsAndLoss::NamedGradientsAndLoss(const NamedGradientsAndLoss& from)
-  : ::google::protobuf::Message(),
-      _internal_metadata_(NULL),
-      _cached_size_(0) {
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  if (from.has_named_gradients()) {
-    named_gradients_ = new ::adaptive_system::NamedGradients(*from.named_gradients_);
-  } else {
-    named_gradients_ = NULL;
-  }
-  loss_ = from.loss_;
-  // @@protoc_insertion_point(copy_constructor:adaptive_system.NamedGradientsAndLoss)
-}
-
-void NamedGradientsAndLoss::SharedCtor() {
-  ::memset(&named_gradients_, 0, reinterpret_cast<char*>(&loss_) -
-    reinterpret_cast<char*>(&named_gradients_) + sizeof(loss_));
-  _cached_size_ = 0;
-}
-
-NamedGradientsAndLoss::~NamedGradientsAndLoss() {
-  // @@protoc_insertion_point(destructor:adaptive_system.NamedGradientsAndLoss)
-  SharedDtor();
-}
-
-void NamedGradientsAndLoss::SharedDtor() {
-  if (this != internal_default_instance()) {
-    delete named_gradients_;
-  }
-}
-
-void NamedGradientsAndLoss::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-}
-const ::google::protobuf::Descriptor* NamedGradientsAndLoss::descriptor() {
-  protobuf_rpc_5fservice_2eproto::protobuf_AssignDescriptorsOnce();
-  return protobuf_rpc_5fservice_2eproto::file_level_metadata[10].descriptor;
-}
-
-const NamedGradientsAndLoss& NamedGradientsAndLoss::default_instance() {
-  protobuf_rpc_5fservice_2eproto::InitDefaults();
-  return *internal_default_instance();
-}
-
-NamedGradientsAndLoss* NamedGradientsAndLoss::New(::google::protobuf::Arena* arena) const {
-  NamedGradientsAndLoss* n = new NamedGradientsAndLoss;
-  if (arena != NULL) {
-    arena->Own(n);
-  }
-  return n;
-}
-
-void NamedGradientsAndLoss::Clear() {
-// @@protoc_insertion_point(message_clear_start:adaptive_system.NamedGradientsAndLoss)
-  if (GetArenaNoVirtual() == NULL && named_gradients_ != NULL) {
-    delete named_gradients_;
-  }
-  named_gradients_ = NULL;
-  loss_ = 0;
-}
-
-bool NamedGradientsAndLoss::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:adaptive_system.NamedGradientsAndLoss)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // .adaptive_system.NamedGradients named_gradients = 1;
-      case 1: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(10u)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_named_gradients()));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      // float loss = 2;
-      case 2: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(21u)) {
-
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
-                 input, &loss_)));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormatLite::SkipField(input, tag));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:adaptive_system.NamedGradientsAndLoss)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:adaptive_system.NamedGradientsAndLoss)
-  return false;
-#undef DO_
-}
-
-void NamedGradientsAndLoss::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:adaptive_system.NamedGradientsAndLoss)
-  // .adaptive_system.NamedGradients named_gradients = 1;
-  if (this->has_named_gradients()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, *this->named_gradients_, output);
-  }
-
-  // float loss = 2;
-  if (this->loss() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(2, this->loss(), output);
-  }
-
-  // @@protoc_insertion_point(serialize_end:adaptive_system.NamedGradientsAndLoss)
-}
-
-::google::protobuf::uint8* NamedGradientsAndLoss::InternalSerializeWithCachedSizesToArray(
-    bool deterministic, ::google::protobuf::uint8* target) const {
-  (void)deterministic;  // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:adaptive_system.NamedGradientsAndLoss)
-  // .adaptive_system.NamedGradients named_gradients = 1;
-  if (this->has_named_gradients()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      InternalWriteMessageNoVirtualToArray(
-        1, *this->named_gradients_, false, target);
-  }
-
-  // float loss = 2;
-  if (this->loss() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(2, this->loss(), target);
-  }
-
-  // @@protoc_insertion_point(serialize_to_array_end:adaptive_system.NamedGradientsAndLoss)
-  return target;
-}
-
-size_t NamedGradientsAndLoss::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:adaptive_system.NamedGradientsAndLoss)
-  size_t total_size = 0;
-
-  // .adaptive_system.NamedGradients named_gradients = 1;
-  if (this->has_named_gradients()) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        *this->named_gradients_);
-  }
-
-  // float loss = 2;
-  if (this->loss() != 0) {
-    total_size += 1 + 4;
-  }
-
-  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = cached_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void NamedGradientsAndLoss::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:adaptive_system.NamedGradientsAndLoss)
-  GOOGLE_DCHECK_NE(&from, this);
-  const NamedGradientsAndLoss* source =
-      ::google::protobuf::internal::DynamicCastToGenerated<const NamedGradientsAndLoss>(
-          &from);
-  if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:adaptive_system.NamedGradientsAndLoss)
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:adaptive_system.NamedGradientsAndLoss)
-    MergeFrom(*source);
-  }
-}
-
-void NamedGradientsAndLoss::MergeFrom(const NamedGradientsAndLoss& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:adaptive_system.NamedGradientsAndLoss)
-  GOOGLE_DCHECK_NE(&from, this);
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  if (from.has_named_gradients()) {
-    mutable_named_gradients()->::adaptive_system::NamedGradients::MergeFrom(from.named_gradients());
-  }
-  if (from.loss() != 0) {
-    set_loss(from.loss());
-  }
-}
-
-void NamedGradientsAndLoss::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:adaptive_system.NamedGradientsAndLoss)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void NamedGradientsAndLoss::CopyFrom(const NamedGradientsAndLoss& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:adaptive_system.NamedGradientsAndLoss)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool NamedGradientsAndLoss::IsInitialized() const {
-  return true;
-}
-
-void NamedGradientsAndLoss::Swap(NamedGradientsAndLoss* other) {
-  if (other == this) return;
-  InternalSwap(other);
-}
-void NamedGradientsAndLoss::InternalSwap(NamedGradientsAndLoss* other) {
-  std::swap(named_gradients_, other->named_gradients_);
-  std::swap(loss_, other->loss_);
-  std::swap(_cached_size_, other->_cached_size_);
-}
-
-::google::protobuf::Metadata NamedGradientsAndLoss::GetMetadata() const {
-  protobuf_rpc_5fservice_2eproto::protobuf_AssignDescriptorsOnce();
-  return protobuf_rpc_5fservice_2eproto::file_level_metadata[10];
-}
-
-#if PROTOBUF_INLINE_NOT_IN_HEADERS
-// NamedGradientsAndLoss
-
-// .adaptive_system.NamedGradients named_gradients = 1;
-bool NamedGradientsAndLoss::has_named_gradients() const {
-  return this != internal_default_instance() && named_gradients_ != NULL;
-}
-void NamedGradientsAndLoss::clear_named_gradients() {
-  if (GetArenaNoVirtual() == NULL && named_gradients_ != NULL) delete named_gradients_;
-  named_gradients_ = NULL;
-}
-const ::adaptive_system::NamedGradients& NamedGradientsAndLoss::named_gradients() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.NamedGradientsAndLoss.named_gradients)
-  return named_gradients_ != NULL ? *named_gradients_
-                         : *::adaptive_system::NamedGradients::internal_default_instance();
-}
-::adaptive_system::NamedGradients* NamedGradientsAndLoss::mutable_named_gradients() {
-  
-  if (named_gradients_ == NULL) {
-    named_gradients_ = new ::adaptive_system::NamedGradients;
-  }
-  // @@protoc_insertion_point(field_mutable:adaptive_system.NamedGradientsAndLoss.named_gradients)
-  return named_gradients_;
-}
-::adaptive_system::NamedGradients* NamedGradientsAndLoss::release_named_gradients() {
-  // @@protoc_insertion_point(field_release:adaptive_system.NamedGradientsAndLoss.named_gradients)
-  
-  ::adaptive_system::NamedGradients* temp = named_gradients_;
-  named_gradients_ = NULL;
-  return temp;
-}
-void NamedGradientsAndLoss::set_allocated_named_gradients(::adaptive_system::NamedGradients* named_gradients) {
-  delete named_gradients_;
-  named_gradients_ = named_gradients;
-  if (named_gradients) {
-    
-  } else {
-    
-  }
-  // @@protoc_insertion_point(field_set_allocated:adaptive_system.NamedGradientsAndLoss.named_gradients)
-}
-
-// float loss = 2;
-void NamedGradientsAndLoss::clear_loss() {
-  loss_ = 0;
-}
-float NamedGradientsAndLoss::loss() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.NamedGradientsAndLoss.loss)
-  return loss_;
-}
-void NamedGradientsAndLoss::set_loss(float value) {
-  
-  loss_ = value;
-  // @@protoc_insertion_point(field_set:adaptive_system.NamedGradientsAndLoss.loss)
-}
-
-#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
-
-// ===================================================================
-
-#if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int PartialStateAndLoss::kPsFieldNumber;
 const int PartialStateAndLoss::kLossFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
@@ -4039,7 +3722,7 @@ void PartialStateAndLoss::SetCachedSize(int size) const {
 }
 const ::google::protobuf::Descriptor* PartialStateAndLoss::descriptor() {
   protobuf_rpc_5fservice_2eproto::protobuf_AssignDescriptorsOnce();
-  return protobuf_rpc_5fservice_2eproto::file_level_metadata[11].descriptor;
+  return protobuf_rpc_5fservice_2eproto::file_level_metadata[10].descriptor;
 }
 
 const PartialStateAndLoss& PartialStateAndLoss::default_instance() {
@@ -4238,7 +3921,7 @@ void PartialStateAndLoss::InternalSwap(PartialStateAndLoss* other) {
 
 ::google::protobuf::Metadata PartialStateAndLoss::GetMetadata() const {
   protobuf_rpc_5fservice_2eproto::protobuf_AssignDescriptorsOnce();
-  return protobuf_rpc_5fservice_2eproto::file_level_metadata[11];
+  return protobuf_rpc_5fservice_2eproto::file_level_metadata[10];
 }
 
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
@@ -4295,6 +3978,230 @@ void PartialStateAndLoss::set_loss(float value) {
   
   loss_ = value;
   // @@protoc_insertion_point(field_set:adaptive_system.PartialStateAndLoss.loss)
+}
+
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
+
+// ===================================================================
+
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int Loss::kLossFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+Loss::Loss()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
+    protobuf_rpc_5fservice_2eproto::InitDefaults();
+  }
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:adaptive_system.Loss)
+}
+Loss::Loss(const Loss& from)
+  : ::google::protobuf::Message(),
+      _internal_metadata_(NULL),
+      _cached_size_(0) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  loss_ = from.loss_;
+  // @@protoc_insertion_point(copy_constructor:adaptive_system.Loss)
+}
+
+void Loss::SharedCtor() {
+  loss_ = 0;
+  _cached_size_ = 0;
+}
+
+Loss::~Loss() {
+  // @@protoc_insertion_point(destructor:adaptive_system.Loss)
+  SharedDtor();
+}
+
+void Loss::SharedDtor() {
+}
+
+void Loss::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* Loss::descriptor() {
+  protobuf_rpc_5fservice_2eproto::protobuf_AssignDescriptorsOnce();
+  return protobuf_rpc_5fservice_2eproto::file_level_metadata[11].descriptor;
+}
+
+const Loss& Loss::default_instance() {
+  protobuf_rpc_5fservice_2eproto::InitDefaults();
+  return *internal_default_instance();
+}
+
+Loss* Loss::New(::google::protobuf::Arena* arena) const {
+  Loss* n = new Loss;
+  if (arena != NULL) {
+    arena->Own(n);
+  }
+  return n;
+}
+
+void Loss::Clear() {
+// @@protoc_insertion_point(message_clear_start:adaptive_system.Loss)
+  loss_ = 0;
+}
+
+bool Loss::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:adaptive_system.Loss)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // float loss = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(13u)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &loss_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(input, tag));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:adaptive_system.Loss)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:adaptive_system.Loss)
+  return false;
+#undef DO_
+}
+
+void Loss::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:adaptive_system.Loss)
+  // float loss = 1;
+  if (this->loss() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(1, this->loss(), output);
+  }
+
+  // @@protoc_insertion_point(serialize_end:adaptive_system.Loss)
+}
+
+::google::protobuf::uint8* Loss::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
+  (void)deterministic;  // Unused
+  // @@protoc_insertion_point(serialize_to_array_start:adaptive_system.Loss)
+  // float loss = 1;
+  if (this->loss() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(1, this->loss(), target);
+  }
+
+  // @@protoc_insertion_point(serialize_to_array_end:adaptive_system.Loss)
+  return target;
+}
+
+size_t Loss::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:adaptive_system.Loss)
+  size_t total_size = 0;
+
+  // float loss = 1;
+  if (this->loss() != 0) {
+    total_size += 1 + 4;
+  }
+
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = cached_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void Loss::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:adaptive_system.Loss)
+  GOOGLE_DCHECK_NE(&from, this);
+  const Loss* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const Loss>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:adaptive_system.Loss)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:adaptive_system.Loss)
+    MergeFrom(*source);
+  }
+}
+
+void Loss::MergeFrom(const Loss& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:adaptive_system.Loss)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  if (from.loss() != 0) {
+    set_loss(from.loss());
+  }
+}
+
+void Loss::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:adaptive_system.Loss)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void Loss::CopyFrom(const Loss& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:adaptive_system.Loss)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool Loss::IsInitialized() const {
+  return true;
+}
+
+void Loss::Swap(Loss* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void Loss::InternalSwap(Loss* other) {
+  std::swap(loss_, other->loss_);
+  std::swap(_cached_size_, other->_cached_size_);
+}
+
+::google::protobuf::Metadata Loss::GetMetadata() const {
+  protobuf_rpc_5fservice_2eproto::protobuf_AssignDescriptorsOnce();
+  return protobuf_rpc_5fservice_2eproto::file_level_metadata[11];
+}
+
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+// Loss
+
+// float loss = 1;
+void Loss::clear_loss() {
+  loss_ = 0;
+}
+float Loss::loss() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.Loss.loss)
+  return loss_;
+}
+void Loss::set_loss(float value) {
+  
+  loss_ = value;
+  // @@protoc_insertion_point(field_set:adaptive_system.Loss.loss)
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS

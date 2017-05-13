@@ -17,6 +17,7 @@ namespace adaptive_system {
 
 static const char* SystemControl_method_names[] = {
   "/adaptive_system.SystemControl/retrieveTuple",
+  "/adaptive_system.SystemControl/sendLoss",
   "/adaptive_system.SystemControl/sendGradient",
   "/adaptive_system.SystemControl/sendState",
 };
@@ -28,8 +29,9 @@ std::unique_ptr< SystemControl::Stub> SystemControl::NewStub(const std::shared_p
 
 SystemControl::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel)
   : channel_(channel), rpcmethod_retrieveTuple_(SystemControl_method_names[0], ::grpc::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_sendGradient_(SystemControl_method_names[1], ::grpc::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_sendState_(SystemControl_method_names[2], ::grpc::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_sendLoss_(SystemControl_method_names[1], ::grpc::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_sendGradient_(SystemControl_method_names[2], ::grpc::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_sendState_(SystemControl_method_names[3], ::grpc::RpcMethod::NORMAL_RPC, channel)
   {}
 
 ::grpc::Status SystemControl::Stub::retrieveTuple(::grpc::ClientContext* context, const ::adaptive_system::Empty& request, ::adaptive_system::Tuple* response) {
@@ -40,11 +42,19 @@ SystemControl::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& chan
   return new ::grpc::ClientAsyncResponseReader< ::adaptive_system::Tuple>(channel_.get(), cq, rpcmethod_retrieveTuple_, context, request);
 }
 
-::grpc::Status SystemControl::Stub::sendGradient(::grpc::ClientContext* context, const ::adaptive_system::NamedGradientsAndLoss& request, ::adaptive_system::NamedGradients* response) {
+::grpc::Status SystemControl::Stub::sendLoss(::grpc::ClientContext* context, const ::adaptive_system::Loss& request, ::adaptive_system::Empty* response) {
+  return ::grpc::BlockingUnaryCall(channel_.get(), rpcmethod_sendLoss_, context, request, response);
+}
+
+::grpc::ClientAsyncResponseReader< ::adaptive_system::Empty>* SystemControl::Stub::AsyncsendLossRaw(::grpc::ClientContext* context, const ::adaptive_system::Loss& request, ::grpc::CompletionQueue* cq) {
+  return new ::grpc::ClientAsyncResponseReader< ::adaptive_system::Empty>(channel_.get(), cq, rpcmethod_sendLoss_, context, request);
+}
+
+::grpc::Status SystemControl::Stub::sendGradient(::grpc::ClientContext* context, const ::adaptive_system::NamedGradients& request, ::adaptive_system::NamedGradients* response) {
   return ::grpc::BlockingUnaryCall(channel_.get(), rpcmethod_sendGradient_, context, request, response);
 }
 
-::grpc::ClientAsyncResponseReader< ::adaptive_system::NamedGradients>* SystemControl::Stub::AsyncsendGradientRaw(::grpc::ClientContext* context, const ::adaptive_system::NamedGradientsAndLoss& request, ::grpc::CompletionQueue* cq) {
+::grpc::ClientAsyncResponseReader< ::adaptive_system::NamedGradients>* SystemControl::Stub::AsyncsendGradientRaw(::grpc::ClientContext* context, const ::adaptive_system::NamedGradients& request, ::grpc::CompletionQueue* cq) {
   return new ::grpc::ClientAsyncResponseReader< ::adaptive_system::NamedGradients>(channel_.get(), cq, rpcmethod_sendGradient_, context, request);
 }
 
@@ -65,10 +75,15 @@ SystemControl::Service::Service() {
   AddMethod(new ::grpc::RpcServiceMethod(
       SystemControl_method_names[1],
       ::grpc::RpcMethod::NORMAL_RPC,
-      new ::grpc::RpcMethodHandler< SystemControl::Service, ::adaptive_system::NamedGradientsAndLoss, ::adaptive_system::NamedGradients>(
-          std::mem_fn(&SystemControl::Service::sendGradient), this)));
+      new ::grpc::RpcMethodHandler< SystemControl::Service, ::adaptive_system::Loss, ::adaptive_system::Empty>(
+          std::mem_fn(&SystemControl::Service::sendLoss), this)));
   AddMethod(new ::grpc::RpcServiceMethod(
       SystemControl_method_names[2],
+      ::grpc::RpcMethod::NORMAL_RPC,
+      new ::grpc::RpcMethodHandler< SystemControl::Service, ::adaptive_system::NamedGradients, ::adaptive_system::NamedGradients>(
+          std::mem_fn(&SystemControl::Service::sendGradient), this)));
+  AddMethod(new ::grpc::RpcServiceMethod(
+      SystemControl_method_names[3],
       ::grpc::RpcMethod::NORMAL_RPC,
       new ::grpc::RpcMethodHandler< SystemControl::Service, ::adaptive_system::PartialStateAndLoss, ::adaptive_system::QuantizationLevel>(
           std::mem_fn(&SystemControl::Service::sendState), this)));
@@ -84,7 +99,14 @@ SystemControl::Service::~Service() {
   return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
 }
 
-::grpc::Status SystemControl::Service::sendGradient(::grpc::ServerContext* context, const ::adaptive_system::NamedGradientsAndLoss* request, ::adaptive_system::NamedGradients* response) {
+::grpc::Status SystemControl::Service::sendLoss(::grpc::ServerContext* context, const ::adaptive_system::Loss* request, ::adaptive_system::Empty* response) {
+  (void) context;
+  (void) request;
+  (void) response;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
+::grpc::Status SystemControl::Service::sendGradient(::grpc::ServerContext* context, const ::adaptive_system::NamedGradients* request, ::adaptive_system::NamedGradients* response) {
   (void) context;
   (void) request;
   (void) response;

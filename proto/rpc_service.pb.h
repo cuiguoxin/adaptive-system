@@ -42,12 +42,12 @@ extern EmptyDefaultTypeInternal _Empty_default_instance_;
 class Gradient;
 class GradientDefaultTypeInternal;
 extern GradientDefaultTypeInternal _Gradient_default_instance_;
+class Loss;
+class LossDefaultTypeInternal;
+extern LossDefaultTypeInternal _Loss_default_instance_;
 class NamedGradients;
 class NamedGradientsDefaultTypeInternal;
 extern NamedGradientsDefaultTypeInternal _NamedGradients_default_instance_;
-class NamedGradientsAndLoss;
-class NamedGradientsAndLossDefaultTypeInternal;
-extern NamedGradientsAndLossDefaultTypeInternal _NamedGradientsAndLoss_default_instance_;
 class Names;
 class NamesDefaultTypeInternal;
 extern NamesDefaultTypeInternal _Names_default_instance_;
@@ -930,99 +930,6 @@ class PartialState : public ::google::protobuf::Message /* @@protoc_insertion_po
 };
 // -------------------------------------------------------------------
 
-class NamedGradientsAndLoss : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:adaptive_system.NamedGradientsAndLoss) */ {
- public:
-  NamedGradientsAndLoss();
-  virtual ~NamedGradientsAndLoss();
-
-  NamedGradientsAndLoss(const NamedGradientsAndLoss& from);
-
-  inline NamedGradientsAndLoss& operator=(const NamedGradientsAndLoss& from) {
-    CopyFrom(from);
-    return *this;
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const NamedGradientsAndLoss& default_instance();
-
-  static inline const NamedGradientsAndLoss* internal_default_instance() {
-    return reinterpret_cast<const NamedGradientsAndLoss*>(
-               &_NamedGradientsAndLoss_default_instance_);
-  }
-
-  void Swap(NamedGradientsAndLoss* other);
-
-  // implements Message ----------------------------------------------
-
-  inline NamedGradientsAndLoss* New() const PROTOBUF_FINAL { return New(NULL); }
-
-  NamedGradientsAndLoss* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
-  void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
-  void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
-  void CopyFrom(const NamedGradientsAndLoss& from);
-  void MergeFrom(const NamedGradientsAndLoss& from);
-  void Clear() PROTOBUF_FINAL;
-  bool IsInitialized() const PROTOBUF_FINAL;
-
-  size_t ByteSizeLong() const PROTOBUF_FINAL;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
-  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
-      bool deterministic, ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output)
-      const PROTOBUF_FINAL {
-    return InternalSerializeWithCachedSizesToArray(
-        ::google::protobuf::io::CodedOutputStream::IsDefaultSerializationDeterministic(), output);
-  }
-  int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const PROTOBUF_FINAL;
-  void InternalSwap(NamedGradientsAndLoss* other);
-  private:
-  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
-    return NULL;
-  }
-  inline void* MaybeArenaPtr() const {
-    return NULL;
-  }
-  public:
-
-  ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  // .adaptive_system.NamedGradients named_gradients = 1;
-  bool has_named_gradients() const;
-  void clear_named_gradients();
-  static const int kNamedGradientsFieldNumber = 1;
-  const ::adaptive_system::NamedGradients& named_gradients() const;
-  ::adaptive_system::NamedGradients* mutable_named_gradients();
-  ::adaptive_system::NamedGradients* release_named_gradients();
-  void set_allocated_named_gradients(::adaptive_system::NamedGradients* named_gradients);
-
-  // float loss = 2;
-  void clear_loss();
-  static const int kLossFieldNumber = 2;
-  float loss() const;
-  void set_loss(float value);
-
-  // @@protoc_insertion_point(class_scope:adaptive_system.NamedGradientsAndLoss)
- private:
-
-  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
-  ::adaptive_system::NamedGradients* named_gradients_;
-  float loss_;
-  mutable int _cached_size_;
-  friend struct protobuf_rpc_5fservice_2eproto::TableStruct;
-};
-// -------------------------------------------------------------------
-
 class PartialStateAndLoss : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:adaptive_system.PartialStateAndLoss) */ {
  public:
   PartialStateAndLoss();
@@ -1110,6 +1017,89 @@ class PartialStateAndLoss : public ::google::protobuf::Message /* @@protoc_inser
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::adaptive_system::PartialState* ps_;
+  float loss_;
+  mutable int _cached_size_;
+  friend struct protobuf_rpc_5fservice_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
+class Loss : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:adaptive_system.Loss) */ {
+ public:
+  Loss();
+  virtual ~Loss();
+
+  Loss(const Loss& from);
+
+  inline Loss& operator=(const Loss& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Loss& default_instance();
+
+  static inline const Loss* internal_default_instance() {
+    return reinterpret_cast<const Loss*>(
+               &_Loss_default_instance_);
+  }
+
+  void Swap(Loss* other);
+
+  // implements Message ----------------------------------------------
+
+  inline Loss* New() const PROTOBUF_FINAL { return New(NULL); }
+
+  Loss* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
+  void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void CopyFrom(const Loss& from);
+  void MergeFrom(const Loss& from);
+  void Clear() PROTOBUF_FINAL;
+  bool IsInitialized() const PROTOBUF_FINAL;
+
+  size_t ByteSizeLong() const PROTOBUF_FINAL;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output)
+      const PROTOBUF_FINAL {
+    return InternalSerializeWithCachedSizesToArray(
+        ::google::protobuf::io::CodedOutputStream::IsDefaultSerializationDeterministic(), output);
+  }
+  int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const PROTOBUF_FINAL;
+  void InternalSwap(Loss* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // float loss = 1;
+  void clear_loss();
+  static const int kLossFieldNumber = 1;
+  float loss() const;
+  void set_loss(float value);
+
+  // @@protoc_insertion_point(class_scope:adaptive_system.Loss)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   float loss_;
   mutable int _cached_size_;
   friend struct protobuf_rpc_5fservice_2eproto::TableStruct;
@@ -1898,63 +1888,6 @@ inline void PartialState::set_loss(float value) {
 
 // -------------------------------------------------------------------
 
-// NamedGradientsAndLoss
-
-// .adaptive_system.NamedGradients named_gradients = 1;
-inline bool NamedGradientsAndLoss::has_named_gradients() const {
-  return this != internal_default_instance() && named_gradients_ != NULL;
-}
-inline void NamedGradientsAndLoss::clear_named_gradients() {
-  if (GetArenaNoVirtual() == NULL && named_gradients_ != NULL) delete named_gradients_;
-  named_gradients_ = NULL;
-}
-inline const ::adaptive_system::NamedGradients& NamedGradientsAndLoss::named_gradients() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.NamedGradientsAndLoss.named_gradients)
-  return named_gradients_ != NULL ? *named_gradients_
-                         : *::adaptive_system::NamedGradients::internal_default_instance();
-}
-inline ::adaptive_system::NamedGradients* NamedGradientsAndLoss::mutable_named_gradients() {
-  
-  if (named_gradients_ == NULL) {
-    named_gradients_ = new ::adaptive_system::NamedGradients;
-  }
-  // @@protoc_insertion_point(field_mutable:adaptive_system.NamedGradientsAndLoss.named_gradients)
-  return named_gradients_;
-}
-inline ::adaptive_system::NamedGradients* NamedGradientsAndLoss::release_named_gradients() {
-  // @@protoc_insertion_point(field_release:adaptive_system.NamedGradientsAndLoss.named_gradients)
-  
-  ::adaptive_system::NamedGradients* temp = named_gradients_;
-  named_gradients_ = NULL;
-  return temp;
-}
-inline void NamedGradientsAndLoss::set_allocated_named_gradients(::adaptive_system::NamedGradients* named_gradients) {
-  delete named_gradients_;
-  named_gradients_ = named_gradients;
-  if (named_gradients) {
-    
-  } else {
-    
-  }
-  // @@protoc_insertion_point(field_set_allocated:adaptive_system.NamedGradientsAndLoss.named_gradients)
-}
-
-// float loss = 2;
-inline void NamedGradientsAndLoss::clear_loss() {
-  loss_ = 0;
-}
-inline float NamedGradientsAndLoss::loss() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.NamedGradientsAndLoss.loss)
-  return loss_;
-}
-inline void NamedGradientsAndLoss::set_loss(float value) {
-  
-  loss_ = value;
-  // @@protoc_insertion_point(field_set:adaptive_system.NamedGradientsAndLoss.loss)
-}
-
-// -------------------------------------------------------------------
-
 // PartialStateAndLoss
 
 // .adaptive_system.PartialState ps = 1;
@@ -2008,6 +1941,24 @@ inline void PartialStateAndLoss::set_loss(float value) {
   
   loss_ = value;
   // @@protoc_insertion_point(field_set:adaptive_system.PartialStateAndLoss.loss)
+}
+
+// -------------------------------------------------------------------
+
+// Loss
+
+// float loss = 1;
+inline void Loss::clear_loss() {
+  loss_ = 0;
+}
+inline float Loss::loss() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.Loss.loss)
+  return loss_;
+}
+inline void Loss::set_loss(float value) {
+  
+  loss_ = value;
+  // @@protoc_insertion_point(field_set:adaptive_system.Loss.loss)
 }
 
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS

@@ -35,8 +35,12 @@ class SystemControl final {
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::Tuple>> AsyncretrieveTuple(::grpc::ClientContext* context, const ::adaptive_system::Empty& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::Tuple>>(AsyncretrieveTupleRaw(context, request, cq));
     }
-    virtual ::grpc::Status sendGradient(::grpc::ClientContext* context, const ::adaptive_system::NamedGradientsAndLoss& request, ::adaptive_system::NamedGradients* response) = 0;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::NamedGradients>> AsyncsendGradient(::grpc::ClientContext* context, const ::adaptive_system::NamedGradientsAndLoss& request, ::grpc::CompletionQueue* cq) {
+    virtual ::grpc::Status sendLoss(::grpc::ClientContext* context, const ::adaptive_system::Loss& request, ::adaptive_system::Empty* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::Empty>> AsyncsendLoss(::grpc::ClientContext* context, const ::adaptive_system::Loss& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::Empty>>(AsyncsendLossRaw(context, request, cq));
+    }
+    virtual ::grpc::Status sendGradient(::grpc::ClientContext* context, const ::adaptive_system::NamedGradients& request, ::adaptive_system::NamedGradients* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::NamedGradients>> AsyncsendGradient(::grpc::ClientContext* context, const ::adaptive_system::NamedGradients& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::NamedGradients>>(AsyncsendGradientRaw(context, request, cq));
     }
     virtual ::grpc::Status sendState(::grpc::ClientContext* context, const ::adaptive_system::PartialStateAndLoss& request, ::adaptive_system::QuantizationLevel* response) = 0;
@@ -45,7 +49,8 @@ class SystemControl final {
     }
   private:
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::Tuple>* AsyncretrieveTupleRaw(::grpc::ClientContext* context, const ::adaptive_system::Empty& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::NamedGradients>* AsyncsendGradientRaw(::grpc::ClientContext* context, const ::adaptive_system::NamedGradientsAndLoss& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::Empty>* AsyncsendLossRaw(::grpc::ClientContext* context, const ::adaptive_system::Loss& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::NamedGradients>* AsyncsendGradientRaw(::grpc::ClientContext* context, const ::adaptive_system::NamedGradients& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::QuantizationLevel>* AsyncsendStateRaw(::grpc::ClientContext* context, const ::adaptive_system::PartialStateAndLoss& request, ::grpc::CompletionQueue* cq) = 0;
   };
   class Stub final : public StubInterface {
@@ -55,8 +60,12 @@ class SystemControl final {
     std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::adaptive_system::Tuple>> AsyncretrieveTuple(::grpc::ClientContext* context, const ::adaptive_system::Empty& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::adaptive_system::Tuple>>(AsyncretrieveTupleRaw(context, request, cq));
     }
-    ::grpc::Status sendGradient(::grpc::ClientContext* context, const ::adaptive_system::NamedGradientsAndLoss& request, ::adaptive_system::NamedGradients* response) override;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::adaptive_system::NamedGradients>> AsyncsendGradient(::grpc::ClientContext* context, const ::adaptive_system::NamedGradientsAndLoss& request, ::grpc::CompletionQueue* cq) {
+    ::grpc::Status sendLoss(::grpc::ClientContext* context, const ::adaptive_system::Loss& request, ::adaptive_system::Empty* response) override;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::adaptive_system::Empty>> AsyncsendLoss(::grpc::ClientContext* context, const ::adaptive_system::Loss& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::adaptive_system::Empty>>(AsyncsendLossRaw(context, request, cq));
+    }
+    ::grpc::Status sendGradient(::grpc::ClientContext* context, const ::adaptive_system::NamedGradients& request, ::adaptive_system::NamedGradients* response) override;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::adaptive_system::NamedGradients>> AsyncsendGradient(::grpc::ClientContext* context, const ::adaptive_system::NamedGradients& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::adaptive_system::NamedGradients>>(AsyncsendGradientRaw(context, request, cq));
     }
     ::grpc::Status sendState(::grpc::ClientContext* context, const ::adaptive_system::PartialStateAndLoss& request, ::adaptive_system::QuantizationLevel* response) override;
@@ -67,9 +76,11 @@ class SystemControl final {
    private:
     std::shared_ptr< ::grpc::ChannelInterface> channel_;
     ::grpc::ClientAsyncResponseReader< ::adaptive_system::Tuple>* AsyncretrieveTupleRaw(::grpc::ClientContext* context, const ::adaptive_system::Empty& request, ::grpc::CompletionQueue* cq) override;
-    ::grpc::ClientAsyncResponseReader< ::adaptive_system::NamedGradients>* AsyncsendGradientRaw(::grpc::ClientContext* context, const ::adaptive_system::NamedGradientsAndLoss& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::adaptive_system::Empty>* AsyncsendLossRaw(::grpc::ClientContext* context, const ::adaptive_system::Loss& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::adaptive_system::NamedGradients>* AsyncsendGradientRaw(::grpc::ClientContext* context, const ::adaptive_system::NamedGradients& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::adaptive_system::QuantizationLevel>* AsyncsendStateRaw(::grpc::ClientContext* context, const ::adaptive_system::PartialStateAndLoss& request, ::grpc::CompletionQueue* cq) override;
     const ::grpc::RpcMethod rpcmethod_retrieveTuple_;
+    const ::grpc::RpcMethod rpcmethod_sendLoss_;
     const ::grpc::RpcMethod rpcmethod_sendGradient_;
     const ::grpc::RpcMethod rpcmethod_sendState_;
   };
@@ -80,7 +91,8 @@ class SystemControl final {
     Service();
     virtual ~Service();
     virtual ::grpc::Status retrieveTuple(::grpc::ServerContext* context, const ::adaptive_system::Empty* request, ::adaptive_system::Tuple* response);
-    virtual ::grpc::Status sendGradient(::grpc::ServerContext* context, const ::adaptive_system::NamedGradientsAndLoss* request, ::adaptive_system::NamedGradients* response);
+    virtual ::grpc::Status sendLoss(::grpc::ServerContext* context, const ::adaptive_system::Loss* request, ::adaptive_system::Empty* response);
+    virtual ::grpc::Status sendGradient(::grpc::ServerContext* context, const ::adaptive_system::NamedGradients* request, ::adaptive_system::NamedGradients* response);
     virtual ::grpc::Status sendState(::grpc::ServerContext* context, const ::adaptive_system::PartialStateAndLoss* request, ::adaptive_system::QuantizationLevel* response);
   };
   template <class BaseClass>
@@ -104,23 +116,43 @@ class SystemControl final {
     }
   };
   template <class BaseClass>
+  class WithAsyncMethod_sendLoss : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service *service) {}
+   public:
+    WithAsyncMethod_sendLoss() {
+      ::grpc::Service::MarkMethodAsync(1);
+    }
+    ~WithAsyncMethod_sendLoss() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status sendLoss(::grpc::ServerContext* context, const ::adaptive_system::Loss* request, ::adaptive_system::Empty* response) final override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestsendLoss(::grpc::ServerContext* context, ::adaptive_system::Loss* request, ::grpc::ServerAsyncResponseWriter< ::adaptive_system::Empty>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(1, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
   class WithAsyncMethod_sendGradient : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service *service) {}
    public:
     WithAsyncMethod_sendGradient() {
-      ::grpc::Service::MarkMethodAsync(1);
+      ::grpc::Service::MarkMethodAsync(2);
     }
     ~WithAsyncMethod_sendGradient() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status sendGradient(::grpc::ServerContext* context, const ::adaptive_system::NamedGradientsAndLoss* request, ::adaptive_system::NamedGradients* response) final override {
+    ::grpc::Status sendGradient(::grpc::ServerContext* context, const ::adaptive_system::NamedGradients* request, ::adaptive_system::NamedGradients* response) final override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    void RequestsendGradient(::grpc::ServerContext* context, ::adaptive_system::NamedGradientsAndLoss* request, ::grpc::ServerAsyncResponseWriter< ::adaptive_system::NamedGradients>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(1, context, request, response, new_call_cq, notification_cq, tag);
+    void RequestsendGradient(::grpc::ServerContext* context, ::adaptive_system::NamedGradients* request, ::grpc::ServerAsyncResponseWriter< ::adaptive_system::NamedGradients>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(2, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -129,7 +161,7 @@ class SystemControl final {
     void BaseClassMustBeDerivedFromService(const Service *service) {}
    public:
     WithAsyncMethod_sendState() {
-      ::grpc::Service::MarkMethodAsync(2);
+      ::grpc::Service::MarkMethodAsync(3);
     }
     ~WithAsyncMethod_sendState() override {
       BaseClassMustBeDerivedFromService(this);
@@ -140,10 +172,10 @@ class SystemControl final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestsendState(::grpc::ServerContext* context, ::adaptive_system::PartialStateAndLoss* request, ::grpc::ServerAsyncResponseWriter< ::adaptive_system::QuantizationLevel>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(2, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(3, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
-  typedef WithAsyncMethod_retrieveTuple<WithAsyncMethod_sendGradient<WithAsyncMethod_sendState<Service > > > AsyncService;
+  typedef WithAsyncMethod_retrieveTuple<WithAsyncMethod_sendLoss<WithAsyncMethod_sendGradient<WithAsyncMethod_sendState<Service > > > > AsyncService;
   template <class BaseClass>
   class WithGenericMethod_retrieveTuple : public BaseClass {
    private:
@@ -162,18 +194,35 @@ class SystemControl final {
     }
   };
   template <class BaseClass>
+  class WithGenericMethod_sendLoss : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service *service) {}
+   public:
+    WithGenericMethod_sendLoss() {
+      ::grpc::Service::MarkMethodGeneric(1);
+    }
+    ~WithGenericMethod_sendLoss() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status sendLoss(::grpc::ServerContext* context, const ::adaptive_system::Loss* request, ::adaptive_system::Empty* response) final override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+  };
+  template <class BaseClass>
   class WithGenericMethod_sendGradient : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service *service) {}
    public:
     WithGenericMethod_sendGradient() {
-      ::grpc::Service::MarkMethodGeneric(1);
+      ::grpc::Service::MarkMethodGeneric(2);
     }
     ~WithGenericMethod_sendGradient() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status sendGradient(::grpc::ServerContext* context, const ::adaptive_system::NamedGradientsAndLoss* request, ::adaptive_system::NamedGradients* response) final override {
+    ::grpc::Status sendGradient(::grpc::ServerContext* context, const ::adaptive_system::NamedGradients* request, ::adaptive_system::NamedGradients* response) final override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
@@ -184,7 +233,7 @@ class SystemControl final {
     void BaseClassMustBeDerivedFromService(const Service *service) {}
    public:
     WithGenericMethod_sendState() {
-      ::grpc::Service::MarkMethodGeneric(2);
+      ::grpc::Service::MarkMethodGeneric(3);
     }
     ~WithGenericMethod_sendState() override {
       BaseClassMustBeDerivedFromService(this);
@@ -216,24 +265,44 @@ class SystemControl final {
     virtual ::grpc::Status StreamedretrieveTuple(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::adaptive_system::Empty,::adaptive_system::Tuple>* server_unary_streamer) = 0;
   };
   template <class BaseClass>
+  class WithStreamedUnaryMethod_sendLoss : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service *service) {}
+   public:
+    WithStreamedUnaryMethod_sendLoss() {
+      ::grpc::Service::MarkMethodStreamed(1,
+        new ::grpc::StreamedUnaryHandler< ::adaptive_system::Loss, ::adaptive_system::Empty>(std::bind(&WithStreamedUnaryMethod_sendLoss<BaseClass>::StreamedsendLoss, this, std::placeholders::_1, std::placeholders::_2)));
+    }
+    ~WithStreamedUnaryMethod_sendLoss() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable regular version of this method
+    ::grpc::Status sendLoss(::grpc::ServerContext* context, const ::adaptive_system::Loss* request, ::adaptive_system::Empty* response) final override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    // replace default version of method with streamed unary
+    virtual ::grpc::Status StreamedsendLoss(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::adaptive_system::Loss,::adaptive_system::Empty>* server_unary_streamer) = 0;
+  };
+  template <class BaseClass>
   class WithStreamedUnaryMethod_sendGradient : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service *service) {}
    public:
     WithStreamedUnaryMethod_sendGradient() {
-      ::grpc::Service::MarkMethodStreamed(1,
-        new ::grpc::StreamedUnaryHandler< ::adaptive_system::NamedGradientsAndLoss, ::adaptive_system::NamedGradients>(std::bind(&WithStreamedUnaryMethod_sendGradient<BaseClass>::StreamedsendGradient, this, std::placeholders::_1, std::placeholders::_2)));
+      ::grpc::Service::MarkMethodStreamed(2,
+        new ::grpc::StreamedUnaryHandler< ::adaptive_system::NamedGradients, ::adaptive_system::NamedGradients>(std::bind(&WithStreamedUnaryMethod_sendGradient<BaseClass>::StreamedsendGradient, this, std::placeholders::_1, std::placeholders::_2)));
     }
     ~WithStreamedUnaryMethod_sendGradient() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable regular version of this method
-    ::grpc::Status sendGradient(::grpc::ServerContext* context, const ::adaptive_system::NamedGradientsAndLoss* request, ::adaptive_system::NamedGradients* response) final override {
+    ::grpc::Status sendGradient(::grpc::ServerContext* context, const ::adaptive_system::NamedGradients* request, ::adaptive_system::NamedGradients* response) final override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     // replace default version of method with streamed unary
-    virtual ::grpc::Status StreamedsendGradient(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::adaptive_system::NamedGradientsAndLoss,::adaptive_system::NamedGradients>* server_unary_streamer) = 0;
+    virtual ::grpc::Status StreamedsendGradient(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::adaptive_system::NamedGradients,::adaptive_system::NamedGradients>* server_unary_streamer) = 0;
   };
   template <class BaseClass>
   class WithStreamedUnaryMethod_sendState : public BaseClass {
@@ -241,7 +310,7 @@ class SystemControl final {
     void BaseClassMustBeDerivedFromService(const Service *service) {}
    public:
     WithStreamedUnaryMethod_sendState() {
-      ::grpc::Service::MarkMethodStreamed(2,
+      ::grpc::Service::MarkMethodStreamed(3,
         new ::grpc::StreamedUnaryHandler< ::adaptive_system::PartialStateAndLoss, ::adaptive_system::QuantizationLevel>(std::bind(&WithStreamedUnaryMethod_sendState<BaseClass>::StreamedsendState, this, std::placeholders::_1, std::placeholders::_2)));
     }
     ~WithStreamedUnaryMethod_sendState() override {
@@ -255,9 +324,9 @@ class SystemControl final {
     // replace default version of method with streamed unary
     virtual ::grpc::Status StreamedsendState(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::adaptive_system::PartialStateAndLoss,::adaptive_system::QuantizationLevel>* server_unary_streamer) = 0;
   };
-  typedef WithStreamedUnaryMethod_retrieveTuple<WithStreamedUnaryMethod_sendGradient<WithStreamedUnaryMethod_sendState<Service > > > StreamedUnaryService;
+  typedef WithStreamedUnaryMethod_retrieveTuple<WithStreamedUnaryMethod_sendLoss<WithStreamedUnaryMethod_sendGradient<WithStreamedUnaryMethod_sendState<Service > > > > StreamedUnaryService;
   typedef Service SplitStreamedService;
-  typedef WithStreamedUnaryMethod_retrieveTuple<WithStreamedUnaryMethod_sendGradient<WithStreamedUnaryMethod_sendState<Service > > > StreamedService;
+  typedef WithStreamedUnaryMethod_retrieveTuple<WithStreamedUnaryMethod_sendLoss<WithStreamedUnaryMethod_sendGradient<WithStreamedUnaryMethod_sendState<Service > > > > StreamedService;
 };
 
 }  // namespace adaptive_system
