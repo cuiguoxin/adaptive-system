@@ -77,7 +77,7 @@ def inference(images, tup):
                                          shape=[5, 5, 3, 64],
                                          stddev=5e-2,
                                          wd=0.0, 
-                                         tup)
+                                         tup=tup)
     conv = tf.nn.conv2d(images, kernel, [1, 1, 1, 1], padding='SAME')
     biases = _variable_on_cpu('biases', [64], tf.constant_initializer(0.0), tup)
     pre_activation = tf.nn.bias_add(conv, biases)
