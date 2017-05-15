@@ -9,12 +9,11 @@ label_bytes = 1;
 image_bytes = 3072;
 
 record_bytes = tf.placeholder(tf.uint8, shape=(3073), name="raw_input")
-result.label = tf.cast(
-      tf.slice(record_bytes, [0], [label_bytes]), tf.int32, name="label")
-depth_major = tf.reshape(tf.slice(record_bytes, [label_bytes], [image_bytes]), [result.depth, result.height, result.width])
+label = tf.cast(tf.slice(record_bytes, [0], [label_bytes]), tf.int32, name="label")
+depth_major = tf.reshape(tf.slice(record_bytes, [label_bytes], [image_bytes]), [3, 32, 32])
 # Convert from [depth, height, width] to [height, width, depth].
-result.uint8image = tf.transpose(depth_major, [1, 2, 0])
-reshaped_image = tf.cast(result.uint8image, tf.float32)
+uint8image = tf.transpose(depth_major, [1, 2, 0])
+reshaped_image = tf.cast(uint8image, tf.float32)
 
 height = IMAGE_SIZE
 width = IMAGE_SIZE
@@ -28,7 +27,7 @@ resized_image = tf.image.resize_image_with_crop_or_pad(reshaped_image,
 float_image = tf.image.per_image_standardization(resized_image)
 
 print float_image.name
-print result.label.name
+print label.name
 print record_bytes.name
 
 tf.train.write_graph(sess.graph_def, './', 'preprocess.pb', as_text=False)
