@@ -158,13 +158,13 @@ with tf.Session() as sess:
   logits = inference(images)
 
   # Calculate loss.
-  loss = loss(logits, labels)
+  losses = loss(logits, labels)
 
   opt = tf.train.GradientDescentOptimizer(learning_rate=0.1)
-  grads = opt.compute_gradients(total_loss)
+  grads = opt.compute_gradients(losses)
   for grad_var in grads:
-    print "variable's name is " grad_var[1].name
-    print "gradient's name is " grad_var[0].name
+    print grad_var[1].name
+    print grad_var[0].name
 
   # Create a saver.
   saver = tf.train.Saver(tf.all_variables())
