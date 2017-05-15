@@ -96,7 +96,7 @@ def inference(images, tup):
                                          shape=[5, 5, 64, 64],
                                          stddev=5e-2,
                                          wd=0.0,
-                                         tup)
+                                         tup=tup)
     conv = tf.nn.conv2d(norm1, kernel, [1, 1, 1, 1], padding='SAME')
     biases = _variable_on_cpu('biases', [64], tf.constant_initializer(0.1), tup)
     pre_activation = tf.nn.bias_add(conv, biases)
@@ -115,7 +115,7 @@ def inference(images, tup):
     reshape = tf.reshape(pool2, [batch_size, -1])
     dim = reshape.get_shape()[1].value
     weights = _variable_with_weight_decay('weights', shape=[dim, 384],
-                                          stddev=0.04, wd=0.004, tup)
+                                          stddev=0.04, wd=0.004, tup=tup)
     biases = _variable_on_cpu('biases', [384], tf.constant_initializer(0.1), tup)
     local3 = tf.nn.relu(tf.matmul(reshape, weights) + biases, name=scope.name)
 
@@ -123,7 +123,7 @@ def inference(images, tup):
   # local4
   with tf.variable_scope('local4') as scope:
     weights = _variable_with_weight_decay('weights', shape=[384, 192],
-                                          stddev=0.04, wd=0.004, tup)
+                                          stddev=0.04, wd=0.004, tup=tup)
     biases = _variable_on_cpu('biases', [192], tf.constant_initializer(0.1), tup)
     local4 = tf.nn.relu(tf.matmul(local3, weights) + biases, name=scope.name)
 
@@ -134,7 +134,7 @@ def inference(images, tup):
   # and performs the softmax internally for efficiency.
   with tf.variable_scope('softmax_linear') as scope:
     weights = _variable_with_weight_decay('weights', [192, NUM_CLASSES],
-                                          stddev=1/192.0, wd=0.0, tup)
+                                          stddev=1/192.0, wd=0.0, tup=tup)
     biases = _variable_on_cpu('biases', [NUM_CLASSES],
                               tf.constant_initializer(0.0), tup)
     softmax_linear = tf.add(tf.matmul(local4, weights), biases, name=scope.name)
