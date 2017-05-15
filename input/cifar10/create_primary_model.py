@@ -192,6 +192,6 @@ with tf.Session() as sess:
   tf.train.write_graph(sess.graph_def, './', 'primary.pb', as_text=False)
   tup.lr = 0.1
   tup.interval = 3;
-  tup.graph = sess.graph_def
+  tup.graph.CopyFrom(sess.graph_def)
   tup.loss_name = losses.name
 
