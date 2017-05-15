@@ -15,8 +15,8 @@ with tf.Session() as sess:
     uint8image = tf.transpose(depth_major, [1, 2, 0])
     reshaped_image = tf.cast(uint8image, tf.float32)
 
-    height = 32
-    width = 32
+    height = 28
+    width = 28
 
     # Image processing for evaluation.
     # # Crop the central [height, width] of the image.

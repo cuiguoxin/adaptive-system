@@ -19,4 +19,8 @@
 #include "tensorflow/core/platform/types.h"
 #include "tensorflow/core/public/session.h"
 
-namespace cifar10 {}
+namespace cifar10 {
+void turn_raw_tensors_to_standard_version(const std::string& binary_file_path,
+                                          const std::string& graph_path);
+std::pair<tensorflow::Tensor, tensorflow::Tensor> get_next_batch();
+}

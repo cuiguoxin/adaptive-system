@@ -23,6 +23,7 @@
 #include "tensorflow/core/platform/types.h"
 #include "tensorflow/core/public/session.h"
 
+#include "input/cifar10/input.h"
 #include "quantization/util/algorithms.h"
 
 using grpc::Channel;
@@ -124,6 +125,7 @@ void init_everything() {
 }
 // return loss and set gradient to the first parameter
 float compute_gradient_and_loss(
+    std::vector<std::pair<std::string, tensorflow::Tensor>> feeds,
     std::map<std::string, tensorflow::Tensor>& gradients) {
   std::vector<std::string> fetch;
   std::string loss_name = get_tuple()->loss_name();
@@ -140,7 +142,7 @@ float compute_gradient_and_loss(
                   fetch.push_back(names.gradient_name());
                   variable_names_in_order.push_back(variable_name);
                 });
-  get_session()->Run({}, fetch, {}, &outputs);
+  get_session()->Run(feeds, fetch, {}, &outputs);
   tensorflow::Tensor& loss_tensor = outputs[0];
   float* loss_ptr = loss_tensor.flat<float>().data();
   outputs.erase(outputs.begin());
@@ -159,10 +161,15 @@ PartialState collect_partial_state(
     std::map<std::string, tensorflow::Tensor> const& gradients,
     const float loss) {}
 
-void do_training() {
+void do_training(const std::string& binary_file_path,
+                 const std::string& graph_path) {
+  cifar10::turn_raw_tensors_to_standard_version(binary_file_path, graph_path);
   for (int i = 0; i < total_iter; i++) {
     std::map<std::string, tensorflow::Tensor> map_gradients;
+    std::pair<tensorflow::Tensor, tensorflow::Tensor> feeds =
+        cifar10::get_next_batch();
     float loss = compute_gradient_and_loss(
+        {{"", feeds.first}, {"", feeds.second}},
         map_gradients);  // compute gradient and loss now
     Loss loss_to_send;
     loss_to_send.set_loss(loss);
