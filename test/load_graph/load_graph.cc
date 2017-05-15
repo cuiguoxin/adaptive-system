@@ -1,5 +1,6 @@
-#include "tensorflow/core/public/session.h"
 #include "tensorflow/core/platform/env.h"
+#include "tensorflow/core/public/session.h"
+
 
 using namespace tensorflow;
 
@@ -35,7 +36,10 @@ int main(int argc, char* argv[]) {
 
   // Run the session, evaluating our "c" operation from the graph
   status = session->Run({}, {}, {"init"}, {});
-  status = session->Run({}, {"c", "gradients/c_grad/tuple/control_dependency:0", "gradients/c_grad/tuple/control_dependency_1:0"}, {}, &outputs);
+  status = session->Run({},
+                        {"c", "gradients/c_grad/tuple/control_dependency:0",
+                         "gradients/c_grad/tuple/control_dependency_1:0"},
+                        {}, &outputs);
   if (!status.ok()) {
     std::cout << status.ToString() << "\n";
     return 1;
@@ -51,10 +55,11 @@ int main(int argc, char* argv[]) {
   // https://github.com/tensorflow/tensorflow/blob/master/tensorflow/core/public/tensor.h)
 
   // Print the results
-  std::cout << outputs[0].DebugString() << "\n"; // Tensor<type: float shape: [] values: 30>
-  std::cout << output_c() << "\n"; // 30
-  std::cout << output_grad_a() << "\n"; // 6
-  std::cout << output_grad_b() << "\n"; // 5
+  std::cout << outputs[0].DebugString()
+            << "\n";                // Tensor<type: float shape: [] values: 30>
+  std::cout << output_c() << "\n";  // 30
+  std::cout << output_grad_a() << "\n";  // 6
+  std::cout << output_grad_b() << "\n";  // 5
 
   // Free any resources used by the session
   session->Close();
