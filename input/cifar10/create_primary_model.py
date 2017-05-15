@@ -180,7 +180,7 @@ with tf.Session() as sess:
   for grad_var in grads:
     print grad_var[1].name
     print grad_var[0].name
-    tup.map_names[grad_var[1]].gradient_name = grad_var[0]
+    tup.map_names[grad_var[1].name].gradient_name = grad_var[0]
 
   # Create a saver.
   saver = tf.train.Saver(tf.all_variables())
