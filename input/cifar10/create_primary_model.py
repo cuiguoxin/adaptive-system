@@ -153,7 +153,7 @@ def loss(logits, labels):
 with tf.Session() as sess:
   # Build a Graph that computes the logits predictions from the
   # inference model.
-  images = tf.placeholder(tf.float32, shape=[batch_size, 3, 28, 28])
+  images = tf.placeholder(tf.float32, shape=[batch_size, 28, 28, 3])
   labels = tf.placeholder(tf.int32, shape=[batch_size])
   logits = inference(images)
 
