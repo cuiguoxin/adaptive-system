@@ -4,8 +4,6 @@ from __future__ import division
 from __future__ import print_function
 
 import os
-
-from six.moves import xrange  # pylint: disable=redefined-builtin
 import tensorflow as tf
 
 label_bytes = 1;
@@ -30,7 +28,6 @@ resized_image = tf.image.resize_image_with_crop_or_pad(reshaped_image,
 # Subtract off the mean and divide by the variance of the pixels.
 float_image = tf.image.per_image_standardization(resized_image)
 
-print float_image.name
 print result.label.name
 print record_bytes.name
 
