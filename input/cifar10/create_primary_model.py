@@ -4,11 +4,12 @@ from __future__ import division
 
 import os
 import tensorflow as tf
+import rpc_service_pb2 as rpc
 
 NUM_CLASSES = 10
 batch_size = 64
 
-def _variable_on_cpu(name, shape, initializer):
+def _variable_on_cpu(name, shape, initializer, tup):
   """Helper to create a Variable stored on CPU memory.
   Args:
     name: name of the variable
@@ -20,10 +21,21 @@ def _variable_on_cpu(name, shape, initializer):
   with tf.device('/cpu:0'):
     dtype = tf.float32
     var = tf.get_variable(name, shape, initializer=initializer, dtype=dtype)
+    placeholder_assign_node = tf.placeholder(dtype, shape=shape)
+    assign_node = tf.assign(var, placeholder_assign_node)
+    placeholder_assign_add_node = tf.placeholder(dtype, shape=shape)
+    assign_add_node = tf.assign_add(var, placeholder_assign_add_node)
+    var_name = var.name
+    tup.map_names[var_name].variable_name = var_name
+    tup.map_names[var_name].assign_name = assign_node.name
+    tup.map_names[var_name].assign_add_name = assign_add_node.name
+    tup.map_names[var_name].placeholder_assign_name = placeholder_assign_node.name
+    tup.map_names[var_name].placeholder_assign_add_name = placeholder_assign_add_node.name
+
   return var
 
 
-def _variable_with_weight_decay(name, shape, stddev, wd):
+def _variable_with_weight_decay(name, shape, stddev, wd, tup):
   """Helper to create an initialized Variable with weight decay.
   Note that the Variable is initialized with a truncated normal distribution.
   A weight decay is added only if one is specified.
@@ -40,14 +52,14 @@ def _variable_with_weight_decay(name, shape, stddev, wd):
   var = _variable_on_cpu(
       name,
       shape,
-      tf.truncated_normal_initializer(stddev=stddev, dtype=dtype))
+      tf.truncated_normal_initializer(stddev=stddev, dtype=dtype), tup)
   if wd is not None:
     weight_decay = tf.multiply(tf.nn.l2_loss(var), wd, name='weight_loss')
     tf.add_to_collection('losses', weight_decay)
   return var
 
 
-def inference(images):
+def inference(images, tup):
   """Build the CIFAR-10 model.
   Args:
     images: Images returned from distorted_inputs() or inputs().
@@ -64,9 +76,10 @@ def inference(images):
     kernel = _variable_with_weight_decay('weights',
                                          shape=[5, 5, 3, 64],
                                          stddev=5e-2,
-                                         wd=0.0)
+                                         wd=0.0, 
+                                         tup)
     conv = tf.nn.conv2d(images, kernel, [1, 1, 1, 1], padding='SAME')
-    biases = _variable_on_cpu('biases', [64], tf.constant_initializer(0.0))
+    biases = _variable_on_cpu('biases', [64], tf.constant_initializer(0.0), tup)
     pre_activation = tf.nn.bias_add(conv, biases)
     conv1 = tf.nn.relu(pre_activation, name=scope.name)
 
@@ -82,9 +95,10 @@ def inference(images):
     kernel = _variable_with_weight_decay('weights',
                                          shape=[5, 5, 64, 64],
                                          stddev=5e-2,
-                                         wd=0.0)
+                                         wd=0.0,
+                                         tup)
     conv = tf.nn.conv2d(norm1, kernel, [1, 1, 1, 1], padding='SAME')
-    biases = _variable_on_cpu('biases', [64], tf.constant_initializer(0.1))
+    biases = _variable_on_cpu('biases', [64], tf.constant_initializer(0.1), tup)
     pre_activation = tf.nn.bias_add(conv, biases)
     conv2 = tf.nn.relu(pre_activation, name=scope.name)
 
@@ -101,16 +115,16 @@ def inference(images):
     reshape = tf.reshape(pool2, [batch_size, -1])
     dim = reshape.get_shape()[1].value
     weights = _variable_with_weight_decay('weights', shape=[dim, 384],
-                                          stddev=0.04, wd=0.004)
-    biases = _variable_on_cpu('biases', [384], tf.constant_initializer(0.1))
+                                          stddev=0.04, wd=0.004, tup)
+    biases = _variable_on_cpu('biases', [384], tf.constant_initializer(0.1), tup)
     local3 = tf.nn.relu(tf.matmul(reshape, weights) + biases, name=scope.name)
 
 
   # local4
   with tf.variable_scope('local4') as scope:
     weights = _variable_with_weight_decay('weights', shape=[384, 192],
-                                          stddev=0.04, wd=0.004)
-    biases = _variable_on_cpu('biases', [192], tf.constant_initializer(0.1))
+                                          stddev=0.04, wd=0.004, tup)
+    biases = _variable_on_cpu('biases', [192], tf.constant_initializer(0.1), tup)
     local4 = tf.nn.relu(tf.matmul(local3, weights) + biases, name=scope.name)
 
 
@@ -120,9 +134,9 @@ def inference(images):
   # and performs the softmax internally for efficiency.
   with tf.variable_scope('softmax_linear') as scope:
     weights = _variable_with_weight_decay('weights', [192, NUM_CLASSES],
-                                          stddev=1/192.0, wd=0.0)
+                                          stddev=1/192.0, wd=0.0, tup)
     biases = _variable_on_cpu('biases', [NUM_CLASSES],
-                              tf.constant_initializer(0.0))
+                              tf.constant_initializer(0.0), tup)
     softmax_linear = tf.add(tf.matmul(local4, weights), biases, name=scope.name)
 
 
@@ -153,9 +167,10 @@ def loss(logits, labels):
 with tf.Session() as sess:
   # Build a Graph that computes the logits predictions from the
   # inference model.
+  tup = Tuple()
   images = tf.placeholder(tf.float32, shape=[batch_size, 28, 28, 3])
   labels = tf.placeholder(tf.int32, shape=[batch_size])
-  logits = inference(images)
+  logits = inference(images, tup)
 
   # Calculate loss.
   losses = loss(logits, labels)
@@ -165,6 +180,7 @@ with tf.Session() as sess:
   for grad_var in grads:
     print grad_var[1].name
     print grad_var[0].name
+    tup.map_names[grad_var[1]].gradient_name = grad_var[0]
 
   # Create a saver.
   saver = tf.train.Saver(tf.all_variables())
@@ -174,4 +190,8 @@ with tf.Session() as sess:
 
 
   tf.train.write_graph(sess.graph_def, './', 'primary.pb', as_text=False)
+  tup.lr = 0.1
+  tup.interval = 3;
+  tup.graph = sess.graph_def
+  tup.loss_name = losses.name
 
