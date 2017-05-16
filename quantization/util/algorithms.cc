@@ -190,7 +190,10 @@ void dequantize(const QUANTIZATION_TYPE type, Gradient& grad,
     tensorflow::TensorProto& tensor_quantized_proto =
         *grad.mutable_tensor_ge_8();
     tensorflow::Tensor temp;
-    temp.FromProto(tensor_quantized_proto);
+    bool is_ok = temp.FromProto(tensor_quantized_proto);
+    if (!is_ok) {
+      std::cout << "proto to tensor failed in line " << __LINE__ << std::endl;
+    }
     // must allocate tensor memory outside dequantize_greater_8_bits
     raw_tensor =
         tensorflow::Tensor(tensorflow::DataType::DT_FLOAT, temp.shape());
@@ -220,8 +223,8 @@ void quantize_gradient(std::map<std::string, tensorflow::Tensor>& map_gradient,
                        NamedGradients* named_gradients,
                        QUANTIZATION_TYPE type) {
   std::for_each(map_gradient.begin(), map_gradient.end(),
-                [named_gradients](
-                    std::pair<std::string const, tensorflow::Tensor>& pair) {
+                [named_gradients,
+                 type](std::pair<std::string const, tensorflow::Tensor>& pair) {
                   std::string const& variable_name = pair.first;
                   tensorflow::Tensor& raw_tensor = pair.second;
                   float max = 0, min = 0;
@@ -243,7 +246,7 @@ void dequantize_gradient(
   std::for_each(
       map_quantized_gradient->begin(), map_quantized_gradient->end(),
       [&map_gradient](
-          ::google::protobuf::MapPair<std::string, Gradient> const& pair) {
+          ::google::protobuf::MapPair<std::string, Gradient>& pair) {
         Gradient& gradient = pair.second;
         std::string const& variable_name = pair.first;
         tensorflow::Tensor temp_tensor;
@@ -274,7 +277,7 @@ void apply_quantized_gradient_to_model(NamedGradients& named_gradients,
           std::cout << "this is impossible Line " << __LINE__ << std::endl;
           std::terminate();
         } else {
-          Names& names = iter->second;
+          Names& names = iter_map_names->second;
           std::string assign_add_name = names.assign_add_name();
 
           tensorflow::Tensor feed;  // nothing need to do to initialize feed
@@ -284,13 +287,12 @@ void apply_quantized_gradient_to_model(NamedGradients& named_gradients,
                      grad, feed);
           float* feed_ptr = feed.flat<float>().data();
           std::for_each(feed_ptr, feed_ptr + feed.NumElements(),
-                        [this](float& ref) { ref = -ref * _lr; });
+                        [](float& ref) { ref = -ref * tuple.lr(); });
           feeds.push_back(std::pair<std::string, tensorflow::Tensor>(
               names.placeholder_assign_add_name(), feed));
           actions_to_do.push_back(assign_add_name);
         }
       });
-  std::vector<tensorflow::Tensor> output;
-  sess->Run(feeds, {}, actions_to_do, &output);
+  sess->Run(feeds, {}, actions_to_do, nullptr);
 }
 }
