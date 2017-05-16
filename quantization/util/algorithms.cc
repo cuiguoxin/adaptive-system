@@ -294,7 +294,7 @@ void apply_quantized_gradient_to_model(NamedGradients& named_gradients,
           float learning_rate = tuple.lr();
           std::for_each(
               feed_ptr, feed_ptr + feed.NumElements(),
-              [&learning_rate](float& ref) { ref = -ref * learning_rate; });
+              [&learning_rate](float& ref) { ref = ref * learning_rate; });
           feeds.push_back(std::pair<std::string, tensorflow::Tensor>(
               names.placeholder_assign_add_name(), feed));
           actions_to_do.push_back(assign_add_name);
