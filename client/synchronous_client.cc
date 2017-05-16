@@ -69,7 +69,7 @@ void print_error(const tensorflow::Status& status) {
 // called in the main
 void init_stub(std::string const& ip) {
   grpc::ChannelArguments channel_args;
-  channel_args.SetInt("grpc.max_message_length",
+  channel_args.SetInt(GRPC_ARG_MAX_MESSAGE_LENGTH,
                       std::numeric_limits<int>::max());
   stub = SystemControl::NewStub(grpc::CreateCustomChannel(
       ip, grpc::InsecureChannelCredentials(), channel_args));
