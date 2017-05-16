@@ -75,7 +75,7 @@ class RPCServiceImpl final : public SystemControl::Service {
     for (size_t i = 0; i < size; i++) {
       tensorflow::TensorProto var_proto;
       var_init_values[i].AsProtoField(&var_proto);
-      _tuple.mutable_map_parameters().insert(
+      _tuple.mutable_map_parameters()->insert(
           google::protobuf::MapPair<std::string, tensorflow::TensorProto>(
               var_names[i], var_proto));
     }
