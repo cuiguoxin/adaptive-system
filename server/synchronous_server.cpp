@@ -54,6 +54,31 @@ class RPCServiceImpl final : public SystemControl::Service {
       std::cerr << "Failed to parse tuple." << std::endl;
       std::terminate();
     }
+    tensorflow::GraphDef graph_def = _tuple.graph();
+    tensorflow::Status tf_status = _session->Create(graph_def);
+    if (!tf_status.ok()) {
+      std::cout << "create graph has failed in line " << __LINE__ << std::endl;
+      std::terminate();
+    }
+    std::string init_name = _tuple.init_name();
+    _session->Run({}, {}, {init_name}, nullptr);
+    std::vector<tensorflow::Tensor> var_init_values;
+    std::vector<std::string> var_names;
+    google::protobuf::Map<std::string, Names> map_names = _tuple.map_names();
+    std::for_each(
+        map_names.begin(), map_names.end(),
+        [&var_names](google::protobuf::MapPair<std::string, Names>& pair) {
+          var_names.push_back(pair.first);
+        });
+    _session->Run({}, var_names, {}, &var_init_values);
+    size_t size = var_names.size();
+    for (size_t i = 0; i < size; i++) {
+      tensorflow::TensorProto var_proto;
+      var_init_values[i].AsProtoField(&var_proto);
+      _tuple.mutable_map_parameters().insert(
+          google::protobuf::MapPair<std::string, tensorflow::TensorProto>(
+              var_names[i], var_proto));
+    }
   }
   Status retrieveTuple(ServerContext* context, const Empty* request,
                        Tuple* reply) override {

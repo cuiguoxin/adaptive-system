@@ -116,8 +116,7 @@ void init_everything() {
         feeds.push_back(std::make_pair(placeholder_name, tensor));
 
       });
-  std::vector<tensorflow::Tensor> outputs;
-  tf_status = get_session()->Run(feeds, {}, assign_names, &outputs);
+  tf_status = get_session()->Run(feeds, {}, assign_names, nullptr);
   if (!tf_status.ok()) {
     print_error(tf_status);
   }

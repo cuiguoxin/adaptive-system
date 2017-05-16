@@ -27,6 +27,9 @@ message Tuple {
     int32 interval = 4;
     tensorflow.GraphDef graph = 5;
     string loss_name = 6;
+    string init_name = 7;
+    string image_placeholder_name = 8;
+    string label_placeholder_name = 9;
 }
 
 
