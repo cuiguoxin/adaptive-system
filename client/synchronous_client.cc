@@ -2,6 +2,7 @@
 #include <exception>
 #include <functional>
 #include <iostream>
+#include <limits>
 #include <map>
 #include <memory>
 #include <string>
@@ -67,8 +68,11 @@ void print_error(const tensorflow::Status& status) {
 }
 // called in the main
 void init_stub(std::string const& ip) {
-  stub = SystemControl::NewStub(
-      grpc::CreateChannel(ip, grpc::InsecureChannelCredentials()));
+  grpc::ChannelArguments channel_args;
+  channel_args.SetInt("grpc.max_message_length",
+                      std::numeric_limits<int>::max());
+  stub = SystemControl::NewStub(grpc::CreateCustomChannel(
+      ip, grpc::InsecureChannelCredentials(), channel_args));
   std::cout << "init stub ok" << std::endl;
 }
 
