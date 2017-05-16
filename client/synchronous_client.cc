@@ -99,7 +99,9 @@ void init_everything() {
   label_placeholder_name = tuple.label_placeholder_name();
   tensorflow::Status tf_status = get_session()->Create(graph_def);
   if (!tf_status.ok()) {
-    print_error(tf_status);
+    std::cout << "line " << __LINE__ << " " << tf_status.error_message()
+              << std::endl;
+    std::terminate();
   }
   // init all the variables
   google::protobuf::Map<std::string, tensorflow::TensorProto> const&
@@ -125,7 +127,9 @@ void init_everything() {
       });
   tf_status = get_session()->Run(feeds, {}, assign_names, nullptr);
   if (!tf_status.ok()) {
-    print_error(tf_status);
+    std::cout << "line " << __LINE__ << " " << tf_status.error_message()
+              << std::endl;
+    std::terminate();
   }
   *get_tuple() = tuple;
 }
@@ -148,7 +152,12 @@ float compute_gradient_and_loss(
                   fetch.push_back(names.gradient_name());
                   variable_names_in_order.push_back(variable_name);
                 });
-  get_session()->Run(feeds, fetch, {}, &outputs);
+  tensorflow::Status tf_status = get_session()->Run(feeds, fetch, {}, &outputs);
+  if (!tf_status.ok()) {
+    std::cout << "line " << __LINE__ << " " << tf_status.error_message()
+              << std::endl;
+    std::terminate();
+  }
   tensorflow::Tensor& loss_tensor = outputs[0];
   float* loss_ptr = loss_tensor.flat<float>().data();
   outputs.erase(outputs.begin());
@@ -190,7 +199,8 @@ void do_training(const std::string& binary_file_path,
       grpc::Status grpc_status =
           stub->sendState(&state_context, partial_state, &quantization_level);
       if (!grpc_status.ok()) {
-        print_error(grpc_status);
+        std::cout << "grpc error in line " << __LINE__ << " "
+                  << grpc_status.error_message() << std::endl;
       }
       grad_quant_level = quantization_level.level();
     }
@@ -202,7 +212,8 @@ void do_training(const std::string& binary_file_path,
     grpc::Status grpc_status = stub->sendGradient(
         &gradient_context, named_gradients_send, &named_gradients_receive);
     if (!grpc_status.ok()) {
-      print_error(grpc_status);
+      std::cout << "grpc error in line " << __LINE__ << " "
+                << grpc_status.error_message() << std::endl;
     }
     // add the gradients to variables
     apply_quantized_gradient_to_model(named_gradients_receive, get_session(),
