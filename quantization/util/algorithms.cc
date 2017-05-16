@@ -262,7 +262,8 @@ void apply_quantized_gradient_to_model(NamedGradients& named_gradients,
                                        Tuple& tuple) {
   google::protobuf::Map<std::string, Gradient>& map_gradient =
       *named_gradients.mutable_name_to_gradient();
-  google::protobuf::Map<std::string, Names>& map_names = tuple.map_names();
+  google::protobuf::Map<std::string, Names>& map_names =
+      *tuple.mutable_map_names();
   std::vector<std::pair<std::string, tensorflow::Tensor>> feeds;
   std::vector<std::string> actions_to_do;
   std::for_each(
@@ -285,8 +286,10 @@ void apply_quantized_gradient_to_model(NamedGradients& named_gradients,
           dequantize(cast_grad_quant_level_to_quantization_type(grad.level()),
                      grad, feed);
           float* feed_ptr = feed.flat<float>().data();
-          std::for_each(feed_ptr, feed_ptr + feed.NumElements(),
-                        [&tuple](float& ref) { ref = -ref * tuple.lr(); });
+          float learning_rate = tuple.lr();
+          std::for_each(
+              feed_ptr, feed_ptr + feed.NumElements(),
+              [&learning_rate](float& ref) { ref = -ref * learning_rate; });
           feeds.push_back(std::pair<std::string, tensorflow::Tensor>(
               names.placeholder_assign_add_name(), feed));
           actions_to_do.push_back(assign_add_name);
