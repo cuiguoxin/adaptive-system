@@ -156,7 +156,7 @@ void quantize(const QUANTIZATION_TYPE type, tensorflow::Tensor& raw_tensor,
     delete[] out_ptr;
     tensorflow::TensorShapeProto raw_tensor_shape_proto;
     raw_tensor_shape.AsProto(&raw_tensor_shape_proto);
-    grad.mutable_tensor_shape() = raw_tensor_shape_proto;
+    *grad.mutable_tensor_shape() = raw_tensor_shape_proto;
   } else if (type == QUANTIZATION_TYPE::EIGHT_BIT ||
              type == QUANTIZATION_TYPE::SIXTEEN_BIT) {
     tensorflow::Tensor tensor(cast_quantization_type_to_data_type(type),
