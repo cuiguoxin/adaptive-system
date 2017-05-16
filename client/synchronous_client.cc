@@ -188,7 +188,7 @@ void show_quantization_infor(
         std::cout << variable_name << " : ";
         for (int i = 0; i < 10; i++) {
           std::cout << "(" << tensor_other_ptr[i] << "-" << tensor_ptr[i] << "="
-                    << tensor_other_ptr[i] - tensor_ptr[i] << ", ";
+                    << tensor_other_ptr[i] - tensor_ptr[i] << "), ";
         }
         std::cout << std::endl;
       });
