@@ -54,17 +54,6 @@ tensorflow::Session* get_session() {
       tensorflow::NewSession(tensorflow::SessionOptions());
   return session;
 }
-
-void print_error(const grpc::Status& status) {
-  std::cout << __LINE__ << " line error: error code is " << status.error_code()
-            << ", error message is " << status.error_message() << std::endl;
-  std::terminate();
-}
-void print_error(const tensorflow::Status& status) {
-  std::cout << __LINE__ << " line error: error code is " << status.code()
-            << ", error message is " << status.error_message() << std::endl;
-  std::terminate();
-}
 }
 // called in the main
 void init_stub(std::string const& ip) {
@@ -82,7 +71,8 @@ void init_everything() {
   ClientContext context;
   grpc::Status grpc_status = stub->retrieveTuple(&context, empty, &tuple);
   if (!grpc_status.ok()) {
-    print_error(grpc_status);
+    std::cout << "grpc error in line " << __LINE__ << " "
+              << grpc_status.error_message() << std::endl;
   }
   // init map_names
   google::protobuf::Map<std::string, Names> const& map_names =
