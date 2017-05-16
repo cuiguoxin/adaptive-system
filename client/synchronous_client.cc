@@ -170,6 +170,28 @@ PartialState collect_partial_state(
     const float loss) {
   return PartialState();
 }
+void show_quantization_infor(
+    std::map<std::string, tensorflow::Tensor>& map_gradients,
+    NamedGradients& named_gradients_send) {
+  std::map<std::string, tensorflow::Tensor> map_gradients_other;
+  dequantize_gradient(named_gradients_send, map_gradients_other);
+  std::for_each(
+      map_gradients.begin(), map_gradients.end(),
+      [&map_gradients_other](std::pair<std::string, tensorflow::Tensor> pair) {
+        std::string variable_name = pair.first;
+        tensorflow::Tensor& tensor = pair.second;
+        float* tensor_ptr = tensor.flat<float>().data();
+        size_t size = tensor.NumElements();
+        auto iter = map_gradients_other.find(variable_name);
+        tensorflow::Tensor& tensor_other = iter.second;
+        float* tensor_other_ptr = tensor_other.flat<float>().data();
+        std::cout << variable_name << " : ";
+        for (int i = 0; i < size; i++) {
+          std::cout << tensor_other_ptr[i] - tensor_ptr[i] << ", ";
+        }
+        std::cout << std::endl;
+      });
+}
 
 void do_training(const std::string& binary_file_path,
                  const std::string& graph_path) {
@@ -211,6 +233,7 @@ void do_training(const std::string& binary_file_path,
     quantize_gradient(
         map_gradients, &named_gradients_send,
         cast_grad_quant_level_to_quantization_type(grad_quant_level));
+    show_quantization_infor(map_gradients, named_gradients_send);
     std::cout << "done in line " << __LINE__ << std::endl;
     ClientContext gradient_context;
     std::cout << "done in line " << __LINE__ << std::endl;
