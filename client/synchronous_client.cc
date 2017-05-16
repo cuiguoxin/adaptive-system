@@ -234,12 +234,13 @@ void do_training(const std::string& binary_file_path,
     quantize_gradient(
         map_gradients, &named_gradients_send,
         cast_grad_quant_level_to_quantization_type(grad_quant_level));
-    show_quantization_infor(map_gradients, named_gradients_send);
+
     std::cout << "done in line " << __LINE__ << std::endl;
     ClientContext gradient_context;
     std::cout << "done in line " << __LINE__ << std::endl;
     grpc::Status grpc_status = stub->sendGradient(
         &gradient_context, named_gradients_send, &named_gradients_receive);
+    show_quantization_infor(map_gradients, named_gradients_receive);
     std::cout << "done in line " << __LINE__ << std::endl;
     if (!grpc_status.ok()) {
       std::cout << "grpc error in line " << __LINE__ << " "
