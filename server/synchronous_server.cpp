@@ -174,6 +174,7 @@ class RPCServiceImpl final : public SystemControl::Service {
     _vector_partial_state.push_back(*request);
     if (_vector_partial_state.size() == _number_of_workers) {
       adjust_rl_model(_vector_partial_state);
+      _vector_partial_state.clear();
       _bool_state = true;
       _condition_variable_state.notify_all();
     } else {
