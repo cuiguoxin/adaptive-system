@@ -186,8 +186,9 @@ void show_quantization_infor(
         tensorflow::Tensor& tensor_other = iter->second;
         float* tensor_other_ptr = tensor_other.flat<float>().data();
         std::cout << variable_name << " : ";
-        for (int i = 0; i < size; i++) {
-          std::cout << tensor_other_ptr[i] - tensor_ptr[i] << ", ";
+        for (int i = 0; i < 10; i++) {
+          std::cout << "(" << tensor_other_ptr[i] << "-" << tensor_ptr[i] << "="
+                    << tensor_other_ptr[i] - tensor_ptr[i] << ", ";
         }
         std::cout << std::endl;
       });
