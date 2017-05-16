@@ -82,6 +82,7 @@ class RPCServiceImpl final : public SystemControl::Service {
           size_t length = assign_name_current.length();
           *names.mutable_assign_name() =
               assign_name_current.substr(0, length - 2);
+          std::cout << *names.mutable_assign_name() << std::endl;
 
           std::string assign_add_name_current = names.assign_add_name();
           length = assign_add_name_current.length();
