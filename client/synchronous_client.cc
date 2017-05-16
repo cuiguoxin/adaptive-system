@@ -37,6 +37,7 @@ float lr = 0.0;
 int interval = 0;
 int total_iter = 0;
 GRAD_QUANT_LEVEL grad_quant_level = GRAD_QUANT_LEVEL::NONE;
+std::string label_placeholder_name, image_placeholder_name;
 Tuple* get_tuple() {
   static Tuple tuple;
   return &tuple;
@@ -90,6 +91,8 @@ void init_everything() {
   tensorflow::GraphDef const& graph_def = tuple.graph();
   lr = tuple.lr();
   interval = tuple.interval();
+  image_placeholder_name = tuple.image_placeholder_name();
+  label_placeholder_name = tuple.label_placeholder_name();
   tensorflow::Status tf_status = get_session()->Create(graph_def);
   if (!tf_status.ok()) {
     print_error(tf_status);
@@ -168,7 +171,8 @@ void do_training(const std::string& binary_file_path,
     std::pair<tensorflow::Tensor, tensorflow::Tensor> feeds =
         cifar10::get_next_batch();
     float loss = compute_gradient_and_loss(
-        {{"", feeds.first}, {"", feeds.second}},
+        {{image_placeholder_name, feeds.first},
+         {label_placeholder_name, feeds.second}},
         map_gradients);  // compute gradient and loss now
     Loss loss_to_send;
     loss_to_send.set_loss(loss);

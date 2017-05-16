@@ -170,6 +170,8 @@ with tf.Session() as sess:
   tup = rpc.Tuple()
   images = tf.placeholder(tf.float32, shape=[batch_size, 28, 28, 3])
   labels = tf.placeholder(tf.int32, shape=[batch_size])
+  tup.image_placeholder_name = images.name
+  tup.label_placeholder_name = labels.name
   logits = inference(images, tup)
 
   # Calculate loss.

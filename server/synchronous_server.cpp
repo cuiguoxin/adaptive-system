@@ -79,6 +79,8 @@ class RPCServiceImpl final : public SystemControl::Service {
           google::protobuf::MapPair<std::string, tensorflow::TensorProto>(
               var_names[i], var_proto));
     }
+    _tuple.set_interval(_interval);
+    _tuple.set_lr(_lr);
   }
   Status retrieveTuple(ServerContext* context, const Empty* request,
                        Tuple* reply) override {
@@ -90,6 +92,7 @@ class RPCServiceImpl final : public SystemControl::Service {
                   const ::adaptive_system::Loss* request,
                   ::adaptive_system::Empty* response) override {
     const float loss = request->loss();
+    std::cout << "loss is " << loss << std::endl;
     std::unique_lock<std::mutex> lk(_mutex_loss);
     _bool_loss = false;
     _vector_loss.push_back(loss);
@@ -229,7 +232,8 @@ class RPCServiceImpl final : public SystemControl::Service {
 void RunServer() {
   std::string server_address("0.0.0.0:50051");
   adaptive_system::RPCServiceImpl service(
-      3, 0.1f, 5000, 3, adaptive_system::GRAD_QUANT_LEVEL::EIGHT, "");
+      3, 0.1f, 5000, 2, adaptive_system::GRAD_QUANT_LEVEL::EIGHT,
+      "/home/cgx/git_project/adptive-system/input/cifar10/tuple.pb");
 
   ServerBuilder builder;
   // Listen on the given address without any authentication mechanism.
