@@ -228,7 +228,7 @@ void run_logic() {
   do_training(
       "/home/cgx/git_project/adaptive-system/resources/cifar-10-batches-bin/"
       "data_batch_1.bin",
-      "/home/cgx/git_project/adaptive_system/input/cifar10/preprocess.pb");
+      "/home/cgx/git_project/adaptive-system/input/cifar10/preprocess.pb");
   close_session();
 }
 }
