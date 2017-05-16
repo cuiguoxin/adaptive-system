@@ -22,6 +22,7 @@ with tf.Session() as sess:
     # # Crop the central [height, width] of the image.
     resized_image = tf.image.resize_image_with_crop_or_pad(reshaped_image,
                                                             width, height)
+    print resized_image.shape
 
     # Subtract off the mean and divide by the variance of the pixels.
     float_image = tf.image.per_image_standardization(resized_image)
