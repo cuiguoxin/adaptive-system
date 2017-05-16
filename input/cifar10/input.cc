@@ -51,7 +51,7 @@ void read_raw_tensors_from_file(const std::string& binary_file_path) {
   for (int i = 0; i < 10; i++) {
     Tensor ten = raw_tensors[i];
     uint8* ten_ptr = ten.flat<uint8>().data();
-    for (int j = 0; j < 3073; i++) {
+    for (int j = 0; j < 30; j++) {
       std::cout << ten_ptr[j] << " ";
     }
     std::cout << std::endl;
