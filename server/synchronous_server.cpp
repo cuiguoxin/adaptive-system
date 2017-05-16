@@ -61,6 +61,7 @@ class RPCServiceImpl final : public SystemControl::Service {
       std::terminate();
     }
     std::string init_name = _tuple.init_name();
+    std::cout << init_name << std::endl;
     tf_status = _session->Run({}, {}, {init_name}, nullptr);
     if (!tf_status.ok()) {
       std::cout << "running init has failed in line " << __LINE__ << std::endl;
