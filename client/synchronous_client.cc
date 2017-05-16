@@ -183,7 +183,7 @@ void show_quantization_infor(
         float* tensor_ptr = tensor.flat<float>().data();
         size_t size = tensor.NumElements();
         auto iter = map_gradients_other.find(variable_name);
-        tensorflow::Tensor& tensor_other = iter.second;
+        tensorflow::Tensor& tensor_other = iter->second;
         float* tensor_other_ptr = tensor_other.flat<float>().data();
         std::cout << variable_name << " : ";
         for (int i = 0; i < size; i++) {
