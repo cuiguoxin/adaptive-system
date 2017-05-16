@@ -73,7 +73,7 @@ void turn_raw_tensors_to_standard_version(const std::string& binary_file_path,
 
 std::pair<Tensor, Tensor> get_next_batch() {
   int standard_images_size = 3 * 28 * 28;
-  TensorShape images_batch_shape({batch_size, 3, 28, 28}),
+  TensorShape images_batch_shape({batch_size, 28, 28, 3}),
       labels_batch_shape({batch_size});
   Tensor images_batch(DataType::DT_FLOAT, images_batch_shape),
       labels_batch(DataType::DT_INT32, labels_batch_shape);
