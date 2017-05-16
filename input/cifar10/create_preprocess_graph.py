@@ -8,7 +8,7 @@ import tensorflow as tf
 label_bytes = 1;
 image_bytes = 3072;
 with tf.Session() as sess:
-    record_bytes = tf.placeholder(tf.uint8, shape=(3073), name="raw_input")
+    record_bytes = tf.placeholder(tf.uint8, shape=(3073), name="raw_tensor")
     label = tf.cast(tf.slice(record_bytes, [0], [label_bytes]), tf.int32, name="label")
     depth_major = tf.reshape(tf.slice(record_bytes, [label_bytes], [image_bytes]), [3, 32, 32])
     # Convert from [depth, height, width] to [height, width, depth].
