@@ -243,7 +243,7 @@ void RunServer() {
   std::string server_address("0.0.0.0:50051");
   adaptive_system::RPCServiceImpl service(
       3, 0.1f, 5000, 2, adaptive_system::GRAD_QUANT_LEVEL::EIGHT,
-      "/home/cgx/git_project/adptive-system/input/cifar10/tuple.pb");
+      "/home/cgx/git_project/adaptive-system/input/cifar10/tuple.pb");
 
   ServerBuilder builder;
   // Listen on the given address without any authentication mechanism.
