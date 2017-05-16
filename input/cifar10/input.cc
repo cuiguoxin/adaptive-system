@@ -39,7 +39,7 @@ void read_raw_tensors_from_file(const std::string& binary_file_path) {
     for (int i = 0; i < 10000; i++) {
       Tensor raw_tensor(DataType::DT_UINT8, raw_tensor_shape);
       uint8* raw_tensor_ptr = raw_tensor.flat<uint8>().data();
-      input_stream.read(raw_tensor_ptr, record_size);
+      input_stream.read(reinterpret_cast<char*>(raw_tensor_ptr), record_size);
       raw_tensors.push_back(raw_tensor);
     }
   }
@@ -58,7 +58,7 @@ void turn_raw_tensors_to_standard_version(const std::string& binary_file_path,
   for (int i = 0; i < 10000; i++) {
     Tensor raw_tensor = raw_tensors[i];
     std::vector<Tensor> image_and_label;
-    Status status = session->Run({"raw_tensor", raw_tensor}, {"div", "label"},
+    Status status = session->Run({{"raw_tensor", raw_tensor}}, {"div", "label"},
                                  {}, &image_and_label);
     if (!status.ok()) {
       std::cout << "failed in line " << __LINE__ << std::endl;
