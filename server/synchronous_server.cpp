@@ -59,16 +59,16 @@ class RPCServiceImpl final : public SystemControl::Service {
     tensorflow::GraphDef graph_def = _tuple.graph();
     tensorflow::Status tf_status = _session->Create(graph_def);
     if (!tf_status.ok()) {
-      std::cout << "create graph has __LINE__ << " in file " << __FILE__ "
-                << __LINE__ << std::endl;
+      std::cout << "create graph has failed in line " << __LINE__ << " in file "
+                << __FILE__ << std::endl;
       std::terminate();
     }
     std::string init_name = _tuple.init_name();
     std::cout << init_name << std::endl;
     tf_status = _session->Run({}, {}, {init_name}, nullptr);
     if (!tf_status.ok()) {
-      std::cout << "running init has __LINE__ << " in file " << __FILE__ "
-                << __LINE__ << std::endl;
+      std::cout << "running init has  failed in line " << __LINE__
+                << " in file " << __FILE__ << std::endl;
       std::terminate();
     }
     std::vector<tensorflow::Tensor> var_init_values;
@@ -94,9 +94,8 @@ class RPCServiceImpl final : public SystemControl::Service {
         });
     tf_status = _session->Run({}, var_names, {}, &var_init_values);
     if (!tf_status.ok()) {
-      std::cout << "getting init var value has __LINE__ << " in file
-                   " << __FILE__ "
-                << __LINE__ << std::endl;
+      std::cout << "getting init var value has failed in line " << __LINE__
+                << " in file " << __FILE__ << std::endl;
       std::terminate();
     }
     size_t size = var_names.size();
