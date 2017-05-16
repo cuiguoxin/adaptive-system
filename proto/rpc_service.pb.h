@@ -463,6 +463,48 @@ class Tuple : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   ::std::string* release_loss_name();
   void set_allocated_loss_name(::std::string* loss_name);
 
+  // string init_name = 7;
+  void clear_init_name();
+  static const int kInitNameFieldNumber = 7;
+  const ::std::string& init_name() const;
+  void set_init_name(const ::std::string& value);
+  #if LANG_CXX11
+  void set_init_name(::std::string&& value);
+  #endif
+  void set_init_name(const char* value);
+  void set_init_name(const char* value, size_t size);
+  ::std::string* mutable_init_name();
+  ::std::string* release_init_name();
+  void set_allocated_init_name(::std::string* init_name);
+
+  // string image_placeholder_name = 8;
+  void clear_image_placeholder_name();
+  static const int kImagePlaceholderNameFieldNumber = 8;
+  const ::std::string& image_placeholder_name() const;
+  void set_image_placeholder_name(const ::std::string& value);
+  #if LANG_CXX11
+  void set_image_placeholder_name(::std::string&& value);
+  #endif
+  void set_image_placeholder_name(const char* value);
+  void set_image_placeholder_name(const char* value, size_t size);
+  ::std::string* mutable_image_placeholder_name();
+  ::std::string* release_image_placeholder_name();
+  void set_allocated_image_placeholder_name(::std::string* image_placeholder_name);
+
+  // string label_placeholder_name = 9;
+  void clear_label_placeholder_name();
+  static const int kLabelPlaceholderNameFieldNumber = 9;
+  const ::std::string& label_placeholder_name() const;
+  void set_label_placeholder_name(const ::std::string& value);
+  #if LANG_CXX11
+  void set_label_placeholder_name(::std::string&& value);
+  #endif
+  void set_label_placeholder_name(const char* value);
+  void set_label_placeholder_name(const char* value, size_t size);
+  ::std::string* mutable_label_placeholder_name();
+  ::std::string* release_label_placeholder_name();
+  void set_allocated_label_placeholder_name(::std::string* label_placeholder_name);
+
   // .tensorflow.GraphDef graph = 5;
   bool has_graph() const;
   void clear_graph();
@@ -511,6 +553,9 @@ class Tuple : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
       ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE,
       0 > map_parameters_;
   ::google::protobuf::internal::ArenaStringPtr loss_name_;
+  ::google::protobuf::internal::ArenaStringPtr init_name_;
+  ::google::protobuf::internal::ArenaStringPtr image_placeholder_name_;
+  ::google::protobuf::internal::ArenaStringPtr label_placeholder_name_;
   ::tensorflow::GraphDef* graph_;
   float lr_;
   ::google::protobuf::int32 interval_;
@@ -1498,6 +1543,162 @@ inline void Tuple::set_allocated_loss_name(::std::string* loss_name) {
   }
   loss_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), loss_name);
   // @@protoc_insertion_point(field_set_allocated:adaptive_system.Tuple.loss_name)
+}
+
+// string init_name = 7;
+inline void Tuple::clear_init_name() {
+  init_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& Tuple::init_name() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.Tuple.init_name)
+  return init_name_.GetNoArena();
+}
+inline void Tuple::set_init_name(const ::std::string& value) {
+  
+  init_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:adaptive_system.Tuple.init_name)
+}
+#if LANG_CXX11
+inline void Tuple::set_init_name(::std::string&& value) {
+  
+  init_name_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Tuple.init_name)
+}
+#endif
+inline void Tuple::set_init_name(const char* value) {
+  
+  init_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:adaptive_system.Tuple.init_name)
+}
+inline void Tuple::set_init_name(const char* value, size_t size) {
+  
+  init_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:adaptive_system.Tuple.init_name)
+}
+inline ::std::string* Tuple::mutable_init_name() {
+  
+  // @@protoc_insertion_point(field_mutable:adaptive_system.Tuple.init_name)
+  return init_name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* Tuple::release_init_name() {
+  // @@protoc_insertion_point(field_release:adaptive_system.Tuple.init_name)
+  
+  return init_name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Tuple::set_allocated_init_name(::std::string* init_name) {
+  if (init_name != NULL) {
+    
+  } else {
+    
+  }
+  init_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), init_name);
+  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Tuple.init_name)
+}
+
+// string image_placeholder_name = 8;
+inline void Tuple::clear_image_placeholder_name() {
+  image_placeholder_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& Tuple::image_placeholder_name() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.Tuple.image_placeholder_name)
+  return image_placeholder_name_.GetNoArena();
+}
+inline void Tuple::set_image_placeholder_name(const ::std::string& value) {
+  
+  image_placeholder_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:adaptive_system.Tuple.image_placeholder_name)
+}
+#if LANG_CXX11
+inline void Tuple::set_image_placeholder_name(::std::string&& value) {
+  
+  image_placeholder_name_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Tuple.image_placeholder_name)
+}
+#endif
+inline void Tuple::set_image_placeholder_name(const char* value) {
+  
+  image_placeholder_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:adaptive_system.Tuple.image_placeholder_name)
+}
+inline void Tuple::set_image_placeholder_name(const char* value, size_t size) {
+  
+  image_placeholder_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:adaptive_system.Tuple.image_placeholder_name)
+}
+inline ::std::string* Tuple::mutable_image_placeholder_name() {
+  
+  // @@protoc_insertion_point(field_mutable:adaptive_system.Tuple.image_placeholder_name)
+  return image_placeholder_name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* Tuple::release_image_placeholder_name() {
+  // @@protoc_insertion_point(field_release:adaptive_system.Tuple.image_placeholder_name)
+  
+  return image_placeholder_name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Tuple::set_allocated_image_placeholder_name(::std::string* image_placeholder_name) {
+  if (image_placeholder_name != NULL) {
+    
+  } else {
+    
+  }
+  image_placeholder_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), image_placeholder_name);
+  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Tuple.image_placeholder_name)
+}
+
+// string label_placeholder_name = 9;
+inline void Tuple::clear_label_placeholder_name() {
+  label_placeholder_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& Tuple::label_placeholder_name() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.Tuple.label_placeholder_name)
+  return label_placeholder_name_.GetNoArena();
+}
+inline void Tuple::set_label_placeholder_name(const ::std::string& value) {
+  
+  label_placeholder_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:adaptive_system.Tuple.label_placeholder_name)
+}
+#if LANG_CXX11
+inline void Tuple::set_label_placeholder_name(::std::string&& value) {
+  
+  label_placeholder_name_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Tuple.label_placeholder_name)
+}
+#endif
+inline void Tuple::set_label_placeholder_name(const char* value) {
+  
+  label_placeholder_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:adaptive_system.Tuple.label_placeholder_name)
+}
+inline void Tuple::set_label_placeholder_name(const char* value, size_t size) {
+  
+  label_placeholder_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:adaptive_system.Tuple.label_placeholder_name)
+}
+inline ::std::string* Tuple::mutable_label_placeholder_name() {
+  
+  // @@protoc_insertion_point(field_mutable:adaptive_system.Tuple.label_placeholder_name)
+  return label_placeholder_name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* Tuple::release_label_placeholder_name() {
+  // @@protoc_insertion_point(field_release:adaptive_system.Tuple.label_placeholder_name)
+  
+  return label_placeholder_name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Tuple::set_allocated_label_placeholder_name(::std::string* label_placeholder_name) {
+  if (label_placeholder_name != NULL) {
+    
+  } else {
+    
+  }
+  label_placeholder_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), label_placeholder_name);
+  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Tuple.label_placeholder_name)
 }
 
 // -------------------------------------------------------------------
