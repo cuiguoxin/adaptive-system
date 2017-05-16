@@ -77,7 +77,7 @@ void quantize_gradient(std::map<std::string, tensorflow::Tensor>& map_gradient,
                        NamedGradients* named_gradients, QUANTIZATION_TYPE type);
 
 void dequantize_gradient(
-    const NamedGradients& named_gradients,
+    NamedGradients& named_gradients,
     std::map<std::string, tensorflow::Tensor>& map_gradient);
 
 void apply_quantized_gradient_to_model(NamedGradients& named_gradients,

@@ -143,6 +143,7 @@ void quantize(const QUANTIZATION_TYPE type, tensorflow::Tensor& raw_tensor,
   grad.set_max(max_value);
   grad.set_min(min_value);
   grad.set_level(cast_quantization_type_to_grad_quant_level(type));
+  tensorflow::TensorShape raw_tensor_shape = raw_tensor.shape();
   if (type == QUANTIZATION_TYPE::TWO_BIT ||
       type == QUANTIZATION_TYPE::FOUR_BIT) {
     float* raw_ptr = raw_tensor.flat<float>().data();
@@ -153,6 +154,9 @@ void quantize(const QUANTIZATION_TYPE type, tensorflow::Tensor& raw_tensor,
                          &out_ptr, out_ptr_length);
     grad.set_tensor_le_8(out_ptr, out_ptr_length);
     delete[] out_ptr;
+    tensorflow::TensorShapeProto raw_tensor_shape_proto;
+    raw_tensor_shape.AsProto(&raw_tensor_shape_proto);
+    grad.mutable_tensor_shape() = raw_tensor_shape_proto;
   } else if (type == QUANTIZATION_TYPE::EIGHT_BIT ||
              type == QUANTIZATION_TYPE::SIXTEEN_BIT) {
     tensorflow::Tensor tensor(cast_quantization_type_to_data_type(type),
@@ -193,6 +197,7 @@ void dequantize(const QUANTIZATION_TYPE type, Gradient& grad,
     bool is_ok = temp.FromProto(tensor_quantized_proto);
     if (!is_ok) {
       std::cout << "proto to tensor failed in line " << __LINE__ << std::endl;
+      std::terminate();
     }
     // must allocate tensor memory outside dequantize_greater_8_bits
     raw_tensor =

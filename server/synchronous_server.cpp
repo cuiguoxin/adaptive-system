@@ -114,7 +114,7 @@ class RPCServiceImpl final : public SystemControl::Service {
 
   Status sendGradient(ServerContext* context, const NamedGradients* request,
                       NamedGradients* response) override {
-    const NamedGradients& named_gradients = *request;
+    NamedGradients& named_gradients = const_cast<NamedGradients&>(*request);
     std::map<std::string, tensorflow::Tensor> map_gradient;
     dequantize_gradient(named_gradients, map_gradient);
     std::unique_lock<std::mutex> lk(_mutex_gradient);
