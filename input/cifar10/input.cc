@@ -50,7 +50,7 @@ void read_raw_tensors_from_file(const std::string& binary_file_path) {
                std::default_random_engine(seed));
   for (int i = 0; i < 10; i++) {
     Tensor ten = raw_tensors[i];
-    unit8* ten_ptr = ten.flat<uint8>().data();
+    uint8* ten_ptr = ten.flat<uint8>().data();
     for (int j = 0; j < 3073; i++) {
       std::cout << ten_ptr[j] << " ";
     }
