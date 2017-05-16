@@ -151,6 +151,7 @@ float compute_gradient_and_loss(
   }
   tensorflow::Tensor& loss_tensor = outputs[0];
   float* loss_ptr = loss_tensor.flat<float>().data();
+  float loss_ret = loss_ptr[0];
   outputs.erase(outputs.begin());
   if (outputs.size() != variable_names_in_order.size()) {
     std::cout << "impossible in " << __LINE__ << std::endl;
@@ -161,6 +162,7 @@ float compute_gradient_and_loss(
     gradients.insert(std::pair<std::string, tensorflow::Tensor>(
         variable_names_in_order[i], outputs[i]));
   }
+  return loss_ret;
 }
 // do not need session
 PartialState collect_partial_state(
