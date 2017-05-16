@@ -171,24 +171,31 @@ void do_training(const std::string& binary_file_path,
                  const std::string& graph_path) {
   cifar10::turn_raw_tensors_to_standard_version(binary_file_path, graph_path);
   for (int i = 0; i < total_iter; i++) {
+    std::cout << "done in line " << __LINE__ << std::endl;
     std::map<std::string, tensorflow::Tensor> map_gradients;
     std::pair<tensorflow::Tensor, tensorflow::Tensor> feeds =
         cifar10::get_next_batch();
+    std::cout << "done in line " << __LINE__ << std::endl;
     float loss = compute_gradient_and_loss(
         {{image_placeholder_name, feeds.first},
          {label_placeholder_name, feeds.second}},
         map_gradients);  // compute gradient and loss now
+    std::cout << "done in line " << __LINE__ << std::endl;
     Loss loss_to_send;
     loss_to_send.set_loss(loss);
     Empty empty;
     ClientContext loss_context;
+    std::cout << "done in line " << __LINE__ << std::endl;
     stub->sendLoss(&loss_context, loss_to_send, &empty);
+    std::cout << "done in line " << __LINE__ << std::endl;
     if (i % interval == 0) {
       PartialState partial_state = collect_partial_state(map_gradients, loss);
       ClientContext state_context;
       QuantizationLevel quantization_level;
+      std::cout << "done in line " << __LINE__ << std::endl;
       grpc::Status grpc_status =
           stub->sendState(&state_context, partial_state, &quantization_level);
+      std::cout << "done in line " << __LINE__ << std::endl;
       if (!grpc_status.ok()) {
         std::cout << "grpc error in line " << __LINE__ << " "
                   << grpc_status.error_message() << std::endl;
@@ -196,19 +203,25 @@ void do_training(const std::string& binary_file_path,
       grad_quant_level = quantization_level.level();
     }
     NamedGradients named_gradients_send, named_gradients_receive;
+    std::cout << "done in line " << __LINE__ << std::endl;
     quantize_gradient(
         map_gradients, &named_gradients_send,
         cast_grad_quant_level_to_quantization_type(grad_quant_level));
+    std::cout << "done in line " << __LINE__ << std::endl;
     ClientContext gradient_context;
+    std::cout << "done in line " << __LINE__ << std::endl;
     grpc::Status grpc_status = stub->sendGradient(
         &gradient_context, named_gradients_send, &named_gradients_receive);
+    std::cout << "done in line " << __LINE__ << std::endl;
     if (!grpc_status.ok()) {
       std::cout << "grpc error in line " << __LINE__ << " "
                 << grpc_status.error_message() << std::endl;
     }
+    std::cout << "done in line " << __LINE__ << std::endl;
     // add the gradients to variables
     apply_quantized_gradient_to_model(named_gradients_receive, get_session(),
                                       *get_tuple());
+    std::cout << "done in line " << __LINE__ << std::endl;
   }
 }
 
