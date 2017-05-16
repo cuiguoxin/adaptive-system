@@ -195,3 +195,7 @@ with tf.Session() as sess:
   tup.graph.CopyFrom(sess.graph_def)
   tup.loss_name = losses.name
 
+  f = open("tuple.pb", "wb")
+  f.write(tup.SerializeToString())
+  f.close()
+
