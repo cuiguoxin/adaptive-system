@@ -55,6 +55,7 @@ class RPCServiceImpl final : public SystemControl::Service {
       std::cerr << "Failed to parse tuple." << std::endl;
       std::terminate();
     }
+
     tensorflow::GraphDef graph_def = _tuple.graph();
     tensorflow::Status tf_status = _session->Create(graph_def);
     if (!tf_status.ok()) {
@@ -75,6 +76,17 @@ class RPCServiceImpl final : public SystemControl::Service {
         map_names.begin(), map_names.end(),
         [&var_names](google::protobuf::MapPair<std::string, Names>& pair) {
           var_names.push_back(pair.first);
+          Names& names = pair.second;
+
+          std::string assign_name_current = names.assign_name();
+          size_t length = assign_name_current.length();
+          names.mutable_assign_name() =
+              assign_name_current.substr(0, length - 2);
+
+          std::string assign_add_name_current = names.assign_add_name();
+          length = assign_add_name_current.length();
+          names.mutable_assign_add_name() =
+              assign_add_name_current.substr(0, length - 2);
         });
     tf_status = _session->Run({}, var_names, {}, &var_init_values);
     if (!tf_status.ok()) {
