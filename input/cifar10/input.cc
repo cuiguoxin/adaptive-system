@@ -61,7 +61,8 @@ void turn_raw_tensors_to_standard_version(const std::string& binary_file_path,
     Status status = session->Run({{"raw_tensor", raw_tensor}}, {"div", "label"},
                                  {}, &image_and_label);
     if (!status.ok()) {
-      std::cout << "failed in line " << __LINE__ << std::endl;
+      std::cout << "failed in line " << __LINE__ << " in file " << __FILE__
+                << " " << status.error_message() << std::endl;
       std::terminate();
     }
     standard_images.push_back(image_and_label[0]);
