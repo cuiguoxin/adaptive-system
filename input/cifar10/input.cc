@@ -88,6 +88,7 @@ std::pair<Tensor, Tensor> get_next_batch() {
     Tensor& label_current = standard_labels[real_index];
     int* label_current_ptr = label_current.flat<int>().data();
     label_batch_ptr[i] = *label_current_ptr;
+    index_current++;
   }
   return std::pair<Tensor, Tensor>(images_batch, labels_batch);
 }

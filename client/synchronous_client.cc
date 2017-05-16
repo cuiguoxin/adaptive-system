@@ -36,7 +36,7 @@ namespace {
 std::unique_ptr<SystemControl::Stub> stub;
 float lr = 0.0;
 int interval = 0;
-int total_iter = 0;
+int total_iter = 5000;
 GRAD_QUANT_LEVEL grad_quant_level = GRAD_QUANT_LEVEL::NONE;
 std::string label_placeholder_name, image_placeholder_name;
 Tuple* get_tuple() {
@@ -85,6 +85,7 @@ void init_everything() {
   tensorflow::GraphDef const& graph_def = tuple.graph();
   lr = tuple.lr();
   interval = tuple.interval();
+  total_iter = tuple.total_iter();
   image_placeholder_name = tuple.image_placeholder_name();
   label_placeholder_name = tuple.label_placeholder_name();
   tensorflow::Status tf_status = get_session()->Create(graph_def);
