@@ -1,1 +1,0 @@
-g++ -std=c++11 -I/home/cgx/git_project/adaptive-system/ -I/home/cgx/include/ -I/home/cgx/git_project/adaptive-system/tensorflow/ -I/home/cgx/git_project/adaptive-system/eigen-eigen synchronous_client.cc  -o client -L/home/cgx/git_project/adaptive-system/build/ -ltensorflow_cc -L/home/cgx/git_project/adaptive-system/quantization/util/ -lalgorithms
