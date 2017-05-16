@@ -80,12 +80,12 @@ class RPCServiceImpl final : public SystemControl::Service {
 
           std::string assign_name_current = names.assign_name();
           size_t length = assign_name_current.length();
-          names.mutable_assign_name() =
+          *names.mutable_assign_name() =
               assign_name_current.substr(0, length - 2);
 
           std::string assign_add_name_current = names.assign_add_name();
           length = assign_add_name_current.length();
-          names.mutable_assign_add_name() =
+          *names.mutable_assign_add_name() =
               assign_add_name_current.substr(0, length - 2);
         });
     tf_status = _session->Run({}, var_names, {}, &var_init_values);
