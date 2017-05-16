@@ -61,7 +61,11 @@ class RPCServiceImpl final : public SystemControl::Service {
       std::terminate();
     }
     std::string init_name = _tuple.init_name();
-    _session->Run({}, {}, {init_name}, nullptr);
+    tf_status = _session->Run({}, {}, {init_name}, nullptr);
+    if (!tf_status.ok()) {
+      std::cout << "running init has failed in line " << __LINE__ << std::endl;
+      std::terminate();
+    }
     std::vector<tensorflow::Tensor> var_init_values;
     std::vector<std::string> var_names;
     google::protobuf::Map<std::string, Names> map_names = _tuple.map_names();
@@ -70,7 +74,12 @@ class RPCServiceImpl final : public SystemControl::Service {
         [&var_names](google::protobuf::MapPair<std::string, Names>& pair) {
           var_names.push_back(pair.first);
         });
-    _session->Run({}, var_names, {}, &var_init_values);
+    tf_status = _session->Run({}, var_names, {}, &var_init_values);
+    if (!tf_status.ok()) {
+      std::cout << "getting init var value has failed in line " << __LINE__
+                << std::endl;
+      std::terminate();
+    }
     size_t size = var_names.size();
     for (size_t i = 0; i < size; i++) {
       tensorflow::TensorProto var_proto;
