@@ -268,8 +268,8 @@ void apply_quantized_gradient_to_model(NamedGradients& named_gradients,
   std::vector<std::string> actions_to_do;
   std::for_each(
       map_gradient.begin(), map_gradient.end(),
-      [&feeds, &actions_to_do,
-       &map_names](google::protobuf::MapPair<std::string, Gradient>& pair) {
+      [&feeds, &actions_to_do, &map_names,
+       &tuple](google::protobuf::MapPair<std::string, Gradient>& pair) {
         std::string const& variable_name = pair.first;
         Gradient& grad = pair.second;
         auto iter_map_names = map_names.find(variable_name);
