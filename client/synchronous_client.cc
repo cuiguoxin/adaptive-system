@@ -167,7 +167,9 @@ float compute_gradient_and_loss(
 // do not need session
 PartialState collect_partial_state(
     std::map<std::string, tensorflow::Tensor> const& gradients,
-    const float loss) {}
+    const float loss) {
+  return PartialState();
+}
 
 void do_training(const std::string& binary_file_path,
                  const std::string& graph_path) {
