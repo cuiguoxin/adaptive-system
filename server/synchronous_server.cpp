@@ -71,7 +71,8 @@ class RPCServiceImpl final : public SystemControl::Service {
     }
     std::vector<tensorflow::Tensor> var_init_values;
     std::vector<std::string> var_names;
-    google::protobuf::Map<std::string, Names> map_names = _tuple.map_names();
+    google::protobuf::Map<std::string, Names>& map_names =
+        *_tuple.mutable_map_names();
     std::for_each(
         map_names.begin(), map_names.end(),
         [&var_names](google::protobuf::MapPair<std::string, Names>& pair) {
