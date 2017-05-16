@@ -196,6 +196,7 @@ with tf.Session() as sess:
   tup.interval = 3;
   tup.graph.CopyFrom(sess.graph_def)
   tup.loss_name = losses.name
+  tup.init_name = init.name
 
   f = open("tuple.pb", "wb")
   f.write(tup.SerializeToString())
