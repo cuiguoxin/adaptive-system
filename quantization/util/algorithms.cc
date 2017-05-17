@@ -11,7 +11,7 @@ void quantize_less_8_bits(
     size_t& quantized_data_length  // the number of bytes to output
     ) {
   const int q_type = static_cast<int>(type);  // for example 2
-  const int scope = std::pow(2, q_type);
+  const float scope = std::pow(2, q_type);
   const float multiplizer = scope / (max_value + eps - min_value);
   std::for_each(raw_data, raw_data + raw_data_length,
                 [multiplizer, min_value](float& ref) {
