@@ -179,8 +179,11 @@ class RPCServiceImpl final : public SystemControl::Service {
       _vector_partial_state.clear();
       _bool_state = true;
       _condition_variable_state.notify_all();
+      std::cout << "got line " << __LINE__ << std::endl;
     } else {
+      std::cout << "got line " << __LINE__ << std::endl;
       _condition_variable_state.wait(lk, [this] { return _bool_state; });
+      std::cout << "got line " << __LINE__ << std::endl;
     }
     lk.unlock();
     response->set_level(_grad_quant_level);
