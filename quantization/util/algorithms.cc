@@ -20,8 +20,8 @@ void quantize_less_8_bits(
   const int length_per_iter = 8 / q_type;  // for example 4
   quantized_data_length = static_cast<size_t>(
       std::ceil(raw_data_length / static_cast<float>(length_per_iter)));
-  std::cout << "quantized_data_length is " << quantized_data_length
-            << std::endl;
+  // std::cout << "quantized_data_length is " << quantized_data_length
+  << std::endl;
   tensorflow::uint8* output = new tensorflow::uint8[quantized_data_length];
   for (int i = 0; i < quantized_data_length; i++) {
     output[i] = 0;
@@ -108,11 +108,11 @@ void dequantize_less_8_bits(const QUANTIZATION_TYPE type,
   static const tensorflow::uint8 mask_2_bits = 3, mask_4_bits = 15,
                                  mask_8_bits = 255;
   const int q_type = static_cast<int>(type);  // for example 2
-  std::cout << "q type is " << q_type << std::endl;
+  // std::cout << "q type is " << q_type << std::endl;
   const int scope = std::pow(2, q_type);
   const int length_per_iter = 8 / q_type;  // for example 4
   const float multiplier = (max_value - min_value) / scope;
-  std::cout << "multiplier is " << multiplier << std::endl;
+  // std::cout << "multiplier is " << multiplier << std::endl;
   int i = 0;
   std::function<void(float&)> func = [=, &i](float& ref) {
     const int index_for_q_data = i / length_per_iter;
