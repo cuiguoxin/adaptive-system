@@ -261,7 +261,7 @@ class RPCServiceImpl final : public SystemControl::Service {
 void RunServer() {
   std::string server_address("0.0.0.0:50051");
   adaptive_system::RPCServiceImpl service(
-      3, 0.1f, 5000, 1, adaptive_system::GRAD_QUANT_LEVEL::EIGHT,
+      3, 0.1f, 5000, 2, adaptive_system::GRAD_QUANT_LEVEL::SIXTEEN,
       "/home/cgx/git_project/adaptive-system/input/cifar10/tuple.pb");
 
   ServerBuilder builder;
