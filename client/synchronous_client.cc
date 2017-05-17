@@ -240,7 +240,7 @@ void do_training(const std::string& binary_file_path,
     std::cout << "done in line " << __LINE__ << std::endl;
     grpc::Status grpc_status = stub->sendGradient(
         &gradient_context, named_gradients_send, &named_gradients_receive);
-    show_quantization_infor(map_gradients, named_gradients_receive);
+    //show_quantization_infor(map_gradients, named_gradients_receive);
     std::cout << "done in line " << __LINE__ << std::endl;
     if (!grpc_status.ok()) {
       std::cout << "grpc error in line " << __LINE__ << " "
