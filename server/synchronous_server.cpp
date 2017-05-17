@@ -127,7 +127,8 @@ class RPCServiceImpl final : public SystemControl::Service {
       float sum =
           std::accumulate(_vector_loss.begin(), _vector_loss.end(), 0.0);
       float average = sum / _number_of_workers;
-      std::cout << "average loss is " << average << std::endl;
+      std::cout << "iteratino :" << _current_iter_number++
+                << ", average loss is " << average << std::endl;
       _vector_loss_history.push_back(average);
       _vector_loss.clear();
       _bool_loss = true;
@@ -234,6 +235,7 @@ class RPCServiceImpl final : public SystemControl::Service {
   const float _lr;
   const int _total_iter;
   const int _number_of_workers;
+  int _current_iter_number = 0;
   GRAD_QUANT_LEVEL _grad_quant_level = GRAD_QUANT_LEVEL::NONE;
 
   std::mutex _mutex_gradient;
@@ -261,7 +263,7 @@ class RPCServiceImpl final : public SystemControl::Service {
 void RunServer() {
   std::string server_address("0.0.0.0:50051");
   adaptive_system::RPCServiceImpl service(
-      3, 0.1f, 5000, 1, adaptive_system::GRAD_QUANT_LEVEL::EIGHT,
+      3, 0.1f, 5000, 1, adaptive_system::GRAD_QUANT_LEVEL::FOUR,
       "/home/cgx/git_project/adaptive-system/input/cifar10/tuple.pb");
 
   ServerBuilder builder;
