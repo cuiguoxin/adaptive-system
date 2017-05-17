@@ -46,7 +46,7 @@ void quantize_greater_8_bits(const QUANTIZATION_TYPE type,
     scale_factor =
         (static_cast<double>(std::numeric_limits<tensorflow::uint8>::max()) -
          static_cast<double>(std::numeric_limits<tensorflow::uint8>::min())) /
-        (max_value - min_value);
+        (max_value + eps - min_value);
     auto o = tensor.flat<tensorflow::uint8>();
     o = ((raw_data.flat<float>().cwiseMin(max_value).cwiseMax(min_value) -
           min_value) *
@@ -57,7 +57,7 @@ void quantize_greater_8_bits(const QUANTIZATION_TYPE type,
     scale_factor =
         (static_cast<double>(std::numeric_limits<tensorflow::uint16>::max()) -
          static_cast<double>(std::numeric_limits<tensorflow::uint16>::min())) /
-        (max_value - min_value);
+        (max_value + eps - min_value);
     auto o = tensor.flat<tensorflow::uint16>();
     o = ((raw_data.flat<float>().cwiseMin(max_value).cwiseMax(min_value) -
           min_value) *
