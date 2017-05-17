@@ -21,7 +21,7 @@ void quantize_less_8_bits(
   quantized_data_length = static_cast<size_t>(
       std::ceil(raw_data_length / static_cast<float>(length_per_iter)));
   // std::cout << "quantized_data_length is " << quantized_data_length
-  << std::endl;
+  //<< std::endl;
   tensorflow::uint8* output = new tensorflow::uint8[quantized_data_length];
   for (int i = 0; i < quantized_data_length; i++) {
     output[i] = 0;
