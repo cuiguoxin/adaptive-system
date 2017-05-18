@@ -82,4 +82,7 @@ void dequantize_gradient(
 
 void apply_quantized_gradient_to_model(NamedGradients& named_gradients,
                                        tensorflow::Session* sess, Tuple& tuple);
+
+void apply_quantized_gradient_to_model_using_adam(
+    NamedGradients& named_gradients, tensorflow::Session* sess, Tuple& tuple);
 }

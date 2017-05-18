@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <condition_variable>
+#include <cstdlib>
 #include <exception>
 #include <fstream>
 #include <functional>
@@ -156,8 +157,8 @@ class RPCServiceImpl final : public SystemControl::Service {
       quantize_gradient(
           map_gradient_another, &_store_named_gradient,
           cast_grad_quant_level_to_quantization_type(_grad_quant_level));
-      apply_quantized_gradient_to_model(_store_named_gradient, _session,
-                                        _tuple);
+      apply_quantized_gradient_to_model_using_adam(_store_named_gradient,
+                                                   _session, _tuple);
       _vector_map_gradient.clear();
       _bool_gradient = true;
       _condition_variable_gradient.notify_all();
@@ -262,12 +263,33 @@ class RPCServiceImpl final : public SystemControl::Service {
   Tuple _tuple;
 };
 }
+adaptive_system::GRAD_QUANT_LEVEL cast_int_to_grad_quant_level(int level) {
+  switch (level) {
+    case 2:
+      return adaptive_system::GRAD_QUANT_LEVEL::TWO;
+    case 4:
+      return adaptive_system::GRAD_QUANT_LEVEL::FOUR;
+    case 8:
+      return adaptive_system::GRAD_QUANT_LEVEL::EIGHT;
+    case 16:
+      return adaptive_system::GRAD_QUANT_LEVEL::SIXTEEN;
+    default:
+      return adaptive_system::GRAD_QUANT_LEVEL::EIGHT;
+  }
+}
 
-void RunServer() {
+int main(int argc, char** argv) {
   std::string server_address("0.0.0.0:50051");
+  int interval = atoi(argv[1]);
+  float learning_rate = atof(argv[2]);
+  int total_iter = atoi(argv[3]);
+  int number_of_workers = atoi(argv[4]);
+  int level = atoi(argv[5]);
+  std::string tuple_path = argv[6];
+
   adaptive_system::RPCServiceImpl service(
-      3, 0.1f, 5000, 2, adaptive_system::GRAD_QUANT_LEVEL::FOUR,
-      "/home/cgx/git_project/adaptive-system/input/cifar10/tuple.pb");
+      interval, learning_rate, total_iter, number_of_workers,
+      cast_int_to_grad_quant_level(level), tuple_path);
 
   ServerBuilder builder;
   // Listen on the given address without any authentication mechanism.
@@ -283,10 +305,6 @@ void RunServer() {
   // Wait for the server to shutdown. Note that some other thread must be
   // responsible for shutting down the server for this call to ever return.
   server->Wait();
-}
-
-int main(int argc, char** argv) {
-  RunServer();
 
   return 0;
 }

@@ -240,7 +240,7 @@ void do_training(const std::string& binary_file_path,
     std::cout << "done in line " << __LINE__ << std::endl;
     grpc::Status grpc_status = stub->sendGradient(
         &gradient_context, named_gradients_send, &named_gradients_receive);
-    //show_quantization_infor(map_gradients, named_gradients_receive);
+    // show_quantization_infor(map_gradients, named_gradients_receive);
     std::cout << "done in line " << __LINE__ << std::endl;
     if (!grpc_status.ok()) {
       std::cout << "grpc error in line " << __LINE__ << " "
@@ -248,8 +248,8 @@ void do_training(const std::string& binary_file_path,
     }
     std::cout << "done in line " << __LINE__ << std::endl;
     // add the gradients to variables
-    apply_quantized_gradient_to_model(named_gradients_receive, get_session(),
-                                      *get_tuple());
+    apply_quantized_gradient_to_model_using_adam(named_gradients_receive,
+                                                 get_session(), *get_tuple());
     std::cout << "done in line " << __LINE__ << std::endl;
   }
 }

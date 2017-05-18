@@ -30,6 +30,7 @@ message Tuple {
     string init_name = 7;
     string image_placeholder_name = 8;
     string label_placeholder_name = 9;
+    string training_op_name = 10;
 }
 
 
