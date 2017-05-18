@@ -10,3 +10,4 @@ eigen-eigen/
 bin/
 *.pb
 *.pyc
+loss_result/

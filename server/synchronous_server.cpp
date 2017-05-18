@@ -1,6 +1,9 @@
 #include <algorithm>
+#include <chrono>
+#include <cmath>
 #include <condition_variable>
 #include <cstdlib>
+#include <ctime>
 #include <exception>
 #include <fstream>
 #include <functional>
@@ -110,6 +113,14 @@ class RPCServiceImpl final : public SystemControl::Service {
     _tuple.set_interval(_interval);
     _tuple.set_lr(_lr);
     _tuple.set_total_iter(_total_iter);
+    _init_time_point = std::chrono::system_clock::now();
+    _init_time_t = std::chrono::system_clock::to_time_t(_init_time_point);
+
+    std::string store_loss_file_path =
+        "loss_result/" + _init_time_t + "_interval:" + _interval +
+        "_number_of_workers:" + _number_of_workers +
+        "_level:" + std::pow(2, static_cast<int>(_grad_quant_level) + 1);
+    _file_out_stream.open(store_loss_file_path);
   }
   Status retrieveTuple(ServerContext* context, const Empty* request,
                        Tuple* reply) override {
@@ -131,6 +142,12 @@ class RPCServiceImpl final : public SystemControl::Service {
       float average = sum / _number_of_workers;
       std::cout << "iteratino :" << _current_iter_number++
                 << ", average loss is " << average << std::endl;
+      std::chrono::time_point<std::chrono::system_clock> now =
+          std::chrono::system_clock::now();
+      std::time_t now_t = std::chrono::system_clock::to_time_t(now);
+      _file_out_stream << now_t - _init_time_t
+                       << " :iter num: " << _current_iter_number << " loss is "
+                       << loss << "\n";
       _vector_loss_history.push_back(average);
       _vector_loss.clear();
       _bool_loss = true;
@@ -243,6 +260,9 @@ class RPCServiceImpl final : public SystemControl::Service {
   int _current_iter_number = 0;
   GRAD_QUANT_LEVEL _grad_quant_level = GRAD_QUANT_LEVEL::NONE;
 
+  std::chrono::time_point<std::chrono::system_clock> _init_time_point;
+  std::time_t _init_time_t;
+
   std::mutex _mutex_gradient;
   std::mutex _mutex_state;
   std::mutex _mutex_loss;
@@ -262,6 +282,7 @@ class RPCServiceImpl final : public SystemControl::Service {
 
   tensorflow::Session* _session;
   Tuple _tuple;
+  std::ofstream _file_out_stream;
 };
 }
 adaptive_system::GRAD_QUANT_LEVEL cast_int_to_grad_quant_level(int level) {

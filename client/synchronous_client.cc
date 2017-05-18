@@ -258,18 +258,18 @@ void do_training(const std::string& binary_file_path,
 
 void close_session() { get_session()->Close(); }
 
-void run_logic() {
+void run_logic(std::string const& training_data_path,
+               std::string& const preprocess_pb_path) {
   init_everything();
-  do_training(
-      "/home/cgx/git_project/adaptive-system/resources/cifar-10-batches-bin/"
-      "data_batch_1.bin",
-      "/home/cgx/git_project/adaptive-system/input/cifar10/preprocess.pb");
+  do_training(training_data_path, preprocess_pb_path);
   close_session();
 }
 }
 
 int main(int argc, char* argv[]) {
   std::string ip_port = argv[1];
+  std::string training_data_path = argv[2];
+  std::string preprocess_pb_path = argv[3];
   adaptive_system::init_stub(ip_port);
   adaptive_system::run_logic();
 }
