@@ -335,6 +335,6 @@ void apply_quantized_gradient_to_model_using_adam(
               std::pair<std::string, tensorflow::Tensor>(grad_name, feed));
         }
       });
-  sess->Run(feeds, actions_to_do, {}, nullptr);
+  sess->Run(feeds, {}, actions_to_do, nullptr);
 }
 }
