@@ -109,6 +109,7 @@ class RPCServiceImpl final : public SystemControl::Service {
     }
     _tuple.set_interval(_interval);
     _tuple.set_lr(_lr);
+    _tuple.set_total_iter(_total_iter);
   }
   Status retrieveTuple(ServerContext* context, const Empty* request,
                        Tuple* reply) override {

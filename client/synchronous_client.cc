@@ -85,7 +85,7 @@ void init_everything() {
   tensorflow::GraphDef const& graph_def = tuple.graph();
   lr = tuple.lr();
   interval = tuple.interval();
-  // total_iter = tuple.total_iter();
+  total_iter = tuple.total_iter();
   image_placeholder_name = tuple.image_placeholder_name();
   label_placeholder_name = tuple.label_placeholder_name();
   tensorflow::Status tf_status = get_session()->Create(graph_def);

@@ -31,6 +31,7 @@ message Tuple {
     string image_placeholder_name = 8;
     string label_placeholder_name = 9;
     string training_op_name = 10;
+    int32 total_iter = 11;
 }
 
 

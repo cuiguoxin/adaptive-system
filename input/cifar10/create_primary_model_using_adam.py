@@ -185,7 +185,7 @@ with tf.Session() as sess:
     tup.map_names[grad_var[1].name].gradient_name = grad_var[0].name
   
   training_op = opt.apply_gradients(grads)
-  tuple.training_op_name = training_op.name
+  tup.training_op_name = training_op.name
 
   # Create a saver.
   saver = tf.train.Saver(tf.all_variables())

@@ -505,6 +505,20 @@ class Tuple : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   ::std::string* release_label_placeholder_name();
   void set_allocated_label_placeholder_name(::std::string* label_placeholder_name);
 
+  // string training_op_name = 10;
+  void clear_training_op_name();
+  static const int kTrainingOpNameFieldNumber = 10;
+  const ::std::string& training_op_name() const;
+  void set_training_op_name(const ::std::string& value);
+  #if LANG_CXX11
+  void set_training_op_name(::std::string&& value);
+  #endif
+  void set_training_op_name(const char* value);
+  void set_training_op_name(const char* value, size_t size);
+  ::std::string* mutable_training_op_name();
+  ::std::string* release_training_op_name();
+  void set_allocated_training_op_name(::std::string* training_op_name);
+
   // .tensorflow.GraphDef graph = 5;
   bool has_graph() const;
   void clear_graph();
@@ -525,6 +539,12 @@ class Tuple : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   static const int kIntervalFieldNumber = 4;
   ::google::protobuf::int32 interval() const;
   void set_interval(::google::protobuf::int32 value);
+
+  // int32 total_iter = 11;
+  void clear_total_iter();
+  static const int kTotalIterFieldNumber = 11;
+  ::google::protobuf::int32 total_iter() const;
+  void set_total_iter(::google::protobuf::int32 value);
 
   // @@protoc_insertion_point(class_scope:adaptive_system.Tuple)
  private:
@@ -556,9 +576,11 @@ class Tuple : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   ::google::protobuf::internal::ArenaStringPtr init_name_;
   ::google::protobuf::internal::ArenaStringPtr image_placeholder_name_;
   ::google::protobuf::internal::ArenaStringPtr label_placeholder_name_;
+  ::google::protobuf::internal::ArenaStringPtr training_op_name_;
   ::tensorflow::GraphDef* graph_;
   float lr_;
   ::google::protobuf::int32 interval_;
+  ::google::protobuf::int32 total_iter_;
   mutable int _cached_size_;
   friend struct protobuf_rpc_5fservice_2eproto::TableStruct;
 };
@@ -1699,6 +1721,72 @@ inline void Tuple::set_allocated_label_placeholder_name(::std::string* label_pla
   }
   label_placeholder_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), label_placeholder_name);
   // @@protoc_insertion_point(field_set_allocated:adaptive_system.Tuple.label_placeholder_name)
+}
+
+// string training_op_name = 10;
+inline void Tuple::clear_training_op_name() {
+  training_op_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& Tuple::training_op_name() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.Tuple.training_op_name)
+  return training_op_name_.GetNoArena();
+}
+inline void Tuple::set_training_op_name(const ::std::string& value) {
+  
+  training_op_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:adaptive_system.Tuple.training_op_name)
+}
+#if LANG_CXX11
+inline void Tuple::set_training_op_name(::std::string&& value) {
+  
+  training_op_name_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Tuple.training_op_name)
+}
+#endif
+inline void Tuple::set_training_op_name(const char* value) {
+  
+  training_op_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:adaptive_system.Tuple.training_op_name)
+}
+inline void Tuple::set_training_op_name(const char* value, size_t size) {
+  
+  training_op_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:adaptive_system.Tuple.training_op_name)
+}
+inline ::std::string* Tuple::mutable_training_op_name() {
+  
+  // @@protoc_insertion_point(field_mutable:adaptive_system.Tuple.training_op_name)
+  return training_op_name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* Tuple::release_training_op_name() {
+  // @@protoc_insertion_point(field_release:adaptive_system.Tuple.training_op_name)
+  
+  return training_op_name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Tuple::set_allocated_training_op_name(::std::string* training_op_name) {
+  if (training_op_name != NULL) {
+    
+  } else {
+    
+  }
+  training_op_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), training_op_name);
+  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Tuple.training_op_name)
+}
+
+// int32 total_iter = 11;
+inline void Tuple::clear_total_iter() {
+  total_iter_ = 0;
+}
+inline ::google::protobuf::int32 Tuple::total_iter() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.Tuple.total_iter)
+  return total_iter_;
+}
+inline void Tuple::set_total_iter(::google::protobuf::int32 value) {
+  
+  total_iter_ = value;
+  // @@protoc_insertion_point(field_set:adaptive_system.Tuple.total_iter)
 }
 
 // -------------------------------------------------------------------
