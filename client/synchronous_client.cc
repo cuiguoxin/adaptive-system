@@ -86,9 +86,11 @@ void init_everything() {
   lr = tuple.lr();
   interval = tuple.interval();
   total_iter = tuple.total_iter();
+  std::string init_name = tuple.init_name();
   image_placeholder_name = tuple.image_placeholder_name();
   label_placeholder_name = tuple.label_placeholder_name();
   tensorflow::Status tf_status = get_session()->Create(graph_def);
+  get_session()->Run({}, {}, {init_name}, nullptr);
   if (!tf_status.ok()) {
     std::cout << "line " << __LINE__ << " " << tf_status.error_message()
               << std::endl;
