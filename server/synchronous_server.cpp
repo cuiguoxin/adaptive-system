@@ -117,9 +117,10 @@ class RPCServiceImpl final : public SystemControl::Service {
     _init_time_t = std::chrono::system_clock::to_time_t(_init_time_point);
 
     std::string store_loss_file_path =
-        "loss_result/" + _init_time_t + "_interval:" + _interval +
-        "_number_of_workers:" + _number_of_workers +
-        "_level:" + std::pow(2, static_cast<int>(_grad_quant_level) + 1);
+        "loss_result/" + std::to_string(_init_time_t) +
+        "_interval:" + std::to_string(_interval) +
+        "_number_of_workers:" + std::to_string(_number_of_workers) + "_level:" +
+        std::to_string(std::pow(2, static_cast<int>(_grad_quant_level) + 1));
     _file_out_stream.open(store_loss_file_path);
   }
   Status retrieveTuple(ServerContext* context, const Empty* request,
@@ -145,9 +146,9 @@ class RPCServiceImpl final : public SystemControl::Service {
       std::chrono::time_point<std::chrono::system_clock> now =
           std::chrono::system_clock::now();
       std::time_t now_t = std::chrono::system_clock::to_time_t(now);
-      _file_out_stream << now_t - _init_time_t
-                       << " :iter num: " << _current_iter_number << " loss is "
-                       << loss << "\n";
+      _file_out_stream << std::to_string(now_t - _init_time_t)
+                       << " :iter num: " << std::to_string(_current_iter_number)
+                       << " loss is " << loss << "\n";
       _vector_loss_history.push_back(average);
       _vector_loss.clear();
       _bool_loss = true;

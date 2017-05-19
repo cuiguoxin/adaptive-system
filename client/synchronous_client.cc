@@ -271,5 +271,5 @@ int main(int argc, char* argv[]) {
   std::string training_data_path = argv[2];
   std::string preprocess_pb_path = argv[3];
   adaptive_system::init_stub(ip_port);
-  adaptive_system::run_logic();
+  adaptive_system::run_logic(training_data_path, preprocess_pb_path);
 }
