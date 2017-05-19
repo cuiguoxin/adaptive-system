@@ -122,6 +122,7 @@ class RPCServiceImpl final : public SystemControl::Service {
         "_number_of_workers:" + std::to_string(_number_of_workers) + "_level:" +
         std::to_string(std::pow(2, static_cast<int>(_grad_quant_level) + 1));
     _file_out_stream.open(store_loss_file_path);
+    std::cout << "file opened" << std::endl;
   }
   Status retrieveTuple(ServerContext* context, const Empty* request,
                        Tuple* reply) override {
@@ -149,6 +150,7 @@ class RPCServiceImpl final : public SystemControl::Service {
       _file_out_stream << std::to_string(now_t - _init_time_t)
                        << " :iter num: " << std::to_string(_current_iter_number)
                        << " loss is " << loss << "\n";
+      _file_out_stream.flush();
       _vector_loss_history.push_back(average);
       _vector_loss.clear();
       _bool_loss = true;
