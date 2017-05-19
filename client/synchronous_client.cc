@@ -259,7 +259,7 @@ void do_training(const std::string& binary_file_path,
 void close_session() { get_session()->Close(); }
 
 void run_logic(std::string const& training_data_path,
-               std::string& const preprocess_pb_path) {
+               std::string const& preprocess_pb_path) {
   init_everything();
   do_training(training_data_path, preprocess_pb_path);
   close_session();
