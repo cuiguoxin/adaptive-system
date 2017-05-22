@@ -12,7 +12,7 @@
 
 #include <grpc++/grpc++.h>
 
-#include "proto/rpc_service.grpc.pb.h"
+#include "proto/rpc_service.pb.h"
 
 #include "tensorflow/core/framework/graph.pb.h"
 #include "tensorflow/core/framework/tensor.h"
@@ -27,4 +27,5 @@
 
 namespace adaptive_system {
 tensorflow::Tensor get_feature(tensorflow::Tensor const& tensor);
+tensorflow::Tensor get_final_state_from_partial_state(std::vector<PartialState> vector_partial_states)
 }
