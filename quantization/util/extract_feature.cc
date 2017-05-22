@@ -1,4 +1,4 @@
-#include "client/extract_feature.h"
+#include "quantization/util/extract_feature.h"
 
 namespace adpative_system {
 	namespace {

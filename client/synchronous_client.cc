@@ -26,6 +26,8 @@
 
 #include "input/cifar10/input.h"
 #include "quantization/util/algorithms.h"
+#include "quantization/util/extract_feature.h"
+#include "quantization/util/helper.h"
 
 using grpc::Channel;
 using grpc::ClientContext;
@@ -71,8 +73,8 @@ namespace adaptive_system {
 		ClientContext context;
 		grpc::Status grpc_status = stub->retrieveTuple(&context, empty, &tuple);
 		if (!grpc_status.ok()) {
-			std::cout << "grpc error in line " << __LINE__ << " "
-				<< grpc_status.error_message() << std::endl;
+			PRINT_ERROR_MESSAGE(grpc_status.error_message());
+			std::terminate();
 		}
 		// init map_names
 		google::protobuf::Map<std::string, Names> const& map_names =
@@ -92,8 +94,7 @@ namespace adaptive_system {
 		tensorflow::Status tf_status = get_session()->Create(graph_def);
 		get_session()->Run({}, {}, { init_name }, nullptr);
 		if (!tf_status.ok()) {
-			std::cout << "line " << __LINE__ << " " << tf_status.error_message()
-				<< std::endl;
+			PRINT_ERROR_MESSAGE(tf_status.error_message());
 			std::terminate();
 		}
 		// init all the variables
@@ -120,8 +121,7 @@ namespace adaptive_system {
 		});
 		tf_status = get_session()->Run(feeds, {}, assign_names, nullptr);
 		if (!tf_status.ok()) {
-			std::cout << "line " << __LINE__ << " " << tf_status.error_message()
-				<< std::endl;
+			PRINT_ERROR_MESSAGE(tf_status.error_message());
 			std::terminate();
 		}
 		*get_tuple() = tuple;
@@ -147,8 +147,7 @@ namespace adaptive_system {
 		});
 		tensorflow::Status tf_status = get_session()->Run(feeds, fetch, {}, &outputs);
 		if (!tf_status.ok()) {
-			std::cout << "line " << __LINE__ << " " << tf_status.error_message()
-				<< std::endl;
+			PRINT_ERROR_MESSAGE(tf_status.error_message());
 			std::terminate();
 		}
 		tensorflow::Tensor& loss_tensor = outputs[0];
@@ -156,7 +155,7 @@ namespace adaptive_system {
 		float loss_ret = loss_ptr[0];
 		outputs.erase(outputs.begin());
 		if (outputs.size() != variable_names_in_order.size()) {
-			std::cout << "impossible in " << __LINE__ << std::endl;
+			PRINT_ERROR;
 			std::terminate();
 		}
 		size_t size = outputs.size();
@@ -166,12 +165,27 @@ namespace adaptive_system {
 		}
 		return loss_ret;
 	}
-	// do not need session
+	// do not need session, currently not use loss information
 	PartialState collect_partial_state(
 		std::map<std::string, tensorflow::Tensor> const& gradients,
 		const float loss) {
-		return PartialState();
+		PartialState partial_state_ret;
+		static const std::string variable_name_to_collect = "";
+		auto iter = gradients.find(variable_name_to_collect);
+		if (iter == gradients.end()) {
+			PRINT_ERROR;
+			std::terminate();
+		}
+		else {
+			tensorflow::Tensor const & tensor_to_be_collected = iter->second;
+			tensorflow::Tensor feature_tensor = get_feature(tensor_to_be_collected);
+			tensorflow::TensorProto feature_tensor_proto;
+			feature_tensor.AsProtoField(&feature_tensor_proto);
+			*partial_state_ret.mutable_tensor() = feature_tensor_proto;
+		}
+		return partial_state_ret;
 	}
+
 	void show_quantization_infor(
 		std::map<std::string, tensorflow::Tensor>& map_gradients,
 		NamedGradients& named_gradients_send) {
@@ -200,59 +214,59 @@ namespace adaptive_system {
 		const std::string& graph_path) {
 		cifar10::turn_raw_tensors_to_standard_version(binary_file_path, graph_path);
 		for (int i = 0; i < total_iter; i++) {
-			std::cout << "done in line " << __LINE__ << std::endl;
+			PRINT_INFO;
 			std::map<std::string, tensorflow::Tensor> map_gradients;
 			std::pair<tensorflow::Tensor, tensorflow::Tensor> feeds =
 				cifar10::get_next_batch();
-			std::cout << "done in line " << __LINE__ << std::endl;
+			PRINT_INFO;
 			float loss = compute_gradient_and_loss(
 			{ {image_placeholder_name, feeds.first},
 			 {label_placeholder_name, feeds.second} },
 				map_gradients);  // compute gradient and loss now
-			std::cout << "done in line " << __LINE__ << std::endl;
+			PRINT_INFO;
 			Loss loss_to_send;
 			loss_to_send.set_loss(loss);
 			Empty empty;
 			ClientContext loss_context;
-			std::cout << "done in line " << __LINE__ << std::endl;
+			PRINT_INFO;
 			stub->sendLoss(&loss_context, loss_to_send, &empty);
-			std::cout << "done in line " << __LINE__ << std::endl;
+			PRINT_INFO;
 			if (i % interval == 0) {
 				PartialState partial_state = collect_partial_state(map_gradients, loss);
 				ClientContext state_context;
 				QuantizationLevel quantization_level;
-				std::cout << "done in line " << __LINE__ << std::endl;
+				PRINT_INFO;
 				grpc::Status grpc_status =
 					stub->sendState(&state_context, partial_state, &quantization_level);
-				std::cout << "done in line " << __LINE__ << std::endl;
+				PRINT_INFO;
 				if (!grpc_status.ok()) {
-					std::cout << "grpc error in line " << __LINE__ << " "
-						<< grpc_status.error_message() << std::endl;
+					PRINT_ERROR_MESSAGE(grpc_status.error_message());
+					std::terminate();
 				}
 				grad_quant_level = quantization_level.level();
 			}
 			NamedGradients named_gradients_send, named_gradients_receive;
-			std::cout << "done in line " << __LINE__ << std::endl;
+			PRINT_INFO;
 			quantize_gradient(
 				map_gradients, &named_gradients_send,
 				cast_grad_quant_level_to_quantization_type(grad_quant_level));
 
-			std::cout << "done in line " << __LINE__ << std::endl;
+			PRINT_INFO;
 			ClientContext gradient_context;
-			std::cout << "done in line " << __LINE__ << std::endl;
+			PRINT_INFO;
 			grpc::Status grpc_status = stub->sendGradient(
 				&gradient_context, named_gradients_send, &named_gradients_receive);
 			show_quantization_infor(map_gradients, named_gradients_receive);
-			std::cout << "done in line " << __LINE__ << std::endl;
+			PRINT_INFO;
 			if (!grpc_status.ok()) {
-				std::cout << "grpc error in line " << __LINE__ << " "
-					<< grpc_status.error_message() << std::endl;
+				PRINT_ERROR_MESSAGE(grpc_status.error_message());
+				std::terminate();
 			}
-			std::cout << "done in line " << __LINE__ << std::endl;
+			PRINT_INFO;
 			// add the gradients to variables
 			apply_quantized_gradient_to_model_using_adam(named_gradients_receive,
 				get_session(), *get_tuple());
-			std::cout << "done in line " << __LINE__ << std::endl;
+			PRINT_INFO;
 		}
 	}
 
