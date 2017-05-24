@@ -98,14 +98,15 @@ namespace adpative_system {
 		return ret_tensor;
 	}
 
-	tensorflow::Tensor get_final_state_from_partial_state(std::vector<PartialState> vector_partial_states) {
+	tensorflow::Tensor get_final_state_from_partial_state(std::vector<PartialState>const & vector_partial_states) {
 		size_t vector_size = vector_partial_states.size();
 		const size_t state_length = 7;
 		tensorflow::Tensor tensor_ret(tensorflow::DataType::DT_FLOAT, tensorflow::TensorShape({ 7 }));
 		float* tensor_ret_ptr = tensor_ret.flat<float>().data();
 		std::fill(tensor_ret_ptr, tensor_ret_ptr + state_length, 0.0f);
 		for (int i = 0; i < vector_size; i++) {
-			tensorflow::Tensor& current_partial_tensor = *vector_partial_states[i].mutable_tensor();
+			tensorflow::Tensor current_partial_tensor;
+			current_partial_tensor.FromProto(vector_partial_states[i].tensor());
 			float* current_partial_tensor_ptr = current_partial_tensor.flat<float>().data();
 			for (int j = 0; j < state_length; j++) {
 				tensor_ret_ptr[j] += current_partial_tensor_ptr[j];

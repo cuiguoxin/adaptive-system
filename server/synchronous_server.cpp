@@ -31,6 +31,8 @@
 #include "tensorflow/core/public/session.h"
 
 #include "quantization/util/algorithms.h"
+#include "quantization/util/helper.h"
+#include "quantization/util/extract_feature.h"
 
 using grpc::Server;
 using grpc::ServerBuilder;
@@ -260,7 +262,10 @@ namespace adaptive_system {
 			});
 		}
 
-		void adjust_rl_model(std::vector<PartialState> const& vector_partial_state) {}
+		void adjust_rl_model(std::vector<PartialState> const& vector_partial_state) {
+			tensorflow::Tensor state_tensor = get_final_state_from_partial_state(vector_partial_state);
+
+		}
 		// private data member
 	private:
 		const int _interval;
