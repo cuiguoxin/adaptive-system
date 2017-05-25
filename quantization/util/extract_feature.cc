@@ -1,9 +1,9 @@
 #include "quantization/util/extract_feature.h"
 
-namespace adpative_system {
+namespace adaptive_system {
 	namespace {
 
-		void mean(tensorflow::Tensor& const tensor, float& result) {
+		void mean(tensorflow::Tensor const & tensor, float& result) {
 			size_t size = tensor.NumElements();
 			float const* tensor_ptr = tensor.flat<float>().data();
 			float sum = 0;
@@ -12,7 +12,7 @@ namespace adpative_system {
 			}
 			result = sum / size;
 		}
-		void max(tensorflow::Tensor& const tensor, float& result) {
+		void max(tensorflow::Tensor const & tensor, float& result) {
 			size_t size = tensor.NumElements();
 			float const* tensor_ptr = tensor.flat<float>().data();
 			result = tensor_ptr[0];
@@ -20,7 +20,7 @@ namespace adpative_system {
 				if (result < tensor_ptr[i]) result = tensor_ptr[i];
 			}
 		}
-		void min(tensorflow::Tensor& const tensor, float& result) {
+		void min(tensorflow::Tensor const &tensor, float& result) {
 			size_t size = tensor.NumElements();
 			float const* tensor_ptr = tensor.flat<float>().data();
 			result = tensor_ptr[0];
@@ -28,7 +28,7 @@ namespace adpative_system {
 				if (result > tensor_ptr[i]) result = tensor_ptr[i];
 			}
 		}
-		void deviation(tensorflow::Tensor& const tensor, float& result) {
+		void deviation(tensorflow::Tensor const& tensor, float& result) {
 			size_t size = tensor.NumElements();
 			float const* tensor_ptr = tensor.flat<float>().data();
 			float sum = 0;
@@ -43,7 +43,7 @@ namespace adpative_system {
 			deviation_sum = deviation_sum / size;
 			result = std::pow(deviation_sum, 0.5);
 		}
-		void abs_sum(tensorflow::Tensor& const tensor, float& result) {
+		void abs_sum(tensorflow::Tensor const& tensor, float& result) {
 			size_t size = tensor.NumElements();
 			float const* tensor_ptr = tensor.flat<float>().data();
 			result = 0;
@@ -54,7 +54,7 @@ namespace adpative_system {
 					result -= tensor_ptr[i];
 			}
 		}
-		void median(tensorflow::Tensor& const tensor, float& result) {
+		void median(tensorflow::Tensor const& tensor, float& result) {
 			size_t size = tensor.NumElements();
 			float const* tensor_ptr = tensor.flat<float>().data();
 			float* float_new = new float[size];
@@ -63,7 +63,7 @@ namespace adpative_system {
 			result = float_new[size / 2];
 			delete[] float_new;
 		}
-		void norm(tensorflow::Tensor& const tensor, float& result) {
+		void norm(tensorflow::Tensor const& tensor, float& result) {
 			size_t size = tensor.NumElements();
 			float const* tensor_ptr = tensor.flat<float>().data();
 			result = 0;
