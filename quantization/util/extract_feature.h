@@ -27,5 +27,5 @@
 
 namespace adaptive_system {
 tensorflow::Tensor get_feature(tensorflow::Tensor const& tensor);
-tensorflow::Tensor get_final_state_from_partial_state(std::vector<PartialState> vector_partial_states);
+tensorflow::Tensor get_final_state_from_partial_state(std::vector<PartialState> const & vector_partial_states);
 }
