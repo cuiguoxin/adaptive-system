@@ -34,6 +34,8 @@ namespace adaptive_system {
 	GRAD_QUANT_LEVEL cast_quantization_type_to_grad_quant_level(
 		QUANTIZATION_TYPE type) {
 		switch (type) {
+		case QUANTIZATION_TYPE::ONE_BIT:
+			return GRAD_QUANT_LEVEL::ONE;
 		case QUANTIZATION_TYPE::TWO_BIT:
 			return GRAD_QUANT_LEVEL::TWO;
 		case QUANTIZATION_TYPE::FOUR_BIT:
@@ -48,6 +50,8 @@ namespace adaptive_system {
 	QUANTIZATION_TYPE cast_grad_quant_level_to_quantization_type(
 		GRAD_QUANT_LEVEL const level) {
 		switch (level) {
+		case GRAD_QUANT_LEVEL::ONE:
+			return QUANTIZATION_TYPE::ONE_BIT;
 		case GRAD_QUANT_LEVEL::TWO:
 			return QUANTIZATION_TYPE::TWO_BIT;
 		case GRAD_QUANT_LEVEL::FOUR:

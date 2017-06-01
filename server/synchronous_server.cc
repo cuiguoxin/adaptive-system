@@ -34,6 +34,8 @@
 #include "quantization/util/helper.h"
 #include "quantization/util/extract_feature.h"
 
+#include "server/sarsa.h"
+
 using grpc::Server;
 using grpc::ServerBuilder;
 using grpc::ServerContext;
@@ -44,14 +46,17 @@ namespace adaptive_system {
 	public:
 		RPCServiceImpl(int interval, float lr, int total_iter, int number_of_workers,
 			GRAD_QUANT_LEVEL grad_quant_level,
-			std::string const& tuple_local_path)
+			std::string const& tuple_local_path
+			std::string const & sarsa_path, float r, float eps_greedy)
 			: SystemControl::Service(),
 			_interval(interval),
 			_lr(lr),
 			_total_iter(total_iter),
 			_number_of_workers(number_of_workers),
 			_grad_quant_level(grad_quant_level),
-			_tuple_local_path(tuple_local_path) {
+			_tuple_local_path(tuple_local_path),
+			sarsa(sarsa_path, r, eps_greedy)
+		{
 			_session = tensorflow::NewSession(tensorflow::SessionOptions());
 			std::fstream input(_tuple_local_path, std::ios::in | std::ios::binary);
 			if (!input) {
@@ -116,11 +121,12 @@ namespace adaptive_system {
 			_tuple.set_interval(_interval);
 			_tuple.set_lr(_lr);
 			_tuple.set_total_iter(_total_iter);
-			_init_time_point = std::chrono::system_clock::now();
-			_init_time_t = std::chrono::system_clock::to_time_t(_init_time_point);
+			_init_time_point = std::chrono::high_resolution_clock::now();
+			auto now = std::chrono::system_clock::now();
+			auto init_time_t = std::chrono::system_clock::to_time_t(now);
 
 			std::string store_loss_file_path =
-				"loss_result/" + std::to_string(_init_time_t) +
+				"loss_result/" + std::to_string(init_time_t) +
 				"_interval:" + std::to_string(_interval) +
 				"_number_of_workers:" + std::to_string(_number_of_workers) + "_level:" +
 				std::to_string(std::pow(2, static_cast<int>(_grad_quant_level) + 1));
@@ -149,11 +155,12 @@ namespace adaptive_system {
 				_current_iter_number++;
 				std::cout << "iteratino :" << _current_iter_number
 					<< ", average loss is " << average << std::endl;
-				std::chrono::time_point<std::chrono::system_clock> now =
-					std::chrono::system_clock::now();
-				std::time_t now_t = std::chrono::system_clock::to_time_t(now);
-				_file_out_stream << std::to_string(now_t - _init_time_t)
-					<< ":: iter num ::" << std::to_string(_current_iter_number)
+				auto now = std::chrono::high_resolution_clock::now();
+				//std::time_t now_t = std::chrono::system_clock::to_time_t(now);
+				//using seconds
+				auto diff_time = std::chrono::duration_cast<double>(now - _init_time_point);
+				_file_out_stream << std::to_string(diff_time.count());
+				<< ":: iter num ::" << std::to_string(_current_iter_number)
 					<< ":: loss is ::" << average << "\n";
 				_file_out_stream.flush();
 				_vector_loss_history.push_back(average);
@@ -204,7 +211,21 @@ namespace adaptive_system {
 			_bool_state = false;
 			_vector_partial_state.push_back(*request);
 			if (_vector_partial_state.size() == _number_of_workers) {
-				//adjust_rl_model(_vector_partial_state);
+				if (_bool_is_first_iteration) {
+					_bool_is_first_iteration = false;
+					_last_state = get_final_state_from_partial_state(_vector_partial_state);
+					//need not to store last action because _grad_quant_level can represent it
+					if (_vector_loss_history.size() != 1) {
+						PRINT_ERROR_MESSAGE("when in first iteration, the _vector_loss_history's size must be 1");
+						std::terminate();
+					}
+					_last_loss = _vector_loss_history[0];
+					_vector_loss_history.clear();
+					_time_point_last = std::chrono::high_resolution_clock::now();
+				}
+				else {
+					adjust_rl_model(_vector_partial_state);
+				}
 				_vector_partial_state.clear();
 				_bool_state = true;
 				_condition_variable_state.notify_all();
@@ -264,7 +285,19 @@ namespace adaptive_system {
 
 		void adjust_rl_model(std::vector<PartialState> const& vector_partial_state) {
 			tensorflow::Tensor state_tensor = get_final_state_from_partial_state(vector_partial_state);
-
+			GRAD_QUANT_LEVEL new_action = sarsa.sample_new_action(state_tensor);
+			GRAD_QUANT_LEVEL old_action = _grad_quant_level;
+			auto now_time_point = std::chrono::high_resolution_clock::now();
+			auto diff_seconds = std::chrono::duration_cast<double>(now_time_point - _time_point_last).count();
+			auto loss_sum = std::accumulate(_vector_loss_history.begin(), _vector_loss_history.end()), 0.0f);
+			auto average = loss_sum / _interval;
+			float reward = (average - _last_loss) / diff_seconds;
+			sarsa.adjust_model(reward, _last_state, old_action, state_tensor, new_action);
+			_grad_quant_level = new_action;
+			_vector_loss_history.clear();
+			_last_loss = reward;
+			_last_state = state_tensor;
+			_time_point_last = std::chrono::high_resolution_clock::now();
 		}
 		// private data member
 	private:
@@ -275,9 +308,8 @@ namespace adaptive_system {
 		int _current_iter_number = 0;
 		GRAD_QUANT_LEVEL _grad_quant_level = GRAD_QUANT_LEVEL::NONE;
 
-		std::chrono::time_point<std::chrono::system_clock> _init_time_point;
-		std::time_t _init_time_t;
-		std::chrono::time_point<std::chrono::steady_clock> _time_point_last;
+		std::chrono::time_point<std::chrono::high_resolution_clock> _init_time_point;
+		std::chrono::time_point<std::chrono::high_resolution_clock> _time_point_last;
 
 
 		std::mutex _mutex_gradient;
@@ -295,11 +327,15 @@ namespace adaptive_system {
 		bool _bool_gradient;
 		bool _bool_state;
 		bool _bool_loss;
+		bool _bool_is_first_iteration = true;
 		NamedGradients _store_named_gradient;
 
 		tensorflow::Session* _session;
 		Tuple _tuple;
 		std::ofstream _file_out_stream;
+
+		sarsa_model _sarsa;
+		tensorflow::Tensor _last_state;
 	};
 }
 adaptive_system::GRAD_QUANT_LEVEL cast_int_to_grad_quant_level(int level) {
@@ -325,10 +361,13 @@ int main(int argc, char** argv) {
 	int number_of_workers = atoi(argv[4]);
 	int level = atoi(argv[5]);
 	std::string tuple_path = argv[6];
+	std::string sarsa_path = argv[7];
+	float r = atof(argv[8]);
+	float eps_greedy = atof(argv[9]);
 
 	adaptive_system::RPCServiceImpl service(
 		interval, learning_rate, total_iter, number_of_workers,
-		cast_int_to_grad_quant_level(level), tuple_path);
+		cast_int_to_grad_quant_level(level), tuple_path, sarsa_path, r, eps_greedy);
 
 	ServerBuilder builder;
 	// Listen on the given address without any authentication mechanism.

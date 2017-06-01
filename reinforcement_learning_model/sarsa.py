@@ -3,6 +3,7 @@ import tensorflow as tf
 def create_sarsa_model():
 	with tf.variable_scope("first_layer"):
 		placeholder_state = tf.placeholder(tf.float32, [7], name="state")
+		print placeholder_state.name
 		state = tf.reshape(placeholder_state, [7, 1])
 		variable_first_layer = tf.get_variable("weight", [10, 7], tf.float32,
 										initializer=tf.truncated_normal_initializer(stddev=5e-2, dtype=tf.float32))
@@ -16,12 +17,16 @@ def create_sarsa_model():
 
 	second_layer = tf.reshape(second_layer, [5])
 	placeholder_one_hot = tf.placeholder(tf.float32, [5], name="one_hot")
+	print placeholder_one_hot.name
 	action_value = tf.einsum('i,i->', placeholder_one_hot, second_layer)
+	print action_value.name
 
 	placeholder_learning_rate = tf.placeholder(tf.float32,shape=(),name="learning_rate")
+	print placeholder_learning_rate.name
 	opt = tf.train.GradientDescentOptimizer(learning_rate=placeholder_learning_rate)
 	grads_vars = opt.compute_gradients(action_value)
 	training_op = opt.apply_gradients(grads_vars)
+	print training_op.name
 
 	init = tf.global_variables_initializer()
 	print init.__name__
