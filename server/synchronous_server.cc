@@ -129,7 +129,7 @@ namespace adaptive_system {
 				"loss_result/" + std::to_string(init_time_t) +
 				"_interval:" + std::to_string(_interval) +
 				"_number_of_workers:" + std::to_string(_number_of_workers) + "_level:" +
-				std::to_string(std::pow(2, static_cast<int>(_grad_quant_level) + 1));
+				std::to_string(std::pow(2, static_cast<int>(_grad_quant_level)));
 			_file_out_stream.open(store_loss_file_path);
 			std::cout << "file opened" << std::endl;
 		}
@@ -340,6 +340,8 @@ namespace adaptive_system {
 }
 adaptive_system::GRAD_QUANT_LEVEL cast_int_to_grad_quant_level(int level) {
 	switch (level) {
+	case 1:
+		return adaptive_system::GRAD_QUANT_LEVEL::ONE;
 	case 2:
 		return adaptive_system::GRAD_QUANT_LEVEL::TWO;
 	case 4:

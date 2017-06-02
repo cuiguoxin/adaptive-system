@@ -37,7 +37,7 @@ message Tuple {
 
 
 enum GRAD_QUANT_LEVEL {
-	ONE = 0;
+		ONE = 0;
         TWO = 1;
         FOUR = 2;
         EIGHT = 3;

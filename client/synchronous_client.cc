@@ -232,7 +232,7 @@ namespace adaptive_system {
 			stub->sendLoss(&loss_context, loss_to_send, &empty);
 			PRINT_INFO;
 			if (i % interval == 0) {
-				PartialState partial_state; //= collect_partial_state(map_gradients, loss);
+				PartialState partial_state = collect_partial_state(map_gradients, loss);
 				ClientContext state_context;
 				QuantizationLevel quantization_level;
 				PRINT_INFO;
