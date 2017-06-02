@@ -10,6 +10,8 @@ namespace adaptive_system {
 	static std::string const state_placeholder_name = "";
 	static std::string const one_hot_placeholder_name = "";
 	static std::string const action_value_name = "";
+	static std::string const learning_rate_placeholder_name = "";
+	static std::string const training_op_name = "";
 	static size_t const total_actions = 5;
 	static size_t const total_features = 7;
 	static float const alpha = 0.01;
@@ -141,8 +143,12 @@ namespace adaptive_system {
 		float update = reward + _r * new_value - old_value;
 		Tensor learning_rate_tensor(DataType::DT_FLOAT, TensorShape());
 		float * learning_rate_ptr = learning_rate_ptr.flat<float>().data();
-		
-		Status status = _session->Run({}, {}, {}, nullptr);
+		*learning_rate_ptr = -alpha * (reward + _r * new_value - old_value);
+		Tensor one_hot_tensor = get_feed_tensor_from_action(old_action);
+		Status status = _session->Run({ { state_placeholder_name, old_state }, 
+										{ one_hot_placeholder_name , one_hot_tensor},
+										{ learning_rate_placeholder_name, learning_rate_tensor} },
+										{}, {training_op_name}, nullptr);
 		if (!status.ok()) {
 			PRINT_ERROR_MESSAGE(status.error_message());
 			std::terminate();
