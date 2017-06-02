@@ -90,16 +90,17 @@ void InitDefaults();
 }  // namespace protobuf_rpc_5fservice_2eproto
 
 enum GRAD_QUANT_LEVEL {
-  TWO = 0,
-  FOUR = 1,
-  EIGHT = 2,
-  SIXTEEN = 3,
-  NONE = 4,
+  ONE = 0,
+  TWO = 1,
+  FOUR = 2,
+  EIGHT = 3,
+  SIXTEEN = 4,
+  NONE = 5,
   GRAD_QUANT_LEVEL_INT_MIN_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32min,
   GRAD_QUANT_LEVEL_INT_MAX_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32max
 };
 bool GRAD_QUANT_LEVEL_IsValid(int value);
-const GRAD_QUANT_LEVEL GRAD_QUANT_LEVEL_MIN = TWO;
+const GRAD_QUANT_LEVEL GRAD_QUANT_LEVEL_MIN = ONE;
 const GRAD_QUANT_LEVEL GRAD_QUANT_LEVEL_MAX = NONE;
 const int GRAD_QUANT_LEVEL_ARRAYSIZE = GRAD_QUANT_LEVEL_MAX + 1;
 

@@ -268,20 +268,20 @@ void AddDescriptorsImpl() {
       "try\022\013\n\003key\030\001 \001(\t\022(\n\005value\030\002 \001(\0132\031.adapti"
       "ve_system.Gradient:\0028\001\"E\n\014PartialState\022\'"
       "\n\006tensor\030\001 \001(\0132\027.tensorflow.TensorProto\022"
-      "\014\n\004loss\030\002 \001(\002\"\024\n\004Loss\022\014\n\004loss\030\001 \001(\002*G\n\020G"
-      "RAD_QUANT_LEVEL\022\007\n\003TWO\020\000\022\010\n\004FOUR\020\001\022\t\n\005EI"
-      "GHT\020\002\022\013\n\007SIXTEEN\020\003\022\010\n\004NONE\020\0042\255\002\n\rSystemC"
-      "ontrol\022\?\n\rretrieveTuple\022\026.adaptive_syste"
-      "m.Empty\032\026.adaptive_system.Tuple\0229\n\010sendL"
-      "oss\022\025.adaptive_system.Loss\032\026.adaptive_sy"
-      "stem.Empty\022P\n\014sendGradient\022\037.adaptive_sy"
-      "stem.NamedGradients\032\037.adaptive_system.Na"
-      "medGradients\022N\n\tsendState\022\035.adaptive_sys"
-      "tem.PartialState\032\".adaptive_system.Quant"
-      "izationLevelb\006proto3"
+      "\014\n\004loss\030\002 \001(\002\"\024\n\004Loss\022\014\n\004loss\030\001 \001(\002*P\n\020G"
+      "RAD_QUANT_LEVEL\022\007\n\003ONE\020\000\022\007\n\003TWO\020\001\022\010\n\004FOU"
+      "R\020\002\022\t\n\005EIGHT\020\003\022\013\n\007SIXTEEN\020\004\022\010\n\004NONE\020\0052\255\002"
+      "\n\rSystemControl\022\?\n\rretrieveTuple\022\026.adapt"
+      "ive_system.Empty\032\026.adaptive_system.Tuple"
+      "\0229\n\010sendLoss\022\025.adaptive_system.Loss\032\026.ad"
+      "aptive_system.Empty\022P\n\014sendGradient\022\037.ad"
+      "aptive_system.NamedGradients\032\037.adaptive_"
+      "system.NamedGradients\022N\n\tsendState\022\035.ada"
+      "ptive_system.PartialState\032\".adaptive_sys"
+      "tem.QuantizationLevelb\006proto3"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 1780);
+      descriptor, 1789);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "rpc_service.proto", &protobuf_RegisterTypes);
   ::tensorflow::protobuf_tensorflow_2fcore_2fframework_2ftensor_2eproto::AddDescriptors();
@@ -314,6 +314,7 @@ bool GRAD_QUANT_LEVEL_IsValid(int value) {
     case 2:
     case 3:
     case 4:
+    case 5:
       return true;
     default:
       return false;

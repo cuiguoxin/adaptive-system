@@ -29,7 +29,7 @@ def create_sarsa_model():
 	print training_op.name
 
 	init = tf.global_variables_initializer()
-	print init.__name__
+	print init.name
 
 	sess = tf.Session()
 	tf.train.write_graph(sess.graph_def, './', 'sarsa.pb', as_text=False)
