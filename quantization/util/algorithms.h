@@ -34,49 +34,11 @@ namespace adaptive_system {
 		tensorflow::Tensor& raw_tensor);
 
 	GRAD_QUANT_LEVEL cast_quantization_type_to_grad_quant_level(
-		QUANTIZATION_TYPE type) {
-		switch (type) {
-		case QUANTIZATION_TYPE::ONE_BIT:
-			return GRAD_QUANT_LEVEL::ONE;
-		case QUANTIZATION_TYPE::TWO_BIT:
-			return GRAD_QUANT_LEVEL::TWO;
-		case QUANTIZATION_TYPE::FOUR_BIT:
-			return GRAD_QUANT_LEVEL::FOUR;
-		case QUANTIZATION_TYPE::EIGHT_BIT:
-			return GRAD_QUANT_LEVEL::EIGHT;
-		case QUANTIZATION_TYPE::SIXTEEN_BIT:
-			return GRAD_QUANT_LEVEL::SIXTEEN;
-		}
-		return GRAD_QUANT_LEVEL::NONE;
-	}
+		QUANTIZATION_TYPE type);
 	QUANTIZATION_TYPE cast_grad_quant_level_to_quantization_type(
-		GRAD_QUANT_LEVEL const level) {
-		switch (level) {
-		case GRAD_QUANT_LEVEL::ONE:
-			return QUANTIZATION_TYPE::ONE_BIT;
-		case GRAD_QUANT_LEVEL::TWO:
-			return QUANTIZATION_TYPE::TWO_BIT;
-		case GRAD_QUANT_LEVEL::FOUR:
-			return QUANTIZATION_TYPE::FOUR_BIT;
-		case GRAD_QUANT_LEVEL::EIGHT:
-			return QUANTIZATION_TYPE::EIGHT_BIT;
-		case GRAD_QUANT_LEVEL::SIXTEEN:
-			return QUANTIZATION_TYPE::SIXTEEN_BIT;
-		}
-		std::terminate();
-		return QUANTIZATION_TYPE::NO_QUANTIZATION;
-	}
+		GRAD_QUANT_LEVEL const level);
 	tensorflow::DataType cast_quantization_type_to_data_type(
-		QUANTIZATION_TYPE type) {
-		if (type == QUANTIZATION_TYPE::EIGHT_BIT) {
-			return tensorflow::DataType::DT_UINT8;
-		}
-		else if (type == QUANTIZATION_TYPE::SIXTEEN_BIT) {
-			return tensorflow::DataType::DT_UINT16;
-		}
-		std::terminate();
-		return tensorflow::DataType::DT_INVALID;
-	}
+		QUANTIZATION_TYPE type);
 
 	void get_max_and_min_value(tensorflow::Tensor const& tensor, float& max,
 		float& min);
