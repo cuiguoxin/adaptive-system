@@ -6,12 +6,12 @@ using namespace tensorflow;
 
 namespace adaptive_system {
 
-	static std::string const q_values_names = "";
-	static std::string const state_placeholder_name = "";
-	static std::string const one_hot_placeholder_name = "";
-	static std::string const action_value_name = "";
-	static std::string const learning_rate_placeholder_name = "";
-	static std::string const training_op_name = "";
+	static std::string const q_values_names = "Reshape:0";
+	static std::string const state_placeholder_name = "first_layer/state:0";
+	static std::string const one_hot_placeholder_name = "one_hot:0";
+	static std::string const action_value_name = "Reshape_3:0";
+	static std::string const learning_rate_placeholder_name = "learning_rate:0";
+	static std::string const training_op_name = "GradientDescent";
 	static size_t const total_actions = 5;
 	static size_t const total_features = 7;
 	static float const alpha = 0.01;
@@ -31,9 +31,9 @@ namespace adaptive_system {
 	}
 
 	Tensor sarsa_model::get_feed_tensor_from_action(GRAD_QUANT_LEVEL action) {
-		Tensor ret(DataType::DT_FLOAT, TensorShape({ total_features }));
+		Tensor ret(DataType::DT_FLOAT, TensorShape({ total_actions }));
 		float* ret_ptr = ret.flat<float>().data();
-		std::fill(ret_ptr, ret_ptr + total_features, 0.0f);
+		std::fill(ret_ptr, ret_ptr + total_actions, 0.0f);
 		switch (action) {
 		case GRAD_QUANT_LEVEL::ONE:
 			ret_ptr[0] = 1.0f;

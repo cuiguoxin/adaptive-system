@@ -170,7 +170,7 @@ namespace adaptive_system {
 		std::map<std::string, tensorflow::Tensor> const& gradients,
 		const float loss) {
 		PartialState partial_state_ret;
-		static const std::string variable_name_to_collect = "";
+		static const std::string variable_name_to_collect = "softmax_linear/weights:0";
 		auto iter = gradients.find(variable_name_to_collect);
 		if (iter == gradients.end()) {
 			PRINT_ERROR;

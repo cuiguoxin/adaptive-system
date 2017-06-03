@@ -16,6 +16,7 @@ def create_sarsa_model():
 		second_layer = tf.matmul(variable_second_layer, activate_first_layer)
 
 	second_layer = tf.reshape(second_layer, [5])
+	print second_layer.name
 	placeholder_one_hot = tf.placeholder(tf.float32, [5], name="one_hot")
 	print placeholder_one_hot.name
 	action_value = tf.einsum('i,i->', placeholder_one_hot, second_layer)
