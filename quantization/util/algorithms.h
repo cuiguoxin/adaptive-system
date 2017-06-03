@@ -15,6 +15,8 @@
 #include "tensorflow/core/platform/types.h"
 #include "tensorflow/core/public/session.h"
 
+#ifndef ADAPTIVE_SYSTEM_ALGORITHM_H
+#define ADAPTIVE_SYSTEM_ALGORITHM_H
 namespace adaptive_system {
 
 	enum QUANTIZATION_TYPE {
@@ -92,3 +94,4 @@ namespace adaptive_system {
 	void apply_quantized_gradient_to_model_using_adam(
 		NamedGradients& named_gradients, tensorflow::Session* sess, Tuple& tuple);
 }
+#endif

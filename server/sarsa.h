@@ -54,6 +54,6 @@ class sarsa_model {
                     GRAD_QUANT_LEVEL old_action,
                     tensorflow::Tensor const& new_state,
                     GRAD_QUANT_LEVEL new_action);
-}
+
 };
 }

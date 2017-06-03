@@ -46,7 +46,7 @@ namespace adaptive_system {
 	public:
 		RPCServiceImpl(int interval, float lr, int total_iter, int number_of_workers,
 			GRAD_QUANT_LEVEL grad_quant_level,
-			std::string const& tuple_local_path
+			std::string const& tuple_local_path,
 			std::string const & sarsa_path, float r, float eps_greedy)
 			: SystemControl::Service(),
 			_interval(interval),
@@ -55,7 +55,7 @@ namespace adaptive_system {
 			_number_of_workers(number_of_workers),
 			_grad_quant_level(grad_quant_level),
 			_tuple_local_path(tuple_local_path),
-			sarsa(sarsa_path, r, eps_greedy)
+			_sarsa(sarsa_path, r, eps_greedy)
 		{
 			_session = tensorflow::NewSession(tensorflow::SessionOptions());
 			std::fstream input(_tuple_local_path, std::ios::in | std::ios::binary);
@@ -158,8 +158,8 @@ namespace adaptive_system {
 				auto now = std::chrono::high_resolution_clock::now();
 				//std::time_t now_t = std::chrono::system_clock::to_time_t(now);
 				//using seconds
-				auto diff_time = std::chrono::duration_cast<double>(now - _init_time_point);
-				_file_out_stream << std::to_string(diff_time.count());
+				 std::chrono::duration<double> diff_time = (now - _init_time_point);
+				_file_out_stream << std::to_string(diff_time.count())
 				<< ":: iter num ::" << std::to_string(_current_iter_number)
 					<< ":: loss is ::" << average << "\n";
 				_file_out_stream.flush();
@@ -285,14 +285,14 @@ namespace adaptive_system {
 
 		void adjust_rl_model(std::vector<PartialState> const& vector_partial_state) {
 			tensorflow::Tensor state_tensor = get_final_state_from_partial_state(vector_partial_state);
-			GRAD_QUANT_LEVEL new_action = sarsa.sample_new_action(state_tensor);
+			GRAD_QUANT_LEVEL new_action = _sarsa.sample_new_action(state_tensor);
 			GRAD_QUANT_LEVEL old_action = _grad_quant_level;
 			auto now_time_point = std::chrono::high_resolution_clock::now();
-			auto diff_seconds = std::chrono::duration_cast<double>(now_time_point - _time_point_last).count();
-			auto loss_sum = std::accumulate(_vector_loss_history.begin(), _vector_loss_history.end()), 0.0f);
+			float diff_seconds = (now_time_point - _time_point_last).count();
+			auto loss_sum = std::accumulate(_vector_loss_history.begin(), _vector_loss_history.end(), 0.0f);
 			auto average = loss_sum / _interval;
 			float reward = (average - _last_loss) / diff_seconds;
-			sarsa.adjust_model(reward, _last_state, old_action, state_tensor, new_action);
+			_sarsa.adjust_model(reward, _last_state, old_action, state_tensor, new_action);
 			_grad_quant_level = new_action;
 			_vector_loss_history.clear();
 			_last_loss = reward;
@@ -351,7 +351,7 @@ adaptive_system::GRAD_QUANT_LEVEL cast_int_to_grad_quant_level(int level) {
 	case 16:
 		return adaptive_system::GRAD_QUANT_LEVEL::SIXTEEN;
 	default:
-		return adaptive_system::GRAD_QUANT_LEVEL::EIGHT;
+		return adaptive_system::GRAD_QUANT_LEVEL::NONE;
 	}
 }
 

@@ -31,7 +31,7 @@ namespace adaptive_system {
 	}
 
 	Tensor sarsa_model::get_feed_tensor_from_action(GRAD_QUANT_LEVEL action) {
-		Tensor ret(DataType::DT_FLOAT, TensorShape({ total_features });
+		Tensor ret(DataType::DT_FLOAT, TensorShape({ total_features }));
 		float* ret_ptr = ret.flat<float>().data();
 		std::fill(ret_ptr, ret_ptr + total_features, 0.0f);
 		switch (action) {
@@ -131,10 +131,10 @@ namespace adaptive_system {
 			return GRAD_QUANT_LEVEL::SIXTEEN;
 		}
 		std::terminate();
-		return nullptr;
+		return GRAD_QUANT_LEVEL::NONE;
 	}
 
-	void sarsa::adjust_model(float reward, tensorflow::Tensor const& old_state,
+	void sarsa_model::adjust_model(float reward, tensorflow::Tensor const& old_state,
 		GRAD_QUANT_LEVEL old_action,
 		Tensor const& new_state,
 		GRAD_QUANT_LEVEL new_action) {
@@ -142,7 +142,7 @@ namespace adaptive_system {
 		float new_value = get_q_value(new_state, new_action);
 		float update = reward + _r * new_value - old_value;
 		Tensor learning_rate_tensor(DataType::DT_FLOAT, TensorShape());
-		float * learning_rate_ptr = learning_rate_ptr.flat<float>().data();
+		float * learning_rate_ptr = learning_rate_tensor.flat<float>().data();
 		*learning_rate_ptr = -alpha * (reward + _r * new_value - old_value);
 		Tensor one_hot_tensor = get_feed_tensor_from_action(old_action);
 		Status status = _session->Run({ { state_placeholder_name, old_state }, 
