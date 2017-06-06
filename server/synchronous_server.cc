@@ -50,6 +50,7 @@ namespace adaptive_system {
 			for (size_t i = 0; i < feature_number; i++) {
 				_file_state_stream << std::to_string(state_ptr[i]) << " ";
 			}
+			_file_state_stream << "\n";
 			_file_state_stream.flush();
 		}
 	public:
@@ -306,14 +307,15 @@ namespace adaptive_system {
 			GRAD_QUANT_LEVEL new_action = _sarsa.sample_new_action(state_tensor);
 			GRAD_QUANT_LEVEL old_action = _grad_quant_level;
 			auto now_time_point = std::chrono::high_resolution_clock::now();
-			float diff_seconds = (now_time_point - _time_point_last).count();
+			std::chrono::duration<float> diff = now_time_point - _time_point_last;
+			float diff_seconds = diff.count();
 			auto loss_sum = std::accumulate(_vector_loss_history.begin(), _vector_loss_history.end(), 0.0f);
 			auto average = loss_sum / _interval;
 			float reward = (average - _last_loss) / diff_seconds;
 			_sarsa.adjust_model(reward, _last_state, old_action, state_tensor, new_action);
 			_grad_quant_level = new_action;
-			std::cout << "diff_seconds is: " << diff_seconds << "reward is " << reward
-				<< "quantization level become: " << std::pow(2, static_cast<int>(_grad_quant_level)) << std::endl;
+			std::cout << "diff_seconds is: " << diff_seconds << " reward is " << reward
+				<< " quantization level become: " << std::pow(2, static_cast<int>(_grad_quant_level)) << std::endl;
 			_vector_loss_history.clear();
 			_last_loss = average;
 			_last_state = state_tensor;
