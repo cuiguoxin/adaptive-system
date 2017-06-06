@@ -41,7 +41,7 @@ namespace adaptive_system {
 				deviation_sum += std::pow(tensor_ptr[i] - average, 2.0);
 			}
 			deviation_sum = deviation_sum / size;
-			result = std::pow(deviation_sum, 0.5);
+			result = std::sqrt(deviation_sum);
 		}
 		void abs_sum(tensorflow::Tensor const& tensor, float& result) {
 			size_t size = tensor.NumElements();
@@ -70,6 +70,7 @@ namespace adaptive_system {
 			for (size_t i = 0; i < size; i++) {
 				result += std::pow(tensor_ptr[i], 2.0);
 			}
+			result = std::sqrt(result);
 		}
 	}
 
