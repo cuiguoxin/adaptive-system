@@ -8,6 +8,7 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include <thread>
 
 #include <grpc++/grpc++.h>
 
@@ -210,6 +211,29 @@ namespace adaptive_system {
 		});
 	}
 
+	void now_sleep(GRAD_QUANT_LEVEL level) {
+		switch (level) {
+		case GRAD_QUANT_LEVEL::ONE:
+			std::this_thread::sleep_for(std::chrono::duration<float>(0.5f));
+			break;
+		case GRAD_QUANT_LEVEL::TWO:
+			std::this_thread::sleep_for(std::chrono::duration<float>(1.0f));
+			break;
+		case GRAD_QUANT_LEVEL::FOUR:
+			std::this_thread::sleep_for(std::chrono::duration<float>(1.5f));
+			break;
+		case GRAD_QUANT_LEVEL::EIGHT:
+			std::this_thread::sleep_for(std::chrono::duration<float>(2.0f));
+			break;
+		case GRAD_QUANT_LEVEL::SIXTEEN:
+			std::this_thread::sleep_for(std::chrono::duration<float>(2.5f));
+			break;
+		case GRAD_QUANT_LEVEL::NONE:
+			std::this_thread::sleep_for(std::chrono::duration<float>(3.0f));
+			break;
+		}
+	}
+
 	void do_training(const std::string& binary_file_path,
 		const std::string& graph_path) {
 		cifar10::turn_raw_tensors_to_standard_version(binary_file_path, graph_path);
@@ -245,6 +269,8 @@ namespace adaptive_system {
 				}
 				grad_quant_level = quantization_level.level();
 			}
+			//fake
+			//now_sleep(grad_quant_level);
 			NamedGradients named_gradients_send, named_gradients_receive;
 			PRINT_INFO;
 			quantize_gradient(

@@ -146,6 +146,12 @@ namespace adaptive_system {
 	// raw_tensor ---->>> grad
 	void quantize(const QUANTIZATION_TYPE type, tensorflow::Tensor& raw_tensor,
 		float const max_value, float const min_value, Gradient& grad) {
+		if (type == QUANTIZATION_TYPE::NO_QUANTIZATION) {
+			tensorflow::TensorProto* tensor_proto = new tensorflow::TensorProto;
+			raw_tensor.AsProtoField(tensor_proto);
+			grad.set_allocated_tensor_ge_8(tensor_proto);
+			return;
+		}
 		grad.set_max(max_value);
 		grad.set_min(min_value);
 		grad.set_level(cast_quantization_type_to_grad_quant_level(type));
@@ -179,6 +185,15 @@ namespace adaptive_system {
 	// raw_tensor can be an empty tensor
 	void dequantize(const QUANTIZATION_TYPE type, Gradient& grad,
 		tensorflow::Tensor& raw_tensor) {
+		if (type == QUANTIZATION_TYPE::NO_QUANTIZATION) {
+			const tensorflow::TensorProto& tensor_proto = grad.tensor_ge_8();
+			bool success = raw_tensor.FromProto(tensor_proto);
+			if (!success) {
+				PRINT_ERROR_MESSAGE("tensorflow::tensor::fromProto failed");
+				std::terminate();
+			}
+			return;
+		}
 		float const max_value = grad.max();
 		float const min_value = grad.min();
 		if (type == QUANTIZATION_TYPE::ONE_BIT || type == QUANTIZATION_TYPE::TWO_BIT ||
@@ -378,7 +393,7 @@ namespace adaptive_system {
 		case GRAD_QUANT_LEVEL::SIXTEEN:
 			return QUANTIZATION_TYPE::SIXTEEN_BIT;
 		}
-		std::terminate();
+		//std::terminate();
 		return QUANTIZATION_TYPE::NO_QUANTIZATION;
 	}
 	tensorflow::DataType cast_quantization_type_to_data_type(

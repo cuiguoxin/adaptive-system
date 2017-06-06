@@ -296,7 +296,7 @@ namespace adaptive_system {
 			_grad_quant_level = new_action;
 			std::cout << "quantization level become: " << std::pow(2, static_cast<int>(_grad_quant_level)) << std::endl;
 			_vector_loss_history.clear();
-			_last_loss = reward;
+			_last_loss = average;
 			_last_state = state_tensor;
 			_time_point_last = std::chrono::high_resolution_clock::now();
 		}
