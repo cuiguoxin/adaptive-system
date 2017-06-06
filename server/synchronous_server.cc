@@ -311,7 +311,7 @@ namespace adaptive_system {
 			float diff_seconds = diff.count();
 			auto loss_sum = std::accumulate(_vector_loss_history.begin(), _vector_loss_history.end(), 0.0f);
 			auto average = loss_sum / _interval;
-			float reward = (average - _last_loss) / diff_seconds;
+			float reward = (_last_loss - average) / diff_seconds;
 			_sarsa.adjust_model(reward, _last_state, old_action, state_tensor, new_action);
 			_grad_quant_level = new_action;
 			std::cout << "diff_seconds is: " << diff_seconds << " reward is " << reward
