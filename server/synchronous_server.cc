@@ -294,7 +294,8 @@ namespace adaptive_system {
 			float reward = (average - _last_loss) / diff_seconds;
 			_sarsa.adjust_model(reward, _last_state, old_action, state_tensor, new_action);
 			_grad_quant_level = new_action;
-			std::cout << "quantization level become: " << std::pow(2, static_cast<int>(_grad_quant_level)) << std::endl;
+			std::cout << "diff_seconds is: " << diff_seconds << "reward is " << reward
+				<< "quantization level become: " << std::pow(2, static_cast<int>(_grad_quant_level)) << std::endl;
 			_vector_loss_history.clear();
 			_last_loss = average;
 			_last_state = state_tensor;
