@@ -5,15 +5,13 @@ def create_sarsa_model():
 		placeholder_state = tf.placeholder(tf.float32, [7], name="state")
 		print placeholder_state.name
 		state = tf.reshape(placeholder_state, [7, 1])
-		variable_first_layer = tf.get_variable("weight", [10, 7], tf.float32,
-										initializer=tf.truncated_normal_initializer(stddev=5e-2, dtype=tf.float32))
+		variable_first_layer = tf.get_variable("weight", [10, 7], tf.float32, initializer=tf.truncated_normal_initializer(stddev=5e-2, dtype=tf.float32))
         bias_first_layer = tf.get_variable("bias", [10, 1], tf.float32, initializer=tf.constant_initializer())
 		first_layer = tf.matmul(variable_first_layer, state) +  bias_first_layer
 		activate_first_layer = tf.nn.relu(first_layer)
 
 	with tf.variable_scope("second_layer"):
-		variable_second_layer = tf.get_variable("weight", [5, 10], tf.float32, 
-										  initializer=tf.truncated_normal_initializer(stddev=5e-2, dtype=tf.float32))
+		variable_second_layer = tf.get_variable("weight", [5, 10], tf.float32, initializer=tf.truncated_normal_initializer(stddev=5e-2, dtype=tf.float32))
         bias_second_layer = tf.get_variable("bias", [5, 1], tf.float32, initializer=tf.constant_initializer())
 		second_layer = tf.matmul(variable_second_layer, activate_first_layer) + bias_second_layer
 
