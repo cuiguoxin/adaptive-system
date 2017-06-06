@@ -43,6 +43,15 @@ using grpc::Status;
 
 namespace adaptive_system {
 	class RPCServiceImpl final : public SystemControl::Service {
+	private:
+		void print_state_to_file(tensorflow::Tensor const & state) {
+			size_t feature_number = state.NumElements();
+			const float * state_ptr = state.flat<float>().data();
+			for (size_t i = 0; i < feature_number; i++) {
+				_file_state_stream << std::to_string(state_ptr[i]) << " ";
+			}
+			_file_state_stream.flush();
+		}
 	public:
 		RPCServiceImpl(int interval, float lr, int total_iter, int number_of_workers,
 			GRAD_QUANT_LEVEL grad_quant_level,
@@ -124,14 +133,20 @@ namespace adaptive_system {
 			_init_time_point = std::chrono::high_resolution_clock::now();
 			auto now = std::chrono::system_clock::now();
 			auto init_time_t = std::chrono::system_clock::to_time_t(now);
-
+			_label = std::to_string(init_time_t);
 			std::string store_loss_file_path =
-				"loss_result/adaptive" + std::to_string(init_time_t) +
+				"loss_result/adaptive" + _label +
 				"_interval:" + std::to_string(_interval) +
 				"_number_of_workers:" + std::to_string(_number_of_workers) + "_init_level:" +
 				std::to_string(std::pow(2, static_cast<int>(_grad_quant_level)));
 			_file_out_stream.open(store_loss_file_path);
-			std::cout << "file opened" << std::endl;
+			std::string store_state_file_path =
+				"state_result/adaptive" + _label +
+				"_interval:" + std::to_string(_interval) +
+				"_number_of_workers:" + std::to_string(_number_of_workers) + "_init_level:" +
+				std::to_string(std::pow(2, static_cast<int>(_grad_quant_level)));
+			_file_state_stream.open(store_state_file_path);
+			std::cout << "files opened" << std::endl;
 		}
 
 		Status retrieveTuple(ServerContext* context, const Empty* request,
@@ -214,6 +229,7 @@ namespace adaptive_system {
 				if (_bool_is_first_iteration) {
 					_bool_is_first_iteration = false;
 					_last_state = get_final_state_from_partial_state(_vector_partial_state);
+					print_state_to_file(_last_state);
 					//need not to store last action because _grad_quant_level can represent it
 					if (_vector_loss_history.size() != 1) {
 						PRINT_ERROR_MESSAGE("when in first iteration, the _vector_loss_history's size must be 1");
@@ -283,8 +299,10 @@ namespace adaptive_system {
 			});
 		}
 
+		
 		void adjust_rl_model(std::vector<PartialState> const& vector_partial_state) {
 			tensorflow::Tensor state_tensor = get_final_state_from_partial_state(vector_partial_state);
+			print_state_to_file(state_tensor);
 			GRAD_QUANT_LEVEL new_action = _sarsa.sample_new_action(state_tensor);
 			GRAD_QUANT_LEVEL old_action = _grad_quant_level;
 			auto now_time_point = std::chrono::high_resolution_clock::now();
@@ -301,6 +319,7 @@ namespace adaptive_system {
 			_last_state = state_tensor;
 			_time_point_last = std::chrono::high_resolution_clock::now();
 		}
+		
 		// private data member
 	private:
 		const int _interval;
@@ -335,9 +354,11 @@ namespace adaptive_system {
 		tensorflow::Session* _session;
 		Tuple _tuple;
 		std::ofstream _file_out_stream;
+		std::ofstream _file_state_stream;
 
 		sarsa_model _sarsa;
 		tensorflow::Tensor _last_state;
+		std::string _label;
 	};
 }
 adaptive_system::GRAD_QUANT_LEVEL cast_int_to_grad_quant_level(int level) {
