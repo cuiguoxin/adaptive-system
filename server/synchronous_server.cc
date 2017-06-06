@@ -126,9 +126,9 @@ namespace adaptive_system {
 			auto init_time_t = std::chrono::system_clock::to_time_t(now);
 
 			std::string store_loss_file_path =
-				"loss_result/" + std::to_string(init_time_t) +
+				"loss_result/adaptive" + std::to_string(init_time_t) +
 				"_interval:" + std::to_string(_interval) +
-				"_number_of_workers:" + std::to_string(_number_of_workers) + "_level:" +
+				"_number_of_workers:" + std::to_string(_number_of_workers) + "_init_level:" +
 				std::to_string(std::pow(2, static_cast<int>(_grad_quant_level)));
 			_file_out_stream.open(store_loss_file_path);
 			std::cout << "file opened" << std::endl;
