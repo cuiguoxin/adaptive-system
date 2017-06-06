@@ -14,7 +14,7 @@ namespace adaptive_system {
 	static std::string const training_op_name = "GradientDescent";
 	static size_t const total_actions = 5;
 	static size_t const total_features = 7;
-	static float const alpha = 0.01;
+	static float const alpha = 0.1;
 
 	namespace {
 		size_t index_of_max(float* array) {
@@ -144,6 +144,8 @@ namespace adaptive_system {
 		Tensor learning_rate_tensor(DataType::DT_FLOAT, TensorShape());
 		float * learning_rate_ptr = learning_rate_tensor.flat<float>().data();
 		*learning_rate_ptr = -alpha * (reward + _r * new_value - old_value);
+		std::cout << "old_value: " << old_value << " new_value: " << new_value <<
+			" learning_rate: " << *learning_rate_ptr << std::endl;
 		Tensor one_hot_tensor = get_feed_tensor_from_action(old_action);
 		Status status = _session->Run({ { state_placeholder_name, old_state }, 
 										{ one_hot_placeholder_name , one_hot_tensor},
