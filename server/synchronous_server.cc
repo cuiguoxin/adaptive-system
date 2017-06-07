@@ -203,6 +203,7 @@ namespace adaptive_system {
 			if (_vector_map_gradient.size() == _number_of_workers) {
 				std::map<std::string, tensorflow::Tensor> map_gradient_another;
 				aggregate_gradients(_vector_map_gradient, map_gradient_another);
+				average_gradients(map_gradient_another);
 				_store_named_gradient = NamedGradients();
 				quantize_gradient(
 					map_gradient_another, &_store_named_gradient,
