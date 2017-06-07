@@ -134,7 +134,7 @@ namespace adaptive_system {
 		return GRAD_QUANT_LEVEL::NONE;
 	}
 
-	void sarsa_model::adjust_model(float reward, tensorflow::Tensor const& old_state,
+	void sarsa_model::adjust_model(float reward, Tensor const& old_state,
 		GRAD_QUANT_LEVEL old_action,
 		Tensor const& new_state,
 		GRAD_QUANT_LEVEL new_action) {

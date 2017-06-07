@@ -312,14 +312,19 @@ namespace adaptive_system {
 		}
 		void adjust_rl_model(std::vector<PartialState> const& vector_partial_state) {
 			tensorflow::Tensor state_tensor = get_final_state_from_partial_state(vector_partial_state);
+			size_t length = state_tensor.NumElements();
+			float* state_tensor_ptr = state_tensor.flat<float>().data();
+			float* last_tensor_ptr = _last_state.flat<float>().data();
+			moving_average(length, last_tensor_ptr, state_tensor_ptr);
 			print_state_to_file(state_tensor);
 			GRAD_QUANT_LEVEL new_action = _sarsa.sample_new_action(state_tensor);
 			GRAD_QUANT_LEVEL old_action = _grad_quant_level;
 			auto now_time_point = std::chrono::high_resolution_clock::now();
 			std::chrono::duration<float> diff = now_time_point - _time_point_last;
 			float diff_seconds = diff.count();
-			auto loss_sum = std::accumulate(_vector_loss_history.begin(), _vector_loss_history.end(), 0.0f);
-			auto average = loss_sum / _interval;
+			float loss_sum = std::accumulate(_vector_loss_history.begin(), _vector_loss_history.end(), 0.0f);
+			float average = loss_sum / _interval;
+			moving_average(1, &_last_loss, &average);
 			float reward = (_last_loss - average) / diff_seconds;
 			_sarsa.adjust_model(reward, _last_state, old_action, state_tensor, new_action);
 			_grad_quant_level = new_action;
