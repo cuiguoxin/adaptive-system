@@ -302,7 +302,7 @@ namespace adaptive_system {
 
 		void average_gradients(std::map<std::string, tensorflow::Tensor> map_gradient) {
 			std::for_each(map_gradient.begin(), map_gradient.end(),
-				[this](std::make_pair<std::string, tensorflow::Tensor>& pair) {
+				[this](std::pair<const std::string, tensorflow::Tensor>& pair) {
 				tensorflow::Tensor & tensor = pair.second;
 				float * tensor_ptr = tensor.flat<float>().data();
 				size_t length = tensor.NumElements();
