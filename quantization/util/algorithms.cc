@@ -150,6 +150,7 @@ namespace adaptive_system {
 			tensorflow::TensorProto* tensor_proto = new tensorflow::TensorProto;
 			raw_tensor.AsProtoField(tensor_proto);
 			grad.set_allocated_tensor_ge_8(tensor_proto);
+			grad.set_level(cast_quantization_type_to_grad_quant_level(type));
 			return;
 		}
 		grad.set_max(max_value);
