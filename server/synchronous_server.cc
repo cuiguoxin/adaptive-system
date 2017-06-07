@@ -300,7 +300,15 @@ namespace adaptive_system {
 			});
 		}
 
-		
+		void average_gradients(std::map<std::string, tensorflow::Tensor> map_gradient) {
+			std::for_each(map_gradient.begin(), map_gradient.end(),
+				[this](std::make_pair<std::string, tensorflow::Tensor>& pair) {
+				tensorflow::Tensor & tensor = pair.second;
+				float * tensor_ptr = tensor.flat<float>().data();
+				size_t length = tensor.NumElements();
+				std::for_each(tensor_ptr, tensor_ptr + length, [this](float& ref) { ref = ref / _number_of_workers; });
+			});
+		}
 		void adjust_rl_model(std::vector<PartialState> const& vector_partial_state) {
 			tensorflow::Tensor state_tensor = get_final_state_from_partial_state(vector_partial_state);
 			print_state_to_file(state_tensor);
