@@ -53,6 +53,7 @@ namespace adaptive_system {
 				else
 					result -= tensor_ptr[i];
 			}
+			result = result / 100;
 		}
 		void median(tensorflow::Tensor const& tensor, float& result) {
 			size_t size = tensor.NumElements();
@@ -70,7 +71,7 @@ namespace adaptive_system {
 			for (size_t i = 0; i < size; i++) {
 				result += std::pow(tensor_ptr[i], 2.0);
 			}
-			result = std::sqrt(result);
+			result = std::sqrt(result) / 10;
 		}
 	}
 
