@@ -15,7 +15,7 @@ namespace adaptive_system {
 			if (action == GRAD_QUANT_LEVEL::EIGHT) {
 				return 0.05;
 			}
-			else if (action = GRAD_QUANT_LEVEL::SIXTEEN) {
+			else if (action == GRAD_QUANT_LEVEL::SIXTEEN) {
 				return 0.07;
 			}
 			else {

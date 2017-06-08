@@ -151,13 +151,13 @@ namespace adaptive_system {
 			std::cout << "files opened" << std::endl;
 		}
 
-		Status retrieveTuple(ServerContext* context, const Empty* request,
+		grpc::Status retrieveTuple(ServerContext* context, const Empty* request,
 			Tuple* reply) override {
 			*reply = _tuple;
-			return Status::OK;
+			return grpc::Status::OK;
 		}
 
-		Status sendLoss(::grpc::ServerContext* context,
+		grpc::Status sendLoss(::grpc::ServerContext* context,
 			const ::adaptive_system::Loss* request,
 			::adaptive_system::Empty* response) override {
 			const float loss = request->loss();
@@ -189,10 +189,10 @@ namespace adaptive_system {
 				_condition_variable_loss.wait(lk, [this] { return _bool_loss; });
 			}
 			lk.unlock();
-			return Status::OK;
+			return grpc::Status::OK;
 		}
 
-		Status sendGradient(ServerContext* context, const NamedGradients* request,
+		grpc::Status sendGradient(ServerContext* context, const NamedGradients* request,
 			NamedGradients* response) override {
 			NamedGradients& named_gradients = const_cast<NamedGradients&>(*request);
 			std::map<std::string, tensorflow::Tensor> map_gradient;
@@ -220,10 +220,10 @@ namespace adaptive_system {
 			}
 			lk.unlock();
 			*response = _store_named_gradient;
-			return Status::OK;
+			return grpc::Status::OK;
 		}
 
-		Status sendState(ServerContext* context, const PartialState* request,
+		grpc::Status sendState(ServerContext* context, const PartialState* request,
 			QuantizationLevel* response) override {
 			std::unique_lock<std::mutex> lk(_mutex_state);
 			_bool_state = false;
@@ -257,7 +257,7 @@ namespace adaptive_system {
 			}
 			lk.unlock();
 			response->set_level(_grad_quant_level);
-			return Status::OK;
+			return grpc::Status::OK;
 		}
 
 		// private member functions
@@ -326,7 +326,7 @@ namespace adaptive_system {
 			float loss_sum = std::accumulate(_vector_loss_history.begin(), _vector_loss_history.end(), 0.0f);
 			float average = loss_sum / _interval;
 			moving_average(1, &_last_loss, &average);
-			float reward = get_reward(_last_tensor, _grad_quant_level, diff_seconds, _last_loss, average);
+			float reward = get_reward(_last_state, _grad_quant_level, diff_seconds, _last_loss, average);
 			_sarsa.adjust_model(reward, _last_state, old_action, state_tensor, new_action);
 			_grad_quant_level = new_action;
 			std::cout << "diff_seconds is: " << diff_seconds << " reward is " << reward
