@@ -29,7 +29,7 @@ namespace adaptive_system {
 			return index;
 		}
 		void print_state(const Tensor& state) {
-			float* state_ptr = state.flat<float>().data();
+			const float* state_ptr = state.flat<float>().data();
 			for (size_t i = 0; i < total_features; i++) {
 				std::cout << state_ptr[i] << " ";
 			}
