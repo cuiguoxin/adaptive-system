@@ -35,6 +35,7 @@
 #include "quantization/util/extract_feature.h"
 
 #include "server/sarsa.h"
+#include "server/reward.h"
 
 using grpc::Server;
 using grpc::ServerBuilder;
@@ -325,7 +326,7 @@ namespace adaptive_system {
 			float loss_sum = std::accumulate(_vector_loss_history.begin(), _vector_loss_history.end(), 0.0f);
 			float average = loss_sum / _interval;
 			moving_average(1, &_last_loss, &average);
-			float reward = (_last_loss - average) / diff_seconds;
+			float reward = get_reward(_last_tensor, _grad_quant_level, diff_seconds, _last_loss, average);
 			_sarsa.adjust_model(reward, _last_state, old_action, state_tensor, new_action);
 			_grad_quant_level = new_action;
 			std::cout << "diff_seconds is: " << diff_seconds << " reward is " << reward
