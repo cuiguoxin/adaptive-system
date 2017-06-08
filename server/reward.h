@@ -1,23 +1,9 @@
-#ifndef EXTRACT_FEATURE_H
-#define EXTRACT_FEATURE_H
+#ifndef REWARD_H
+#define REWARD_H
 
 
-#include <algorithm>
-#include <exception>
-#include <functional>
 #include <iostream>
-#include <limits>
-#include <map>
-#include <memory>
-#include <string>
-#include <thread>
-#include <utility>
-#include <vector>
-
-#include <grpc++/grpc++.h>
-
-#include "proto/rpc_service.pb.h"
-
+#include <algorithm>
 #include "tensorflow/core/framework/graph.pb.h"
 #include "tensorflow/core/framework/tensor.h"
 #include "tensorflow/core/graph/default_device.h"
@@ -29,10 +15,14 @@
 #include "tensorflow/core/platform/types.h"
 #include "tensorflow/core/public/session.h"
 
+#include "proto/rpc_service.pb.h"
+
 namespace adaptive_system {
-	tensorflow::Tensor get_feature(tensorflow::Tensor const& tensor, const float loss);
-	tensorflow::Tensor get_final_state_from_partial_state(std::vector<PartialState> const & vector_partial_states);
+	using namespace tensorflow;
+
+	float get_reward(const Tensor& state, const GRAD_QUANT_LEVEL action,
+		const float time_interval, const float last_loss, const float current_loss);
 }
 
-#endif // !EXTRACT_FEATURE_H
+#endif // !REWARD_H
 

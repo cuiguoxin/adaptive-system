@@ -1,3 +1,6 @@
+#ifndef SARSA_H
+#define SARSA_H
+
 #include <algorithm>
 #include <chrono>
 #include <cmath>
@@ -33,27 +36,31 @@
 #include "quantization/util/helper.h"
 
 namespace adaptive_system {
-class sarsa_model {
- private:
-  tensorflow::Session* _session;
-  std::string _sarsa_model_path;
-  float _r;
-  float _eps_greedy;
-  // return one hot tensor
-  tensorflow::Tensor get_feed_tensor_from_action(GRAD_QUANT_LEVEL action);
-  std::vector<float> get_greedy_probability(size_t index_of_max);
+	class sarsa_model {
+	private:
+		tensorflow::Session* _session;
+		std::string _sarsa_model_path;
+		float _r;
+		float _eps_greedy;
+		// return one hot tensor
+		tensorflow::Tensor get_feed_tensor_from_action(GRAD_QUANT_LEVEL action);
+		std::vector<float> get_greedy_probability(size_t index_of_max);
 
- public:
-  sarsa_model(std::string const& path, float r, float eps_greedy);
+	public:
+		sarsa_model(std::string const& path, float r, float eps_greedy);
 
-  float get_q_value(tensorflow::Tensor const& state, GRAD_QUANT_LEVEL action);
+		float get_q_value(tensorflow::Tensor const& state, GRAD_QUANT_LEVEL action);
 
-  GRAD_QUANT_LEVEL sample_new_action(tensorflow::Tensor const& state);
+		GRAD_QUANT_LEVEL sample_new_action(tensorflow::Tensor const& state);
 
-  void adjust_model(float reward, tensorflow::Tensor const& old_state,
-                    GRAD_QUANT_LEVEL old_action,
-                    tensorflow::Tensor const& new_state,
-                    GRAD_QUANT_LEVEL new_action);
+		void adjust_model(float reward, tensorflow::Tensor const& old_state,
+			GRAD_QUANT_LEVEL old_action,
+			tensorflow::Tensor const& new_state,
+			GRAD_QUANT_LEVEL new_action);
 
-};
+	};
 }
+
+
+#endif // !SARSA_H
+

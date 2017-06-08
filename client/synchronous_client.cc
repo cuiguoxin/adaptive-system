@@ -179,7 +179,7 @@ namespace adaptive_system {
 		}
 		else {
 			tensorflow::Tensor const & tensor_to_be_collected = iter->second;
-			tensorflow::Tensor feature_tensor = get_feature(tensor_to_be_collected);
+			tensorflow::Tensor feature_tensor = get_feature(tensor_to_be_collected, loss);
 			tensorflow::TensorProto feature_tensor_proto;
 			feature_tensor.AsProtoField(&feature_tensor_proto);
 			*partial_state_ret.mutable_tensor() = feature_tensor_proto;

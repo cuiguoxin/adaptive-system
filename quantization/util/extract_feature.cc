@@ -53,7 +53,7 @@ namespace adaptive_system {
 				else
 					result -= tensor_ptr[i];
 			}
-			result = result / 100;
+			result = result / 1000;
 		}
 		void median(tensorflow::Tensor const& tensor, float& result) {
 			size_t size = tensor.NumElements();
@@ -75,7 +75,7 @@ namespace adaptive_system {
 		}
 	}
 
-	tensorflow::Tensor get_feature(tensorflow::Tensor const& tensor) {
+	tensorflow::Tensor get_feature(tensorflow::Tensor const& tensor, const float loss) {
 		tensorflow::Tensor ret_tensor =
 			tensorflow::Tensor(tensorflow::DataType::DT_FLOAT, tensorflow::TensorShape({ 7 }));
 		float* ret_tensor_ptr = ret_tensor.flat<float>().data();
