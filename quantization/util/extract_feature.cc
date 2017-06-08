@@ -113,8 +113,8 @@ namespace adaptive_system {
 				tensor_ret_ptr[j] += current_partial_tensor_ptr[j];
 			}
 		}
-		std::for_each(tensor_ret_ptr, tensor_ret_ptr + state_length, [state_length](float& ref) {
-			ref = ref / state_length;
+		std::for_each(tensor_ret_ptr, tensor_ret_ptr + state_length, [vector_size](float& ref) {
+			ref = ref / vector_size;
 		});
 		return tensor_ret;
 	}

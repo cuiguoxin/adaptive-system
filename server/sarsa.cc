@@ -28,6 +28,13 @@ namespace adaptive_system {
 			}
 			return index;
 		}
+		void print_state(const Tensor& state) {
+			float* state_ptr = state.flat<float>().data();
+			for (size_t i = 0; i < total_features; i++) {
+				std::cout << state_ptr[i] << " ";
+			}
+			std::cout << "\n";
+		}
 	}
 
 	Tensor sarsa_model::get_feed_tensor_from_action(GRAD_QUANT_LEVEL action) {
@@ -138,6 +145,8 @@ namespace adaptive_system {
 		GRAD_QUANT_LEVEL old_action,
 		Tensor const& new_state,
 		GRAD_QUANT_LEVEL new_action) {
+		print_state(old_state);
+		print_state(new_state);
 		float old_value = get_q_value(old_state, old_action);
 		float new_value = get_q_value(new_state, new_action);
 		float update = reward + _r * new_value - old_value;
