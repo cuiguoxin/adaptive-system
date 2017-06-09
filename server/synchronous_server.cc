@@ -316,7 +316,7 @@ namespace adaptive_system {
 			size_t length = state_tensor.NumElements();
 			float* state_tensor_ptr = state_tensor.flat<float>().data();
 			float* last_tensor_ptr = _last_state.flat<float>().data();
-			moving_average(length, last_tensor_ptr, state_tensor_ptr);
+			moving_average(length, last_tensor_ptr, state_tensor_ptr, 0.9f);
 			print_state_to_file(state_tensor);
 			GRAD_QUANT_LEVEL new_action = _sarsa.sample_new_action(state_tensor);
 			GRAD_QUANT_LEVEL old_action = _grad_quant_level;
@@ -325,7 +325,7 @@ namespace adaptive_system {
 			float diff_seconds = diff.count();
 			float loss_sum = std::accumulate(_vector_loss_history.begin(), _vector_loss_history.end(), 0.0f);
 			float average = loss_sum / _interval;
-			moving_average(1, &_last_loss, &average);
+			moving_average(1, &_last_loss, &average, 0.9f);
 			float reward = get_reward(_last_state, _grad_quant_level, diff_seconds, _last_loss, average);
 			_sarsa.adjust_model(reward, _last_state, old_action, state_tensor, new_action);
 			_grad_quant_level = new_action;

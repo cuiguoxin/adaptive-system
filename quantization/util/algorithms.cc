@@ -409,8 +409,7 @@ namespace adaptive_system {
 		return tensorflow::DataType::DT_INVALID;
 	}
 
-	void moving_average(size_t length, float const * previous, float* current) {
-		static float r = 0.95;
+	void moving_average(size_t length, float const * previous, float* current, float const r) {
 		for (size_t i = 0; i < length; i++) {
 			current[i] = r * previous[i] + (1 - r) * current[i];
 		}

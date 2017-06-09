@@ -56,6 +56,6 @@ namespace adaptive_system {
 	void apply_quantized_gradient_to_model_using_adam(
 		NamedGradients& named_gradients, tensorflow::Session* sess, Tuple& tuple);
 
-	void moving_average(size_t length, float const * previous, float* current);
+	void moving_average(size_t length, float const * previous, float* current, const float r);
 }
 #endif

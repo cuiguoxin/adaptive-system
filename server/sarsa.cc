@@ -14,7 +14,7 @@ namespace adaptive_system {
 	static std::string const training_op_name = "GradientDescent";
 	static size_t const total_actions = 5;
 	static size_t const total_features = 7;
-	static float const alpha = 0.1;
+	static float const alpha = 0.5;
 
 	namespace {
 		size_t index_of_max(float* array) {

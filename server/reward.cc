@@ -13,14 +13,14 @@ namespace adaptive_system {
 		else {
 			//bad thing happens
 			if (action == GRAD_QUANT_LEVEL::EIGHT) {
-				return 0.05;
+				return 0.5;
 			}
 			else if (action == GRAD_QUANT_LEVEL::SIXTEEN) {
-				return 0.07;
+				return 0.8;
 			}
 			else {
 				//reduction < 0 
-				return reduction / time_interval;
+				return reduction / time_interval * 5;
 			}
 		}
 	}
