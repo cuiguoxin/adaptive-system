@@ -64,7 +64,7 @@ namespace adaptive_system {
 	std::vector<float> sarsa_model::get_greedy_probability(size_t index_of_max) {
 		float value = _eps_greedy / total_actions;
 		std::vector<float> ret(total_actions, value);
-		ret[index_of_max] += value;
+		ret[index_of_max] += 1 - _eps_greedy;
 		return ret;
 	}
 	sarsa_model::sarsa_model(std::string const& path, float r, float eps_greedy)
