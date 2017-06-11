@@ -209,7 +209,7 @@ namespace adaptive_system {
 				quantize_gradient(
 					map_gradient_another, &_store_named_gradient,
 					cast_grad_quant_level_to_quantization_type(_grad_quant_level));
-				apply_quantized_gradient_to_model_using_adam(_store_named_gradient,
+				apply_quantized_gradient_to_model(_store_named_gradient,
 					_session, _tuple);
 				_vector_map_gradient.clear();
 				_bool_gradient = true;

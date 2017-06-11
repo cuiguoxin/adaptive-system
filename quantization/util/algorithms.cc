@@ -295,47 +295,6 @@ namespace adaptive_system {
 			*tuple.mutable_map_names();
 		std::vector<std::pair<std::string, tensorflow::Tensor>> feeds;
 		std::vector<std::string> actions_to_do;
-		std::for_each(
-			map_gradient.begin(), map_gradient.end(),
-			[&feeds, &actions_to_do, &map_names,
-			&tuple](google::protobuf::MapPair<std::string, Gradient>& pair) {
-			std::string const& variable_name = pair.first;
-			Gradient& grad = pair.second;
-			auto iter_map_names = map_names.find(variable_name);
-			if (iter_map_names == map_names.end()) {
-				std::cout << "this is impossible Line " << __LINE__ << std::endl;
-				std::terminate();
-			}
-			else {
-				Names& names = iter_map_names->second;
-				std::string assign_add_name = names.assign_add_name();
-
-				tensorflow::Tensor feed;  // nothing need to do to initialize feed
-										  // tensor, dequantize function will do all
-										  // stuff
-				dequantize(cast_grad_quant_level_to_quantization_type(grad.level()),
-					grad, feed);
-				float* feed_ptr = feed.flat<float>().data();
-				float learning_rate = tuple.lr();
-				std::for_each(
-					feed_ptr, feed_ptr + feed.NumElements(),
-					[&learning_rate](float& ref) { ref = -ref * learning_rate; });
-				feeds.push_back(std::pair<std::string, tensorflow::Tensor>(
-					names.placeholder_assign_add_name(), feed));
-				actions_to_do.push_back(assign_add_name);
-			}
-		});
-		sess->Run(feeds, {}, actions_to_do, nullptr);
-	}
-
-	void apply_quantized_gradient_to_model_using_adam(
-		NamedGradients& named_gradients, tensorflow::Session* sess, Tuple& tuple) {
-		google::protobuf::Map<std::string, Gradient>& map_gradient =
-			*named_gradients.mutable_name_to_gradient();
-		google::protobuf::Map<std::string, Names>& map_names =
-			*tuple.mutable_map_names();
-		std::vector<std::pair<std::string, tensorflow::Tensor>> feeds;
-		std::vector<std::string> actions_to_do;
 		actions_to_do.push_back(tuple.training_op_name());
 		std::for_each(
 			map_gradient.begin(), map_gradient.end(),
@@ -363,6 +322,8 @@ namespace adaptive_system {
 		});
 		sess->Run(feeds, {}, actions_to_do, nullptr);
 	}
+
+	
 
 	GRAD_QUANT_LEVEL cast_quantization_type_to_grad_quant_level(
 		QUANTIZATION_TYPE type) {

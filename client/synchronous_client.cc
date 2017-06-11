@@ -290,7 +290,7 @@ namespace adaptive_system {
 			}
 			PRINT_INFO;
 			// add the gradients to variables
-			apply_quantized_gradient_to_model_using_adam(named_gradients_receive,
+			apply_quantized_gradient_to_model(named_gradients_receive,
 				get_session(), *get_tuple());
 			PRINT_INFO;
 		}
