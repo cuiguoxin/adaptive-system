@@ -2,10 +2,10 @@ import tensorflow as tf
 
 def create_sarsa_model():
 	with tf.variable_scope("first_layer"):
-		placeholder_state = tf.placeholder(tf.float32, [7], name="state")
+		placeholder_state = tf.placeholder(tf.float32, [8], name="state")
 		print placeholder_state.name
-		state = tf.reshape(placeholder_state, [7, 1])
-		variable_first_layer = tf.get_variable("weight", [10, 7],
+		state = tf.reshape(placeholder_state, [8, 1])
+		variable_first_layer = tf.get_variable("weight", [10, 8],
                                         tf.float32, initializer=tf.truncated_normal_initializer(stddev=5e-2, dtype=tf.float32))
 	        bias_first_layer = tf.get_variable("bias", [10, 1], tf.float32, initializer=tf.constant_initializer())
        		first_layer = tf.matmul(variable_first_layer, state) +  bias_first_layer

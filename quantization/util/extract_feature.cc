@@ -77,7 +77,7 @@ namespace adaptive_system {
 
 	tensorflow::Tensor get_feature(tensorflow::Tensor const& tensor, const float loss) {
 		tensorflow::Tensor ret_tensor =
-			tensorflow::Tensor(tensorflow::DataType::DT_FLOAT, tensorflow::TensorShape({ 7 }));
+			tensorflow::Tensor(tensorflow::DataType::DT_FLOAT, tensorflow::TensorShape({ 8 }));
 		float* ret_tensor_ptr = ret_tensor.flat<float>().data();
 		std::thread mean_thread(mean, std::ref(tensor), std::ref(ret_tensor_ptr[0]));
 		std::thread min_thread(min, std::ref(tensor), std::ref(ret_tensor_ptr[1]));
@@ -96,14 +96,15 @@ namespace adaptive_system {
 		abs_sum_thread.join();
 		median_thread.join();
 		norm_thread.join();
+		ret_tensor_ptr[7] = loss;
 
 		return ret_tensor;
 	}
 
 	tensorflow::Tensor get_final_state_from_partial_state(std::vector<PartialState>const & vector_partial_states) {
 		size_t vector_size = vector_partial_states.size();
-		const size_t state_length = 7;
-		tensorflow::Tensor tensor_ret(tensorflow::DataType::DT_FLOAT, tensorflow::TensorShape({ 7 }));
+		const size_t state_length = 8;
+		tensorflow::Tensor tensor_ret(tensorflow::DataType::DT_FLOAT, tensorflow::TensorShape({ 8 }));
 		float* tensor_ret_ptr = tensor_ret.flat<float>().data();
 		std::fill(tensor_ret_ptr, tensor_ret_ptr + state_length, 0.0f);
 		for (int i = 0; i < vector_size; i++) {
