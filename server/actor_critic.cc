@@ -16,16 +16,18 @@ namespace adaptive_system {
 		const std::string value_state_name = "";
 		//value name
 		const std::string value_name = "";
-		//policy name, whole vector name, length is 5, not 1
+		//policy name, whole vector name, length is 5, not 1, log
 		const std::string policy_value_name = ""; 
 		//training op name
 		const std::string policy_training_name = "";
 		const std::string value_training_name = "";
+		//const number
 		const size_t action_number = 5;
 		const size_t state_number = 8;
 	}
-	actor_critic::actor_critic(std::string const & model_path, float const r, float const beta, size_t t)
-		:_sarsa_model_path(model_path), _r(r), _beta(beta), _T(t) {
+	actor_critic::actor_critic(std::string const & model_path, 
+		float const r, float const beta, float const alpha, size_t t)
+		:_sarsa_model_path(model_path), _r(r), _beta(beta), _alpha(alpha), _T(t) {
 		_session = NewSession(SessionOptions());
 		GraphDef graph_def;
 		Status status = ReadBinaryProto(Env::Default(), model_path, &graph_def);
@@ -98,12 +100,36 @@ namespace adaptive_system {
 		float last_value = get_value(last_state);
 		float ret = reward + _r * new_value - last_value;
 	}
+
 	void actor_critic::update_value_function_parameter(tensorflow::Tensor const & state,
 		const float update) {
-
+		tensorflow::Tensor lr_tensor(tensorflow::DataType::DT_FLOAT, TensorShape());
+		float * lr_tensor_ptr = lr_tensor.flat<float>().data();
+		*lr_tensor_ptr = _beta * update;
+		Status status = _session->Run({ { value_state_name, state },
+										{ value_function_learning_rate_name , lr_tensor} },
+		{}, { value_training_name }, nullptr);
+		if (!status.ok()) {
+			PRINT_ERROR_MESSAGE(status.error_message());
+			std::terminate();
+		}
 	}
-	void actor_critic::update_policy_parameter(tensorflow::Tensor const & state, const float update) {
-
+	void actor_critic::update_policy_parameter(tensorflow::Tensor const & state,
+		GRAD_QUANT_LEVEL action, 
+		const float update) {
+		tensorflow::Tensor action_tensor = get_feed_tensor_from_action(action);
+		tensorflow::Tensor lr_tensor(tensorflow::DataType::DT_FLOAT, TensorShape());
+		float * lr_tensor_ptr = lr_tensor.flat<float>().data();
+		//learning rate need to be discounted
+		*lr_tensor_ptr = _alpha * update;
+		Status status = _session->Run({ { policy_state_name, state },
+										{ policy_learning_rate_name , lr_tensor },
+										{ one_hot_state_name, action_tensor } },
+		{}, { policy_training_name }, nullptr);
+		if (!status.ok()) {
+			PRINT_ERROR_MESSAGE(status.error_message());
+			std::terminate();
+		}
 	}
 
 

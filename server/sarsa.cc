@@ -37,30 +37,6 @@ namespace adaptive_system {
 		}
 	}
 
-	Tensor sarsa_model::get_feed_tensor_from_action(GRAD_QUANT_LEVEL action) {
-		Tensor ret(DataType::DT_FLOAT, TensorShape({ total_actions }));
-		float* ret_ptr = ret.flat<float>().data();
-		std::fill(ret_ptr, ret_ptr + total_actions, 0.0f);
-		switch (action) {
-		case GRAD_QUANT_LEVEL::ONE:
-			ret_ptr[0] = 1.0f;
-			break;
-		case GRAD_QUANT_LEVEL::TWO:
-			ret_ptr[1] = 1.0f;
-			break;
-		case GRAD_QUANT_LEVEL::FOUR:
-			ret_ptr[2] = 1.0f;
-			break;
-		case GRAD_QUANT_LEVEL::EIGHT:
-			ret_ptr[3] = 1.0f;
-			break;
-		case GRAD_QUANT_LEVEL::SIXTEEN:
-			ret_ptr[4] = 1.0f;
-			break;
-		}
-		return ret;
-	}
-
 	std::vector<float> sarsa_model::get_greedy_probability(size_t index_of_max) {
 		float value = _eps_greedy / total_actions;
 		std::vector<float> ret(total_actions, value);

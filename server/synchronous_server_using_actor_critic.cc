@@ -34,7 +34,7 @@
 #include "quantization/util/helper.h"
 #include "quantization/util/extract_feature.h"
 
-#include "server/sarsa.h"
+#include "server/actor_critic.h"
 #include "server/reward.h"
 
 using grpc::Server;
@@ -58,7 +58,7 @@ namespace adaptive_system {
 		RPCServiceImpl(int interval, float lr, int total_iter, int number_of_workers,
 			GRAD_QUANT_LEVEL grad_quant_level,
 			std::string const& tuple_local_path,
-			std::string const & sarsa_path, float r, float eps_greedy)
+			std::string const & sarsa_path, float r, float beta, float alpha, size_t t)
 			: SystemControl::Service(),
 			_interval(interval),
 			_lr(lr),
@@ -66,7 +66,7 @@ namespace adaptive_system {
 			_number_of_workers(number_of_workers),
 			_grad_quant_level(grad_quant_level),
 			_tuple_local_path(tuple_local_path),
-			_sarsa(sarsa_path, r, eps_greedy)
+			_actor_critic(sarsa_path, r, beta, alpha, t)
 		{
 			_session = tensorflow::NewSession(tensorflow::SessionOptions());
 			std::fstream input(_tuple_local_path, std::ios::in | std::ios::binary);
@@ -233,6 +233,8 @@ namespace adaptive_system {
 					_bool_is_first_iteration = false;
 					_last_state = get_final_state_from_partial_state(_vector_partial_state);
 					print_state_to_file(_last_state);
+					//sample action from policy
+					_grad_quant_level = _actor_critic.sample_action_from_policy(_last_state);
 					//need not to store last action because _grad_quant_level can represent it
 					if (_vector_loss_history.size() != 1) {
 						PRINT_ERROR_MESSAGE("when in first iteration, the _vector_loss_history's size must be 1");
@@ -312,14 +314,13 @@ namespace adaptive_system {
 			});
 		}
 		void adjust_rl_model(std::vector<PartialState> const& vector_partial_state) {
-			tensorflow::Tensor state_tensor = get_final_state_from_partial_state(vector_partial_state);
+			tensorflow::Tensor state_tensor = get_final_state_from_partial_state(vector_partial_state);//S'
 			size_t length = state_tensor.NumElements();
-			float* state_tensor_ptr = state_tensor.flat<float>().data();
-			float* last_tensor_ptr = _last_state.flat<float>().data();
+			float* state_tensor_ptr = state_tensor.flat<float>().data();// S'
+			float* last_tensor_ptr = _last_state.flat<float>().data();//S
 			moving_average(length, last_tensor_ptr, state_tensor_ptr, 0.9f);
 			print_state_to_file(state_tensor);
-			GRAD_QUANT_LEVEL new_action = _sarsa.sample_new_action(state_tensor);
-			GRAD_QUANT_LEVEL old_action = _grad_quant_level;
+			//get reward
 			auto now_time_point = std::chrono::high_resolution_clock::now();
 			std::chrono::duration<float> diff = now_time_point - _time_point_last;
 			float diff_seconds = diff.count();
@@ -327,8 +328,13 @@ namespace adaptive_system {
 			float average = loss_sum / _interval;
 			moving_average(1, &_last_loss, &average, 0.9f);
 			float reward = get_reward(_last_state, _grad_quant_level, diff_seconds, _last_loss, average);
-			_sarsa.adjust_model(reward, _last_state, old_action, state_tensor, new_action);
-			_grad_quant_level = new_action;
+			//adjust actor critic model
+			float update = _actor_critic.get_update_value(reward, state_tensor, _last_state);
+			_actor_critic.update_value_function_parameter(_last_state, update);
+			_actor_critic.update_policy_parameter(_last_state, _grad_quant_level, update);
+			//sample new action from current state
+			_grad_quant_level = _actor_critic.sample_action_from_policy(state_tensor);
+			
 			std::cout << "diff_seconds is: " << diff_seconds << " reward is " << reward
 				<< " quantization level become: " << std::pow(2, static_cast<int>(_grad_quant_level)) << std::endl;
 			_vector_loss_history.clear();
@@ -373,7 +379,7 @@ namespace adaptive_system {
 		std::ofstream _file_out_stream;
 		std::ofstream _file_state_stream;
 
-		sarsa_model _sarsa;
+		actor_critic _actor_critic;
 		tensorflow::Tensor _last_state;
 		std::string _label;
 	};
@@ -403,13 +409,15 @@ int main(int argc, char** argv) {
 	int number_of_workers = atoi(argv[4]);
 	int level = atoi(argv[5]);
 	std::string tuple_path = argv[6];
-	std::string sarsa_path = argv[7];
+	std::string actor_critic_path = argv[7];
 	float r = atof(argv[8]);
-	float eps_greedy = atof(argv[9]);
+	float beta = atof(argv[9]);
+	float alpha = atof(argv[10]);
+	size_t T = atoi(argv[11]);
 
 	adaptive_system::RPCServiceImpl service(
 		interval, learning_rate, total_iter, number_of_workers,
-		cast_int_to_grad_quant_level(level), tuple_path, sarsa_path, r, eps_greedy);
+		cast_int_to_grad_quant_level(level), tuple_path, actor_critic_path, r, beta, alpha, T);
 
 	ServerBuilder builder;
 	// Listen on the given address without any authentication mechanism.

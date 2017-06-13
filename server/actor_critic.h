@@ -41,14 +41,15 @@ namespace adaptive_system {
 		std::string _sarsa_model_path;
 		float _r;
 		float _beta;
+		float _alpha;
 		size_t _T;
 	public:
-		actor_critic(std::string const & model_path, float const r, float const beta, size_t t);
+		actor_critic(std::string const & model_path, float const r, float const beta, float const alpha, size_t t);
 		GRAD_QUANT_LEVEL sample_action_from_policy(tensorflow::Tensor const & state);
 		float get_update_value(float reward, tensorflow::Tensor const & new_state, 
 			tensorflow::Tensor const & last_state);
 		void update_value_function_parameter(tensorflow::Tensor const & state, const float update);
-		void update_policy_parameter(tensorflow::Tensor const & state, const float update);
+		void update_policy_parameter(tensorflow::Tensor const & state, GRAD_QUANT_LEVEL action, const float update);
 
 	};
 }

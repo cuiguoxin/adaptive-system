@@ -375,5 +375,30 @@ namespace adaptive_system {
 			current[i] = r * previous[i] + (1 - r) * current[i];
 		}
 	}
+	
+	tensorflow::Tensor get_feed_tensor_from_action(GRAD_QUANT_LEVEL action) {
+		const size_t total_actions = 5;
+		tensorflow::Tensor ret(tensorflow::DataType::DT_FLOAT, tensorflow::TensorShape({ total_actions }));
+		float* ret_ptr = ret.flat<float>().data();
+		std::fill(ret_ptr, ret_ptr + total_actions, 0.0f);
+		switch (action) {
+		case GRAD_QUANT_LEVEL::ONE:
+			ret_ptr[0] = 1.0f;
+			break;
+		case GRAD_QUANT_LEVEL::TWO:
+			ret_ptr[1] = 1.0f;
+			break;
+		case GRAD_QUANT_LEVEL::FOUR:
+			ret_ptr[2] = 1.0f;
+			break;
+		case GRAD_QUANT_LEVEL::EIGHT:
+			ret_ptr[3] = 1.0f;
+			break;
+		case GRAD_QUANT_LEVEL::SIXTEEN:
+			ret_ptr[4] = 1.0f;
+			break;
+		}
+		return ret;
+	}
 }
 

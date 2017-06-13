@@ -55,5 +55,7 @@ namespace adaptive_system {
 
 
 	void moving_average(size_t length, float const * previous, float* current, const float r);
+
+	tensorflow::Tensor get_feed_tensor_from_action(GRAD_QUANT_LEVEL action);
 }
 #endif

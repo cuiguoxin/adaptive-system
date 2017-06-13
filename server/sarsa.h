@@ -42,8 +42,7 @@ namespace adaptive_system {
 		std::string _sarsa_model_path;
 		float _r;
 		float _eps_greedy;
-		// return one hot tensor
-		tensorflow::Tensor get_feed_tensor_from_action(GRAD_QUANT_LEVEL action);
+		
 		std::vector<float> get_greedy_probability(size_t index_of_max);
 
 	public:
