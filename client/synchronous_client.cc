@@ -223,13 +223,13 @@ namespace adaptive_system {
 			std::this_thread::sleep_for(std::chrono::duration<float>(1.5f));
 			break;
 		case GRAD_QUANT_LEVEL::EIGHT:
-			std::this_thread::sleep_for(std::chrono::duration<float>(2.0f));
-			break;
-		case GRAD_QUANT_LEVEL::SIXTEEN:
 			std::this_thread::sleep_for(std::chrono::duration<float>(2.5f));
 			break;
+		case GRAD_QUANT_LEVEL::SIXTEEN:
+			std::this_thread::sleep_for(std::chrono::duration<float>(4f));
+			break;
 		case GRAD_QUANT_LEVEL::NONE:
-			std::this_thread::sleep_for(std::chrono::duration<float>(3.0f));
+			std::this_thread::sleep_for(std::chrono::duration<float>(6.0f));
 			break;
 		}
 	}
@@ -270,7 +270,7 @@ namespace adaptive_system {
 				grad_quant_level = quantization_level.level();
 			}
 			//fake
-			//now_sleep(grad_quant_level);
+			now_sleep(grad_quant_level);
 			NamedGradients named_gradients_send, named_gradients_receive;
 			PRINT_INFO;
 			quantize_gradient(
