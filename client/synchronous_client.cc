@@ -226,7 +226,7 @@ namespace adaptive_system {
 			std::this_thread::sleep_for(std::chrono::duration<float>(2.5f));
 			break;
 		case GRAD_QUANT_LEVEL::SIXTEEN:
-			std::this_thread::sleep_for(std::chrono::duration<float>(4f));
+			std::this_thread::sleep_for(std::chrono::duration<float>(4.0f));
 			break;
 		case GRAD_QUANT_LEVEL::NONE:
 			std::this_thread::sleep_for(std::chrono::duration<float>(6.0f));
