@@ -18,6 +18,7 @@ message Names {
     string assign_add_name = 4;
     string placeholder_assign_name = 5;
     string placeholder_assign_add_name = 6;
+	string gradient_index_name = 7;
 }
 
 message Tuple {
@@ -28,7 +29,7 @@ message Tuple {
     tensorflow.GraphDef graph = 5;
     string loss_name = 6;
     string init_name = 7;
-    string image_placeholder_name = 8;
+    string batch_placeholder_name = 8;
     string label_placeholder_name = 9;
     string training_op_name = 10;
     int32 total_iter = 11;
@@ -57,6 +58,7 @@ message Gradient {
     float max = 4;
     float min = 5;
     tensorflow.TensorShapeProto tensor_shape = 6;
+	tensorflow.TensorShapeProto tensor_index = 7;
 
 }
 
