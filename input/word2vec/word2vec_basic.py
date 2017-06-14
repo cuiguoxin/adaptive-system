@@ -29,6 +29,7 @@ from six.moves import xrange  # pylint: disable=redefined-builtin
 import tensorflow as tf
 import rpc_service_pb2 as rpc
 
+vocabulary_size = 50000
 batch_size = 256
 embedding_size = 128  # Dimension of the embedding vector.
 skip_window = 1       # How many words to consider left and right.
@@ -83,12 +84,12 @@ with graph.as_default():
 
   # Construct the SGD optimizer using a learning rate of 1.0.
   optimizer = tf.train.GradientDescentOptimizer(1.0)
-  grads = opt.compute_gradients(losses)
+  grads = optimizer.compute_gradients(loss)
   for grad_var in grads:
     tup.map_names[grad_var[1].name].gradient_name = grad_var[0].values.name
     tup.map_names[grad_var[1].name].gradient_index_name = grad_var[0].indices.name
 
-  training_op = opt.apply_gradients(grads)
+  training_op = optimizer.apply_gradients(grads)
   tup.training_op_name = training_op.name
 
   ## Compute the cosine similarity between minibatch examples and all embeddings.

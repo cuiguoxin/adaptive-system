@@ -343,6 +343,20 @@ class Names : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   ::std::string* release_placeholder_assign_add_name();
   void set_allocated_placeholder_assign_add_name(::std::string* placeholder_assign_add_name);
 
+  // string gradient_index_name = 7;
+  void clear_gradient_index_name();
+  static const int kGradientIndexNameFieldNumber = 7;
+  const ::std::string& gradient_index_name() const;
+  void set_gradient_index_name(const ::std::string& value);
+  #if LANG_CXX11
+  void set_gradient_index_name(::std::string&& value);
+  #endif
+  void set_gradient_index_name(const char* value);
+  void set_gradient_index_name(const char* value, size_t size);
+  ::std::string* mutable_gradient_index_name();
+  ::std::string* release_gradient_index_name();
+  void set_allocated_gradient_index_name(::std::string* gradient_index_name);
+
   // @@protoc_insertion_point(class_scope:adaptive_system.Names)
  private:
 
@@ -353,6 +367,7 @@ class Names : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   ::google::protobuf::internal::ArenaStringPtr assign_add_name_;
   ::google::protobuf::internal::ArenaStringPtr placeholder_assign_name_;
   ::google::protobuf::internal::ArenaStringPtr placeholder_assign_add_name_;
+  ::google::protobuf::internal::ArenaStringPtr gradient_index_name_;
   mutable int _cached_size_;
   friend struct protobuf_rpc_5fservice_2eproto::TableStruct;
 };
@@ -478,19 +493,19 @@ class Tuple : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   ::std::string* release_init_name();
   void set_allocated_init_name(::std::string* init_name);
 
-  // string image_placeholder_name = 8;
-  void clear_image_placeholder_name();
-  static const int kImagePlaceholderNameFieldNumber = 8;
-  const ::std::string& image_placeholder_name() const;
-  void set_image_placeholder_name(const ::std::string& value);
+  // string batch_placeholder_name = 8;
+  void clear_batch_placeholder_name();
+  static const int kBatchPlaceholderNameFieldNumber = 8;
+  const ::std::string& batch_placeholder_name() const;
+  void set_batch_placeholder_name(const ::std::string& value);
   #if LANG_CXX11
-  void set_image_placeholder_name(::std::string&& value);
+  void set_batch_placeholder_name(::std::string&& value);
   #endif
-  void set_image_placeholder_name(const char* value);
-  void set_image_placeholder_name(const char* value, size_t size);
-  ::std::string* mutable_image_placeholder_name();
-  ::std::string* release_image_placeholder_name();
-  void set_allocated_image_placeholder_name(::std::string* image_placeholder_name);
+  void set_batch_placeholder_name(const char* value);
+  void set_batch_placeholder_name(const char* value, size_t size);
+  ::std::string* mutable_batch_placeholder_name();
+  ::std::string* release_batch_placeholder_name();
+  void set_allocated_batch_placeholder_name(::std::string* batch_placeholder_name);
 
   // string label_placeholder_name = 9;
   void clear_label_placeholder_name();
@@ -575,7 +590,7 @@ class Tuple : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
       0 > map_parameters_;
   ::google::protobuf::internal::ArenaStringPtr loss_name_;
   ::google::protobuf::internal::ArenaStringPtr init_name_;
-  ::google::protobuf::internal::ArenaStringPtr image_placeholder_name_;
+  ::google::protobuf::internal::ArenaStringPtr batch_placeholder_name_;
   ::google::protobuf::internal::ArenaStringPtr label_placeholder_name_;
   ::google::protobuf::internal::ArenaStringPtr training_op_name_;
   ::tensorflow::GraphDef* graph_;
@@ -769,6 +784,15 @@ class Gradient : public ::google::protobuf::Message /* @@protoc_insertion_point(
   ::tensorflow::TensorShapeProto* release_tensor_shape();
   void set_allocated_tensor_shape(::tensorflow::TensorShapeProto* tensor_shape);
 
+  // .tensorflow.TensorShapeProto tensor_index = 7;
+  bool has_tensor_index() const;
+  void clear_tensor_index();
+  static const int kTensorIndexFieldNumber = 7;
+  const ::tensorflow::TensorShapeProto& tensor_index() const;
+  ::tensorflow::TensorShapeProto* mutable_tensor_index();
+  ::tensorflow::TensorShapeProto* release_tensor_index();
+  void set_allocated_tensor_index(::tensorflow::TensorShapeProto* tensor_index);
+
   // .adaptive_system.GRAD_QUANT_LEVEL level = 1;
   void clear_level();
   static const int kLevelFieldNumber = 1;
@@ -794,6 +818,7 @@ class Gradient : public ::google::protobuf::Message /* @@protoc_insertion_point(
   ::google::protobuf::internal::ArenaStringPtr tensor_le_8_;
   ::tensorflow::TensorProto* tensor_ge_8_;
   ::tensorflow::TensorShapeProto* tensor_shape_;
+  ::tensorflow::TensorShapeProto* tensor_index_;
   int level_;
   float max_;
   float min_;
@@ -1400,6 +1425,58 @@ inline void Names::set_allocated_placeholder_assign_add_name(::std::string* plac
   // @@protoc_insertion_point(field_set_allocated:adaptive_system.Names.placeholder_assign_add_name)
 }
 
+// string gradient_index_name = 7;
+inline void Names::clear_gradient_index_name() {
+  gradient_index_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& Names::gradient_index_name() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.Names.gradient_index_name)
+  return gradient_index_name_.GetNoArena();
+}
+inline void Names::set_gradient_index_name(const ::std::string& value) {
+  
+  gradient_index_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:adaptive_system.Names.gradient_index_name)
+}
+#if LANG_CXX11
+inline void Names::set_gradient_index_name(::std::string&& value) {
+  
+  gradient_index_name_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Names.gradient_index_name)
+}
+#endif
+inline void Names::set_gradient_index_name(const char* value) {
+  
+  gradient_index_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:adaptive_system.Names.gradient_index_name)
+}
+inline void Names::set_gradient_index_name(const char* value, size_t size) {
+  
+  gradient_index_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:adaptive_system.Names.gradient_index_name)
+}
+inline ::std::string* Names::mutable_gradient_index_name() {
+  
+  // @@protoc_insertion_point(field_mutable:adaptive_system.Names.gradient_index_name)
+  return gradient_index_name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* Names::release_gradient_index_name() {
+  // @@protoc_insertion_point(field_release:adaptive_system.Names.gradient_index_name)
+  
+  return gradient_index_name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Names::set_allocated_gradient_index_name(::std::string* gradient_index_name) {
+  if (gradient_index_name != NULL) {
+    
+  } else {
+    
+  }
+  gradient_index_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), gradient_index_name);
+  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Names.gradient_index_name)
+}
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
@@ -1620,56 +1697,56 @@ inline void Tuple::set_allocated_init_name(::std::string* init_name) {
   // @@protoc_insertion_point(field_set_allocated:adaptive_system.Tuple.init_name)
 }
 
-// string image_placeholder_name = 8;
-inline void Tuple::clear_image_placeholder_name() {
-  image_placeholder_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+// string batch_placeholder_name = 8;
+inline void Tuple::clear_batch_placeholder_name() {
+  batch_placeholder_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline const ::std::string& Tuple::image_placeholder_name() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.Tuple.image_placeholder_name)
-  return image_placeholder_name_.GetNoArena();
+inline const ::std::string& Tuple::batch_placeholder_name() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.Tuple.batch_placeholder_name)
+  return batch_placeholder_name_.GetNoArena();
 }
-inline void Tuple::set_image_placeholder_name(const ::std::string& value) {
+inline void Tuple::set_batch_placeholder_name(const ::std::string& value) {
   
-  image_placeholder_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:adaptive_system.Tuple.image_placeholder_name)
+  batch_placeholder_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:adaptive_system.Tuple.batch_placeholder_name)
 }
 #if LANG_CXX11
-inline void Tuple::set_image_placeholder_name(::std::string&& value) {
+inline void Tuple::set_batch_placeholder_name(::std::string&& value) {
   
-  image_placeholder_name_.SetNoArena(
+  batch_placeholder_name_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Tuple.image_placeholder_name)
+  // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Tuple.batch_placeholder_name)
 }
 #endif
-inline void Tuple::set_image_placeholder_name(const char* value) {
+inline void Tuple::set_batch_placeholder_name(const char* value) {
   
-  image_placeholder_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:adaptive_system.Tuple.image_placeholder_name)
+  batch_placeholder_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:adaptive_system.Tuple.batch_placeholder_name)
 }
-inline void Tuple::set_image_placeholder_name(const char* value, size_t size) {
+inline void Tuple::set_batch_placeholder_name(const char* value, size_t size) {
   
-  image_placeholder_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+  batch_placeholder_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:adaptive_system.Tuple.image_placeholder_name)
+  // @@protoc_insertion_point(field_set_pointer:adaptive_system.Tuple.batch_placeholder_name)
 }
-inline ::std::string* Tuple::mutable_image_placeholder_name() {
+inline ::std::string* Tuple::mutable_batch_placeholder_name() {
   
-  // @@protoc_insertion_point(field_mutable:adaptive_system.Tuple.image_placeholder_name)
-  return image_placeholder_name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  // @@protoc_insertion_point(field_mutable:adaptive_system.Tuple.batch_placeholder_name)
+  return batch_placeholder_name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline ::std::string* Tuple::release_image_placeholder_name() {
-  // @@protoc_insertion_point(field_release:adaptive_system.Tuple.image_placeholder_name)
+inline ::std::string* Tuple::release_batch_placeholder_name() {
+  // @@protoc_insertion_point(field_release:adaptive_system.Tuple.batch_placeholder_name)
   
-  return image_placeholder_name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  return batch_placeholder_name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline void Tuple::set_allocated_image_placeholder_name(::std::string* image_placeholder_name) {
-  if (image_placeholder_name != NULL) {
+inline void Tuple::set_allocated_batch_placeholder_name(::std::string* batch_placeholder_name) {
+  if (batch_placeholder_name != NULL) {
     
   } else {
     
   }
-  image_placeholder_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), image_placeholder_name);
-  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Tuple.image_placeholder_name)
+  batch_placeholder_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), batch_placeholder_name);
+  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Tuple.batch_placeholder_name)
 }
 
 // string label_placeholder_name = 9;
@@ -1992,6 +2069,50 @@ inline void Gradient::set_allocated_tensor_shape(::tensorflow::TensorShapeProto*
     
   }
   // @@protoc_insertion_point(field_set_allocated:adaptive_system.Gradient.tensor_shape)
+}
+
+// .tensorflow.TensorShapeProto tensor_index = 7;
+inline bool Gradient::has_tensor_index() const {
+  return this != internal_default_instance() && tensor_index_ != NULL;
+}
+inline void Gradient::clear_tensor_index() {
+  if (GetArenaNoVirtual() == NULL && tensor_index_ != NULL) delete tensor_index_;
+  tensor_index_ = NULL;
+}
+inline const ::tensorflow::TensorShapeProto& Gradient::tensor_index() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.Gradient.tensor_index)
+  return tensor_index_ != NULL ? *tensor_index_
+                         : *::tensorflow::TensorShapeProto::internal_default_instance();
+}
+inline ::tensorflow::TensorShapeProto* Gradient::mutable_tensor_index() {
+  
+  if (tensor_index_ == NULL) {
+    tensor_index_ = new ::tensorflow::TensorShapeProto;
+  }
+  // @@protoc_insertion_point(field_mutable:adaptive_system.Gradient.tensor_index)
+  return tensor_index_;
+}
+inline ::tensorflow::TensorShapeProto* Gradient::release_tensor_index() {
+  // @@protoc_insertion_point(field_release:adaptive_system.Gradient.tensor_index)
+  
+  ::tensorflow::TensorShapeProto* temp = tensor_index_;
+  tensor_index_ = NULL;
+  return temp;
+}
+inline void Gradient::set_allocated_tensor_index(::tensorflow::TensorShapeProto* tensor_index) {
+  delete tensor_index_;
+  if (tensor_index != NULL && tensor_index->GetArena() != NULL) {
+    ::tensorflow::TensorShapeProto* new_tensor_index = new ::tensorflow::TensorShapeProto;
+    new_tensor_index->CopyFrom(*tensor_index);
+    tensor_index = new_tensor_index;
+  }
+  tensor_index_ = tensor_index;
+  if (tensor_index) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Gradient.tensor_index)
 }
 
 // -------------------------------------------------------------------
