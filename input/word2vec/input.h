@@ -13,8 +13,11 @@
 #include "tensorflow/core/platform/types.h"
 #include "tensorflow/core/public/session.h"
 namespace adaptive_system {
-	void init();
-	std::pair<tensorflow::Tensor, tensorflow::Tensor> get_next_batch();
+	namespace word2vec {
+		void init();
+		std::pair<tensorflow::Tensor, tensorflow::Tensor> get_next_batch();
+	}
+
 }
 
 #endif // !WORD2VEC_INPUT_H

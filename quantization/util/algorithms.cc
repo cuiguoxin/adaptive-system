@@ -310,14 +310,19 @@ namespace adaptive_system {
 			else {
 				Names& names = iter_map_names->second;
 				std::string grad_name = names.gradient_name();
+				std::string index_name = names.gradient_index_name();
 
-				tensorflow::Tensor feed;  // nothing need to do to initialize feed
+				tensorflow::Tensor feed_grad;  // nothing need to do to initialize feed
 										  // tensor, dequantize function will do all
 										  // stuff
+				tensorflow::Tensor feed_index;
 				dequantize(cast_grad_quant_level_to_quantization_type(grad.level()),
-					grad, feed);
+					grad, feed_grad);
+				feed_index.FromProto(grad.tensor_index());
 				feeds.push_back(
-					std::pair<std::string, tensorflow::Tensor>(grad_name, feed));
+					std::pair<std::string, tensorflow::Tensor>(grad_name, feed_grad));
+				feeds.push_back(
+					std::pair<std::string, tensorflow::Tensor>(index_name, feed_index));
 			}
 		});
 		sess->Run(feeds, {}, actions_to_do, nullptr);
@@ -399,6 +404,17 @@ namespace adaptive_system {
 			break;
 		}
 		return ret;
+	}
+
+	void add_indices_to_named_gradients(std::map<std::string, tensorflow::Tensor> const & map_indices,
+		NamedGradients& named_gradients) {
+		for (auto iter = map_indices.begin(); iter != map_indices.end(); iter++) {
+			tensorflow::Tensor const & index = iter->second;
+			std::string var_name = iter->first;
+			auto iter_named_gradients = (named_gradients.mutable_name_to_gradient())->find(var_name);
+			Gradient& grad = iter_named_gradients->second;
+			index.AsProtoField(grad.mutable_tensor_index());
+		}
 	}
 }
 

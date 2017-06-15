@@ -58,7 +58,7 @@ message Gradient {
     float max = 4;
     float min = 5;
     tensorflow.TensorShapeProto tensor_shape = 6;
-	tensorflow.TensorShapeProto tensor_index = 7;
+	tensorflow.TensorProto tensor_index = 7;
 
 }
 

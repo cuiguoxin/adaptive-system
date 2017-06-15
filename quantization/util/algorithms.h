@@ -1,3 +1,6 @@
+#ifndef ADAPTIVE_SYSTEM_ALGORITHM_H
+#define ADAPTIVE_SYSTEM_ALGORITHM_H
+
 #include <algorithm>
 #include <cmath>
 #include <exception>
@@ -15,8 +18,7 @@
 #include "tensorflow/core/platform/types.h"
 #include "tensorflow/core/public/session.h"
 
-#ifndef ADAPTIVE_SYSTEM_ALGORITHM_H
-#define ADAPTIVE_SYSTEM_ALGORITHM_H
+
 namespace adaptive_system {
 
 	enum QUANTIZATION_TYPE {
@@ -57,5 +59,8 @@ namespace adaptive_system {
 	void moving_average(size_t length, float const * previous, float* current, const float r);
 
 	tensorflow::Tensor get_feed_tensor_from_action(GRAD_QUANT_LEVEL action);
+
+	void add_indices_to_named_gradients(std::map<std::string, tensorflow::Tensor> const & map_indices,
+		NamedGradients& named_gradients);
 }
 #endif

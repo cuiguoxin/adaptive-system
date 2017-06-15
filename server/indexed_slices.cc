@@ -1,5 +1,6 @@
 #include "server/indexed_slices.h"
 #include "quantization/util/helper.h"
+#include "proto/rpc_service.pb.h"
 #include <functional>
 #include <vector>
 #include <unordered_map>
@@ -12,13 +13,22 @@ namespace adaptive_system {
 	namespace {
 		size_t get_embedding_dimension(std::pair<Tensor, Tensor>const & p) {
 			Tensor const & values = p.first;
+			if (values.shape().dims() == 1) {
+				return 1;
+			}
 			return values.shape().dim_size(1);
 		}
 
 		std::vector<Tensor> split_tensor_according_to_first_dimension(Tensor const & tensor) {
 			std::vector<Tensor> ret_vec;
 			size_t first_dimension_size = tensor.shape().dim_size(0);
-			size_t second_dimension_size = tensor.shape().dim_size(1);
+			size_t second_dimension_size = 0;
+			if (tensor.shape().dims() == 1) {
+				second_dimension_size = 1;
+			}
+			else {
+				second_dimension_size = tensor.shape().dim_size(1);
+			}
 			float const* value_ptr = tensor.flat<float>().data();
 			size_t current_index = 0;
 			for (int i = 0; i < first_dimension_size; i++) {
@@ -86,7 +96,14 @@ namespace adaptive_system {
 		}
 		//put index_to_value into ret
 		size_t const map_size = index_to_value.size();
-		Tensor ret_value(DataType::DT_FLOAT, TensorShape({ map_size, embedding_dimension }));
+		TensorShape shape;
+		if (embedding_dimension == 1) {
+			shape = TensorShape({ map_size });
+		}
+		else {
+			shape = TensorShape({ map_size, embedding_dimension });
+		}
+		Tensor ret_value(DataType::DT_FLOAT, shape);
 		float* ret_value_ptr = ret_value.flat<float>().data();
 		Tensor ret_index(type, TensorShape({ map_size }));
 		if (type == DataType::DT_INT32) {
@@ -120,4 +137,43 @@ namespace adaptive_system {
 		return std::make_pair(ret_value, ret_index);
 	}
 
+	void extract_indices_from_named_gradient(const NamedGradients& named_gradients,
+		std::map<std::string, Tensor>& map_indices) {
+		auto& map_named_gradients = named_gradients.name_to_gradient();
+		for (auto iter = map_named_gradients.begin(); iter != map_named_gradients.end(); iter++) {
+			std::string var_name = iter->first;
+			Tensor index;
+			index.FromProto(iter->second.tensor_index());
+			map_indices.insert(std::pair<std::string, Tensor>(var_name, index));
+		}
+	}
+
+	void aggregate_indexed_slices(std::vector<std::map<std::string, Tensor>> const & vec_map_gradients,
+		std::vector<std::map<std::string, Tensor>> const & vec_map_indices,
+		std::map<std::string, Tensor>& merged_gradients,
+		std::map<std::string, Tensor>& merged_indices) {
+		merged_gradients.clear();
+		merged_indices.clear();
+		size_t size = vec_map_indices.size();
+		//var_name --->>> vector<pair<grad, indice>>
+		std::map<std::string, std::vector<std::pair<Tensor, Tensor>>> name_to_vec_pair;
+		for (int i = 0; i < size; i++) {
+			auto& map_indices = vec_map_indices[i];
+			auto& map_gradients = vec_map_gradients[i];
+			for (auto iter = map_indices.begin(); iter != map_indices.end(); iter++) {
+				std::string var_name = iter->first;
+				auto & indice_tensor = iter->second;
+				auto & gradient_tensor = map_gradients.find(var_name)->second;
+				name_to_vec_pair[var_name].push_back(std::pair<Tensor, Tensor>(gradient_tensor, indice_tensor));
+			}
+		}
+		for (auto iter = name_to_vec_pair.begin(); iter != name_to_vec_pair.end(); iter++) {
+			std::string var_name = iter->first;
+			auto& vec_pair = iter->second;
+			auto merged_pair = merge_multiple_indexed_slices(vec_pair);
+			merged_gradients[var_name] = merged_pair.first;
+			merged_indices[var_name] = merged_pair.second;
+		}
+
+	}
 }

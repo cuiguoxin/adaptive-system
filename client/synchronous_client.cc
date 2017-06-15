@@ -25,7 +25,7 @@
 #include "tensorflow/core/platform/types.h"
 #include "tensorflow/core/public/session.h"
 
-#include "input/cifar10/input.h"
+#include "input/word2vec/input.h"
 #include "quantization/util/algorithms.h"
 #include "quantization/util/extract_feature.h"
 #include "quantization/util/helper.h"
@@ -39,9 +39,9 @@ namespace adaptive_system {
 		std::unique_ptr<SystemControl::Stub> stub;
 		float lr = 0.0;
 		int interval = 0;
-		int total_iter = 5000;
+		int total_iter = 1000;
 		GRAD_QUANT_LEVEL grad_quant_level = GRAD_QUANT_LEVEL::NONE;
-		std::string label_placeholder_name, image_placeholder_name;
+		std::string label_placeholder_name, batch_placeholder_name;
 		Tuple* get_tuple() {
 			static Tuple tuple;
 			return &tuple;
@@ -90,7 +90,7 @@ namespace adaptive_system {
 		interval = tuple.interval();
 		total_iter = tuple.total_iter();
 		std::string init_name = tuple.init_name();
-		image_placeholder_name = tuple.image_placeholder_name();
+		batch_placeholder_name = tuple.batch_placeholder_name();
 		label_placeholder_name = tuple.label_placeholder_name();
 		tensorflow::Status tf_status = get_session()->Create(graph_def);
 		get_session()->Run({}, {}, { init_name }, nullptr);
@@ -130,7 +130,9 @@ namespace adaptive_system {
 	// return loss and set gradient to the first parameter
 	float compute_gradient_and_loss(
 		std::vector<std::pair<std::string, tensorflow::Tensor>> feeds,
-		std::map<std::string, tensorflow::Tensor>& gradients) {
+		std::map<std::string, tensorflow::Tensor>& gradients,
+		std::map<std::string, tensorflow::Tensor>& indices) {
+
 		std::vector<std::string> fetch;
 		std::string loss_name = get_tuple()->loss_name();
 		fetch.push_back(loss_name);
@@ -144,6 +146,7 @@ namespace adaptive_system {
 			Names const& names = pair.second;
 			std::string const& variable_name = pair.first;
 			fetch.push_back(names.gradient_name());
+			fetch.push_back(names.gradient_index_name());
 			variable_names_in_order.push_back(variable_name);
 		});
 		tensorflow::Status tf_status = get_session()->Run(feeds, fetch, {}, &outputs);
@@ -155,14 +158,17 @@ namespace adaptive_system {
 		float* loss_ptr = loss_tensor.flat<float>().data();
 		float loss_ret = loss_ptr[0];
 		outputs.erase(outputs.begin());
-		if (outputs.size() != variable_names_in_order.size()) {
-			PRINT_ERROR;
-			std::terminate();
-		}
+
 		size_t size = outputs.size();
-		for (size_t i = 0; i < size; i++) {
+		for (size_t i = 0; i < size; i = i + 2) {
 			gradients.insert(std::pair<std::string, tensorflow::Tensor>(
-				variable_names_in_order[i], outputs[i]));
+				variable_names_in_order[i / 2], outputs[i]));
+			indices.insert(std::pair<std::string, tensorflow::Tensor>(
+				variable_names_in_order[i / 2], outputs[i + 1]));
+		}
+		if (gradients.size() != indices.size()) {
+			PRINT_ERROR_MESSAGE("value and index's sizes are not the same");
+			std::terminate();
 		}
 		return loss_ret;
 	}
@@ -234,19 +240,20 @@ namespace adaptive_system {
 		}
 	}
 
-	void do_training(const std::string& binary_file_path,
-		const std::string& graph_path) {
-		cifar10::turn_raw_tensors_to_standard_version(binary_file_path, graph_path);
+
+	void do_training() {
+		word2vec::init();
 		for (int i = 0; i < total_iter; i++) {
 			PRINT_INFO;
 			std::map<std::string, tensorflow::Tensor> map_gradients;
+			std::map<std::string, tensorflow::Tensor> map_indices;
 			std::pair<tensorflow::Tensor, tensorflow::Tensor> feeds =
-				cifar10::get_next_batch();
+				word2vec::get_next_batch();
 			PRINT_INFO;
 			float loss = compute_gradient_and_loss(
-			{ {image_placeholder_name, feeds.first},
+			{ {batch_placeholder_name, feeds.first},
 			 {label_placeholder_name, feeds.second} },
-				map_gradients);  // compute gradient and loss now
+				map_gradients, map_indices);  // compute gradient and loss now
 			PRINT_INFO;
 			Loss loss_to_send;
 			loss_to_send.set_loss(loss);
@@ -270,14 +277,14 @@ namespace adaptive_system {
 				grad_quant_level = quantization_level.level();
 			}
 			//fake
-			now_sleep(grad_quant_level);
+			//now_sleep(grad_quant_level);
 			NamedGradients named_gradients_send, named_gradients_receive;
 			PRINT_INFO;
 			quantize_gradient(
 				map_gradients, &named_gradients_send,
 				cast_grad_quant_level_to_quantization_type(grad_quant_level));
-
 			PRINT_INFO;
+			add_indices_to_named_gradients(map_indices, named_gradients_send);
 			ClientContext gradient_context;
 			PRINT_INFO;
 			grpc::Status grpc_status = stub->sendGradient(
@@ -298,18 +305,15 @@ namespace adaptive_system {
 
 	void close_session() { get_session()->Close(); }
 
-	void run_logic(std::string const& training_data_path,
-		std::string const& preprocess_pb_path) {
+	void run_logic() {
 		init_everything();
-		do_training(training_data_path, preprocess_pb_path);
+		do_training();
 		close_session();
 	}
 }
 
 int main(int argc, char* argv[]) {
 	std::string ip_port = argv[1];
-	std::string training_data_path = argv[2];
-	std::string preprocess_pb_path = argv[3];
 	adaptive_system::init_stub(ip_port);
-	adaptive_system::run_logic(training_data_path, preprocess_pb_path);
+	adaptive_system::run_logic();
 }

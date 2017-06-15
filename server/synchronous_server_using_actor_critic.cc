@@ -36,6 +36,7 @@
 
 #include "server/actor_critic.h"
 #include "server/reward.h"
+#include "server/indexed_slices.h"
 
 using grpc::Server;
 using grpc::ServerBuilder;
@@ -43,7 +44,7 @@ using grpc::ServerContext;
 using grpc::Status;
 
 namespace adaptive_system {
-	class RPCServiceImpl final : public SystemControl::Service {
+	class RPCService_actor_critic_Impl final : public SystemControl::Service {
 	private:
 		void print_state_to_file(tensorflow::Tensor const & state) {
 			size_t feature_number = state.NumElements();
@@ -55,7 +56,7 @@ namespace adaptive_system {
 			_file_state_stream.flush();
 		}
 	public:
-		RPCServiceImpl(int interval, float lr, int total_iter, int number_of_workers,
+		RPCService_actor_critic_Impl(int interval, float lr, int total_iter, int number_of_workers,
 			GRAD_QUANT_LEVEL grad_quant_level,
 			std::string const& tuple_local_path,
 			std::string const & sarsa_path, float r, float beta, float alpha, size_t t)
@@ -195,23 +196,28 @@ namespace adaptive_system {
 		grpc::Status sendGradient(ServerContext* context, const NamedGradients* request,
 			NamedGradients* response) override {
 			NamedGradients& named_gradients = const_cast<NamedGradients&>(*request);
-			std::map<std::string, tensorflow::Tensor> map_gradient;
+			std::map<std::string, tensorflow::Tensor> map_gradient, map_indices;
 			dequantize_gradient(named_gradients, map_gradient);
+			extract_indices_from_named_gradient(named_gradients, map_indices);
 			std::unique_lock<std::mutex> lk(_mutex_gradient);
 			_bool_gradient = false;
 			_vector_map_gradient.push_back(
 				map_gradient);  // result in copy which may slow down the process!!!!
+			_vector_map_indice.push_back(map_indices);
 			if (_vector_map_gradient.size() == _number_of_workers) {
-				std::map<std::string, tensorflow::Tensor> map_gradient_another;
-				aggregate_gradients(_vector_map_gradient, map_gradient_another);
-				average_gradients(map_gradient_another);
+				std::map<std::string, tensorflow::Tensor> merged_gradient, merged_indice;
+				aggregate_indexed_slices(_vector_map_gradient, _vector_map_indice,
+					merged_gradient, merged_indice);
+				//average_gradients(map_gradient_another);
 				_store_named_gradient = NamedGradients();
 				quantize_gradient(
-					map_gradient_another, &_store_named_gradient,
+					merged_gradient, &_store_named_gradient,
 					cast_grad_quant_level_to_quantization_type(_grad_quant_level));
+				add_indices_to_named_gradients(map_indices, _store_named_gradient);
 				apply_quantized_gradient_to_model(_store_named_gradient,
 					_session, _tuple);
 				_vector_map_gradient.clear();
+				_vector_map_indice.clear();
 				_bool_gradient = true;
 				_condition_variable_gradient.notify_all();
 			}
@@ -264,7 +270,7 @@ namespace adaptive_system {
 
 		// private member functions
 	private:
-		void aggregate_gradients(
+		/*void aggregate_gradients(
 			std::vector<std::map<std::string, tensorflow::Tensor>> const&
 			vector_map_gradient,
 			std::map<std::string, tensorflow::Tensor>& map_gradient) {
@@ -312,7 +318,7 @@ namespace adaptive_system {
 				size_t length = tensor.NumElements();
 				std::for_each(tensor_ptr, tensor_ptr + length, [this](float& ref) { ref = ref / _number_of_workers; });
 			});
-		}
+		}*/
 		void adjust_rl_model(std::vector<PartialState> const& vector_partial_state) {
 			tensorflow::Tensor state_tensor = get_final_state_from_partial_state(vector_partial_state);//S'
 			size_t length = state_tensor.NumElements();
@@ -362,7 +368,7 @@ namespace adaptive_system {
 		std::condition_variable _condition_variable_gradient;
 		std::condition_variable _condition_variable_state;
 		std::condition_variable _condition_variable_loss;
-		std::vector<std::map<std::string, tensorflow::Tensor>> _vector_map_gradient;
+		std::vector<std::map<std::string, tensorflow::Tensor>> _vector_map_gradient, _vector_map_indice;
 		std::vector<PartialState> _vector_partial_state;
 		float _last_loss;
 		std::vector<float> _vector_loss;
@@ -415,7 +421,7 @@ int main(int argc, char** argv) {
 	float alpha = atof(argv[10]);
 	size_t T = atoi(argv[11]);
 
-	adaptive_system::RPCServiceImpl service(
+	adaptive_system::RPCService_actor_critic_Impl service(
 		interval, learning_rate, total_iter, number_of_workers,
 		cast_int_to_grad_quant_level(level), tuple_path, actor_critic_path, r, beta, alpha, T);
 
