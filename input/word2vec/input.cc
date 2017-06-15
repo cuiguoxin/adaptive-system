@@ -18,8 +18,8 @@ namespace adaptive_system {
 			std::vector<std::pair<int, int>> training_data;
 			std::unordered_map<std::string, int> word_to_index;
 
-			bool less_compare_pair(std::pair<std::string, int> const & a, std::pair<std::string, int> const & b) {
-				return a.second < b.second;
+			bool greater_compare_pair(std::pair<std::string, int> const & a, std::pair<std::string, int> const & b) {
+				return b.second < a.second;
 			}
 
 			int get_index(std::string const & word) {
@@ -84,14 +84,14 @@ namespace adaptive_system {
 				top_k.push_back(pair);
 			});
 			//sort top_k
-			std::sort(top_k.begin(), top_k.end(), less_compare_pair);
+			std::sort(top_k.begin(), top_k.end(), greater_compare_pair);
 			size_t const size = top_k.size();
 			size_t tail_sum = 0;
-			for (int i = k; i < size; i++) {
+			for (int i = k - 1; i < size; i++) {
 				tail_sum += top_k[i].second;
 			}
 			word_to_index.insert(std::make_pair("UNK", 0));
-			for (int i = 0; i < k; i++) {
+			for (int i = 0; i < k - 1; i++) {
 				word_to_index.insert(std::make_pair(top_k[i].first, word_to_index.size()));
 			}
 			top_k.clear();
@@ -108,10 +108,10 @@ namespace adaptive_system {
 			static const size_t total_training_data = training_data.size();
 			tensorflow::Tensor batch_tensor(tensorflow::DataType::DT_INT32,
 				tensorflow::TensorShape({ batch_size }));
-			float* batch_tensor_ptr = batch_tensor.flat<float>().data();
+			tensorflow::int32* batch_tensor_ptr = batch_tensor.flat<tensorflow::int32>().data();
 			tensorflow::Tensor label_tensor(tensorflow::DataType::DT_INT32,
 				tensorflow::TensorShape({ batch_size, 1 }));
-			float* label_tensor_ptr = label_tensor.flat<float>().data();
+			tensorflow::int32* label_tensor_ptr = label_tensor.flat<tensorflow::int32>().data();
 			for (int i = 0; i < batch_size; i++) {
 				current_index = current_index % total_training_data;
 				std::pair<int, int> const & current_pair = training_data[current_index];
