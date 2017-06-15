@@ -14,6 +14,7 @@
 #include "tensorflow/core/public/session.h"
 #include <functional>
 #include <vector>
+#include "proto/rpc_service.pb.h"
 
 namespace adaptive_system {
 	//return pair<value, index>
@@ -21,11 +22,11 @@ namespace adaptive_system {
 	(std::vector<std::pair<tensorflow::Tensor, tensorflow::Tensor>> const & vec_ind_slic);
 
 	void extract_indices_from_named_gradient(const NamedGradients& named_gradients,
-		std::map<std::string, Tensor>& map_indices);
+		std::map<std::string, tensorflow::Tensor>& map_indices);
 
-	void aggregate_indexed_slices(std::vector<std::map<std::string, Tensor>> const & vec_map_gradients,
-		std::vector<std::map<std::string, Tensor>> const & vec_map_indices,
-		std::map<std::string, Tensor>& merged_gradients,
-		std::map<std::string, Tensor>& merged_indices);
+	void aggregate_indexed_slices(std::vector<std::map<std::string, tensorflow::Tensor>> const & vec_map_gradients,
+		std::vector<std::map<std::string, tensorflow::Tensor>> const & vec_map_indices,
+		std::map<std::string, tensorflow::Tensor>& merged_gradients,
+		std::map<std::string, tensorflow::Tensor>& merged_indices);
 }
 #endif // !ADAPTIVE_SYSTEM_INDEXED_SLICES_H

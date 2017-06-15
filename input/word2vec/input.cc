@@ -18,7 +18,7 @@ namespace adaptive_system {
 			std::vector<std::pair<int, int>> training_data;
 			std::unordered_map<std::string, int> word_to_index;
 
-			bool less_compare_pair(std::pair<std::string, int> & a, std::pair<std::string, int> & b) {
+			bool less_compare_pair(std::pair<std::string, int> const & a, std::pair<std::string, int> const & b) {
 				return a.second < b.second;
 			}
 
@@ -57,7 +57,7 @@ namespace adaptive_system {
 			}
 		}
 		void init() {
-			std::string const raw_data_path = "/home/cgx/git-project/adaptive_system/resources/text8";
+			std::string const raw_data_path = "/home/cgx/git_project/adaptive-system/resources/text8";
 			std::ifstream input_stream(raw_data_path);
 			std::string line;
 			std::unordered_map<std::string, int> word_count;
@@ -80,7 +80,7 @@ namespace adaptive_system {
 			std::vector<std::pair<std::string, int>> top_k;
 			auto begin = word_count.begin();
 			auto end = word_count.end();
-			std::for_each(begin, end, [&top_k](std::pair<std::string, int> & pair) {
+			std::for_each(begin, end, [&top_k](std::pair<std::string, int> const & pair) {
 				top_k.push_back(pair);
 			});
 			//sort top_k

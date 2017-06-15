@@ -225,8 +225,8 @@ void TableStruct::InitDefaultsImpl() {
       ::tensorflow::TensorProto::internal_default_instance());
   _Gradient_default_instance_.get_mutable()->tensor_shape_ = const_cast< ::tensorflow::TensorShapeProto*>(
       ::tensorflow::TensorShapeProto::internal_default_instance());
-  _Gradient_default_instance_.get_mutable()->tensor_index_ = const_cast< ::tensorflow::TensorShapeProto*>(
-      ::tensorflow::TensorShapeProto::internal_default_instance());
+  _Gradient_default_instance_.get_mutable()->tensor_index_ = const_cast< ::tensorflow::TensorProto*>(
+      ::tensorflow::TensorProto::internal_default_instance());
   _PartialState_default_instance_.get_mutable()->tensor_ = const_cast< ::tensorflow::TensorProto*>(
       ::tensorflow::TensorProto::internal_default_instance());
 }
@@ -261,33 +261,33 @@ void AddDescriptorsImpl() {
       "ParametersEntry\022\013\n\003key\030\001 \001(\t\022&\n\005value\030\002 "
       "\001(\0132\027.tensorflow.TensorProto:\0028\001\"E\n\021Quan"
       "tizationLevel\0220\n\005level\030\001 \001(\0162!.adaptive_"
-      "system.GRAD_QUANT_LEVEL\"\201\002\n\010Gradient\0220\n\005"
+      "system.GRAD_QUANT_LEVEL\"\374\001\n\010Gradient\0220\n\005"
       "level\030\001 \001(\0162!.adaptive_system.GRAD_QUANT"
       "_LEVEL\022,\n\013tensor_ge_8\030\002 \001(\0132\027.tensorflow"
       ".TensorProto\022\023\n\013tensor_le_8\030\003 \001(\014\022\013\n\003max"
       "\030\004 \001(\002\022\013\n\003min\030\005 \001(\002\0222\n\014tensor_shape\030\006 \001("
-      "\0132\034.tensorflow.TensorShapeProto\0222\n\014tenso"
-      "r_index\030\007 \001(\0132\034.tensorflow.TensorShapePr"
-      "oto\"\261\001\n\016NamedGradients\022M\n\020name_to_gradie"
-      "nt\030\001 \003(\01323.adaptive_system.NamedGradient"
-      "s.NameToGradientEntry\032P\n\023NameToGradientE"
-      "ntry\022\013\n\003key\030\001 \001(\t\022(\n\005value\030\002 \001(\0132\031.adapt"
-      "ive_system.Gradient:\0028\001\"E\n\014PartialState\022"
-      "\'\n\006tensor\030\001 \001(\0132\027.tensorflow.TensorProto"
-      "\022\014\n\004loss\030\002 \001(\002\"\024\n\004Loss\022\014\n\004loss\030\001 \001(\002*P\n\020"
-      "GRAD_QUANT_LEVEL\022\007\n\003ONE\020\000\022\007\n\003TWO\020\001\022\010\n\004FO"
-      "UR\020\002\022\t\n\005EIGHT\020\003\022\013\n\007SIXTEEN\020\004\022\010\n\004NONE\020\0052\255"
-      "\002\n\rSystemControl\022\?\n\rretrieveTuple\022\026.adap"
-      "tive_system.Empty\032\026.adaptive_system.Tupl"
-      "e\0229\n\010sendLoss\022\025.adaptive_system.Loss\032\026.a"
-      "daptive_system.Empty\022P\n\014sendGradient\022\037.a"
-      "daptive_system.NamedGradients\032\037.adaptive"
-      "_system.NamedGradients\022N\n\tsendState\022\035.ad"
-      "aptive_system.PartialState\032\".adaptive_sy"
-      "stem.QuantizationLevelb\006proto3"
+      "\0132\034.tensorflow.TensorShapeProto\022-\n\014tenso"
+      "r_index\030\007 \001(\0132\027.tensorflow.TensorProto\"\261"
+      "\001\n\016NamedGradients\022M\n\020name_to_gradient\030\001 "
+      "\003(\01323.adaptive_system.NamedGradients.Nam"
+      "eToGradientEntry\032P\n\023NameToGradientEntry\022"
+      "\013\n\003key\030\001 \001(\t\022(\n\005value\030\002 \001(\0132\031.adaptive_s"
+      "ystem.Gradient:\0028\001\"E\n\014PartialState\022\'\n\006te"
+      "nsor\030\001 \001(\0132\027.tensorflow.TensorProto\022\014\n\004l"
+      "oss\030\002 \001(\002\"\024\n\004Loss\022\014\n\004loss\030\001 \001(\002*P\n\020GRAD_"
+      "QUANT_LEVEL\022\007\n\003ONE\020\000\022\007\n\003TWO\020\001\022\010\n\004FOUR\020\002\022"
+      "\t\n\005EIGHT\020\003\022\013\n\007SIXTEEN\020\004\022\010\n\004NONE\020\0052\255\002\n\rSy"
+      "stemControl\022\?\n\rretrieveTuple\022\026.adaptive_"
+      "system.Empty\032\026.adaptive_system.Tuple\0229\n\010"
+      "sendLoss\022\025.adaptive_system.Loss\032\026.adapti"
+      "ve_system.Empty\022P\n\014sendGradient\022\037.adapti"
+      "ve_system.NamedGradients\032\037.adaptive_syst"
+      "em.NamedGradients\022N\n\tsendState\022\035.adaptiv"
+      "e_system.PartialState\032\".adaptive_system."
+      "QuantizationLevelb\006proto3"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 1870);
+      descriptor, 1865);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "rpc_service.proto", &protobuf_RegisterTypes);
   ::tensorflow::protobuf_tensorflow_2fcore_2fframework_2ftensor_2eproto::AddDescriptors();
@@ -3022,7 +3022,7 @@ Gradient::Gradient(const Gradient& from)
     tensor_shape_ = NULL;
   }
   if (from.has_tensor_index()) {
-    tensor_index_ = new ::tensorflow::TensorShapeProto(*from.tensor_index_);
+    tensor_index_ = new ::tensorflow::TensorProto(*from.tensor_index_);
   } else {
     tensor_index_ = NULL;
   }
@@ -3188,7 +3188,7 @@ bool Gradient::MergePartialFromCodedStream(
         break;
       }
 
-      // .tensorflow.TensorShapeProto tensor_index = 7;
+      // .tensorflow.TensorProto tensor_index = 7;
       case 7: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(58u)) {
@@ -3258,7 +3258,7 @@ void Gradient::SerializeWithCachedSizes(
       6, *this->tensor_shape_, output);
   }
 
-  // .tensorflow.TensorShapeProto tensor_index = 7;
+  // .tensorflow.TensorProto tensor_index = 7;
   if (this->has_tensor_index()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       7, *this->tensor_index_, output);
@@ -3308,7 +3308,7 @@ void Gradient::SerializeWithCachedSizes(
         6, *this->tensor_shape_, false, target);
   }
 
-  // .tensorflow.TensorShapeProto tensor_index = 7;
+  // .tensorflow.TensorProto tensor_index = 7;
   if (this->has_tensor_index()) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageNoVirtualToArray(
@@ -3344,7 +3344,7 @@ size_t Gradient::ByteSizeLong() const {
         *this->tensor_shape_);
   }
 
-  // .tensorflow.TensorShapeProto tensor_index = 7;
+  // .tensorflow.TensorProto tensor_index = 7;
   if (this->has_tensor_index()) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
@@ -3404,7 +3404,7 @@ void Gradient::MergeFrom(const Gradient& from) {
     mutable_tensor_shape()->::tensorflow::TensorShapeProto::MergeFrom(from.tensor_shape());
   }
   if (from.has_tensor_index()) {
-    mutable_tensor_index()->::tensorflow::TensorShapeProto::MergeFrom(from.tensor_index());
+    mutable_tensor_index()->::tensorflow::TensorProto::MergeFrom(from.tensor_index());
   }
   if (from.level() != 0) {
     set_level(from.level());
@@ -3640,7 +3640,7 @@ void Gradient::set_allocated_tensor_shape(::tensorflow::TensorShapeProto* tensor
   // @@protoc_insertion_point(field_set_allocated:adaptive_system.Gradient.tensor_shape)
 }
 
-// .tensorflow.TensorShapeProto tensor_index = 7;
+// .tensorflow.TensorProto tensor_index = 7;
 bool Gradient::has_tensor_index() const {
   return this != internal_default_instance() && tensor_index_ != NULL;
 }
@@ -3648,30 +3648,30 @@ void Gradient::clear_tensor_index() {
   if (GetArenaNoVirtual() == NULL && tensor_index_ != NULL) delete tensor_index_;
   tensor_index_ = NULL;
 }
-const ::tensorflow::TensorShapeProto& Gradient::tensor_index() const {
+const ::tensorflow::TensorProto& Gradient::tensor_index() const {
   // @@protoc_insertion_point(field_get:adaptive_system.Gradient.tensor_index)
   return tensor_index_ != NULL ? *tensor_index_
-                         : *::tensorflow::TensorShapeProto::internal_default_instance();
+                         : *::tensorflow::TensorProto::internal_default_instance();
 }
-::tensorflow::TensorShapeProto* Gradient::mutable_tensor_index() {
+::tensorflow::TensorProto* Gradient::mutable_tensor_index() {
   
   if (tensor_index_ == NULL) {
-    tensor_index_ = new ::tensorflow::TensorShapeProto;
+    tensor_index_ = new ::tensorflow::TensorProto;
   }
   // @@protoc_insertion_point(field_mutable:adaptive_system.Gradient.tensor_index)
   return tensor_index_;
 }
-::tensorflow::TensorShapeProto* Gradient::release_tensor_index() {
+::tensorflow::TensorProto* Gradient::release_tensor_index() {
   // @@protoc_insertion_point(field_release:adaptive_system.Gradient.tensor_index)
   
-  ::tensorflow::TensorShapeProto* temp = tensor_index_;
+  ::tensorflow::TensorProto* temp = tensor_index_;
   tensor_index_ = NULL;
   return temp;
 }
-void Gradient::set_allocated_tensor_index(::tensorflow::TensorShapeProto* tensor_index) {
+void Gradient::set_allocated_tensor_index(::tensorflow::TensorProto* tensor_index) {
   delete tensor_index_;
   if (tensor_index != NULL && tensor_index->GetArena() != NULL) {
-    ::tensorflow::TensorShapeProto* new_tensor_index = new ::tensorflow::TensorShapeProto;
+    ::tensorflow::TensorProto* new_tensor_index = new ::tensorflow::TensorProto;
     new_tensor_index->CopyFrom(*tensor_index);
     tensor_index = new_tensor_index;
   }

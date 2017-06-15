@@ -784,14 +784,14 @@ class Gradient : public ::google::protobuf::Message /* @@protoc_insertion_point(
   ::tensorflow::TensorShapeProto* release_tensor_shape();
   void set_allocated_tensor_shape(::tensorflow::TensorShapeProto* tensor_shape);
 
-  // .tensorflow.TensorShapeProto tensor_index = 7;
+  // .tensorflow.TensorProto tensor_index = 7;
   bool has_tensor_index() const;
   void clear_tensor_index();
   static const int kTensorIndexFieldNumber = 7;
-  const ::tensorflow::TensorShapeProto& tensor_index() const;
-  ::tensorflow::TensorShapeProto* mutable_tensor_index();
-  ::tensorflow::TensorShapeProto* release_tensor_index();
-  void set_allocated_tensor_index(::tensorflow::TensorShapeProto* tensor_index);
+  const ::tensorflow::TensorProto& tensor_index() const;
+  ::tensorflow::TensorProto* mutable_tensor_index();
+  ::tensorflow::TensorProto* release_tensor_index();
+  void set_allocated_tensor_index(::tensorflow::TensorProto* tensor_index);
 
   // .adaptive_system.GRAD_QUANT_LEVEL level = 1;
   void clear_level();
@@ -818,7 +818,7 @@ class Gradient : public ::google::protobuf::Message /* @@protoc_insertion_point(
   ::google::protobuf::internal::ArenaStringPtr tensor_le_8_;
   ::tensorflow::TensorProto* tensor_ge_8_;
   ::tensorflow::TensorShapeProto* tensor_shape_;
-  ::tensorflow::TensorShapeProto* tensor_index_;
+  ::tensorflow::TensorProto* tensor_index_;
   int level_;
   float max_;
   float min_;
@@ -2071,7 +2071,7 @@ inline void Gradient::set_allocated_tensor_shape(::tensorflow::TensorShapeProto*
   // @@protoc_insertion_point(field_set_allocated:adaptive_system.Gradient.tensor_shape)
 }
 
-// .tensorflow.TensorShapeProto tensor_index = 7;
+// .tensorflow.TensorProto tensor_index = 7;
 inline bool Gradient::has_tensor_index() const {
   return this != internal_default_instance() && tensor_index_ != NULL;
 }
@@ -2079,30 +2079,30 @@ inline void Gradient::clear_tensor_index() {
   if (GetArenaNoVirtual() == NULL && tensor_index_ != NULL) delete tensor_index_;
   tensor_index_ = NULL;
 }
-inline const ::tensorflow::TensorShapeProto& Gradient::tensor_index() const {
+inline const ::tensorflow::TensorProto& Gradient::tensor_index() const {
   // @@protoc_insertion_point(field_get:adaptive_system.Gradient.tensor_index)
   return tensor_index_ != NULL ? *tensor_index_
-                         : *::tensorflow::TensorShapeProto::internal_default_instance();
+                         : *::tensorflow::TensorProto::internal_default_instance();
 }
-inline ::tensorflow::TensorShapeProto* Gradient::mutable_tensor_index() {
+inline ::tensorflow::TensorProto* Gradient::mutable_tensor_index() {
   
   if (tensor_index_ == NULL) {
-    tensor_index_ = new ::tensorflow::TensorShapeProto;
+    tensor_index_ = new ::tensorflow::TensorProto;
   }
   // @@protoc_insertion_point(field_mutable:adaptive_system.Gradient.tensor_index)
   return tensor_index_;
 }
-inline ::tensorflow::TensorShapeProto* Gradient::release_tensor_index() {
+inline ::tensorflow::TensorProto* Gradient::release_tensor_index() {
   // @@protoc_insertion_point(field_release:adaptive_system.Gradient.tensor_index)
   
-  ::tensorflow::TensorShapeProto* temp = tensor_index_;
+  ::tensorflow::TensorProto* temp = tensor_index_;
   tensor_index_ = NULL;
   return temp;
 }
-inline void Gradient::set_allocated_tensor_index(::tensorflow::TensorShapeProto* tensor_index) {
+inline void Gradient::set_allocated_tensor_index(::tensorflow::TensorProto* tensor_index) {
   delete tensor_index_;
   if (tensor_index != NULL && tensor_index->GetArena() != NULL) {
-    ::tensorflow::TensorShapeProto* new_tensor_index = new ::tensorflow::TensorShapeProto;
+    ::tensorflow::TensorProto* new_tensor_index = new ::tensorflow::TensorProto;
     new_tensor_index->CopyFrom(*tensor_index);
     tensor_index = new_tensor_index;
   }
