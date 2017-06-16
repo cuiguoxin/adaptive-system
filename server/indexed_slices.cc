@@ -143,7 +143,11 @@ namespace adaptive_system {
 		for (auto iter = map_named_gradients.begin(); iter != map_named_gradients.end(); iter++) {
 			std::string var_name = iter->first;
 			Tensor index;
-			index.FromProto(iter->second.tensor_index());
+			bool success = index.FromProto(iter->second.tensor_index());
+			if (!success) {
+				PRINT_ERROR_MESSAGE("from proto not success");
+				std::terminate();
+			}
 			map_indices.insert(std::pair<std::string, Tensor>(var_name, index));
 		}
 	}

@@ -295,11 +295,11 @@ namespace adaptive_system {
 			*tuple.mutable_map_names();
 		std::vector<std::pair<std::string, tensorflow::Tensor>> feeds;
 		std::vector<std::string> actions_to_do;
-		actions_to_do.push_back(tuple.training_op_name());
+		
 		std::for_each(
 			map_gradient.begin(), map_gradient.end(),
 			[&feeds, &map_names,
-			&tuple](google::protobuf::MapPair<std::string, Gradient>& pair) {
+			&tuple, &actions_to_do](google::protobuf::MapPair<std::string, Gradient>& pair) {
 			std::string const& variable_name = pair.first;
 			Gradient& grad = pair.second;
 			auto iter_map_names = map_names.find(variable_name);
@@ -309,8 +309,10 @@ namespace adaptive_system {
 			}
 			else {
 				Names& names = iter_map_names->second;
-				std::string grad_name = names.gradient_name();
-				std::string index_name = names.gradient_index_name();
+				std::string grad_name = names.placeholder_gradient_name();
+				std::string index_name = names.placeholder_index_name();
+				std::string scatter_sub_name = names.scatter_sub_name();
+				actions_to_do.push_back(scatter_sub_name);
 
 				tensorflow::Tensor feed_grad;  // nothing need to do to initialize feed
 										  // tensor, dequantize function will do all
