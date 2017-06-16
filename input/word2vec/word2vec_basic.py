@@ -38,10 +38,10 @@ num_sampled = 100      # Number of negative examples to sample.
 
 graph = tf.Graph()
 tup = rpc.Tuple()
-def _add_assign_and_placeholder(variable, tup):
+def _add_assign_and_placeholder(variable, tup, dtype):
     placeholder_node = tf.placeholder(tf.float32, variable.get_shape())
     assign_node = tf.assign(variable, placeholder_node)
-    placeholder_indice_node = tf.placeholder(tf.int64)
+    placeholder_indice_node = tf.placeholder(dtype)
     placeholder_gradient_node = tf.placeholder(tf.float32)
     scatter_sub_node = tf.scatter_sub(variable, placeholder_indice_node, placeholder_gradient_node)
     var_name = variable.name
@@ -51,7 +51,7 @@ def _add_assign_and_placeholder(variable, tup):
     tup.map_names[var_name].placeholder_assign_name = placeholder_node.name
     tup.map_names[var_name].placeholder_indice_name = placeholder_indice_node.name
     tup.map_names[var_name].placeholder_gradient_name = placeholder_gradient_node.name
-    tup.map_names[var_name].scatter_sub_name = scatter_sub_node.name
+    tup.map_names[var_name].scatter_sub_name = scatter_sub_node.name[:-2]
     #tup.map_names[var_name].placeholder_assign_add_name = placeholder_assign_add_node.name
 
 with graph.as_default():
@@ -69,16 +69,16 @@ with graph.as_default():
     embeddings = tf.Variable(
         tf.random_uniform([vocabulary_size, embedding_size], -1.0, 1.0))
     print embeddings.name
-    _add_assign_and_placeholder(embeddings, tup)
+    _add_assign_and_placeholder(embeddings, tup, tf.int32)
     embed = tf.nn.embedding_lookup(embeddings, train_inputs)
 
     # Construct the variables for the NCE loss
     nce_weights = tf.Variable(
         tf.truncated_normal([vocabulary_size, embedding_size],
                             stddev=1.0 / math.sqrt(embedding_size)))
-    _add_assign_and_placeholder(nce_weights, tup)
+    _add_assign_and_placeholder(nce_weights, tup, tf.int64)
     nce_biases = tf.Variable(tf.zeros([vocabulary_size]))
-    _add_assign_and_placeholder(nce_biases, tup)
+    _add_assign_and_placeholder(nce_biases, tup, tf.int64)
 
   # Compute the average NCE loss for the batch.
   # tf.nce_loss automatically draws a new sample of the negative labels each
@@ -94,7 +94,7 @@ with graph.as_default():
   for grad_var in grads:
     tup.map_names[grad_var[1].name].gradient_name = grad_var[0].values.name
     tup.map_names[grad_var[1].name].gradient_index_name = grad_var[0].indices.name
-    print grad_var[0].values.shape, grad_var[0].indices.shape
+    print grad_var[0].values.shape, grad_var[0].indices.shape, grad_var[0].indices.dtype
   training_op = optimizer.apply_gradients(grads)
   tup.training_op_name = training_op.name
 

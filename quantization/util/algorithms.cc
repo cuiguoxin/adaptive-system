@@ -310,7 +310,7 @@ namespace adaptive_system {
 			else {
 				Names& names = iter_map_names->second;
 				std::string grad_name = names.placeholder_gradient_name();
-				std::string index_name = names.placeholder_index_name();
+				std::string index_name = names.placeholder_indice_name();
 				std::string scatter_sub_name = names.scatter_sub_name();
 				actions_to_do.push_back(scatter_sub_name);
 
@@ -321,17 +321,19 @@ namespace adaptive_system {
 				dequantize(cast_grad_quant_level_to_quantization_type(grad.level()),
 					grad, feed_grad);
 				feed_index.FromProto(grad.tensor_index());
+				std::cout << feed_grad.dim_size(0) << " " << feed_index.dim_size(0) << std::endl;
 				feeds.push_back(
 					std::pair<std::string, tensorflow::Tensor>(grad_name, feed_grad));
 				feeds.push_back(
 					std::pair<std::string, tensorflow::Tensor>(index_name, feed_index));
 			}
 		});
-		tensorflow::Status status = sess->Run(feeds, {}, actions_to_do, nullptr);
+		tensorflow::Status status = sess->Run(feeds, {},  actions_to_do, nullptr);
 		if(!status.ok()){
 			PRINT_ERROR_MESSAGE(status.error_message());
 			std::terminate();
 		}
+		std::cout << "finished update!!!" << std::endl;
 	}
 
 	

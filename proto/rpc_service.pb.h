@@ -357,6 +357,48 @@ class Names : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   ::std::string* release_gradient_index_name();
   void set_allocated_gradient_index_name(::std::string* gradient_index_name);
 
+  // string placeholder_indice_name = 8;
+  void clear_placeholder_indice_name();
+  static const int kPlaceholderIndiceNameFieldNumber = 8;
+  const ::std::string& placeholder_indice_name() const;
+  void set_placeholder_indice_name(const ::std::string& value);
+  #if LANG_CXX11
+  void set_placeholder_indice_name(::std::string&& value);
+  #endif
+  void set_placeholder_indice_name(const char* value);
+  void set_placeholder_indice_name(const char* value, size_t size);
+  ::std::string* mutable_placeholder_indice_name();
+  ::std::string* release_placeholder_indice_name();
+  void set_allocated_placeholder_indice_name(::std::string* placeholder_indice_name);
+
+  // string placeholder_gradient_name = 9;
+  void clear_placeholder_gradient_name();
+  static const int kPlaceholderGradientNameFieldNumber = 9;
+  const ::std::string& placeholder_gradient_name() const;
+  void set_placeholder_gradient_name(const ::std::string& value);
+  #if LANG_CXX11
+  void set_placeholder_gradient_name(::std::string&& value);
+  #endif
+  void set_placeholder_gradient_name(const char* value);
+  void set_placeholder_gradient_name(const char* value, size_t size);
+  ::std::string* mutable_placeholder_gradient_name();
+  ::std::string* release_placeholder_gradient_name();
+  void set_allocated_placeholder_gradient_name(::std::string* placeholder_gradient_name);
+
+  // string scatter_sub_name = 10;
+  void clear_scatter_sub_name();
+  static const int kScatterSubNameFieldNumber = 10;
+  const ::std::string& scatter_sub_name() const;
+  void set_scatter_sub_name(const ::std::string& value);
+  #if LANG_CXX11
+  void set_scatter_sub_name(::std::string&& value);
+  #endif
+  void set_scatter_sub_name(const char* value);
+  void set_scatter_sub_name(const char* value, size_t size);
+  ::std::string* mutable_scatter_sub_name();
+  ::std::string* release_scatter_sub_name();
+  void set_allocated_scatter_sub_name(::std::string* scatter_sub_name);
+
   // @@protoc_insertion_point(class_scope:adaptive_system.Names)
  private:
 
@@ -368,6 +410,9 @@ class Names : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   ::google::protobuf::internal::ArenaStringPtr placeholder_assign_name_;
   ::google::protobuf::internal::ArenaStringPtr placeholder_assign_add_name_;
   ::google::protobuf::internal::ArenaStringPtr gradient_index_name_;
+  ::google::protobuf::internal::ArenaStringPtr placeholder_indice_name_;
+  ::google::protobuf::internal::ArenaStringPtr placeholder_gradient_name_;
+  ::google::protobuf::internal::ArenaStringPtr scatter_sub_name_;
   mutable int _cached_size_;
   friend struct protobuf_rpc_5fservice_2eproto::TableStruct;
 };
@@ -1475,6 +1520,162 @@ inline void Names::set_allocated_gradient_index_name(::std::string* gradient_ind
   }
   gradient_index_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), gradient_index_name);
   // @@protoc_insertion_point(field_set_allocated:adaptive_system.Names.gradient_index_name)
+}
+
+// string placeholder_indice_name = 8;
+inline void Names::clear_placeholder_indice_name() {
+  placeholder_indice_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& Names::placeholder_indice_name() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.Names.placeholder_indice_name)
+  return placeholder_indice_name_.GetNoArena();
+}
+inline void Names::set_placeholder_indice_name(const ::std::string& value) {
+  
+  placeholder_indice_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:adaptive_system.Names.placeholder_indice_name)
+}
+#if LANG_CXX11
+inline void Names::set_placeholder_indice_name(::std::string&& value) {
+  
+  placeholder_indice_name_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Names.placeholder_indice_name)
+}
+#endif
+inline void Names::set_placeholder_indice_name(const char* value) {
+  
+  placeholder_indice_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:adaptive_system.Names.placeholder_indice_name)
+}
+inline void Names::set_placeholder_indice_name(const char* value, size_t size) {
+  
+  placeholder_indice_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:adaptive_system.Names.placeholder_indice_name)
+}
+inline ::std::string* Names::mutable_placeholder_indice_name() {
+  
+  // @@protoc_insertion_point(field_mutable:adaptive_system.Names.placeholder_indice_name)
+  return placeholder_indice_name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* Names::release_placeholder_indice_name() {
+  // @@protoc_insertion_point(field_release:adaptive_system.Names.placeholder_indice_name)
+  
+  return placeholder_indice_name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Names::set_allocated_placeholder_indice_name(::std::string* placeholder_indice_name) {
+  if (placeholder_indice_name != NULL) {
+    
+  } else {
+    
+  }
+  placeholder_indice_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), placeholder_indice_name);
+  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Names.placeholder_indice_name)
+}
+
+// string placeholder_gradient_name = 9;
+inline void Names::clear_placeholder_gradient_name() {
+  placeholder_gradient_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& Names::placeholder_gradient_name() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.Names.placeholder_gradient_name)
+  return placeholder_gradient_name_.GetNoArena();
+}
+inline void Names::set_placeholder_gradient_name(const ::std::string& value) {
+  
+  placeholder_gradient_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:adaptive_system.Names.placeholder_gradient_name)
+}
+#if LANG_CXX11
+inline void Names::set_placeholder_gradient_name(::std::string&& value) {
+  
+  placeholder_gradient_name_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Names.placeholder_gradient_name)
+}
+#endif
+inline void Names::set_placeholder_gradient_name(const char* value) {
+  
+  placeholder_gradient_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:adaptive_system.Names.placeholder_gradient_name)
+}
+inline void Names::set_placeholder_gradient_name(const char* value, size_t size) {
+  
+  placeholder_gradient_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:adaptive_system.Names.placeholder_gradient_name)
+}
+inline ::std::string* Names::mutable_placeholder_gradient_name() {
+  
+  // @@protoc_insertion_point(field_mutable:adaptive_system.Names.placeholder_gradient_name)
+  return placeholder_gradient_name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* Names::release_placeholder_gradient_name() {
+  // @@protoc_insertion_point(field_release:adaptive_system.Names.placeholder_gradient_name)
+  
+  return placeholder_gradient_name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Names::set_allocated_placeholder_gradient_name(::std::string* placeholder_gradient_name) {
+  if (placeholder_gradient_name != NULL) {
+    
+  } else {
+    
+  }
+  placeholder_gradient_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), placeholder_gradient_name);
+  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Names.placeholder_gradient_name)
+}
+
+// string scatter_sub_name = 10;
+inline void Names::clear_scatter_sub_name() {
+  scatter_sub_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& Names::scatter_sub_name() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.Names.scatter_sub_name)
+  return scatter_sub_name_.GetNoArena();
+}
+inline void Names::set_scatter_sub_name(const ::std::string& value) {
+  
+  scatter_sub_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:adaptive_system.Names.scatter_sub_name)
+}
+#if LANG_CXX11
+inline void Names::set_scatter_sub_name(::std::string&& value) {
+  
+  scatter_sub_name_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Names.scatter_sub_name)
+}
+#endif
+inline void Names::set_scatter_sub_name(const char* value) {
+  
+  scatter_sub_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:adaptive_system.Names.scatter_sub_name)
+}
+inline void Names::set_scatter_sub_name(const char* value, size_t size) {
+  
+  scatter_sub_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:adaptive_system.Names.scatter_sub_name)
+}
+inline ::std::string* Names::mutable_scatter_sub_name() {
+  
+  // @@protoc_insertion_point(field_mutable:adaptive_system.Names.scatter_sub_name)
+  return scatter_sub_name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* Names::release_scatter_sub_name() {
+  // @@protoc_insertion_point(field_release:adaptive_system.Names.scatter_sub_name)
+  
+  return scatter_sub_name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Names::set_allocated_scatter_sub_name(::std::string* scatter_sub_name) {
+  if (scatter_sub_name != NULL) {
+    
+  } else {
+    
+  }
+  scatter_sub_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), scatter_sub_name);
+  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Names.scatter_sub_name)
 }
 
 // -------------------------------------------------------------------

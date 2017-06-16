@@ -213,7 +213,7 @@ namespace adaptive_system {
 				quantize_gradient(
 					merged_gradient, &_store_named_gradient,
 					cast_grad_quant_level_to_quantization_type(_grad_quant_level));
-				add_indices_to_named_gradients(map_indices, _store_named_gradient);
+				add_indices_to_named_gradients(merged_indice, _store_named_gradient);
 				apply_quantized_gradient_to_model(_store_named_gradient,
 					_session, _tuple);
 				_vector_map_gradient.clear();

@@ -175,6 +175,7 @@ namespace adaptive_system {
 			std::string var_name = iter->first;
 			auto& vec_pair = iter->second;
 			auto merged_pair = merge_multiple_indexed_slices(vec_pair);
+			std::cout << "gradient's first is " << merged_pair.first.dim_size(0) << " indice is " << merged_pair.second.dim_size(0)<<std::endl;
 			merged_gradients[var_name] = merged_pair.first;
 			merged_indices[var_name] = merged_pair.second;
 		}

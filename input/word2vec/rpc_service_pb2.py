@@ -23,7 +23,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='rpc_service.proto',
   package='adaptive_system',
   syntax='proto3',
-  serialized_pb=_b('\n\x11rpc_service.proto\x12\x0f\x61\x64\x61ptive_system\x1a&tensorflow/core/framework/tensor.proto\x1a%tensorflow/core/framework/graph.proto\x1a,tensorflow/core/framework/tensor_shape.proto\"\x07\n\x05\x45mpty\"\xc6\x01\n\x05Names\x12\x15\n\rvariable_name\x18\x01 \x01(\t\x12\x15\n\rgradient_name\x18\x02 \x01(\t\x12\x13\n\x0b\x61ssign_name\x18\x03 \x01(\t\x12\x17\n\x0f\x61ssign_add_name\x18\x04 \x01(\t\x12\x1f\n\x17placeholder_assign_name\x18\x05 \x01(\t\x12#\n\x1bplaceholder_assign_add_name\x18\x06 \x01(\t\x12\x1b\n\x13gradient_index_name\x18\x07 \x01(\t\"\xf2\x03\n\x05Tuple\x12\x37\n\tmap_names\x18\x01 \x03(\x0b\x32$.adaptive_system.Tuple.MapNamesEntry\x12\x41\n\x0emap_parameters\x18\x02 \x03(\x0b\x32).adaptive_system.Tuple.MapParametersEntry\x12\n\n\x02lr\x18\x03 \x01(\x02\x12\x10\n\x08interval\x18\x04 \x01(\x05\x12#\n\x05graph\x18\x05 \x01(\x0b\x32\x14.tensorflow.GraphDef\x12\x11\n\tloss_name\x18\x06 \x01(\t\x12\x11\n\tinit_name\x18\x07 \x01(\t\x12\x1e\n\x16\x62\x61tch_placeholder_name\x18\x08 \x01(\t\x12\x1e\n\x16label_placeholder_name\x18\t \x01(\t\x12\x18\n\x10training_op_name\x18\n \x01(\t\x12\x12\n\ntotal_iter\x18\x0b \x01(\x05\x1aG\n\rMapNamesEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12%\n\x05value\x18\x02 \x01(\x0b\x32\x16.adaptive_system.Names:\x02\x38\x01\x1aM\n\x12MapParametersEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12&\n\x05value\x18\x02 \x01(\x0b\x32\x17.tensorflow.TensorProto:\x02\x38\x01\"E\n\x11QuantizationLevel\x12\x30\n\x05level\x18\x01 \x01(\x0e\x32!.adaptive_system.GRAD_QUANT_LEVEL\"\xfc\x01\n\x08Gradient\x12\x30\n\x05level\x18\x01 \x01(\x0e\x32!.adaptive_system.GRAD_QUANT_LEVEL\x12,\n\x0btensor_ge_8\x18\x02 \x01(\x0b\x32\x17.tensorflow.TensorProto\x12\x13\n\x0btensor_le_8\x18\x03 \x01(\x0c\x12\x0b\n\x03max\x18\x04 \x01(\x02\x12\x0b\n\x03min\x18\x05 \x01(\x02\x12\x32\n\x0ctensor_shape\x18\x06 \x01(\x0b\x32\x1c.tensorflow.TensorShapeProto\x12-\n\x0ctensor_index\x18\x07 \x01(\x0b\x32\x17.tensorflow.TensorProto\"\xb1\x01\n\x0eNamedGradients\x12M\n\x10name_to_gradient\x18\x01 \x03(\x0b\x32\x33.adaptive_system.NamedGradients.NameToGradientEntry\x1aP\n\x13NameToGradientEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12(\n\x05value\x18\x02 \x01(\x0b\x32\x19.adaptive_system.Gradient:\x02\x38\x01\"E\n\x0cPartialState\x12\'\n\x06tensor\x18\x01 \x01(\x0b\x32\x17.tensorflow.TensorProto\x12\x0c\n\x04loss\x18\x02 \x01(\x02\"\x14\n\x04Loss\x12\x0c\n\x04loss\x18\x01 \x01(\x02*P\n\x10GRAD_QUANT_LEVEL\x12\x07\n\x03ONE\x10\x00\x12\x07\n\x03TWO\x10\x01\x12\x08\n\x04\x46OUR\x10\x02\x12\t\n\x05\x45IGHT\x10\x03\x12\x0b\n\x07SIXTEEN\x10\x04\x12\x08\n\x04NONE\x10\x05\x32\xad\x02\n\rSystemControl\x12?\n\rretrieveTuple\x12\x16.adaptive_system.Empty\x1a\x16.adaptive_system.Tuple\x12\x39\n\x08sendLoss\x12\x15.adaptive_system.Loss\x1a\x16.adaptive_system.Empty\x12P\n\x0csendGradient\x12\x1f.adaptive_system.NamedGradients\x1a\x1f.adaptive_system.NamedGradients\x12N\n\tsendState\x12\x1d.adaptive_system.PartialState\x1a\".adaptive_system.QuantizationLevelb\x06proto3')
+  serialized_pb=_b('\n\x11rpc_service.proto\x12\x0f\x61\x64\x61ptive_system\x1a&tensorflow/core/framework/tensor.proto\x1a%tensorflow/core/framework/graph.proto\x1a,tensorflow/core/framework/tensor_shape.proto\"\x07\n\x05\x45mpty\"\xa4\x02\n\x05Names\x12\x15\n\rvariable_name\x18\x01 \x01(\t\x12\x15\n\rgradient_name\x18\x02 \x01(\t\x12\x13\n\x0b\x61ssign_name\x18\x03 \x01(\t\x12\x17\n\x0f\x61ssign_add_name\x18\x04 \x01(\t\x12\x1f\n\x17placeholder_assign_name\x18\x05 \x01(\t\x12#\n\x1bplaceholder_assign_add_name\x18\x06 \x01(\t\x12\x1b\n\x13gradient_index_name\x18\x07 \x01(\t\x12\x1f\n\x17placeholder_indice_name\x18\x08 \x01(\t\x12!\n\x19placeholder_gradient_name\x18\t \x01(\t\x12\x18\n\x10scatter_sub_name\x18\n \x01(\t\"\xf2\x03\n\x05Tuple\x12\x37\n\tmap_names\x18\x01 \x03(\x0b\x32$.adaptive_system.Tuple.MapNamesEntry\x12\x41\n\x0emap_parameters\x18\x02 \x03(\x0b\x32).adaptive_system.Tuple.MapParametersEntry\x12\n\n\x02lr\x18\x03 \x01(\x02\x12\x10\n\x08interval\x18\x04 \x01(\x05\x12#\n\x05graph\x18\x05 \x01(\x0b\x32\x14.tensorflow.GraphDef\x12\x11\n\tloss_name\x18\x06 \x01(\t\x12\x11\n\tinit_name\x18\x07 \x01(\t\x12\x1e\n\x16\x62\x61tch_placeholder_name\x18\x08 \x01(\t\x12\x1e\n\x16label_placeholder_name\x18\t \x01(\t\x12\x18\n\x10training_op_name\x18\n \x01(\t\x12\x12\n\ntotal_iter\x18\x0b \x01(\x05\x1aG\n\rMapNamesEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12%\n\x05value\x18\x02 \x01(\x0b\x32\x16.adaptive_system.Names:\x02\x38\x01\x1aM\n\x12MapParametersEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12&\n\x05value\x18\x02 \x01(\x0b\x32\x17.tensorflow.TensorProto:\x02\x38\x01\"E\n\x11QuantizationLevel\x12\x30\n\x05level\x18\x01 \x01(\x0e\x32!.adaptive_system.GRAD_QUANT_LEVEL\"\xfc\x01\n\x08Gradient\x12\x30\n\x05level\x18\x01 \x01(\x0e\x32!.adaptive_system.GRAD_QUANT_LEVEL\x12,\n\x0btensor_ge_8\x18\x02 \x01(\x0b\x32\x17.tensorflow.TensorProto\x12\x13\n\x0btensor_le_8\x18\x03 \x01(\x0c\x12\x0b\n\x03max\x18\x04 \x01(\x02\x12\x0b\n\x03min\x18\x05 \x01(\x02\x12\x32\n\x0ctensor_shape\x18\x06 \x01(\x0b\x32\x1c.tensorflow.TensorShapeProto\x12-\n\x0ctensor_index\x18\x07 \x01(\x0b\x32\x17.tensorflow.TensorProto\"\xb1\x01\n\x0eNamedGradients\x12M\n\x10name_to_gradient\x18\x01 \x03(\x0b\x32\x33.adaptive_system.NamedGradients.NameToGradientEntry\x1aP\n\x13NameToGradientEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12(\n\x05value\x18\x02 \x01(\x0b\x32\x19.adaptive_system.Gradient:\x02\x38\x01\"E\n\x0cPartialState\x12\'\n\x06tensor\x18\x01 \x01(\x0b\x32\x17.tensorflow.TensorProto\x12\x0c\n\x04loss\x18\x02 \x01(\x02\"\x14\n\x04Loss\x12\x0c\n\x04loss\x18\x01 \x01(\x02*P\n\x10GRAD_QUANT_LEVEL\x12\x07\n\x03ONE\x10\x00\x12\x07\n\x03TWO\x10\x01\x12\x08\n\x04\x46OUR\x10\x02\x12\t\n\x05\x45IGHT\x10\x03\x12\x0b\n\x07SIXTEEN\x10\x04\x12\x08\n\x04NONE\x10\x05\x32\xad\x02\n\rSystemControl\x12?\n\rretrieveTuple\x12\x16.adaptive_system.Empty\x1a\x16.adaptive_system.Tuple\x12\x39\n\x08sendLoss\x12\x15.adaptive_system.Loss\x1a\x16.adaptive_system.Empty\x12P\n\x0csendGradient\x12\x1f.adaptive_system.NamedGradients\x1a\x1f.adaptive_system.NamedGradients\x12N\n\tsendState\x12\x1d.adaptive_system.PartialState\x1a\".adaptive_system.QuantizationLevelb\x06proto3')
   ,
   dependencies=[tensorflow_dot_core_dot_framework_dot_tensor__pb2.DESCRIPTOR,tensorflow_dot_core_dot_framework_dot_graph__pb2.DESCRIPTOR,tensorflow_dot_core_dot_framework_dot_tensor__shape__pb2.DESCRIPTOR,])
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
@@ -61,8 +61,8 @@ _GRAD_QUANT_LEVEL = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1473,
-  serialized_end=1553,
+  serialized_start=1567,
+  serialized_end=1647,
 )
 _sym_db.RegisterEnumDescriptor(_GRAD_QUANT_LEVEL)
 
@@ -156,6 +156,27 @@ _NAMES = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='placeholder_indice_name', full_name='adaptive_system.Names.placeholder_indice_name', index=7,
+      number=8, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='placeholder_gradient_name', full_name='adaptive_system.Names.placeholder_gradient_name', index=8,
+      number=9, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='scatter_sub_name', full_name='adaptive_system.Names.scatter_sub_name', index=9,
+      number=10, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -169,7 +190,7 @@ _NAMES = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=173,
-  serialized_end=371,
+  serialized_end=465,
 )
 
 
@@ -206,8 +227,8 @@ _TUPLE_MAPNAMESENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=722,
-  serialized_end=793,
+  serialized_start=816,
+  serialized_end=887,
 )
 
 _TUPLE_MAPPARAMETERSENTRY = _descriptor.Descriptor(
@@ -243,8 +264,8 @@ _TUPLE_MAPPARAMETERSENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=795,
-  serialized_end=872,
+  serialized_start=889,
+  serialized_end=966,
 )
 
 _TUPLE = _descriptor.Descriptor(
@@ -343,8 +364,8 @@ _TUPLE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=374,
-  serialized_end=872,
+  serialized_start=468,
+  serialized_end=966,
 )
 
 
@@ -374,8 +395,8 @@ _QUANTIZATIONLEVEL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=874,
-  serialized_end=943,
+  serialized_start=968,
+  serialized_end=1037,
 )
 
 
@@ -447,8 +468,8 @@ _GRADIENT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=946,
-  serialized_end=1198,
+  serialized_start=1040,
+  serialized_end=1292,
 )
 
 
@@ -485,8 +506,8 @@ _NAMEDGRADIENTS_NAMETOGRADIENTENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1298,
-  serialized_end=1378,
+  serialized_start=1392,
+  serialized_end=1472,
 )
 
 _NAMEDGRADIENTS = _descriptor.Descriptor(
@@ -515,8 +536,8 @@ _NAMEDGRADIENTS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1201,
-  serialized_end=1378,
+  serialized_start=1295,
+  serialized_end=1472,
 )
 
 
@@ -553,8 +574,8 @@ _PARTIALSTATE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1380,
-  serialized_end=1449,
+  serialized_start=1474,
+  serialized_end=1543,
 )
 
 
@@ -584,8 +605,8 @@ _LOSS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1451,
-  serialized_end=1471,
+  serialized_start=1545,
+  serialized_end=1565,
 )
 
 _TUPLE_MAPNAMESENTRY.fields_by_name['value'].message_type = _NAMES
