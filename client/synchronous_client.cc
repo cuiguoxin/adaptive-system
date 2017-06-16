@@ -177,7 +177,7 @@ namespace adaptive_system {
 		std::map<std::string, tensorflow::Tensor> const& gradients,
 		const float loss) {
 		PartialState partial_state_ret;
-		static const std::string variable_name_to_collect = "softmax_linear/weights:0";
+		static const std::string variable_name_to_collect = "Variable:0";
 		auto iter = gradients.find(variable_name_to_collect);
 		if (iter == gradients.end()) {
 			PRINT_ERROR;
@@ -262,7 +262,7 @@ namespace adaptive_system {
 			PRINT_INFO;
 			stub->sendLoss(&loss_context, loss_to_send, &empty);
 			PRINT_INFO;
-			if (i % interval == 0) {
+			/*if (i % interval == 0) {
 				PartialState partial_state = collect_partial_state(map_gradients, loss);
 				ClientContext state_context;
 				QuantizationLevel quantization_level;
@@ -275,7 +275,7 @@ namespace adaptive_system {
 					std::terminate();
 				}
 				grad_quant_level = quantization_level.level();
-			}
+			}*/
 			//fake
 			//now_sleep(grad_quant_level);
 			NamedGradients named_gradients_send, named_gradients_receive;

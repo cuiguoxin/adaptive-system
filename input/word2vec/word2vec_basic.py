@@ -15,7 +15,6 @@
 
 from __future__ import absolute_import
 from __future__ import division
-from __future__ import print_function
 
 import collections
 import math
@@ -34,7 +33,7 @@ batch_size = 256
 embedding_size = 128  # Dimension of the embedding vector.
 skip_window = 1       # How many words to consider left and right.
 num_skips = 2         # How many times to reuse an input to generate a label.
-num_sampled = 64      # Number of negative examples to sample.
+num_sampled = 100      # Number of negative examples to sample.
 
 
 graph = tf.Graph()
@@ -63,6 +62,7 @@ with graph.as_default():
     # Look up embeddings for inputs.
     embeddings = tf.Variable(
         tf.random_uniform([vocabulary_size, embedding_size], -1.0, 1.0))
+    print embeddings.name
     _add_assign_and_placeholder(embeddings, tup)
     embed = tf.nn.embedding_lookup(embeddings, train_inputs)
 
@@ -88,7 +88,7 @@ with graph.as_default():
   for grad_var in grads:
     tup.map_names[grad_var[1].name].gradient_name = grad_var[0].values.name
     tup.map_names[grad_var[1].name].gradient_index_name = grad_var[0].indices.name
-
+    print grad_var[0].values.shape, grad_var[0].indices.shape
   training_op = optimizer.apply_gradients(grads)
   tup.training_op_name = training_op.name
 

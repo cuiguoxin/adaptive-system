@@ -325,7 +325,11 @@ namespace adaptive_system {
 					std::pair<std::string, tensorflow::Tensor>(index_name, feed_index));
 			}
 		});
-		sess->Run(feeds, {}, actions_to_do, nullptr);
+		tensorflow::Status status = sess->Run(feeds, {}, actions_to_do, nullptr);
+		if(!status.ok()){
+			PRINT_ERROR_MESSAGE(status.error_message());
+			std::terminate();
+		}
 	}
 
 	
