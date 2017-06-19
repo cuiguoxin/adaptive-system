@@ -14,8 +14,8 @@
 #include "tensorflow/core/public/session.h"
 namespace adaptive_system {
 	namespace word2vec {
-		void init();
-		std::pair<tensorflow::Tensor, tensorflow::Tensor> get_next_batch();
+		void init(std::string const & raw_data_path);
+		std::pair<tensorflow::Tensor, tensorflow::Tensor> get_next_batch(size_t const batch_size);
 	}
 
 }

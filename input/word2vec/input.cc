@@ -56,8 +56,7 @@ namespace adaptive_system {
 				}
 			}
 		}
-		void init() {
-			std::string const raw_data_path = "/home/cgx/git_project/adaptive-system/resources/text8";
+		void init(std::string const & raw_data_path) {
 			std::ifstream input_stream(raw_data_path);
 			std::string line;
 			std::unordered_map<std::string, int> word_count;
@@ -96,14 +95,13 @@ namespace adaptive_system {
 			}
 			top_k.clear();
 			generate_training_data(raw_data);
-			// shuffle the vector raw_tensors
-			unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-			std::shuffle(training_data.begin(), training_data.end(),
-				std::default_random_engine(seed));
+			//// shuffle the vector raw_tensors
+			//unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+			//std::shuffle(training_data.begin(), training_data.end(),
+			//	std::default_random_engine(seed));
 		}
 
-		std::pair<tensorflow::Tensor, tensorflow::Tensor> get_next_batch() {
-			static const size_t batch_size = 256;
+		std::pair<tensorflow::Tensor, tensorflow::Tensor> get_next_batch(size_t const batch_size) {
 			static size_t current_index = 0;
 			static const size_t total_training_data = training_data.size();
 			tensorflow::Tensor batch_tensor(tensorflow::DataType::DT_INT32,

@@ -28,6 +28,9 @@ from six.moves import xrange  # pylint: disable=redefined-builtin
 import tensorflow as tf
 import rpc_service_pb2 as rpc
 
+graph = tf.Graph()
+tup = rpc.Tuple()
+
 vocabulary_size = 50000
 batch_size = 256
 embedding_size = 128  # Dimension of the embedding vector.
@@ -35,9 +38,7 @@ skip_window = 1       # How many words to consider left and right.
 num_skips = 2         # How many times to reuse an input to generate a label.
 num_sampled = 100      # Number of negative examples to sample.
 
-
-graph = tf.Graph()
-tup = rpc.Tuple()
+tup.batch_size = batch_size
 def _add_assign_and_placeholder(variable, tup, dtype):
     placeholder_node = tf.placeholder(tf.float32, variable.get_shape())
     assign_node = tf.assign(variable, placeholder_node)

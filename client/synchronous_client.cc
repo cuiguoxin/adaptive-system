@@ -40,6 +40,7 @@ namespace adaptive_system {
 		float lr = 0.0;
 		int interval = 0;
 		int total_iter = 1000;
+		size_t batch_size = 0;
 		GRAD_QUANT_LEVEL grad_quant_level = GRAD_QUANT_LEVEL::NONE;
 		std::string label_placeholder_name, batch_placeholder_name;
 		Tuple* get_tuple() {
@@ -89,6 +90,7 @@ namespace adaptive_system {
 		lr = tuple.lr();
 		interval = tuple.interval();
 		total_iter = tuple.total_iter();
+		batch_size = tuple.batch_size();
 		std::string init_name = tuple.init_name();
 		batch_placeholder_name = tuple.batch_placeholder_name();
 		label_placeholder_name = tuple.label_placeholder_name();
@@ -241,14 +243,14 @@ namespace adaptive_system {
 	}
 
 
-	void do_training() {
-		word2vec::init();
+	void do_training(std::string const & raw_data_path) {
+		word2vec::init(raw_data_path);
 		for (int i = 0; i < total_iter; i++) {
 			PRINT_INFO;
 			std::map<std::string, tensorflow::Tensor> map_gradients;
 			std::map<std::string, tensorflow::Tensor> map_indices;
 			std::pair<tensorflow::Tensor, tensorflow::Tensor> feeds =
-				word2vec::get_next_batch();
+				word2vec::get_next_batch(batch_size);
 			PRINT_INFO;
 			float loss = compute_gradient_and_loss(
 			{ {batch_placeholder_name, feeds.first},
@@ -314,6 +316,7 @@ namespace adaptive_system {
 
 int main(int argc, char* argv[]) {
 	std::string ip_port = argv[1];
+	std::string raw_data_path = argv[2];
 	adaptive_system::init_stub(ip_port);
 	adaptive_system::run_logic();
 }
