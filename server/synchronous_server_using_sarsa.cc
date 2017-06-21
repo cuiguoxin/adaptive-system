@@ -197,7 +197,7 @@ namespace adaptive_system {
 			NamedGradients* response) override {
 			NamedGradients& named_gradients = const_cast<NamedGradients&>(*request);
 			std::map<std::string, tensorflow::Tensor> map_gradient, map_indices;
-			dequantize_gradient(named_gradients, map_gradient);
+			dequantize_gradients(named_gradients, map_gradient);
 			extract_indices_from_named_gradient(named_gradients, map_indices);
 			std::unique_lock<std::mutex> lk(_mutex_gradient);
 			_bool_gradient = false;
@@ -262,7 +262,8 @@ namespace adaptive_system {
 				std::cout << "got line " << __LINE__ << std::endl;
 			}
 			lk.unlock();
-			response->set_level(_grad_quant_level);
+			response->set_quantized_level(_grad_quant_level);
+			
 			return grpc::Status::OK;
 		}
 
@@ -324,8 +325,8 @@ namespace adaptive_system {
 			float* last_tensor_ptr = _last_state.flat<float>().data();
 			moving_average(length, last_tensor_ptr, state_tensor_ptr, 0.9f);
 			print_state_to_file(state_tensor);
-			GRAD_QUANT_LEVEL new_action = _sarsa.sample_new_action(state_tensor);
-			GRAD_QUANT_LEVEL old_action = _grad_quant_level;
+			int new_action_order = _sarsa.sample_new_action(state_tensor);
+			int old_action_order = _grad_quant_level;
 			auto now_time_point = std::chrono::high_resolution_clock::now();
 			std::chrono::duration<float> diff = now_time_point - _time_point_last;
 			float diff_seconds = diff.count();
@@ -333,8 +334,8 @@ namespace adaptive_system {
 			float average = loss_sum / _interval;
 			moving_average(1, &_last_loss, &average, 0.9f);
 			float reward = get_reward(_last_state, _grad_quant_level, diff_seconds, _last_loss, average);
-			_sarsa.adjust_model(reward, _last_state, old_action, state_tensor, new_action);
-			_grad_quant_level = new_action;
+			_sarsa.adjust_model(reward, _last_state, old_action_order, state_tensor, new_action_order);
+			_grad_quant_level = new_action_order;
 			std::cout << "diff_seconds is: " << diff_seconds << " reward is " << reward
 				<< " quantization level become: " << std::pow(2, static_cast<int>(_grad_quant_level)) << std::endl;
 			_vector_loss_history.clear();
@@ -350,7 +351,7 @@ namespace adaptive_system {
 		const int _total_iter;
 		const int _number_of_workers;
 		int _current_iter_number = 0;
-		GRAD_QUANT_LEVEL _grad_quant_level = GRAD_QUANT_LEVEL::NONE;
+		int _grad_quant_level = 0;
 
 		std::chrono::time_point<std::chrono::high_resolution_clock> _init_time_point;
 		std::chrono::time_point<std::chrono::high_resolution_clock> _time_point_last;
@@ -384,6 +385,7 @@ namespace adaptive_system {
 		std::string _label;
 	};
 }
+
 adaptive_system::GRAD_QUANT_LEVEL cast_int_to_grad_quant_level(int level) {
 	switch (level) {
 	case 1:

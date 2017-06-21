@@ -68,8 +68,8 @@ namespace adaptive_system {
 	}
 
 	float sarsa_model::get_q_value(tensorflow::Tensor const& state,
-		GRAD_QUANT_LEVEL action) {
-		Tensor action_tensor = get_feed_tensor_from_action(action);
+		int action_order) {
+		Tensor action_tensor = get_feed_tensor_from_action(action_order);
 		std::vector<Tensor> result;
 		Status status = _session->Run({ {state_placeholder_name, state},
 									   {one_hot_placeholder_name, action_tensor} },
@@ -84,7 +84,7 @@ namespace adaptive_system {
 		return ret_v;
 	}
 
-	GRAD_QUANT_LEVEL sarsa_model::sample_new_action(Tensor const& state) {
+	int sarsa_model::sample_new_action(Tensor const& state) {
 		static unsigned seed =
 			std::chrono::system_clock::now().time_since_epoch().count();
 		static std::default_random_engine generator(seed);
@@ -101,37 +101,24 @@ namespace adaptive_system {
 		std::vector<float> prob = get_greedy_probability(max_index);
 		std::discrete_distribution<int> discrete{ prob.begin(), prob.end() };
 		size_t sample = discrete(generator);
-		switch (sample) {
-		case 0:
-			return GRAD_QUANT_LEVEL::ONE;
-		case 1:
-			return GRAD_QUANT_LEVEL::TWO;
-		case 2:
-			return GRAD_QUANT_LEVEL::FOUR;
-		case 3:
-			return GRAD_QUANT_LEVEL::EIGHT;
-		case 4:
-			return GRAD_QUANT_LEVEL::SIXTEEN;
-		}
-		std::terminate();
-		return GRAD_QUANT_LEVEL::NONE;
+		return sample;
 	}
 
 	void sarsa_model::adjust_model(float reward, Tensor const& old_state,
-		GRAD_QUANT_LEVEL old_action,
+		int const old_action_order,
 		Tensor const& new_state,
-		GRAD_QUANT_LEVEL new_action) {
+		int const new_action_order) {
 		print_state(old_state);
 		print_state(new_state);
-		float old_value = get_q_value(old_state, old_action);
-		float new_value = get_q_value(new_state, new_action);
+		float old_value = get_q_value(old_state, old_action_order);
+		float new_value = get_q_value(new_state, new_action_order);
 		float update = reward + _r * new_value - old_value;
 		Tensor learning_rate_tensor(DataType::DT_FLOAT, TensorShape());
 		float * learning_rate_ptr = learning_rate_tensor.flat<float>().data();
 		*learning_rate_ptr = -alpha * (reward + _r * new_value - old_value);
 		std::cout << "old_value: " << old_value << " new_value: " << new_value <<
 			" learning_rate: " << *learning_rate_ptr << std::endl;
-		Tensor one_hot_tensor = get_feed_tensor_from_action(old_action);
+		Tensor one_hot_tensor = get_feed_tensor_from_action(old_action_order);
 		Status status = _session->Run({ { state_placeholder_name, old_state }, 
 										{ one_hot_placeholder_name , one_hot_tensor},
 										{ learning_rate_placeholder_name, learning_rate_tensor} },

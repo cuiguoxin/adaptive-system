@@ -48,14 +48,14 @@ namespace adaptive_system {
 	public:
 		sarsa_model(std::string const& path, float r, float eps_greedy);
 
-		float get_q_value(tensorflow::Tensor const& state, GRAD_QUANT_LEVEL action);
+		float get_q_value(tensorflow::Tensor const& state, int action_order);
 
-		GRAD_QUANT_LEVEL sample_new_action(tensorflow::Tensor const& state);
+		int sample_new_action(tensorflow::Tensor const& state);
 
 		void adjust_model(float reward, tensorflow::Tensor const& old_state,
-			GRAD_QUANT_LEVEL old_action,
+			int const old_action_order,
 			tensorflow::Tensor const& new_state,
-			GRAD_QUANT_LEVEL new_action);
+			int const new_action_order);
 
 	};
 }

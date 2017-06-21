@@ -20,7 +20,7 @@
 namespace adaptive_system {
 	using namespace tensorflow;
 
-	float get_reward(const Tensor& state, const GRAD_QUANT_LEVEL action,
+	float get_reward(const Tensor& state, const int action_order,
 		const float time_interval, const float last_loss, const float current_loss);
 }
 

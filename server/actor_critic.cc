@@ -25,6 +25,7 @@ namespace adaptive_system {
 		const size_t action_number = 5;
 		const size_t state_number = 8;
 	}
+
 	actor_critic::actor_critic(std::string const & model_path, 
 		float const r, float const beta, float const alpha, size_t t)
 		:_sarsa_model_path(model_path), _r(r), _beta(beta), _alpha(alpha), _T(t) {
@@ -50,7 +51,7 @@ namespace adaptive_system {
 		}
 	}
 
-	GRAD_QUANT_LEVEL actor_critic::sample_action_from_policy(tensorflow::Tensor const & state) {
+	int actor_critic::sample_action_from_policy(tensorflow::Tensor const & state) {
 		static unsigned seed =
 			std::chrono::system_clock::now().time_since_epoch().count();
 		static std::default_random_engine generator(seed);
@@ -65,20 +66,9 @@ namespace adaptive_system {
 		float* result_tensor_ptr = result_tensor.flat<float>().data();
 		std::discrete_distribution<int> discrete{ result_tensor_ptr, result_tensor_ptr + action_number };
 		size_t sample = discrete(generator);
-		switch (sample) {
-		case 0:
-			return GRAD_QUANT_LEVEL::ONE;
-		case 1:
-			return GRAD_QUANT_LEVEL::TWO;
-		case 2:
-			return GRAD_QUANT_LEVEL::FOUR;
-		case 3:
-			return GRAD_QUANT_LEVEL::EIGHT;
-		case 4:
-			return GRAD_QUANT_LEVEL::SIXTEEN;
-		}
+		return sample;
 		std::terminate();
-		return GRAD_QUANT_LEVEL::NONE;
+		return -1;
 	}
 
 	float actor_critic::get_value(tensorflow::Tensor const & state) {
@@ -115,9 +105,9 @@ namespace adaptive_system {
 		}
 	}
 	void actor_critic::update_policy_parameter(tensorflow::Tensor const & state,
-		GRAD_QUANT_LEVEL action, 
+		int action_order, 
 		const float update) {
-		tensorflow::Tensor action_tensor = get_feed_tensor_from_action(action);
+		tensorflow::Tensor action_tensor = get_feed_tensor_from_action(action_order);
 		tensorflow::Tensor lr_tensor(tensorflow::DataType::DT_FLOAT, TensorShape());
 		float * lr_tensor_ptr = lr_tensor.flat<float>().data();
 		//learning rate need to be discounted

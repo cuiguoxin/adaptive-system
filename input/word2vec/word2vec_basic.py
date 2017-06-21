@@ -42,17 +42,17 @@ tup.batch_size = batch_size
 def _add_assign_and_placeholder(variable, tup, dtype):
     placeholder_node = tf.placeholder(tf.float32, variable.get_shape())
     assign_node = tf.assign(variable, placeholder_node)
-    placeholder_indice_node = tf.placeholder(dtype)
-    placeholder_gradient_node = tf.placeholder(tf.float32)
-    scatter_sub_node = tf.scatter_sub(variable, placeholder_indice_node, placeholder_gradient_node)
+    #placeholder_indice_node = tf.placeholder(dtype)
+    #placeholder_gradient_node = tf.placeholder(tf.float32)
+    #scatter_sub_node = tf.scatter_sub(variable, placeholder_indice_node, placeholder_gradient_node)
     var_name = variable.name
     tup.map_names[var_name].variable_name = var_name
     tup.map_names[var_name].assign_name = assign_node.name
     #tup.map_names[var_name].assign_add_name = assign_add_node.name
     tup.map_names[var_name].placeholder_assign_name = placeholder_node.name
-    tup.map_names[var_name].placeholder_indice_name = placeholder_indice_node.name
-    tup.map_names[var_name].placeholder_gradient_name = placeholder_gradient_node.name
-    tup.map_names[var_name].scatter_sub_name = scatter_sub_node.name[:-2]
+    #tup.map_names[var_name].placeholder_indice_name = placeholder_indice_node.name
+    #tup.map_names[var_name].placeholder_gradient_name = placeholder_gradient_node.name
+    #tup.map_names[var_name].scatter_sub_name = scatter_sub_node.name[:-2]
     #tup.map_names[var_name].placeholder_assign_add_name = placeholder_assign_add_node.name
 
 with graph.as_default():
