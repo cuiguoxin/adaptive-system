@@ -57,9 +57,9 @@ namespace adaptive_system {
 		}
 	public:
 		RPCServiceImpl(int interval, float lr, int total_iter, int number_of_workers,
-			GRAD_QUANT_LEVEL grad_quant_level,
+			int grad_quant_level,
 			std::string const& tuple_local_path,
-			std::string const & sarsa_path, float r, float eps_greedy)
+			std::string const & sarsa_path, float r, float eps_greedy, std::string const & material_path)
 			: SystemControl::Service(),
 			_interval(interval),
 			_lr(lr),
@@ -133,6 +133,7 @@ namespace adaptive_system {
 			_tuple.set_interval(_interval);
 			_tuple.set_lr(_lr);
 			_tuple.set_total_iter(_total_iter);
+			set_tuple_with_order_to_level(_tuple);
 			_init_time_point = std::chrono::high_resolution_clock::now();
 			auto now = std::chrono::system_clock::now();
 			auto init_time_t = std::chrono::system_clock::to_time_t(now);
@@ -141,15 +142,16 @@ namespace adaptive_system {
 				"loss_result/adaptive" + _label +
 				"_interval:" + std::to_string(_interval) +
 				"_number_of_workers:" + std::to_string(_number_of_workers) + "_init_level:" +
-				std::to_string(std::pow(2, static_cast<int>(_grad_quant_level)));
+				std::to_string(_tuple.order_to_level().find(_grad_quant_level)->second);
 			_file_out_stream.open(store_loss_file_path);
 			std::string store_state_file_path =
 				"state_result/adaptive" + _label +
 				"_interval:" + std::to_string(_interval) +
 				"_number_of_workers:" + std::to_string(_number_of_workers) + "_init_level:" +
-				std::to_string(std::pow(2, static_cast<int>(_grad_quant_level)));
+				std::to_string(_tuple.order_to_level().find(_grad_quant_level)->second);
 			_file_state_stream.open(store_state_file_path);
 			std::cout << "files opened" << std::endl;
+			set_tuple_with_word_to_index(material_path, _tuple);
 		}
 
 		grpc::Status retrieveTuple(ServerContext* context, const Empty* request,
@@ -210,9 +212,9 @@ namespace adaptive_system {
 					merged_gradient, merged_indice);
 				//average_gradients(map_gradient_another);
 				_store_named_gradient = NamedGradients();
-				quantize_gradient(
+				quantize_gradients(
 					merged_gradient, &_store_named_gradient,
-					cast_grad_quant_level_to_quantization_type(_grad_quant_level));
+					(*_tuple.mutable_order_to_level())[_grad_quant_level]);
 				add_indices_to_named_gradients(merged_indice, _store_named_gradient);
 				apply_quantized_gradient_to_model(_store_named_gradient,
 					_session, _tuple);
@@ -262,7 +264,7 @@ namespace adaptive_system {
 				std::cout << "got line " << __LINE__ << std::endl;
 			}
 			lk.unlock();
-			response->set_quantized_level(_grad_quant_level);
+			response->set_level_order(_grad_quant_level);
 			
 			return grpc::Status::OK;
 		}
@@ -337,13 +339,21 @@ namespace adaptive_system {
 			_sarsa.adjust_model(reward, _last_state, old_action_order, state_tensor, new_action_order);
 			_grad_quant_level = new_action_order;
 			std::cout << "diff_seconds is: " << diff_seconds << " reward is " << reward
-				<< " quantization level become: " << std::pow(2, static_cast<int>(_grad_quant_level)) << std::endl;
+				<< " quantization level become: " << _tuple.order_to_level().find(_grad_quant_level)->second << std::endl;
 			_vector_loss_history.clear();
 			_last_loss = average;
 			_last_state = state_tensor;
 			_time_point_last = std::chrono::high_resolution_clock::now();
 		}
 		
+		void set_tuple_with_order_to_level(Tuple& tuple) {
+			google::protobuf::Map<int32_t, int32_t> order_to_level = *tuple.mutable_order_to_level();
+			int const action_number = 5, base_line = 6;
+			for (int i = 0; i < action_number; i++) {
+				order_to_level[i] = i + 6;
+			}
+		}
+
 		// private data member
 	private:
 		const int _interval;
@@ -386,23 +396,6 @@ namespace adaptive_system {
 	};
 }
 
-adaptive_system::GRAD_QUANT_LEVEL cast_int_to_grad_quant_level(int level) {
-	switch (level) {
-	case 1:
-		return adaptive_system::GRAD_QUANT_LEVEL::ONE;
-	case 2:
-		return adaptive_system::GRAD_QUANT_LEVEL::TWO;
-	case 4:
-		return adaptive_system::GRAD_QUANT_LEVEL::FOUR;
-	case 8:
-		return adaptive_system::GRAD_QUANT_LEVEL::EIGHT;
-	case 16:
-		return adaptive_system::GRAD_QUANT_LEVEL::SIXTEEN;
-	default:
-		return adaptive_system::GRAD_QUANT_LEVEL::NONE;
-	}
-}
-
 int main(int argc, char** argv) {
 	std::string server_address("0.0.0.0:50051");
 	int interval = atoi(argv[1]);
@@ -414,10 +407,11 @@ int main(int argc, char** argv) {
 	std::string sarsa_path = argv[7];
 	float r = atof(argv[8]);
 	float eps_greedy = atof(argv[9]);
+	std::string material_path = argv[10];
 
 	adaptive_system::RPCServiceImpl service(
 		interval, learning_rate, total_iter, number_of_workers,
-		cast_int_to_grad_quant_level(level), tuple_path, sarsa_path, r, eps_greedy);
+		0, tuple_path, sarsa_path, r, eps_greedy);
 
 	ServerBuilder builder;
 	// Listen on the given address without any authentication mechanism.

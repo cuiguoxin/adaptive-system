@@ -1,6 +1,17 @@
 #include "quantization/util/algorithms.h"
 #include "quantization/util/helper.h"
 
+#include <sstream>
+#include <algorithm>
+#include <chrono>
+#include <exception>
+#include <fstream>
+#include <iostream>
+#include <random>
+#include <string>
+#include <vector>
+#include <unordered_map>
+
 namespace adaptive_system {
 
 	void apply_quantized_gradient_to_model(NamedGradients& named_gradients,
@@ -12,11 +23,11 @@ namespace adaptive_system {
 			*tuple.mutable_map_names();
 		std::vector<std::pair<std::string, tensorflow::Tensor>> feeds;
 		std::vector<std::string> actions_to_do;
-		
+		actions_to_do.push_back(tuple.training_op_name);
 		std::for_each(
 			map_gradient.begin(), map_gradient.end(),
 			[&feeds, &map_names,
-			&tuple, &actions_to_do](google::protobuf::MapPair<std::string, Gradient>& pair) {
+			&tuple](google::protobuf::MapPair<std::string, Gradient>& pair) {
 			std::string const& variable_name = pair.first;
 			Gradient& grad = pair.second;
 			auto iter_map_names = map_names.find(variable_name);
@@ -26,11 +37,8 @@ namespace adaptive_system {
 			}
 			else {
 				Names& names = iter_map_names->second;
-				std::string grad_name = names.placeholder_gradient_name();
-				std::string index_name = names.placeholder_indice_name();
-				std::string scatter_sub_name = names.scatter_sub_name();
-				actions_to_do.push_back(scatter_sub_name);
-
+				std::string grad_name = names.gradient_name();
+				std::string index_name = names.gradient_index_name();
 				tensorflow::Tensor feed_grad;  // nothing need to do to initialize feed
 										  // tensor, dequantize function will do all
 										  // stuff
@@ -78,5 +86,48 @@ namespace adaptive_system {
 			index.AsProtoField(grad.mutable_tensor_index());
 		}
 	}
+
+	namespace {
+		bool greater_compare_pair(std::pair<std::string, int> const & a, std::pair<std::string, int> const & b) {
+			return b.second < a.second;
+		}
+	}
+
+	void set_tuple_with_word_to_index(std::string const & material_path, Tuple& tuple) {
+		auto & word_to_index = *tuple.mutable_word_to_index();
+		std::ifstream input_stream(material_path);
+		std::string line;
+		std::unordered_map<std::string, int> word_count;
+		while (std::getline(input_stream, line)) {
+			std::istringstream iss(line);
+			std::string word;
+			while (iss >> word) {
+				if (word_count.find(word) == word_count.end()) {
+					word_count[word] = 0;
+				}
+				word_count[word]++;
+			}
+		}
+		std::cout << "total distinct word size is " << word_count.size() << std::endl;
+		size_t const k = 50000;
+		std::vector<std::pair<std::string, int>> top_k;
+		auto begin = word_count.begin();
+		auto end = word_count.end();
+		std::for_each(begin, end, [&top_k](std::pair<std::string, int> const & pair) {
+			top_k.push_back(pair);
+		});
+		//sort top_k
+		std::sort(top_k.begin(), top_k.end(), greater_compare_pair);
+		size_t const size = top_k.size();
+		/*size_t tail_sum = 0;
+		for (int i = k - 1; i < size; i++) {
+			tail_sum += top_k[i].second;
+		}*/
+		word_to_index["UNK"] = 0;
+		for (int i = 0; i < k - 1; i++) {
+			word_to_index[top_k[i].first] = word_to_index.size();
+		}
+	}
+
 }
 

@@ -8,6 +8,8 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <deque>
+
 #include "input/word2vec/input.h"
 
 namespace adaptive_system {
@@ -15,12 +17,9 @@ namespace adaptive_system {
 	namespace word2vec {
 
 		namespace {
-			std::vector<std::pair<int, int>> training_data;
-			std::unordered_map<std::string, int> word_to_index;
-
-			bool greater_compare_pair(std::pair<std::string, int> const & a, std::pair<std::string, int> const & b) {
-				return b.second < a.second;
-			}
+			std::deque<std::pair<int32_t, int32_t>> training_data;
+			google::protobuf::Map<std::string, int32_t>  word_to_index;
+			std::ifstream stream;
 
 			int get_index(std::string const & word) {
 				auto iter = word_to_index.find(word);
@@ -46,64 +45,27 @@ namespace adaptive_system {
 						training_data.push_back(std::make_pair(index_of_i, index_of_j));
 					}
 				}
-			}
-
-			void generate_training_data(std::vector<std::vector<std::string>> const & raw_data) {
-				size_t size = raw_data.size();
-				for (int i = 0; i < size; i++) {
-					std::vector<std::string> const & line_words = raw_data[i];
-					generate_according_one_line(line_words);
-				}
-			}
+			}		
 		}
-		void init(std::string const & raw_data_path) {
+		void init(std::string const & raw_data_path,
+			google::protobuf::Map<std::string, int32_t> const & word_2_index) {
+			word_to_index = word_2_index;
 			std::ifstream input_stream(raw_data_path);
-			std::string line;
-			std::unordered_map<std::string, int> word_count;
-			std::vector<std::vector<std::string>> raw_data;
-			while (std::getline(input_stream, line)) {
-				std::vector<std::string> words_line;
-				std::istringstream iss(line);
-				std::string word;
-				while (iss >> word) {
-					if (word_count.find(word) == word_count.end()) {
-						word_count[word] = 0;
-					}
-					word_count[word]++;
-					words_line.push_back(word);
-				}
-				raw_data.push_back(words_line);
-			}
-			std::cout << "total distinct word size is " << word_count.size() << std::endl;
-			size_t const k = 50000;
-			std::vector<std::pair<std::string, int>> top_k;
-			auto begin = word_count.begin();
-			auto end = word_count.end();
-			std::for_each(begin, end, [&top_k](std::pair<std::string, int> const & pair) {
-				top_k.push_back(pair);
-			});
-			//sort top_k
-			std::sort(top_k.begin(), top_k.end(), greater_compare_pair);
-			size_t const size = top_k.size();
-			size_t tail_sum = 0;
-			for (int i = k - 1; i < size; i++) {
-				tail_sum += top_k[i].second;
-			}
-			word_to_index.insert(std::make_pair("UNK", 0));
-			for (int i = 0; i < k - 1; i++) {
-				word_to_index.insert(std::make_pair(top_k[i].first, word_to_index.size()));
-			}
-			top_k.clear();
-			generate_training_data(raw_data);
-			//// shuffle the vector raw_tensors
-			//unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-			//std::shuffle(training_data.begin(), training_data.end(),
-			//	std::default_random_engine(seed));
+			stream = std::move(input_stream);
 		}
 
 		std::pair<tensorflow::Tensor, tensorflow::Tensor> get_next_batch(size_t const batch_size) {
-			static size_t current_index = 0;
-			static const size_t total_training_data = training_data.size();
+			while (training_data.size() < batch_size) {
+				std::string line;
+				std::getline(stream, line);
+				std::istringstream iss(line);
+				std::string word;
+				std::vector<std::string> line_words;
+				while (iss >> word) {
+					line_words.push_back(word);
+				}
+				generate_according_one_line(line_words);
+			}
 			tensorflow::Tensor batch_tensor(tensorflow::DataType::DT_INT32,
 				tensorflow::TensorShape({ batch_size }));
 			tensorflow::int32* batch_tensor_ptr = batch_tensor.flat<tensorflow::int32>().data();
@@ -111,9 +73,8 @@ namespace adaptive_system {
 				tensorflow::TensorShape({ batch_size, 1 }));
 			tensorflow::int32* label_tensor_ptr = label_tensor.flat<tensorflow::int32>().data();
 			for (int i = 0; i < batch_size; i++) {
-				current_index = current_index % total_training_data;
-				std::pair<int, int> const & current_pair = training_data[current_index];
-				current_index++;
+				std::pair<int, int> const current_pair = training_data.front();
+				training_data.pop_front();
 				//assign value
 				batch_tensor_ptr[i] = current_pair.first;
 				label_tensor_ptr[i] = current_pair.second;
@@ -122,6 +83,6 @@ namespace adaptive_system {
 		}
 
 	}
-	
+
 
 }

@@ -32,5 +32,7 @@ namespace adaptive_system {
 
 	void add_indices_to_named_gradients(std::map<std::string, tensorflow::Tensor> const & map_indices,
 		NamedGradients& named_gradients);
+
+	void set_tuple_with_word_to_index(std::string const & material_path, Tuple& tuple);
 }
 #endif
