@@ -41,7 +41,7 @@ namespace adaptive_system {
 		int interval = 0;
 		int total_iter = 1000;
 		size_t batch_size = 0;
-		GRAD_QUANT_LEVEL grad_quant_level = GRAD_QUANT_LEVEL::NONE;
+		int grad_quant_level_order = 0;
 		std::string label_placeholder_name, batch_placeholder_name;
 		Tuple* get_tuple() {
 			static Tuple tuple;
@@ -195,31 +195,31 @@ namespace adaptive_system {
 		return partial_state_ret;
 	}
 
-	void show_quantization_infor(
-		std::map<std::string, tensorflow::Tensor>& map_gradients,
-		NamedGradients& named_gradients_send) {
-		std::map<std::string, tensorflow::Tensor> map_gradients_other;
-		dequantize_gradient(named_gradients_send, map_gradients_other);
-		std::for_each(
-			map_gradients.begin(), map_gradients.end(),
-			[&map_gradients_other](std::pair<std::string, tensorflow::Tensor> pair) {
-			std::string variable_name = pair.first;
-			tensorflow::Tensor& tensor = pair.second;
-			float* tensor_ptr = tensor.flat<float>().data();
-			size_t size = tensor.NumElements();
-			auto iter = map_gradients_other.find(variable_name);
-			tensorflow::Tensor& tensor_other = iter->second;
-			float* tensor_other_ptr = tensor_other.flat<float>().data();
-			std::cout << variable_name << " : ";
-			for (int i = 0; i < 10; i++) {
-				std::cout << "(" << tensor_other_ptr[i] << "-" << tensor_ptr[i] << "="
-					<< tensor_other_ptr[i] - tensor_ptr[i] << "), ";
-			}
-			std::cout << std::endl;
-		});
-	}
+	//void show_quantization_infor(
+	//	std::map<std::string, tensorflow::Tensor>& map_gradients,
+	//	NamedGradients& named_gradients_send) {
+	//	std::map<std::string, tensorflow::Tensor> map_gradients_other;
+	//	dequantize_gradient(named_gradients_send, map_gradients_other);
+	//	std::for_each(
+	//		map_gradients.begin(), map_gradients.end(),
+	//		[&map_gradients_other](std::pair<std::string, tensorflow::Tensor> pair) {
+	//		std::string variable_name = pair.first;
+	//		tensorflow::Tensor& tensor = pair.second;
+	//		float* tensor_ptr = tensor.flat<float>().data();
+	//		size_t size = tensor.NumElements();
+	//		auto iter = map_gradients_other.find(variable_name);
+	//		tensorflow::Tensor& tensor_other = iter->second;
+	//		float* tensor_other_ptr = tensor_other.flat<float>().data();
+	//		std::cout << variable_name << " : ";
+	//		for (int i = 0; i < 10; i++) {
+	//			std::cout << "(" << tensor_other_ptr[i] << "-" << tensor_ptr[i] << "="
+	//				<< tensor_other_ptr[i] - tensor_ptr[i] << "), ";
+	//		}
+	//		std::cout << std::endl;
+	//	});
+	//}
 
-	void now_sleep(GRAD_QUANT_LEVEL level) {
+	/*void now_sleep(GRAD_QUANT_LEVEL level) {
 		switch (level) {
 		case GRAD_QUANT_LEVEL::ONE:
 			std::this_thread::sleep_for(std::chrono::duration<float>(0.5f));
@@ -240,11 +240,11 @@ namespace adaptive_system {
 			std::this_thread::sleep_for(std::chrono::duration<float>(6.0f));
 			break;
 		}
-	}
+	}*/
 
 
 	void do_training(std::string const & raw_data_path) {
-		word2vec::init(raw_data_path);
+		word2vec::init(raw_data_path, get_tuple()->word_to_index());
 		for (int i = 0; i < total_iter; i++) {
 			PRINT_INFO;
 			std::map<std::string, tensorflow::Tensor> map_gradients;
@@ -276,22 +276,22 @@ namespace adaptive_system {
 					PRINT_ERROR_MESSAGE(grpc_status.error_message());
 					std::terminate();
 				}
-				grad_quant_level = quantization_level.level();
+				grad_quant_level_order = quantization_level.level_order();
 			}
 			//fake
 			//now_sleep(grad_quant_level);
 			NamedGradients named_gradients_send, named_gradients_receive;
 			PRINT_INFO;
-			quantize_gradient(
+			quantize_gradients(
 				map_gradients, &named_gradients_send,
-				cast_grad_quant_level_to_quantization_type(grad_quant_level));
+				get_tuple()->order_to_level().find(grad_quant_level_order)->second);
 			PRINT_INFO;
 			add_indices_to_named_gradients(map_indices, named_gradients_send);
 			ClientContext gradient_context;
 			PRINT_INFO;
 			grpc::Status grpc_status = stub->sendGradient(
 				&gradient_context, named_gradients_send, &named_gradients_receive);
-			show_quantization_infor(map_gradients, named_gradients_receive);
+			//show_quantization_infor(map_gradients, named_gradients_receive);
 			PRINT_INFO;
 			if (!grpc_status.ok()) {
 				PRINT_ERROR_MESSAGE(grpc_status.error_message());
@@ -307,9 +307,9 @@ namespace adaptive_system {
 
 	void close_session() { get_session()->Close(); }
 
-	void run_logic() {
+	void run_logic(std::string const & raw_data_path) {
 		init_everything();
-		do_training();
+		do_training(raw_data_path);
 		close_session();
 	}
 }
@@ -318,5 +318,5 @@ int main(int argc, char* argv[]) {
 	std::string ip_port = argv[1];
 	std::string raw_data_path = argv[2];
 	adaptive_system::init_stub(ip_port);
-	adaptive_system::run_logic();
+	adaptive_system::run_logic(raw_data_path);
 }

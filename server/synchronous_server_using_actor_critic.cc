@@ -57,15 +57,16 @@ namespace adaptive_system {
 		}
 	public:
 		RPCService_actor_critic_Impl(int interval, float lr, int total_iter, int number_of_workers,
-			GRAD_QUANT_LEVEL grad_quant_level,
+			int grad_quant_level,
 			std::string const& tuple_local_path,
-			std::string const & sarsa_path, float r, float beta, float alpha, size_t t)
+			std::string const & sarsa_path, float r, float beta, float alpha, 
+			size_t t, std::string const & material_path)
 			: SystemControl::Service(),
 			_interval(interval),
 			_lr(lr),
 			_total_iter(total_iter),
 			_number_of_workers(number_of_workers),
-			_grad_quant_level(grad_quant_level),
+			_grad_quant_level_order(grad_quant_level),
 			_tuple_local_path(tuple_local_path),
 			_actor_critic(sarsa_path, r, beta, alpha, t)
 		{
@@ -133,6 +134,7 @@ namespace adaptive_system {
 			_tuple.set_interval(_interval);
 			_tuple.set_lr(_lr);
 			_tuple.set_total_iter(_total_iter);
+			set_tuple_with_order_to_level(_tuple);
 			_init_time_point = std::chrono::high_resolution_clock::now();
 			auto now = std::chrono::system_clock::now();
 			auto init_time_t = std::chrono::system_clock::to_time_t(now);
@@ -141,15 +143,16 @@ namespace adaptive_system {
 				"loss_result/adaptive" + _label +
 				"_interval:" + std::to_string(_interval) +
 				"_number_of_workers:" + std::to_string(_number_of_workers) + "_init_level:" +
-				std::to_string(std::pow(2, static_cast<int>(_grad_quant_level)));
+				std::to_string(_tuple.order_to_level().find(_grad_quant_level_order)->second);
 			_file_out_stream.open(store_loss_file_path);
 			std::string store_state_file_path =
 				"state_result/adaptive" + _label +
 				"_interval:" + std::to_string(_interval) +
 				"_number_of_workers:" + std::to_string(_number_of_workers) + "_init_level:" +
-				std::to_string(std::pow(2, static_cast<int>(_grad_quant_level)));
+				std::to_string(_tuple.order_to_level().find(_grad_quant_level_order)->second);
 			_file_state_stream.open(store_state_file_path);
 			std::cout << "files opened" << std::endl;
+			set_tuple_with_word_to_index(material_path, _tuple);
 		}
 
 		grpc::Status retrieveTuple(ServerContext* context, const Empty* request,
@@ -197,7 +200,7 @@ namespace adaptive_system {
 			NamedGradients* response) override {
 			NamedGradients& named_gradients = const_cast<NamedGradients&>(*request);
 			std::map<std::string, tensorflow::Tensor> map_gradient, map_indices;
-			dequantize_gradient(named_gradients, map_gradient);
+			dequantize_gradients(named_gradients, map_gradient);
 			extract_indices_from_named_gradient(named_gradients, map_indices);
 			std::unique_lock<std::mutex> lk(_mutex_gradient);
 			_bool_gradient = false;
@@ -210,9 +213,9 @@ namespace adaptive_system {
 					merged_gradient, merged_indice);
 				//average_gradients(map_gradient_another);
 				_store_named_gradient = NamedGradients();
-				quantize_gradient(
+				quantize_gradients(
 					merged_gradient, &_store_named_gradient,
-					cast_grad_quant_level_to_quantization_type(_grad_quant_level));
+					(*_tuple.mutable_order_to_level()).find(_grad_quant_level_order)->second);
 				add_indices_to_named_gradients(merged_indice, _store_named_gradient);
 				apply_quantized_gradient_to_model(_store_named_gradient,
 					_session, _tuple);
@@ -240,8 +243,8 @@ namespace adaptive_system {
 					_last_state = get_final_state_from_partial_state(_vector_partial_state);
 					print_state_to_file(_last_state);
 					//sample action from policy
-					_grad_quant_level = _actor_critic.sample_action_from_policy(_last_state);
-					//need not to store last action because _grad_quant_level can represent it
+					_grad_quant_level_order = _actor_critic.sample_action_from_policy(_last_state);
+					//need not to store last action because _grad_quant_level_order can represent it
 					if (_vector_loss_history.size() != 1) {
 						PRINT_ERROR_MESSAGE("when in first iteration, the _vector_loss_history's size must be 1");
 						std::terminate();
@@ -264,8 +267,16 @@ namespace adaptive_system {
 				std::cout << "got line " << __LINE__ << std::endl;
 			}
 			lk.unlock();
-			response->set_level(_grad_quant_level);
+			response->set_level_order(_grad_quant_level_order);
 			return grpc::Status::OK;
+		}
+
+		void set_tuple_with_order_to_level(Tuple& tuple) {
+			google::protobuf::Map<int32_t, int32_t> order_to_level = *tuple.mutable_order_to_level();
+			int const action_number = 5, base_line = 6;
+			for (int i = 0; i < action_number; i++) {
+				order_to_level[i] = i + 6;
+			}
 		}
 
 		// private member functions
@@ -333,16 +344,16 @@ namespace adaptive_system {
 			float loss_sum = std::accumulate(_vector_loss_history.begin(), _vector_loss_history.end(), 0.0f);
 			float average = loss_sum / _interval;
 			moving_average(1, &_last_loss, &average, 0.9f);
-			float reward = get_reward(_last_state, _grad_quant_level, diff_seconds, _last_loss, average);
+			float reward = get_reward(_last_state, _grad_quant_level_order, diff_seconds, _last_loss, average);
 			//adjust actor critic model
 			float update = _actor_critic.get_update_value(reward, state_tensor, _last_state);
 			_actor_critic.update_value_function_parameter(_last_state, update);
-			_actor_critic.update_policy_parameter(_last_state, _grad_quant_level, update);
+			_actor_critic.update_policy_parameter(_last_state, _grad_quant_level_order, update);
 			//sample new action from current state
-			_grad_quant_level = _actor_critic.sample_action_from_policy(state_tensor);
+			_grad_quant_level_order = _actor_critic.sample_action_from_policy(state_tensor);
 			
 			std::cout << "diff_seconds is: " << diff_seconds << " reward is " << reward
-				<< " quantization level become: " << std::pow(2, static_cast<int>(_grad_quant_level)) << std::endl;
+				<< " quantization level become: " << std::pow(2, static_cast<int>(_grad_quant_level_order)) << std::endl;
 			_vector_loss_history.clear();
 			_last_loss = average;
 			_last_state = state_tensor;
@@ -356,7 +367,7 @@ namespace adaptive_system {
 		const int _total_iter;
 		const int _number_of_workers;
 		int _current_iter_number = 0;
-		GRAD_QUANT_LEVEL _grad_quant_level = GRAD_QUANT_LEVEL::NONE;
+		int _grad_quant_level_order = 0;
 
 		std::chrono::time_point<std::chrono::high_resolution_clock> _init_time_point;
 		std::chrono::time_point<std::chrono::high_resolution_clock> _time_point_last;
@@ -390,22 +401,7 @@ namespace adaptive_system {
 		std::string _label;
 	};
 }
-adaptive_system::GRAD_QUANT_LEVEL cast_int_to_grad_quant_level(int level) {
-	switch (level) {
-	case 1:
-		return adaptive_system::GRAD_QUANT_LEVEL::ONE;
-	case 2:
-		return adaptive_system::GRAD_QUANT_LEVEL::TWO;
-	case 4:
-		return adaptive_system::GRAD_QUANT_LEVEL::FOUR;
-	case 8:
-		return adaptive_system::GRAD_QUANT_LEVEL::EIGHT;
-	case 16:
-		return adaptive_system::GRAD_QUANT_LEVEL::SIXTEEN;
-	default:
-		return adaptive_system::GRAD_QUANT_LEVEL::NONE;
-	}
-}
+
 
 int main(int argc, char** argv) {
 	std::string server_address("0.0.0.0:50051");
@@ -420,10 +416,11 @@ int main(int argc, char** argv) {
 	float beta = atof(argv[9]);
 	float alpha = atof(argv[10]);
 	size_t T = atoi(argv[11]);
+	std::string material_path = argv[12];
 
 	adaptive_system::RPCService_actor_critic_Impl service(
 		interval, learning_rate, total_iter, number_of_workers,
-		cast_int_to_grad_quant_level(level), tuple_path, actor_critic_path, r, beta, alpha, T);
+		0, tuple_path, actor_critic_path, r, beta, alpha, T, material_path);
 
 	ServerBuilder builder;
 	// Listen on the given address without any authentication mechanism.

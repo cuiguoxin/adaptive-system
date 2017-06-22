@@ -57,7 +57,7 @@ namespace adaptive_system {
 		}
 	public:
 		RPCServiceImpl(int interval, float lr, int total_iter, int number_of_workers,
-			int grad_quant_level,
+			int grad_quant_level_order,
 			std::string const& tuple_local_path,
 			std::string const & sarsa_path, float r, float eps_greedy, std::string const & material_path)
 			: SystemControl::Service(),
@@ -65,7 +65,7 @@ namespace adaptive_system {
 			_lr(lr),
 			_total_iter(total_iter),
 			_number_of_workers(number_of_workers),
-			_grad_quant_level(grad_quant_level),
+			_grad_quant_level_order(grad_quant_level_order),
 			_tuple_local_path(tuple_local_path),
 			_sarsa(sarsa_path, r, eps_greedy)
 		{
@@ -142,13 +142,13 @@ namespace adaptive_system {
 				"loss_result/adaptive" + _label +
 				"_interval:" + std::to_string(_interval) +
 				"_number_of_workers:" + std::to_string(_number_of_workers) + "_init_level:" +
-				std::to_string(_tuple.order_to_level().find(_grad_quant_level)->second);
+				std::to_string(_tuple.order_to_level().find(_grad_quant_level_order)->second);
 			_file_out_stream.open(store_loss_file_path);
 			std::string store_state_file_path =
 				"state_result/adaptive" + _label +
 				"_interval:" + std::to_string(_interval) +
 				"_number_of_workers:" + std::to_string(_number_of_workers) + "_init_level:" +
-				std::to_string(_tuple.order_to_level().find(_grad_quant_level)->second);
+				std::to_string(_tuple.order_to_level().find(_grad_quant_level_order)->second);
 			_file_state_stream.open(store_state_file_path);
 			std::cout << "files opened" << std::endl;
 			set_tuple_with_word_to_index(material_path, _tuple);
@@ -214,7 +214,7 @@ namespace adaptive_system {
 				_store_named_gradient = NamedGradients();
 				quantize_gradients(
 					merged_gradient, &_store_named_gradient,
-					(*_tuple.mutable_order_to_level())[_grad_quant_level]);
+					(*_tuple.mutable_order_to_level()).find(_grad_quant_level_order)->second);
 				add_indices_to_named_gradients(merged_indice, _store_named_gradient);
 				apply_quantized_gradient_to_model(_store_named_gradient,
 					_session, _tuple);
@@ -264,7 +264,7 @@ namespace adaptive_system {
 				std::cout << "got line " << __LINE__ << std::endl;
 			}
 			lk.unlock();
-			response->set_level_order(_grad_quant_level);
+			response->set_level_order(_grad_quant_level_order);
 			
 			return grpc::Status::OK;
 		}
@@ -328,18 +328,18 @@ namespace adaptive_system {
 			moving_average(length, last_tensor_ptr, state_tensor_ptr, 0.9f);
 			print_state_to_file(state_tensor);
 			int new_action_order = _sarsa.sample_new_action(state_tensor);
-			int old_action_order = _grad_quant_level;
+			int old_action_order = _grad_quant_level_order;
 			auto now_time_point = std::chrono::high_resolution_clock::now();
 			std::chrono::duration<float> diff = now_time_point - _time_point_last;
 			float diff_seconds = diff.count();
 			float loss_sum = std::accumulate(_vector_loss_history.begin(), _vector_loss_history.end(), 0.0f);
 			float average = loss_sum / _interval;
 			moving_average(1, &_last_loss, &average, 0.9f);
-			float reward = get_reward(_last_state, _grad_quant_level, diff_seconds, _last_loss, average);
+			float reward = get_reward(_last_state, _grad_quant_level_order, diff_seconds, _last_loss, average);
 			_sarsa.adjust_model(reward, _last_state, old_action_order, state_tensor, new_action_order);
-			_grad_quant_level = new_action_order;
+			_grad_quant_level_order = new_action_order;
 			std::cout << "diff_seconds is: " << diff_seconds << " reward is " << reward
-				<< " quantization level become: " << _tuple.order_to_level().find(_grad_quant_level)->second << std::endl;
+				<< " quantization level become: " << _tuple.order_to_level().find(_grad_quant_level_order)->second << std::endl;
 			_vector_loss_history.clear();
 			_last_loss = average;
 			_last_state = state_tensor;
@@ -361,7 +361,7 @@ namespace adaptive_system {
 		const int _total_iter;
 		const int _number_of_workers;
 		int _current_iter_number = 0;
-		int _grad_quant_level = 0;
+		int _grad_quant_level_order = 0;
 
 		std::chrono::time_point<std::chrono::high_resolution_clock> _init_time_point;
 		std::chrono::time_point<std::chrono::high_resolution_clock> _time_point_last;
@@ -411,7 +411,7 @@ int main(int argc, char** argv) {
 
 	adaptive_system::RPCServiceImpl service(
 		interval, learning_rate, total_iter, number_of_workers,
-		0, tuple_path, sarsa_path, r, eps_greedy);
+		0, tuple_path, sarsa_path, r, eps_greedy, material_path);
 
 	ServerBuilder builder;
 	// Listen on the given address without any authentication mechanism.

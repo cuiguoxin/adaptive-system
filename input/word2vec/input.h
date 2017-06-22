@@ -12,9 +12,13 @@
 #include "tensorflow/core/platform/logging.h"
 #include "tensorflow/core/platform/types.h"
 #include "tensorflow/core/public/session.h"
+
+
+#include "proto/rpc_service.pb.h"
+
 namespace adaptive_system {
 	namespace word2vec {
-		void init(std::string const & raw_data_path);
+		void init(std::string const & raw_data_path, google::protobuf::Map<std::string, int32_t> const & word_2_index);
 		std::pair<tensorflow::Tensor, tensorflow::Tensor> get_next_batch(size_t const batch_size);
 	}
 

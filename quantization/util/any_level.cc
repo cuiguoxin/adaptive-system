@@ -121,7 +121,7 @@ namespace adaptive_system {
 		tensorflow::TensorShape tensor_shape(gradient.tensor_shape());
 		tensor = tensorflow::Tensor(tensorflow::DataType::DT_FLOAT, tensor_shape);
 		float* tensor_ptr = tensor.flat<float>().data();
-		uint8_t const * quantized_array = gradient.quantized_data().data();
+		uint8_t const * quantized_array = gradient.quantized_tensor().data();
 		size_t size = tensor_shape.num_elements();
 		uint32_t const level = gradient.quantized_level();
 		uint32_t const scope = 1 << level;
