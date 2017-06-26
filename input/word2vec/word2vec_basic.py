@@ -33,7 +33,7 @@ tup = rpc.Tuple()
 
 vocabulary_size = 50000
 batch_size = 1000
-embedding_size = 1000  # Dimension of the embedding vector.
+embedding_size = 3000  # Dimension of the embedding vector.
 skip_window = 1       # How many words to consider left and right.
 num_skips = 2         # How many times to reuse an input to generate a label.
 num_sampled = 100      # Number of negative examples to sample.

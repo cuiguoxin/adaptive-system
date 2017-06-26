@@ -349,9 +349,9 @@ namespace adaptive_system {
 		
 		void set_tuple_with_order_to_level(Tuple& tuple) {
 			google::protobuf::Map<int32_t, int32_t>& order_to_level = *tuple.mutable_order_to_level();
-			int const action_number = 5, base_line = 6;
+			int const action_number = 5, base_line = 8;
 			for (int i = 0; i < action_number; i++) {
-				order_to_level[i] = i + 6;
+				order_to_level[i] = i + base_line;
 			}
 		}
 
