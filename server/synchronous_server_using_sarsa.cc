@@ -111,17 +111,15 @@ namespace adaptive_system {
 					assign_name_current.substr(0, length - 2);
 				std::cout << *names.mutable_assign_name() << std::endl;
 
-				std::string assign_add_name_current = names.assign_add_name();
-				length = assign_add_name_current.length();
-				*names.mutable_assign_add_name() =
-					assign_add_name_current.substr(0, length - 2);
 			});
+			PRINT_INFO;
 			tf_status = _session->Run({}, var_names, {}, &var_init_values);
 			if (!tf_status.ok()) {
 				std::cout << "getting init var value has failed in line " << __LINE__
 					<< " in file " << __FILE__ << std::endl;
 				std::terminate();
 			}
+			PRINT_INFO;
 			size_t size = var_names.size();
 			for (size_t i = 0; i < size; i++) {
 				tensorflow::TensorProto var_proto;
@@ -130,6 +128,7 @@ namespace adaptive_system {
 					google::protobuf::MapPair<std::string, tensorflow::TensorProto>(
 						var_names[i], var_proto));
 			}
+			PRINT_INFO;
 			_tuple.set_interval(_interval);
 			_tuple.set_lr(_lr);
 			_tuple.set_total_iter(_total_iter);
@@ -151,7 +150,9 @@ namespace adaptive_system {
 				std::to_string(_tuple.order_to_level().find(_grad_quant_level_order)->second);
 			_file_state_stream.open(store_state_file_path);
 			std::cout << "files opened" << std::endl;
+			PRINT_INFO;
 			set_tuple_with_word_to_index(material_path, _tuple);
+			PRINT_INFO;
 		}
 
 		grpc::Status retrieveTuple(ServerContext* context, const Empty* request,
@@ -347,7 +348,7 @@ namespace adaptive_system {
 		}
 		
 		void set_tuple_with_order_to_level(Tuple& tuple) {
-			google::protobuf::Map<int32_t, int32_t> order_to_level = *tuple.mutable_order_to_level();
+			google::protobuf::Map<int32_t, int32_t>& order_to_level = *tuple.mutable_order_to_level();
 			int const action_number = 5, base_line = 6;
 			for (int i = 0; i < action_number; i++) {
 				order_to_level[i] = i + 6;

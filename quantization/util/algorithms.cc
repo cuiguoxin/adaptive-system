@@ -102,9 +102,6 @@ namespace adaptive_system {
 			std::istringstream iss(line);
 			std::string word;
 			while (iss >> word) {
-				if (word_count.find(word) == word_count.end()) {
-					word_count[word] = 0;
-				}
 				word_count[word]++;
 			}
 		}
