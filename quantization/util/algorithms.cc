@@ -97,33 +97,37 @@ namespace adaptive_system {
 		auto & word_to_index = *tuple.mutable_word_to_index();
 		std::ifstream input_stream(material_path);
 		std::string line;
-		std::unordered_map<std::string, int> word_count;
+		//std::unordered_map<std::string, int> word_count;
 		while (std::getline(input_stream, line)) {
 			std::istringstream iss(line);
 			std::string word;
-			while (iss >> word) {
+			int index;
+			/*while (iss >> word) {
 				word_count[word]++;
-			}
+			}*/
+			iss >> word;
+			iss >> index;
+			word_to_index[word] = index;
 		}
-		std::cout << "total distinct word size is " << word_count.size() << std::endl;
-		size_t const k = 50000;
-		std::vector<std::pair<std::string, int>> top_k;
-		auto begin = word_count.begin();
-		auto end = word_count.end();
-		std::for_each(begin, end, [&top_k](std::pair<std::string, int> const & pair) {
-			top_k.push_back(pair);
-		});
-		//sort top_k
-		std::sort(top_k.begin(), top_k.end(), greater_compare_pair);
-		size_t const size = top_k.size();
-		/*size_t tail_sum = 0;
-		for (int i = k - 1; i < size; i++) {
-			tail_sum += top_k[i].second;
-		}*/
-		word_to_index["UNK"] = 0;
-		for (int i = 0; i < k - 1; i++) {
-			word_to_index[top_k[i].first] = word_to_index.size();
-		}
+		//std::cout << "total distinct word size is " << word_count.size() << std::endl;
+		//size_t const k = 50000;
+		//std::vector<std::pair<std::string, int>> top_k;
+		//auto begin = word_count.begin();
+		//auto end = word_count.end();
+		//std::for_each(begin, end, [&top_k](std::pair<std::string, int> const & pair) {
+		//	top_k.push_back(pair);
+		//});
+		////sort top_k
+		//std::sort(top_k.begin(), top_k.end(), greater_compare_pair);
+		//size_t const size = top_k.size();
+		///*size_t tail_sum = 0;
+		//for (int i = k - 1; i < size; i++) {
+		//	tail_sum += top_k[i].second;
+		//}*/
+		//word_to_index["UNK"] = 0;
+		//for (int i = 0; i < k - 1; i++) {
+		//	word_to_index[top_k[i].first] = word_to_index.size();
+		//}
 	}
 
 }
