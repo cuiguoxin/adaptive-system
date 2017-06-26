@@ -1,5 +1,5 @@
 #include "quantization/util/extract_feature.h"
-
+#include "quantization/util/helper.h"
 namespace adaptive_system {
 	namespace {
 
@@ -109,7 +109,11 @@ namespace adaptive_system {
 		std::fill(tensor_ret_ptr, tensor_ret_ptr + state_length, 0.0f);
 		for (int i = 0; i < vector_size; i++) {
 			tensorflow::Tensor current_partial_tensor;
-			current_partial_tensor.FromProto(vector_partial_states[i].tensor());
+			bool is_success = current_partial_tensor.FromProto(vector_partial_states[i].tensor());
+			if(!is_success){
+				PRINT_ERROR_MESSAGE("FROM PROTO FAILED");
+				std::terminate();
+			}
 			float* current_partial_tensor_ptr = current_partial_tensor.flat<float>().data();
 			for (int j = 0; j < state_length; j++) {
 				tensor_ret_ptr[j] += current_partial_tensor_ptr[j];

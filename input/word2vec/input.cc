@@ -50,14 +50,16 @@ namespace adaptive_system {
 		void init(std::string const & raw_data_path,
 			google::protobuf::Map<std::string, int32_t> const & word_2_index) {
 			word_to_index = word_2_index;
-			std::ifstream input_stream(raw_data_path);
-			stream = std::move(input_stream);
+			//std::ifstream input_stream(raw_data_path);
+			stream.open(raw_data_path);
 		}
 
 		std::pair<tensorflow::Tensor, tensorflow::Tensor> get_next_batch(size_t const batch_size) {
 			while (training_data.size() < batch_size) {
 				std::string line;
-				std::getline(stream, line);
+				while (!std::getline(stream, line)) {
+					stream.seekg(0, stream.beg);
+				}
 				std::istringstream iss(line);
 				std::string word;
 				std::vector<std::string> line_words;
@@ -67,10 +69,10 @@ namespace adaptive_system {
 				generate_according_one_line(line_words);
 			}
 			tensorflow::Tensor batch_tensor(tensorflow::DataType::DT_INT32,
-				tensorflow::TensorShape({ batch_size }));
+				tensorflow::TensorShape({ (int)batch_size }));
 			tensorflow::int32* batch_tensor_ptr = batch_tensor.flat<tensorflow::int32>().data();
 			tensorflow::Tensor label_tensor(tensorflow::DataType::DT_INT32,
-				tensorflow::TensorShape({ batch_size, 1 }));
+				tensorflow::TensorShape({ (int)batch_size, 1 }));
 			tensorflow::int32* label_tensor_ptr = label_tensor.flat<tensorflow::int32>().data();
 			for (int i = 0; i < batch_size; i++) {
 				std::pair<int, int> const current_pair = training_data.front();

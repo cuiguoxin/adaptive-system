@@ -47,7 +47,7 @@ message Tuple {
 
 
 message Gradient {
-    int32 quantizaton_level = 1;
+    int32 quantization_level = 1;
     tensorflow.TensorProto unquantized_tensor = 2;
     bytes quantized_tensor = 3;
     float max = 4;

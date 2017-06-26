@@ -97,7 +97,7 @@ namespace adaptive_system {
 		float const * tensor_ptr = tensor.flat<float>().data();
 		float max = 0, min = 0;
 		get_max_and_min_value(tensor, max, min);
-		gradient.set_quantized_level(level);
+		gradient.set_quantization_level(level);
 		gradient.set_max(max);
 		gradient.set_min(min);
 		gradient.set_is_quantized(true);
@@ -114,16 +114,17 @@ namespace adaptive_system {
 			set_value(quantized_data, begin, level, value);
 			begin += level;
 		}
-		gradient.set_allocated_quantized_tensor(quantized_data, quantized_size);
+		gradient.set_quantized_tensor(quantized_data, quantized_size);
+		delete[] quantized_data;
 	}
 
 	void dequantize_gradient(Gradient const & gradient, tensorflow::Tensor & tensor) {
 		tensorflow::TensorShape tensor_shape(gradient.tensor_shape());
 		tensor = tensorflow::Tensor(tensorflow::DataType::DT_FLOAT, tensor_shape);
 		float* tensor_ptr = tensor.flat<float>().data();
-		uint8_t const * quantized_array = gradient.quantized_tensor().data();
+		uint8_t const * quantized_array = reinterpret_cast<uint8_t const*>(gradient.quantized_tensor().data());
 		size_t size = tensor_shape.num_elements();
-		uint32_t const level = gradient.quantized_level();
+		uint32_t const level = gradient.quantization_level();
 		uint32_t const scope = 1 << level;
 		float const max = gradient.max(), min = gradient.min();
 		float const multiplier = (max - min) / scope;

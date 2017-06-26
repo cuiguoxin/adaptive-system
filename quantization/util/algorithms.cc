@@ -23,7 +23,7 @@ namespace adaptive_system {
 			*tuple.mutable_map_names();
 		std::vector<std::pair<std::string, tensorflow::Tensor>> feeds;
 		std::vector<std::string> actions_to_do;
-		actions_to_do.push_back(tuple.training_op_name);
+		actions_to_do.push_back(tuple.training_op_name());
 		std::for_each(
 			map_gradient.begin(), map_gradient.end(),
 			[&feeds, &map_names,

@@ -86,7 +86,7 @@ const ::google::protobuf::uint32 TableStruct::offsets[] = {
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Gradient, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Gradient, quantizaton_level_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Gradient, quantization_level_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Gradient, unquantized_tensor_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Gradient, quantized_tensor_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Gradient, max_),
@@ -288,31 +288,31 @@ void AddDescriptorsImpl() {
       ".tensorflow.TensorProto:\0028\001\0322\n\020WordToInd"
       "exEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\005:\0028\001\032"
       "3\n\021OrderToLevelEntry\022\013\n\003key\030\001 \001(\005\022\r\n\005val"
-      "ue\030\002 \001(\005:\0028\001\"\207\002\n\010Gradient\022\031\n\021quantizaton"
-      "_level\030\001 \001(\005\0223\n\022unquantized_tensor\030\002 \001(\013"
-      "2\027.tensorflow.TensorProto\022\030\n\020quantized_t"
-      "ensor\030\003 \001(\014\022\013\n\003max\030\004 \001(\002\022\013\n\003min\030\005 \001(\002\0222\n"
-      "\014tensor_shape\030\006 \001(\0132\034.tensorflow.TensorS"
-      "hapeProto\022-\n\014tensor_index\030\007 \001(\0132\027.tensor"
-      "flow.TensorProto\022\024\n\014is_quantized\030\010 \001(\010\"\261"
-      "\001\n\016NamedGradients\022M\n\020name_to_gradient\030\001 "
-      "\003(\01323.adaptive_system.NamedGradients.Nam"
-      "eToGradientEntry\032P\n\023NameToGradientEntry\022"
-      "\013\n\003key\030\001 \001(\t\022(\n\005value\030\002 \001(\0132\031.adaptive_s"
-      "ystem.Gradient:\0028\001\"E\n\014PartialState\022\'\n\006te"
-      "nsor\030\001 \001(\0132\027.tensorflow.TensorProto\022\014\n\004l"
-      "oss\030\002 \001(\002\"\024\n\004Loss\022\014\n\004loss\030\001 \001(\0022\255\002\n\rSyst"
-      "emControl\022\?\n\rretrieveTuple\022\026.adaptive_sy"
-      "stem.Empty\032\026.adaptive_system.Tuple\0229\n\010se"
-      "ndLoss\022\025.adaptive_system.Loss\032\026.adaptive"
-      "_system.Empty\022P\n\014sendGradient\022\037.adaptive"
-      "_system.NamedGradients\032\037.adaptive_system"
-      ".NamedGradients\022N\n\tsendState\022\035.adaptive_"
-      "system.PartialState\032\".adaptive_system.Qu"
-      "antizationLevelb\006proto3"
+      "ue\030\002 \001(\005:\0028\001\"\210\002\n\010Gradient\022\032\n\022quantizatio"
+      "n_level\030\001 \001(\005\0223\n\022unquantized_tensor\030\002 \001("
+      "\0132\027.tensorflow.TensorProto\022\030\n\020quantized_"
+      "tensor\030\003 \001(\014\022\013\n\003max\030\004 \001(\002\022\013\n\003min\030\005 \001(\002\0222"
+      "\n\014tensor_shape\030\006 \001(\0132\034.tensorflow.Tensor"
+      "ShapeProto\022-\n\014tensor_index\030\007 \001(\0132\027.tenso"
+      "rflow.TensorProto\022\024\n\014is_quantized\030\010 \001(\010\""
+      "\261\001\n\016NamedGradients\022M\n\020name_to_gradient\030\001"
+      " \003(\01323.adaptive_system.NamedGradients.Na"
+      "meToGradientEntry\032P\n\023NameToGradientEntry"
+      "\022\013\n\003key\030\001 \001(\t\022(\n\005value\030\002 \001(\0132\031.adaptive_"
+      "system.Gradient:\0028\001\"E\n\014PartialState\022\'\n\006t"
+      "ensor\030\001 \001(\0132\027.tensorflow.TensorProto\022\014\n\004"
+      "loss\030\002 \001(\002\"\024\n\004Loss\022\014\n\004loss\030\001 \001(\0022\255\002\n\rSys"
+      "temControl\022\?\n\rretrieveTuple\022\026.adaptive_s"
+      "ystem.Empty\032\026.adaptive_system.Tuple\0229\n\010s"
+      "endLoss\022\025.adaptive_system.Loss\032\026.adaptiv"
+      "e_system.Empty\022P\n\014sendGradient\022\037.adaptiv"
+      "e_system.NamedGradients\032\037.adaptive_syste"
+      "m.NamedGradients\022N\n\tsendState\022\035.adaptive"
+      "_system.PartialState\032\".adaptive_system.Q"
+      "uantizationLevelb\006proto3"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 1983);
+      descriptor, 1984);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "rpc_service.proto", &protobuf_RegisterTypes);
   ::tensorflow::protobuf_tensorflow_2fcore_2fframework_2ftensor_2eproto::AddDescriptors();
@@ -3263,7 +3263,7 @@ Tuple::mutable_order_to_level() {
 // ===================================================================
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int Gradient::kQuantizatonLevelFieldNumber;
+const int Gradient::kQuantizationLevelFieldNumber;
 const int Gradient::kUnquantizedTensorFieldNumber;
 const int Gradient::kQuantizedTensorFieldNumber;
 const int Gradient::kMaxFieldNumber;
@@ -3305,9 +3305,9 @@ Gradient::Gradient(const Gradient& from)
   } else {
     tensor_index_ = NULL;
   }
-  ::memcpy(&quantizaton_level_, &from.quantizaton_level_,
+  ::memcpy(&quantization_level_, &from.quantization_level_,
     reinterpret_cast<char*>(&is_quantized_) -
-    reinterpret_cast<char*>(&quantizaton_level_) + sizeof(is_quantized_));
+    reinterpret_cast<char*>(&quantization_level_) + sizeof(is_quantized_));
   // @@protoc_insertion_point(copy_constructor:adaptive_system.Gradient)
 }
 
@@ -3374,8 +3374,8 @@ void Gradient::Clear() {
     delete tensor_index_;
   }
   tensor_index_ = NULL;
-  ::memset(&quantizaton_level_, 0, reinterpret_cast<char*>(&is_quantized_) -
-    reinterpret_cast<char*>(&quantizaton_level_) + sizeof(is_quantized_));
+  ::memset(&quantization_level_, 0, reinterpret_cast<char*>(&is_quantized_) -
+    reinterpret_cast<char*>(&quantization_level_) + sizeof(is_quantized_));
 }
 
 bool Gradient::MergePartialFromCodedStream(
@@ -3388,14 +3388,14 @@ bool Gradient::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // int32 quantizaton_level = 1;
+      // int32 quantization_level = 1;
       case 1: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(8u)) {
 
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &quantizaton_level_)));
+                 input, &quantization_level_)));
         } else {
           goto handle_unusual;
         }
@@ -3516,9 +3516,9 @@ failure:
 void Gradient::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // @@protoc_insertion_point(serialize_start:adaptive_system.Gradient)
-  // int32 quantizaton_level = 1;
-  if (this->quantizaton_level() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->quantizaton_level(), output);
+  // int32 quantization_level = 1;
+  if (this->quantization_level() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->quantization_level(), output);
   }
 
   // .tensorflow.TensorProto unquantized_tensor = 2;
@@ -3567,9 +3567,9 @@ void Gradient::SerializeWithCachedSizes(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic;  // Unused
   // @@protoc_insertion_point(serialize_to_array_start:adaptive_system.Gradient)
-  // int32 quantizaton_level = 1;
-  if (this->quantizaton_level() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->quantizaton_level(), target);
+  // int32 quantization_level = 1;
+  if (this->quantization_level() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->quantization_level(), target);
   }
 
   // .tensorflow.TensorProto unquantized_tensor = 2;
@@ -3651,11 +3651,11 @@ size_t Gradient::ByteSizeLong() const {
         *this->tensor_index_);
   }
 
-  // int32 quantizaton_level = 1;
-  if (this->quantizaton_level() != 0) {
+  // int32 quantization_level = 1;
+  if (this->quantization_level() != 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::Int32Size(
-        this->quantizaton_level());
+        this->quantization_level());
   }
 
   // float max = 4;
@@ -3712,8 +3712,8 @@ void Gradient::MergeFrom(const Gradient& from) {
   if (from.has_tensor_index()) {
     mutable_tensor_index()->::tensorflow::TensorProto::MergeFrom(from.tensor_index());
   }
-  if (from.quantizaton_level() != 0) {
-    set_quantizaton_level(from.quantizaton_level());
+  if (from.quantization_level() != 0) {
+    set_quantization_level(from.quantization_level());
   }
   if (from.max() != 0) {
     set_max(from.max());
@@ -3753,7 +3753,7 @@ void Gradient::InternalSwap(Gradient* other) {
   std::swap(unquantized_tensor_, other->unquantized_tensor_);
   std::swap(tensor_shape_, other->tensor_shape_);
   std::swap(tensor_index_, other->tensor_index_);
-  std::swap(quantizaton_level_, other->quantizaton_level_);
+  std::swap(quantization_level_, other->quantization_level_);
   std::swap(max_, other->max_);
   std::swap(min_, other->min_);
   std::swap(is_quantized_, other->is_quantized_);
@@ -3768,18 +3768,18 @@ void Gradient::InternalSwap(Gradient* other) {
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
 // Gradient
 
-// int32 quantizaton_level = 1;
-void Gradient::clear_quantizaton_level() {
-  quantizaton_level_ = 0;
+// int32 quantization_level = 1;
+void Gradient::clear_quantization_level() {
+  quantization_level_ = 0;
 }
-::google::protobuf::int32 Gradient::quantizaton_level() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.Gradient.quantizaton_level)
-  return quantizaton_level_;
+::google::protobuf::int32 Gradient::quantization_level() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.Gradient.quantization_level)
+  return quantization_level_;
 }
-void Gradient::set_quantizaton_level(::google::protobuf::int32 value) {
+void Gradient::set_quantization_level(::google::protobuf::int32 value) {
   
-  quantizaton_level_ = value;
-  // @@protoc_insertion_point(field_set:adaptive_system.Gradient.quantizaton_level)
+  quantization_level_ = value;
+  // @@protoc_insertion_point(field_set:adaptive_system.Gradient.quantization_level)
 }
 
 // .tensorflow.TensorProto unquantized_tensor = 2;

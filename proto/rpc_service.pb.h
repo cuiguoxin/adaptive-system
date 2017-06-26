@@ -805,11 +805,11 @@ class Gradient : public ::google::protobuf::Message /* @@protoc_insertion_point(
   ::tensorflow::TensorProto* release_tensor_index();
   void set_allocated_tensor_index(::tensorflow::TensorProto* tensor_index);
 
-  // int32 quantizaton_level = 1;
-  void clear_quantizaton_level();
-  static const int kQuantizatonLevelFieldNumber = 1;
-  ::google::protobuf::int32 quantizaton_level() const;
-  void set_quantizaton_level(::google::protobuf::int32 value);
+  // int32 quantization_level = 1;
+  void clear_quantization_level();
+  static const int kQuantizationLevelFieldNumber = 1;
+  ::google::protobuf::int32 quantization_level() const;
+  void set_quantization_level(::google::protobuf::int32 value);
 
   // float max = 4;
   void clear_max();
@@ -837,7 +837,7 @@ class Gradient : public ::google::protobuf::Message /* @@protoc_insertion_point(
   ::tensorflow::TensorProto* unquantized_tensor_;
   ::tensorflow::TensorShapeProto* tensor_shape_;
   ::tensorflow::TensorProto* tensor_index_;
-  ::google::protobuf::int32 quantizaton_level_;
+  ::google::protobuf::int32 quantization_level_;
   float max_;
   float min_;
   bool is_quantized_;
@@ -1910,18 +1910,18 @@ Tuple::mutable_order_to_level() {
 
 // Gradient
 
-// int32 quantizaton_level = 1;
-inline void Gradient::clear_quantizaton_level() {
-  quantizaton_level_ = 0;
+// int32 quantization_level = 1;
+inline void Gradient::clear_quantization_level() {
+  quantization_level_ = 0;
 }
-inline ::google::protobuf::int32 Gradient::quantizaton_level() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.Gradient.quantizaton_level)
-  return quantizaton_level_;
+inline ::google::protobuf::int32 Gradient::quantization_level() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.Gradient.quantization_level)
+  return quantization_level_;
 }
-inline void Gradient::set_quantizaton_level(::google::protobuf::int32 value) {
+inline void Gradient::set_quantization_level(::google::protobuf::int32 value) {
   
-  quantizaton_level_ = value;
-  // @@protoc_insertion_point(field_set:adaptive_system.Gradient.quantizaton_level)
+  quantization_level_ = value;
+  // @@protoc_insertion_point(field_set:adaptive_system.Gradient.quantization_level)
 }
 
 // .tensorflow.TensorProto unquantized_tensor = 2;
