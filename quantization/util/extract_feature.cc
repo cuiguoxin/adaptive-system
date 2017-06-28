@@ -100,11 +100,38 @@ namespace adaptive_system {
 
 		return ret_tensor;
 	}
+	//only contains deviation, abs_sum, norm and recent losses
+	tensorflow::Tensor get_feature_v2(tensorflow::Tensor const & tensor,
+		std::vector<float> const & recent_losses) {
+		size_t const recent_loss_size = recent_losses.size();
+		size_t const statistic_size
+		tensorflow::Tensor ret_tensor =
+			tensorflow::Tensor(tensorflow::DataType::DT_FLOAT,
+				tensorflow::TensorShape({ 3 + recent_loss_size}));
+		float* ret_tensor_ptr = ret_tensor.flat<float>().data();
+		std::thread deviation_thread(deviation, std::ref(tensor),
+			std::ref(ret_tensor_ptr[0]));
+		std::thread abs_sum_thread(abs_sum, std::ref(tensor),
+			std::ref(ret_tensor_ptr[1]));
+		std::thread norm_thread(norm, std::ref(tensor),
+			std::ref(ret_tensor_ptr[2]));
+		
+		deviation_thread.join();
+		abs_sum_thread.join();
+		norm_thread.join();
+
+		for (int i = 0; i < recent_loss_size; i++) {
+			ret_tensor_ptr[i + statistic_size] = recent_losses[i];
+		}
+		
+
+		return ret_tensor;
+	}
 
 	tensorflow::Tensor get_final_state_from_partial_state(std::vector<PartialState>const & vector_partial_states) {
 		size_t vector_size = vector_partial_states.size();
 		const size_t state_length = 8;
-		tensorflow::Tensor tensor_ret(tensorflow::DataType::DT_FLOAT, tensorflow::TensorShape({ 8 }));
+		tensorflow::Tensor tensor_ret(tensorflow::DataType::DT_FLOAT, tensorflow::TensorShape({ state_length }));
 		float* tensor_ret_ptr = tensor_ret.flat<float>().data();
 		std::fill(tensor_ret_ptr, tensor_ret_ptr + state_length, 0.0f);
 		for (int i = 0; i < vector_size; i++) {

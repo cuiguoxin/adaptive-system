@@ -272,55 +272,7 @@ namespace adaptive_system {
 
 		// private member functions
 	private:
-		/*void aggregate_gradients(
-			std::vector<std::map<std::string, tensorflow::Tensor>> const&
-			vector_map_gradient,
-			std::map<std::string, tensorflow::Tensor>& map_gradient) {
-			std::for_each(
-				vector_map_gradient.cbegin(), vector_map_gradient.cend(),
-				[&map_gradient](
-					std::map<std::string, tensorflow::Tensor> const& current_map) {
-				std::for_each(
-					current_map.cbegin(), current_map.cend(),
-					[&map_gradient](
-						std::pair<std::string, tensorflow::Tensor> const& pair) {
-					std::string const& variable_name = pair.first;
-					tensorflow::Tensor const& tensor_to_be_aggregate = pair.second;
-					const float* tensor_to_be_aggregate_ptr =
-						tensor_to_be_aggregate.flat<float>().data();
-					auto iter = map_gradient.find(variable_name);
-					if (iter == map_gradient.end()) {
-						tensorflow::Tensor new_tensor(tensorflow::DataType::DT_FLOAT,
-							tensor_to_be_aggregate.shape());
-						float* new_tensor_ptr = new_tensor.flat<float>().data();
-						size_t num_new_tensor = new_tensor.NumElements();
-						std::copy(tensor_to_be_aggregate_ptr,
-							tensor_to_be_aggregate_ptr + num_new_tensor,
-							new_tensor_ptr);
-						map_gradient.insert(
-							std::make_pair(variable_name, new_tensor));
-					}
-					else {
-						tensorflow::Tensor& tensor_sum = iter->second;
-						float* tensor_sum_ptr = tensor_sum.flat<float>().data();
-						size_t num_new_tensor = tensor_sum.NumElements();
-						for (size_t i = 0; i < num_new_tensor; i++) {
-							tensor_sum_ptr[i] += tensor_to_be_aggregate_ptr[i];
-						}
-					}
-				});
-			});
-		}*/
-
-		/*void average_gradients(std::map<std::string, tensorflow::Tensor> map_gradient) {
-			std::for_each(map_gradient.begin(), map_gradient.end(),
-				[this](std::pair<const std::string, tensorflow::Tensor>& pair) {
-				tensorflow::Tensor & tensor = pair.second;
-				float * tensor_ptr = tensor.flat<float>().data();
-				size_t length = tensor.NumElements();
-				std::for_each(tensor_ptr, tensor_ptr + length, [this](float& ref) { ref = ref / _number_of_workers; });
-			});
-		}*/
+		
 		void adjust_rl_model(std::vector<PartialState> const& vector_partial_state) {
 			tensorflow::Tensor state_tensor = get_final_state_from_partial_state(vector_partial_state);
 			size_t length = state_tensor.NumElements();
