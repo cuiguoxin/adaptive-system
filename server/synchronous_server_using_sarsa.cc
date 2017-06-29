@@ -254,7 +254,7 @@ namespace adaptive_system {
 					_time_point_last = std::chrono::high_resolution_clock::now();
 				}
 				else {
-					adjust_rl_model(_vector_partial_state);
+					//adjust_rl_model(_vector_partial_state);
 				}
 				_vector_partial_state.clear();
 				_bool_state = true;

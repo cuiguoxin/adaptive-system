@@ -104,10 +104,10 @@ namespace adaptive_system {
 	tensorflow::Tensor get_feature_v2(tensorflow::Tensor const & tensor,
 		std::vector<float> const & recent_losses) {
 		size_t const recent_loss_size = recent_losses.size();
-		size_t const statistic_size
+		size_t const statistic_size = 3;
 		tensorflow::Tensor ret_tensor =
 			tensorflow::Tensor(tensorflow::DataType::DT_FLOAT,
-				tensorflow::TensorShape({ 3 + recent_loss_size}));
+				tensorflow::TensorShape({ statistic_size + recent_loss_size}));
 		float* ret_tensor_ptr = ret_tensor.flat<float>().data();
 		std::thread deviation_thread(deviation, std::ref(tensor),
 			std::ref(ret_tensor_ptr[0]));
