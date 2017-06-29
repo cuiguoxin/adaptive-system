@@ -142,14 +142,14 @@ namespace adaptive_system {
 			std::string store_loss_file_path =
 				"loss_result/adaptive" + _label +
 				"_interval:" + std::to_string(_interval) +
-				"_number_of_workers:" + std::to_string(_number_of_workers) + "_init_level:" +
-				std::to_string(_tuple.order_to_level().find(_grad_quant_level_order)->second);
+				"_number_of_workers:" + std::to_string(_number_of_workers) + "_base_level:" +
+				std::to_string(_level);
 			_file_out_stream.open(store_loss_file_path);
 			std::string store_state_file_path =
 				"state_result/adaptive" + _label +
 				"_interval:" + std::to_string(_interval) +
-				"_number_of_workers:" + std::to_string(_number_of_workers) + "_init_level:" +
-				std::to_string(_tuple.order_to_level().find(_grad_quant_level_order)->second);
+				"_number_of_workers:" + std::to_string(_number_of_workers) + "_base_level:" +
+				std::to_string(_level);
 			_file_state_stream.open(store_state_file_path);
 			std::cout << "files opened" << std::endl;
 			PRINT_INFO;
