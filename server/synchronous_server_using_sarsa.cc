@@ -59,7 +59,8 @@ namespace adaptive_system {
 		RPCServiceImpl(int interval, float lr, int total_iter, int number_of_workers,
 			int grad_quant_level_order,
 			std::string const& tuple_local_path,
-			std::string const & sarsa_path, float r, float eps_greedy, std::string const & material_path)
+			std::string const & sarsa_path, float r, float eps_greedy, std::string const & material_path,
+			int const level)
 			: SystemControl::Service(),
 			_interval(interval),
 			_lr(lr),
@@ -67,7 +68,8 @@ namespace adaptive_system {
 			_number_of_workers(number_of_workers),
 			_grad_quant_level_order(grad_quant_level_order),
 			_tuple_local_path(tuple_local_path),
-			_sarsa(sarsa_path, r, eps_greedy)
+			_sarsa(sarsa_path, r, eps_greedy), 
+			_level(level)
 		{
 			_session = tensorflow::NewSession(tensorflow::SessionOptions());
 			std::fstream input(_tuple_local_path, std::ios::in | std::ios::binary);
@@ -215,7 +217,7 @@ namespace adaptive_system {
 				_store_named_gradient = NamedGradients();
 				quantize_gradients(
 					merged_gradient, &_store_named_gradient,
-					(*_tuple.mutable_order_to_level()).find(_grad_quant_level_order)->second);
+					_level);
 				add_indices_to_named_gradients(merged_indice, _store_named_gradient);
 				apply_quantized_gradient_to_model(_store_named_gradient,
 					_session, _tuple);
@@ -306,6 +308,7 @@ namespace adaptive_system {
 		const float _lr;
 		const int _total_iter;
 		const int _number_of_workers;
+		const int _level;
 		int _current_iter_number = 0;
 		int _grad_quant_level_order = 0;
 
@@ -354,10 +357,11 @@ int main(int argc, char** argv) {
 	float r = atof(argv[8]);
 	float eps_greedy = atof(argv[9]);
 	std::string material_path = argv[10];
+	const int level = atoi(argv[11]);
 
 	adaptive_system::RPCServiceImpl service(
 		interval, learning_rate, total_iter, number_of_workers,
-		0, tuple_path, sarsa_path, r, eps_greedy, material_path);
+		0, tuple_path, sarsa_path, r, eps_greedy, material_path, level);
 
 	ServerBuilder builder;
 	// Listen on the given address without any authentication mechanism.

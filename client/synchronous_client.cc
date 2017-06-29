@@ -218,7 +218,7 @@ namespace adaptive_system {
 	
 
 
-	void do_training(std::string const & raw_data_path) {
+	void do_training(std::string const & raw_data_path, const int level) {
 		word2vec::init(raw_data_path, get_tuple()->word_to_index());
 		for (int i = 0; i < total_iter; i++) {
 			PRINT_INFO;
@@ -258,8 +258,8 @@ namespace adaptive_system {
 			NamedGradients named_gradients_send, named_gradients_receive;
 			PRINT_INFO;
 			quantize_gradients(
-				map_gradients, &named_gradients_send,
-				get_tuple()->order_to_level().find(grad_quant_level_order)->second);
+				map_gradients, &named_gradients_send, level);
+				//get_tuple()->order_to_level().find(grad_quant_level_order)->second);
 			PRINT_INFO;
 			add_indices_to_named_gradients(map_indices, named_gradients_send);
 			ClientContext gradient_context;
@@ -282,9 +282,9 @@ namespace adaptive_system {
 
 	void close_session() { get_session()->Close(); }
 
-	void run_logic(std::string const & raw_data_path) {
+	void run_logic(std::string const & raw_data_path, int const level) {
 		init_everything();
-		do_training(raw_data_path);
+		do_training(raw_data_path, level);
 		close_session();
 	}
 }
@@ -292,6 +292,7 @@ namespace adaptive_system {
 int main(int argc, char* argv[]) {
 	std::string ip_port = argv[1];
 	std::string raw_data_path = argv[2];
+	const int level = atoi(argv[3]);
 	adaptive_system::init_stub(ip_port);
-	adaptive_system::run_logic(raw_data_path);
+	adaptive_system::run_logic(raw_data_path, level);
 }
