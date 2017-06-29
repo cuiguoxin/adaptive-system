@@ -134,7 +134,7 @@ namespace adaptive_system {
 			_tuple.set_interval(_interval);
 			_tuple.set_lr(_lr);
 			_tuple.set_total_iter(_total_iter);
-			set_tuple_with_order_to_level(_tuple);
+			//set_tuple_with_order_to_level(_tuple);
 			_init_time_point = std::chrono::high_resolution_clock::now();
 			auto now = std::chrono::system_clock::now();
 			auto init_time_t = std::chrono::system_clock::to_time_t(now);
@@ -357,11 +357,11 @@ int main(int argc, char** argv) {
 	float r = atof(argv[8]);
 	float eps_greedy = atof(argv[9]);
 	std::string material_path = argv[10];
-	const int level = atoi(argv[11]);
+	const int base_level = atoi(argv[11]);
 
 	adaptive_system::RPCServiceImpl service(
 		interval, learning_rate, total_iter, number_of_workers,
-		0, tuple_path, sarsa_path, r, eps_greedy, material_path, level);
+		0, tuple_path, sarsa_path, r, eps_greedy, material_path, base_level);
 
 	ServerBuilder builder;
 	// Listen on the given address without any authentication mechanism.
