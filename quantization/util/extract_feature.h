@@ -31,6 +31,8 @@
 
 namespace adaptive_system {
 	tensorflow::Tensor get_feature(tensorflow::Tensor const& tensor, const float loss);
+	tensorflow::Tensor get_feature_v2(tensorflow::Tensor const & tensor,
+		std::vector<float> const & recent_losses);
 	tensorflow::Tensor get_final_state_from_partial_state(std::vector<PartialState> const & vector_partial_states);
 }
 

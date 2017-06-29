@@ -195,55 +195,30 @@ namespace adaptive_system {
 		return partial_state_ret;
 	}
 
-	//void show_quantization_infor(
-	//	std::map<std::string, tensorflow::Tensor>& map_gradients,
-	//	NamedGradients& named_gradients_send) {
-	//	std::map<std::string, tensorflow::Tensor> map_gradients_other;
-	//	dequantize_gradient(named_gradients_send, map_gradients_other);
-	//	std::for_each(
-	//		map_gradients.begin(), map_gradients.end(),
-	//		[&map_gradients_other](std::pair<std::string, tensorflow::Tensor> pair) {
-	//		std::string variable_name = pair.first;
-	//		tensorflow::Tensor& tensor = pair.second;
-	//		float* tensor_ptr = tensor.flat<float>().data();
-	//		size_t size = tensor.NumElements();
-	//		auto iter = map_gradients_other.find(variable_name);
-	//		tensorflow::Tensor& tensor_other = iter->second;
-	//		float* tensor_other_ptr = tensor_other.flat<float>().data();
-	//		std::cout << variable_name << " : ";
-	//		for (int i = 0; i < 10; i++) {
-	//			std::cout << "(" << tensor_other_ptr[i] << "-" << tensor_ptr[i] << "="
-	//				<< tensor_other_ptr[i] - tensor_ptr[i] << "), ";
-	//		}
-	//		std::cout << std::endl;
-	//	});
-	//}
-
-	/*void now_sleep(GRAD_QUANT_LEVEL level) {
-		switch (level) {
-		case GRAD_QUANT_LEVEL::ONE:
-			std::this_thread::sleep_for(std::chrono::duration<float>(0.5f));
-			break;
-		case GRAD_QUANT_LEVEL::TWO:
-			std::this_thread::sleep_for(std::chrono::duration<float>(1.0f));
-			break;
-		case GRAD_QUANT_LEVEL::FOUR:
-			std::this_thread::sleep_for(std::chrono::duration<float>(1.5f));
-			break;
-		case GRAD_QUANT_LEVEL::EIGHT:
-			std::this_thread::sleep_for(std::chrono::duration<float>(2.5f));
-			break;
-		case GRAD_QUANT_LEVEL::SIXTEEN:
-			std::this_thread::sleep_for(std::chrono::duration<float>(4.0f));
-			break;
-		case GRAD_QUANT_LEVEL::NONE:
-			std::this_thread::sleep_for(std::chrono::duration<float>(6.0f));
-			break;
+	// do not need session, currently not use loss information
+	PartialState collect_partial_state_v2(
+		std::map<std::string, tensorflow::Tensor> const& gradients,
+		const std::vector<float>& recent_losses) {
+		PartialState partial_state_ret;
+		static const std::string variable_name_to_collect = "Variable:0";
+		auto iter = gradients.find(variable_name_to_collect);
+		if (iter == gradients.end()) {
+			PRINT_ERROR;
+			std::terminate();
 		}
-	}*/
+		else {
+			tensorflow::Tensor const & tensor_to_be_collected = iter->second;
+			tensorflow::Tensor feature_tensor = get_feature_v2(tensor_to_be_collected, recent_losses);
+			tensorflow::TensorProto feature_tensor_proto;
+			feature_tensor.AsProtoField(&feature_tensor_proto);
+			*partial_state_ret.mutable_tensor() = feature_tensor_proto;
+		}
+		return partial_state_ret;
+	}
+	
 
 
-	void do_training(std::string const & raw_data_path) {
+	void do_training(std::string const & raw_data_path, const int level) {
 		word2vec::init(raw_data_path, get_tuple()->word_to_index());
 		for (int i = 0; i < total_iter; i++) {
 			PRINT_INFO;
@@ -283,8 +258,8 @@ namespace adaptive_system {
 			NamedGradients named_gradients_send, named_gradients_receive;
 			PRINT_INFO;
 			quantize_gradients(
-				map_gradients, &named_gradients_send,
-				get_tuple()->order_to_level().find(grad_quant_level_order)->second);
+				map_gradients, &named_gradients_send, level);
+				//get_tuple()->order_to_level().find(grad_quant_level_order)->second);
 			PRINT_INFO;
 			add_indices_to_named_gradients(map_indices, named_gradients_send);
 			ClientContext gradient_context;
@@ -307,9 +282,9 @@ namespace adaptive_system {
 
 	void close_session() { get_session()->Close(); }
 
-	void run_logic(std::string const & raw_data_path) {
+	void run_logic(std::string const & raw_data_path, int const level) {
 		init_everything();
-		do_training(raw_data_path);
+		do_training(raw_data_path, level);
 		close_session();
 	}
 }
@@ -317,6 +292,7 @@ namespace adaptive_system {
 int main(int argc, char* argv[]) {
 	std::string ip_port = argv[1];
 	std::string raw_data_path = argv[2];
+	const int level = atoi(argv[3]);
 	adaptive_system::init_stub(ip_port);
-	adaptive_system::run_logic(raw_data_path);
+	adaptive_system::run_logic(raw_data_path, level);
 }

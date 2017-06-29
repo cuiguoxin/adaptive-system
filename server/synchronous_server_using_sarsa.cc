@@ -59,7 +59,8 @@ namespace adaptive_system {
 		RPCServiceImpl(int interval, float lr, int total_iter, int number_of_workers,
 			int grad_quant_level_order,
 			std::string const& tuple_local_path,
-			std::string const & sarsa_path, float r, float eps_greedy, std::string const & material_path)
+			std::string const & sarsa_path, float r, float eps_greedy, std::string const & material_path,
+			int const level)
 			: SystemControl::Service(),
 			_interval(interval),
 			_lr(lr),
@@ -67,7 +68,8 @@ namespace adaptive_system {
 			_number_of_workers(number_of_workers),
 			_grad_quant_level_order(grad_quant_level_order),
 			_tuple_local_path(tuple_local_path),
-			_sarsa(sarsa_path, r, eps_greedy)
+			_sarsa(sarsa_path, r, eps_greedy), 
+			_level(level)
 		{
 			_session = tensorflow::NewSession(tensorflow::SessionOptions());
 			std::fstream input(_tuple_local_path, std::ios::in | std::ios::binary);
@@ -215,7 +217,7 @@ namespace adaptive_system {
 				_store_named_gradient = NamedGradients();
 				quantize_gradients(
 					merged_gradient, &_store_named_gradient,
-					(*_tuple.mutable_order_to_level()).find(_grad_quant_level_order)->second);
+					_level);
 				add_indices_to_named_gradients(merged_indice, _store_named_gradient);
 				apply_quantized_gradient_to_model(_store_named_gradient,
 					_session, _tuple);
@@ -272,55 +274,7 @@ namespace adaptive_system {
 
 		// private member functions
 	private:
-		/*void aggregate_gradients(
-			std::vector<std::map<std::string, tensorflow::Tensor>> const&
-			vector_map_gradient,
-			std::map<std::string, tensorflow::Tensor>& map_gradient) {
-			std::for_each(
-				vector_map_gradient.cbegin(), vector_map_gradient.cend(),
-				[&map_gradient](
-					std::map<std::string, tensorflow::Tensor> const& current_map) {
-				std::for_each(
-					current_map.cbegin(), current_map.cend(),
-					[&map_gradient](
-						std::pair<std::string, tensorflow::Tensor> const& pair) {
-					std::string const& variable_name = pair.first;
-					tensorflow::Tensor const& tensor_to_be_aggregate = pair.second;
-					const float* tensor_to_be_aggregate_ptr =
-						tensor_to_be_aggregate.flat<float>().data();
-					auto iter = map_gradient.find(variable_name);
-					if (iter == map_gradient.end()) {
-						tensorflow::Tensor new_tensor(tensorflow::DataType::DT_FLOAT,
-							tensor_to_be_aggregate.shape());
-						float* new_tensor_ptr = new_tensor.flat<float>().data();
-						size_t num_new_tensor = new_tensor.NumElements();
-						std::copy(tensor_to_be_aggregate_ptr,
-							tensor_to_be_aggregate_ptr + num_new_tensor,
-							new_tensor_ptr);
-						map_gradient.insert(
-							std::make_pair(variable_name, new_tensor));
-					}
-					else {
-						tensorflow::Tensor& tensor_sum = iter->second;
-						float* tensor_sum_ptr = tensor_sum.flat<float>().data();
-						size_t num_new_tensor = tensor_sum.NumElements();
-						for (size_t i = 0; i < num_new_tensor; i++) {
-							tensor_sum_ptr[i] += tensor_to_be_aggregate_ptr[i];
-						}
-					}
-				});
-			});
-		}*/
-
-		/*void average_gradients(std::map<std::string, tensorflow::Tensor> map_gradient) {
-			std::for_each(map_gradient.begin(), map_gradient.end(),
-				[this](std::pair<const std::string, tensorflow::Tensor>& pair) {
-				tensorflow::Tensor & tensor = pair.second;
-				float * tensor_ptr = tensor.flat<float>().data();
-				size_t length = tensor.NumElements();
-				std::for_each(tensor_ptr, tensor_ptr + length, [this](float& ref) { ref = ref / _number_of_workers; });
-			});
-		}*/
+		
 		void adjust_rl_model(std::vector<PartialState> const& vector_partial_state) {
 			tensorflow::Tensor state_tensor = get_final_state_from_partial_state(vector_partial_state);
 			size_t length = state_tensor.NumElements();
@@ -347,13 +301,6 @@ namespace adaptive_system {
 			_time_point_last = std::chrono::high_resolution_clock::now();
 		}
 		
-		void set_tuple_with_order_to_level(Tuple& tuple) {
-			google::protobuf::Map<int32_t, int32_t>& order_to_level = *tuple.mutable_order_to_level();
-			int const action_number = 5, base_line = 8;
-			for (int i = 0; i < action_number; i++) {
-				order_to_level[i] = i + base_line;
-			}
-		}
 
 		// private data member
 	private:
@@ -361,6 +308,7 @@ namespace adaptive_system {
 		const float _lr;
 		const int _total_iter;
 		const int _number_of_workers;
+		const int _level;
 		int _current_iter_number = 0;
 		int _grad_quant_level_order = 0;
 
@@ -409,10 +357,11 @@ int main(int argc, char** argv) {
 	float r = atof(argv[8]);
 	float eps_greedy = atof(argv[9]);
 	std::string material_path = argv[10];
+	const int level = atoi(argv[11]);
 
 	adaptive_system::RPCServiceImpl service(
 		interval, learning_rate, total_iter, number_of_workers,
-		0, tuple_path, sarsa_path, r, eps_greedy, material_path);
+		0, tuple_path, sarsa_path, r, eps_greedy, material_path, level);
 
 	ServerBuilder builder;
 	// Listen on the given address without any authentication mechanism.
