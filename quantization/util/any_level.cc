@@ -107,15 +107,21 @@ namespace adaptive_system {
 
 		size_t quantized_size = std::ceil(((float)size) * level / 8); //number of byte
 		uint8_t* quantized_data = new uint8_t[quantized_size]();
-		size_t const scope = 1 << level;
+		unsigned long long const scope = ((long long)1) << level;
 		float const eps = 0.000001;
 		float const multiplier = scope / (max + eps - min);
+		//std::cout << "multiplier: " << multiplier << " scope is: " << scope << std::endl;
 		size_t begin = 0;
 		for (size_t i = 0; i < size; i++) {
-			uint32_t value = multiplier * (tensor_ptr[i] - min);
+			uint64_t value = multiplier * (tensor_ptr[i] - min);
+			if(value == scope) {
+				value--;
+			}
+			//std::cout << value << " ";
 			set_value(quantized_data, begin, level, value);
 			begin += level;
 		}
+		//std::cout << std::endl;
 		gradient.set_quantized_tensor(quantized_data, quantized_size);
 		delete[] quantized_data;
 	}
@@ -127,15 +133,17 @@ namespace adaptive_system {
 		uint8_t const * quantized_array = reinterpret_cast<uint8_t const*>(gradient.quantized_tensor().data());
 		size_t size = tensor_shape.num_elements();
 		uint32_t const level = gradient.quantization_level();
-		uint32_t const scope = 1 << level;
+		unsigned long long const scope = ((long long)1) << level;
 		float const max = gradient.max(), min = gradient.min();
 		float const multiplier = (max - min) / scope;
 		size_t begin = 0;
 		for (size_t i = 0; i < size; i++) {
 			uint32_t value = read_value(quantized_array, begin, level);
+			//std::cout << value << " ";
 			tensor_ptr[i] = multiplier * value + min + multiplier / 2;
 			begin += level;
 		}
+		//std::cout << std::endl;
 	}
 
 	void quantize_gradients(std::map<std::string, tensorflow::Tensor>& map_gradient,
