@@ -18,8 +18,9 @@
 
 namespace adaptive_system {
 	//return pair<value, index>
-	std::pair<tensorflow::Tensor, tensorflow::Tensor>  merge_multiple_indexed_slices
-	(std::vector<std::pair<tensorflow::Tensor, tensorflow::Tensor>> const & vec_ind_slic);
+	void  merge_multiple_indexed_slices
+	(std::vector<std::pair<tensorflow::Tensor, tensorflow::Tensor>> const & vec_ind_slic,
+		std::pair<tensorflow::Tensor, tensorflow::Tensor>& result);
 
 	void extract_indices_from_named_gradient(const NamedGradients& named_gradients,
 		std::map<std::string, tensorflow::Tensor>& map_indices);
