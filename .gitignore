@@ -17,3 +17,4 @@ state_result/
 *.filters
 .vs/
 Debug/
+*.sh

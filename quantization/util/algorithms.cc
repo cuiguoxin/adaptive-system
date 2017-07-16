@@ -130,5 +130,18 @@ namespace adaptive_system {
 		//}
 	}
 
+	void average_gradients(int const number_workers,
+		std::map<std::string, tensorflow::Tensor> & name2gradient) {
+		auto begin = name2gradient.begin();
+		auto end = name2gradient.end();
+		for (auto iter = begin; iter != end; iter++) {
+			tensorflow::Tensor & tensor = iter->second;
+			float* tensor_ptr = tensor.flat<float>().data();
+			size_t size = tensor.NumElements();
+			std::for_each(tensor_ptr, tensor_ptr + size, 
+				[number_workers](float& current) { current = current / number_workers; });
+		}
+	}
+
 }
 

@@ -35,5 +35,7 @@ namespace adaptive_system {
 		NamedGradients& named_gradients);
 
 	void set_tuple_with_word_to_index(std::string const & material_path, Tuple& tuple);
+
+	void average_gradients(int const number_workers, std::map<std::string, tensorflow::Tensor> & name2gradient);
 }
 #endif
