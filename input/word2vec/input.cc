@@ -58,7 +58,7 @@ namespace adaptive_system {
 			while (training_data.size() < batch_size) {
 				std::string line;
 				while (!std::getline(stream, line)) {
-					strean.clear();
+					stream.clear();
 					stream.seekg(0, stream.beg);
 				}
 				std::istringstream iss(line);
