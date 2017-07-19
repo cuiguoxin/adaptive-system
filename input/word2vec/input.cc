@@ -31,7 +31,7 @@ namespace adaptive_system {
 
 			void generate_according_one_line(std::vector<std::string> const & line_words) {
 				const int window = 1;
-				const size_t size = line_words.size();
+				const int size = line_words.size();
 				for (int i = window; i < size - window; i++) {
 					size_t index_of_i = get_index(line_words[i]);
 					//previous
@@ -58,6 +58,7 @@ namespace adaptive_system {
 			while (training_data.size() < batch_size) {
 				std::string line;
 				while (!std::getline(stream, line)) {
+					stream.clear();
 					stream.seekg(0, stream.beg);
 				}
 				std::istringstream iss(line);
