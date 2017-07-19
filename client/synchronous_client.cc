@@ -218,7 +218,7 @@ namespace adaptive_system {
 	
 
 
-	void do_training(std::string const & raw_data_path, const int level) {
+	void do_training(std::string const & raw_data_path, int level) {
 		word2vec::init(raw_data_path, get_tuple()->word_to_index());
 		for (int i = 0; i < total_iter; i++) {
 			PRINT_INFO;
@@ -257,6 +257,9 @@ namespace adaptive_system {
 			//now_sleep(grad_quant_level);
 			NamedGradients named_gradients_send, named_gradients_receive;
 			PRINT_INFO;
+			if (i == 750) {
+				level = 10;
+			}
 			quantize_gradients(
 				map_gradients, &named_gradients_send, level);
 				//get_tuple()->order_to_level().find(grad_quant_level_order)->second);
