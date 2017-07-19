@@ -213,7 +213,7 @@ namespace adaptive_system {
 				std::map<std::string, tensorflow::Tensor> merged_gradient, merged_indice;
 				aggregate_indexed_slices(_vector_map_gradient, _vector_map_indice,
 					merged_gradient, merged_indice);
-				//average_gradients(map_gradient_another);
+				average_gradients(_number_of_workers, merged_gradient);
 				_store_named_gradient = NamedGradients();
 				quantize_gradients(
 					merged_gradient, &_store_named_gradient,

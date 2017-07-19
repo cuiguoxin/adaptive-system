@@ -5,6 +5,8 @@
 #include <vector>
 #include <unordered_map>
 #include <algorithm>
+#include <thread>
+#include <utility>
 
 using namespace tensorflow;
 
@@ -61,8 +63,8 @@ namespace adaptive_system {
 		}
 	}
 	//pair<values, indices>
-	std::pair<Tensor, Tensor>  merge_multiple_indexed_slices
-	(std::vector<std::pair<Tensor, Tensor>> const & vec_index_slice) {
+	void  merge_multiple_indexed_slices
+	(std::vector<std::pair<Tensor, Tensor>> const & vec_index_slice, std::pair<Tensor, Tensor>& result) {
 		std::unordered_map<int, Tensor> index_to_value;
 		const int size = vec_index_slice.size();
 		const int embedding_dimension = get_embedding_dimension(vec_index_slice[0]);
@@ -134,7 +136,8 @@ namespace adaptive_system {
 				current_index_value += embedding_dimension;
 			}
 		}
-		return std::make_pair(ret_value, ret_index);
+		result.first = ret_value;
+		result.second = ret_index;
 	}
 
 	void extract_indices_from_named_gradient(const NamedGradients& named_gradients,
@@ -171,14 +174,23 @@ namespace adaptive_system {
 				name_to_vec_pair[var_name].push_back(std::pair<Tensor, Tensor>(gradient_tensor, indice_tensor));
 			}
 		}
+		std::vector<std::thread> threads;
+		std::vector<std::string> variable_names;
+		std::vector<std::pair<tensorflow::Tensor, tensorflow::Tensor>> merged_pairs;
+		size = name_to_vec_pair.size();
+		merged_pairs.resize(size);
+		int index = 0;
 		for (auto iter = name_to_vec_pair.begin(); iter != name_to_vec_pair.end(); iter++) {
 			std::string var_name = iter->first;
+			variable_names.push_back(var_name);
 			auto& vec_pair = iter->second;
-			auto merged_pair = merge_multiple_indexed_slices(vec_pair);
-			std::cout << "gradient's first is " << merged_pair.first.dim_size(0) << " indice is " << merged_pair.second.dim_size(0)<<std::endl;
-			merged_gradients[var_name] = merged_pair.first;
-			merged_indices[var_name] = merged_pair.second;
+			threads.push_back(
+				std::thread(merge_multiple_indexed_slices, std::ref(vec_pair), std::ref(merged_pairs[index++])));
 		}
-
+		for (int i = 0; i < size; i++) {
+			threads[i].join();
+			merged_gradients[variable_names[i]] = merged_pairs[i].first;
+			merged_indices[variable_names[i]] = merged_pairs[i].second;
+		}
 	}
 }

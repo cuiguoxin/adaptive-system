@@ -18,3 +18,5 @@ state_result/
 *.filters
 .vs/
 Debug/
+test/
+*.log

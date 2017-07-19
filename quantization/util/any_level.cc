@@ -1,4 +1,6 @@
 #include "quantization/util/any_level.h"
+#include <thread>
+#include <utility>
 
 namespace adaptive_system {
 	namespace {
@@ -146,33 +148,72 @@ namespace adaptive_system {
 
 	void quantize_gradients(std::map<std::string, tensorflow::Tensor>& map_gradient,
 		NamedGradients* named_gradients, int level) {
-		std::for_each(map_gradient.begin(), map_gradient.end(),
-			[named_gradients, level](std::pair<std::string const, tensorflow::Tensor>& pair) {
-			std::string const& variable_name = pair.first;
-			tensorflow::Tensor& raw_tensor = pair.second;
-			Gradient grad;
-			quantize_gradient(level, raw_tensor, grad);
+		int const size = map_gradient.size();
+		std::vector<Gradient> grads;
+		std::vector<std::thread> threads;
+		grads.resize(size);
+		std::vector<std::string> variable_names;
+		int index = 0;
+		//std::for_each(map_gradient.begin(), map_gradient.end(),
+		//	[named_gradients, level, ](std::pair<std::string const, tensorflow::Tensor>& pair) {
+		//	std::string const& variable_name = pair.first;
+		//	variable_names.push_back
+		//	tensorflow::Tensor& raw_tensor = pair.second;
+		//	threads.push_back(
+		//		std::thread(quantize_gradient, level, std::ref(raw_tensor), std::ref(grads[i++]));
+		//	//quantize_gradient(level, raw_tensor, grad);
+		//	named_gradients->mutable_name_to_gradient()->insert(
+		//		google::protobuf::MapPair<::std::string, Gradient>(
+		//			variable_name, grad));
+		//});
+		for (auto iter = map_gradient.begin(); iter != map_gradient.end(); iter++) {
+			std::string const & variable_name = iter->first;
+			variable_names.push_back(variable_name);
+			tensorflow::Tensor& raw_tensor = iter->second;
+			threads.push_back(
+				std::thread(quantize_gradient, level, std::ref(raw_tensor), std::ref(grads[index++])));
+		}
+		for (int i = 0; i < size; i++) {
+			threads[i].join();
 			named_gradients->mutable_name_to_gradient()->insert(
-				google::protobuf::MapPair<::std::string, Gradient>(
-					variable_name, grad));
-		});
+				google::protobuf::MapPair<std::string, Gradient>(variable_names[i], grads[i]));
+		}
 	}
 
 	void dequantize_gradients(
 		NamedGradients& named_gradients,
 		std::map<std::string, tensorflow::Tensor>& map_gradient) {
-		auto map_quantized_gradient =
-			named_gradients.mutable_name_to_gradient();  // const reference
-		std::for_each(
-			map_quantized_gradient->begin(), map_quantized_gradient->end(),
-			[&map_gradient](
-				::google::protobuf::MapPair<std::string, Gradient>& pair) {
-			Gradient& gradient = pair.second;
-			std::string const& variable_name = pair.first;
-			tensorflow::Tensor temp_tensor;
-			dequantize_gradient(gradient, temp_tensor);
-			map_gradient.insert(std::pair<std::string, tensorflow::Tensor>(
-				variable_name, temp_tensor));
-		});
+		//auto map_quantized_gradient =
+		//	named_gradients.mutable_name_to_gradient();  // const reference
+		//std::for_each(
+		//	map_quantized_gradient->begin(), map_quantized_gradient->end(),
+		//	[&map_gradient](
+		//		::google::protobuf::MapPair<std::string, Gradient>& pair) {
+		//	Gradient& gradient = pair.second;
+		//	std::string const& variable_name = pair.first;
+		//	tensorflow::Tensor temp_tensor;
+		//	dequantize_gradient(gradient, temp_tensor);
+		//	map_gradient.insert(std::pair<std::string, tensorflow::Tensor>(
+		//		variable_name, temp_tensor));
+		//});
+		int const size = named_gradients.name_to_gradient().size();
+		std::vector<tensorflow::Tensor> tensors;
+		std::vector<std::thread> threads;
+		tensors.resize(size);
+		std::vector<std::string> variable_names;
+		int index = 0;
+		for (auto iter = named_gradients.mutable_name_to_gradient()->begin();
+			iter != named_gradients.mutable_name_to_gradient()->end(); iter++) {
+			std::string const & variable_name = iter->first;
+			variable_names.push_back(variable_name);
+			Gradient& gradient = iter->second;
+			threads.push_back(
+				std::thread(dequantize_gradient, std::ref(gradient), std::ref(tensors[index++])));
+		}
+		for (int i = 0; i < size; i++) {
+			threads[i].join();
+			map_gradient.insert(
+				std::pair<std::string, tensorflow::Tensor>(variable_names[i], tensors[i]));
+		}
 	}
 }
