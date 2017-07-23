@@ -215,6 +215,9 @@ namespace adaptive_system {
 					merged_gradient, merged_indice);
 				average_gradients(_number_of_workers, merged_gradient);
 				_store_named_gradient = NamedGradients();
+				if (_current_iter_number == 250) {
+					_level = 8;
+				}
 				if (_current_iter_number == 750) {
 					_level = 10;
 				}
@@ -311,7 +314,7 @@ namespace adaptive_system {
 		const float _lr;
 		const int _total_iter;
 		const int _number_of_workers;
-		int _level;
+		int _level = 6;
 		int _current_iter_number = 0;
 		int _grad_quant_level_order = 0;
 

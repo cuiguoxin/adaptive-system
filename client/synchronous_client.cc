@@ -257,6 +257,9 @@ namespace adaptive_system {
 			//now_sleep(grad_quant_level);
 			NamedGradients named_gradients_send, named_gradients_receive;
 			PRINT_INFO;
+			if (i == 250) {
+				level = 8;
+			}
 			if (i == 750) {
 				level = 10;
 			}
