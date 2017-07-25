@@ -21,3 +21,4 @@ Debug/
 test/
 *.log
 *.sh
+word2vec_basic.py
