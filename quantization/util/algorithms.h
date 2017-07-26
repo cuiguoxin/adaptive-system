@@ -19,6 +19,7 @@
 #include "tensorflow/core/public/session.h"
 
 #include "quantization/util/any_level.h"
+#include <Eigen/Dense>
 
 
 namespace adaptive_system {
@@ -29,6 +30,12 @@ namespace adaptive_system {
 
 	void moving_average(size_t length, float const * previous, float* current, const float r);
 
+	float moving_average_v2(float const previous,
+		std::vector<float> const& losses,
+		std::vector<float> & new_losses, float const r);
+
+	void standard_times(std::vector<float> & times);
+
 	tensorflow::Tensor get_feed_tensor_from_action(int action_order);
 
 	void add_indices_to_named_gradients(std::map<std::string, tensorflow::Tensor> const & map_indices,
@@ -36,6 +43,12 @@ namespace adaptive_system {
 
 	void set_tuple_with_word_to_index(std::string const & material_path, Tuple& tuple);
 
+	void set_tuple_with_order_to_level(Tuple& tuple);
+
+	float get_slope(std::vector<float> const & times, std::vector<float> const & move_average_losses);
+
 	void average_gradients(int const number_workers, std::map<std::string, tensorflow::Tensor> & name2gradient);
+
+	int get_real_level(int const order, int const level);
 }
 #endif

@@ -22,6 +22,10 @@ namespace adaptive_system {
 
 	float get_reward(const Tensor& state, const int action_order,
 		const float time_interval, const float last_loss, const float current_loss);
+
+	float get_reward_v2(float slope);
+
+	float get_reward_v3(float slope);
 }
 
 #endif // !REWARD_H

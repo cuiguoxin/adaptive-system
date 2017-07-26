@@ -59,16 +59,35 @@ namespace adaptive_system {
 		}
 		std::cout << "finished update!!!" << std::endl;
 	}
-
+	//suitable for state like statistics of gradient
 	void moving_average(size_t length, float const * previous, float* current, float const r) {
 		for (size_t i = 0; i < length; i++) {
 			current[i] = r * previous[i] + (1 - r) * current[i];
 		}
 	}
 	
+	float moving_average_v2(float const previous,
+		std::vector<float> const& losses,
+		std::vector<float> & new_losses, float const r) {
+		size_t size = losses.size();
+		new_losses.resize(size);
+		new_losses[0] = r * previous + (1 - r) * losses[0];
+		for (size_t i = 1; i < size; i++) {
+			new_losses[i] = r * new_losses[i - 1] + (1 - r) * losses[i];
+		}
+		return new_losses[size - 1];
+	}
+	void standard_times(std::vector<float> & times) {
+		size_t size = times.size();
+		float base = times[0];
+		for (int i = 0; i < size; i++) {
+			times[i] -= base;
+		}
+	}
+
 	tensorflow::Tensor get_feed_tensor_from_action(int action_order // begin from 0
 	) {
-		const size_t total_actions = 5;
+		const size_t total_actions = 3;
 		tensorflow::Tensor ret(tensorflow::DataType::DT_FLOAT, tensorflow::TensorShape({ total_actions }));
 		float* ret_ptr = ret.flat<float>().data();
 		std::fill(ret_ptr, ret_ptr + total_actions, 0.0f);
@@ -97,7 +116,6 @@ namespace adaptive_system {
 		auto & word_to_index = *tuple.mutable_word_to_index();
 		std::ifstream input_stream(material_path);
 		std::string line;
-		//std::unordered_map<std::string, int> word_count;
 		while (std::getline(input_stream, line)) {
 			std::istringstream iss(line);
 			std::string word;
@@ -105,7 +123,42 @@ namespace adaptive_system {
 			iss >> word;
 			iss >> index;
 			word_to_index[word] = index;
+		}	
+	}
+
+	void set_tuple_with_order_to_level(Tuple& tuple) {
+		auto & order2level = *tuple.mutable_order_to_level();
+		for (int i = 0; i < 5; i++) {
+			order2level[i] = 8 + i * 2;
 		}
+	}
+
+	float get_slope(std::vector<float> const & times, std::vector<float> const & move_average_losses) {
+		using namespace Eigen;
+		int const size = times.size();
+		std::cout << "time is ::" << std::endl;
+		for (int i = 0; i < size; i++) {
+			std::cout << times[i] << "  ";
+		}
+		std::cout << std::endl;
+
+		std::cout << "average is ::" << std::endl;
+		for (int i = 0; i < size; i++) {
+			std::cout << move_average_losses[i] << "  ";
+		}
+		std::cout << std::endl;
+		MatrixXf A = MatrixXf::Random(size, 2);
+		VectorXf b = VectorXf::Random(size);
+		for (int i = 0; i < size; i++) {
+			A(i, 0) = times[i];
+			A(i, 1) = 1.0f;
+			b(i) = move_average_losses[i];
+		}
+		//std::cout << A << std::endl << b << std::endl;
+		auto qr = A.fullPivHouseholderQr();
+		auto w = qr.solve(b);
+		std::cout << "slope is " << w << std::endl;
+		return w(0);
 	}
 
 	void average_gradients(int const number_workers,
@@ -116,21 +169,27 @@ namespace adaptive_system {
 			tensorflow::Tensor & tensor = iter->second;
 			float* tensor_ptr = tensor.flat<float>().data();
 			size_t size = tensor.NumElements();
-			std::for_each(tensor_ptr, tensor_ptr + size, 
+			std::for_each(tensor_ptr, tensor_ptr + size,
 				[number_workers](float& current) { current = current / number_workers; });
 		}
 	}
-	
-	int get_real_level(int index) {
-		switch(index) {
-		case 0:
-			return 6;
-		case 1:
-			return 8;
-		case 2:
-			return 10;
+
+	int get_real_level(int const order, int const level) {
+		int temp = 0;
+		const int min_level = 6;
+		const int max_level = 10;
+		if (order == 0) {
+			temp = level - 1;
+			return temp < min_level ? min_level : temp;
 		}
-		PRINT_ERROR_MESSAGE("index must lie in the range of 0 to 2");
+		else if (order == 1) {
+			return level;
+		}
+		else if (order == 2) {
+			temp = level + 1;
+			return temp > max_level ? max_level : temp;
+		}
+		PRINT_ERROR_MESSAGE("order must between 0 and 2");
 		std::terminate();
 	}
 }
