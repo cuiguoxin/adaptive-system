@@ -34,7 +34,7 @@
 #include "quantization/util/helper.h"
 #include "quantization/util/extract_feature.h"
 
-#include "server/sarsa.h"
+#include "server/multi_bandit.h"
 #include "server/reward.h"
 #include "server/indexed_slices.h"
 
