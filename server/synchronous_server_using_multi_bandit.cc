@@ -214,13 +214,7 @@ namespace adaptive_system {
 				aggregate_indexed_slices(_vector_map_gradient, _vector_map_indice,
 					merged_gradient, merged_indice);
 				average_gradients(_number_of_workers, merged_gradient);
-				_store_named_gradient = NamedGradients();
-				if (_current_iter_number == 250) {
-					_level = 8;
-				}
-				if (_current_iter_number == 750) {
-					_level = 10;
-				}
+				_store_named_gradient = NamedGradients();		
 				quantize_gradients(
 					merged_gradient, &_store_named_gradient,
 					_level);
@@ -282,29 +276,7 @@ namespace adaptive_system {
 	private:
 		
 		void adjust_rl_model(std::vector<PartialState> const& vector_partial_state) {
-			tensorflow::Tensor state_tensor = get_final_state_from_partial_state(vector_partial_state);
-			size_t length = state_tensor.NumElements();
-			float* state_tensor_ptr = state_tensor.flat<float>().data();
-			float* last_tensor_ptr = _last_state.flat<float>().data();
-			moving_average(length, last_tensor_ptr, state_tensor_ptr, 0.9f);
-			print_state_to_file(state_tensor);
-			int new_action_order = _sarsa.sample_new_action(state_tensor);
-			int old_action_order = _grad_quant_level_order;
-			auto now_time_point = std::chrono::high_resolution_clock::now();
-			std::chrono::duration<float> diff = now_time_point - _time_point_last;
-			float diff_seconds = diff.count();
-			float loss_sum = std::accumulate(_vector_loss_history.begin(), _vector_loss_history.end(), 0.0f);
-			float average = loss_sum / _interval;
-			moving_average(1, &_last_loss, &average, 0.9f);
-			float reward = get_reward(_last_state, _grad_quant_level_order, diff_seconds, _last_loss, average);
-			_sarsa.adjust_model(reward, _last_state, old_action_order, state_tensor, new_action_order);
-			_grad_quant_level_order = new_action_order;
-			std::cout << "diff_seconds is: " << diff_seconds << " reward is " << reward
-				<< " quantization level become: " << _tuple.order_to_level().find(_grad_quant_level_order)->second << std::endl;
-			_vector_loss_history.clear();
-			_last_loss = average;
-			_last_state = state_tensor;
-			_time_point_last = std::chrono::high_resolution_clock::now();
+			
 		}
 		
 
@@ -345,7 +317,7 @@ namespace adaptive_system {
 		std::ofstream _file_out_stream;
 		std::ofstream _file_state_stream;
 
-		sarsa_model _sarsa;
+		multi_bandit<3, 0.5, 0.1> _multi_bandit;
 		tensorflow::Tensor _last_state;
 		std::string _label;
 	};

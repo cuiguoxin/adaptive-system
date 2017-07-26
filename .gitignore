@@ -20,5 +20,4 @@ state_result/
 Debug/
 test/
 *.log
-*.sh
-word2vec_basic.py
+temp/

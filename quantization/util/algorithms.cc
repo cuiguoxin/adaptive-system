@@ -102,33 +102,12 @@ namespace adaptive_system {
 			std::istringstream iss(line);
 			std::string word;
 			int index;
-			/*while (iss >> word) {
-				word_count[word]++;
-			}*/
 			iss >> word;
 			iss >> index;
 			word_to_index[word] = index;
 		}
-		//std::cout << "total distinct word size is " << word_count.size() << std::endl;
-		//size_t const k = 50000;
-		//std::vector<std::pair<std::string, int>> top_k;
-		//auto begin = word_count.begin();
-		//auto end = word_count.end();
-		//std::for_each(begin, end, [&top_k](std::pair<std::string, int> const & pair) {
-		//	top_k.push_back(pair);
-		//});
-		////sort top_k
-		//std::sort(top_k.begin(), top_k.end(), greater_compare_pair);
-		//size_t const size = top_k.size();
-		///*size_t tail_sum = 0;
-		//for (int i = k - 1; i < size; i++) {
-		//	tail_sum += top_k[i].second;
-		//}*/
-		//word_to_index["UNK"] = 0;
-		//for (int i = 0; i < k - 1; i++) {
-		//	word_to_index[top_k[i].first] = word_to_index.size();
-		//}
 	}
+
 	void average_gradients(int const number_workers,
 		std::map<std::string, tensorflow::Tensor> & name2gradient) {
 		auto begin = name2gradient.begin();
@@ -141,6 +120,18 @@ namespace adaptive_system {
 				[number_workers](float& current) { current = current / number_workers; });
 		}
 	}
-
+	
+	int get_real_level(int index) {
+		switch(index) {
+		case 0:
+			return 6;
+		case 1:
+			return 8;
+		case 2:
+			return 10;
+		}
+		PRINT_ERROR_MESSAGE("index must lie in the range of 0 to 2");
+		std::terminate();
+	}
 }
 
