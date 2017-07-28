@@ -40,4 +40,11 @@ namespace adaptive_system {
 		return get_reward_from_heuristic(state, action_order, time_interval, last_loss, current_loss);
 	}
 
+	float get_reward_v2(float slope) {
+		return  -slope;
+	}
+
+	float get_reward_v3(float slope) {
+		return -slope * 100;
+	}
 }

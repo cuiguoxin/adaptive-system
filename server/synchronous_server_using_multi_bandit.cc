@@ -34,7 +34,7 @@
 #include "quantization/util/helper.h"
 #include "quantization/util/extract_feature.h"
 
-#include "server/actor_critic.h"
+#include "server/multi_bandit.h"
 #include "server/reward.h"
 #include "server/indexed_slices.h"
 
@@ -44,31 +44,19 @@ using grpc::ServerContext;
 using grpc::Status;
 
 namespace adaptive_system {
-	class RPCService_actor_critic_Impl final : public SystemControl::Service {
-	private:
-		void print_state_to_file(tensorflow::Tensor const & state) {
-			size_t feature_number = state.NumElements();
-			const float * state_ptr = state.flat<float>().data();
-			for (size_t i = 0; i < feature_number; i++) {
-				_file_state_stream << std::to_string(state_ptr[i]) << " ";
-			}
-			_file_state_stream << "\n";
-			_file_state_stream.flush();
-		}
+	class RPCServiceImpl final : public SystemControl::Service {	
 	public:
-		RPCService_actor_critic_Impl(int interval, float lr, int total_iter, int number_of_workers,
-			int grad_quant_level,
+		RPCServiceImpl(int interval, float lr, int total_iter, int number_of_workers,
+			int grad_quant_level_order,
 			std::string const& tuple_local_path,
-			std::string const & sarsa_path, float r, float beta, float alpha, 
-			size_t t, std::string const & material_path)
+		    std::string const & material_path)
 			: SystemControl::Service(),
 			_interval(interval),
 			_lr(lr),
 			_total_iter(total_iter),
 			_number_of_workers(number_of_workers),
-			_grad_quant_level_order(grad_quant_level),
-			_tuple_local_path(tuple_local_path),
-			_actor_critic(sarsa_path, r, beta, alpha, t)
+			_grad_quant_level_order(grad_quant_level_order),
+			_tuple_local_path(tuple_local_path)
 		{
 			_session = tensorflow::NewSession(tensorflow::SessionOptions());
 			std::fstream input(_tuple_local_path, std::ios::in | std::ios::binary);
@@ -112,17 +100,15 @@ namespace adaptive_system {
 					assign_name_current.substr(0, length - 2);
 				std::cout << *names.mutable_assign_name() << std::endl;
 
-				std::string assign_add_name_current = names.assign_add_name();
-				length = assign_add_name_current.length();
-				*names.mutable_assign_add_name() =
-					assign_add_name_current.substr(0, length - 2);
 			});
+			PRINT_INFO;
 			tf_status = _session->Run({}, var_names, {}, &var_init_values);
 			if (!tf_status.ok()) {
 				std::cout << "getting init var value has failed in line " << __LINE__
 					<< " in file " << __FILE__ << std::endl;
 				std::terminate();
 			}
+			PRINT_INFO;
 			size_t size = var_names.size();
 			for (size_t i = 0; i < size; i++) {
 				tensorflow::TensorProto var_proto;
@@ -131,6 +117,7 @@ namespace adaptive_system {
 					google::protobuf::MapPair<std::string, tensorflow::TensorProto>(
 						var_names[i], var_proto));
 			}
+			PRINT_INFO;
 			_tuple.set_interval(_interval);
 			_tuple.set_lr(_lr);
 			_tuple.set_total_iter(_total_iter);
@@ -142,22 +129,33 @@ namespace adaptive_system {
 			std::string store_loss_file_path =
 				"loss_result/adaptive" + _label +
 				"_interval:" + std::to_string(_interval) +
-				"_number_of_workers:" + std::to_string(_number_of_workers) + "_init_level:" +
-				std::to_string(_tuple.order_to_level().find(_grad_quant_level_order)->second);
-			_file_out_stream.open(store_loss_file_path);
+				"_number_of_workers:" + std::to_string(_number_of_workers);
+			_file_loss_stream.open(store_loss_file_path);
 			std::string store_state_file_path =
 				"state_result/adaptive" + _label +
 				"_interval:" + std::to_string(_interval) +
-				"_number_of_workers:" + std::to_string(_number_of_workers) + "_init_level:" +
-				std::to_string(_tuple.order_to_level().find(_grad_quant_level_order)->second);
+				"_number_of_workers:" + std::to_string(_number_of_workers);
 			_file_state_stream.open(store_state_file_path);
+			std::string store_action_file_path =
+				"action_result/adaptive" + _label +
+				"_interval:" + std::to_string(_interval) +
+				"_number_of_workers:" + std::to_string(_number_of_workers);
+			_file_action_stream.open(store_action_file_path);
 			std::cout << "files opened" << std::endl;
+			PRINT_INFO;
 			set_tuple_with_word_to_index(material_path, _tuple);
+			PRINT_INFO;
 		}
 
 		grpc::Status retrieveTuple(ServerContext* context, const Empty* request,
 			Tuple* reply) override {
 			*reply = _tuple;
+			_mutex_tuple.lock();
+			_count++;
+			if (_count == _number_of_workers) {
+				_tuple.mutable_map_parameters()->clear();
+			}
+			_mutex_tuple.unlock();
 			return grpc::Status::OK;
 		}
 
@@ -177,13 +175,12 @@ namespace adaptive_system {
 				std::cout << "iteratino :" << _current_iter_number
 					<< ", average loss is " << average << std::endl;
 				auto now = std::chrono::high_resolution_clock::now();
-				//std::time_t now_t = std::chrono::system_clock::to_time_t(now);
-				//using seconds
 				std::chrono::duration<double> diff_time = (now - _init_time_point);
-				_file_out_stream << std::to_string(diff_time.count())
+				_vector_time_history.push_back(diff_time.count());
+				_file_loss_stream << std::to_string(diff_time.count())
 					<< ":: iter num ::" << std::to_string(_current_iter_number)
 					<< ":: loss is ::" << average << "\n";
-				_file_out_stream.flush();
+				_file_loss_stream.flush();
 				_vector_loss_history.push_back(average);
 				_vector_loss.clear();
 				_bool_loss = true;
@@ -215,7 +212,7 @@ namespace adaptive_system {
 				_store_named_gradient = NamedGradients();
 				quantize_gradients(
 					merged_gradient, &_store_named_gradient,
-					(*_tuple.mutable_order_to_level()).find(_grad_quant_level_order)->second);
+					_level);
 				add_indices_to_named_gradients(merged_indice, _store_named_gradient);
 				apply_quantized_gradient_to_model(_store_named_gradient,
 					_session, _tuple);
@@ -240,21 +237,16 @@ namespace adaptive_system {
 			if (_vector_partial_state.size() == _number_of_workers) {
 				if (_bool_is_first_iteration) {
 					_bool_is_first_iteration = false;
-					_last_state = get_final_state_from_partial_state(_vector_partial_state);
-					print_state_to_file(_last_state);
-					//sample action from policy
-					_grad_quant_level_order = _actor_critic.sample_action_from_policy(_last_state);
-					//need not to store last action because _grad_quant_level_order can represent it
+					//need not to store last action because _grad_quant_level can represent it
 					if (_vector_loss_history.size() != 1) {
 						PRINT_ERROR_MESSAGE("when in first iteration, the _vector_loss_history's size must be 1");
 						std::terminate();
-					}
-					_last_loss = _vector_loss_history[0];
+					}				
 					_vector_loss_history.clear();
-					_time_point_last = std::chrono::high_resolution_clock::now();
+					_vector_time_history.clear();
 				}
 				else {
-					adjust_rl_model(_vector_partial_state);
+					adjust_rl_model();
 				}
 				_vector_partial_state.clear();
 				_bool_state = true;
@@ -268,97 +260,40 @@ namespace adaptive_system {
 			}
 			lk.unlock();
 			response->set_level_order(_grad_quant_level_order);
-			return grpc::Status::OK;
-		}
 
-		void set_tuple_with_order_to_level(Tuple& tuple) {
-			google::protobuf::Map<int32_t, int32_t> order_to_level = *tuple.mutable_order_to_level();
-			int const action_number = 5, base_line = 6;
-			for (int i = 0; i < action_number; i++) {
-				order_to_level[i] = i + 6;
-			}
+			return grpc::Status::OK;
 		}
 
 		// private member functions
 	private:
-		/*void aggregate_gradients(
-			std::vector<std::map<std::string, tensorflow::Tensor>> const&
-			vector_map_gradient,
-			std::map<std::string, tensorflow::Tensor>& map_gradient) {
-			std::for_each(
-				vector_map_gradient.cbegin(), vector_map_gradient.cend(),
-				[&map_gradient](
-					std::map<std::string, tensorflow::Tensor> const& current_map) {
-				std::for_each(
-					current_map.cbegin(), current_map.cend(),
-					[&map_gradient](
-						std::pair<std::string, tensorflow::Tensor> const& pair) {
-					std::string const& variable_name = pair.first;
-					tensorflow::Tensor const& tensor_to_be_aggregate = pair.second;
-					const float* tensor_to_be_aggregate_ptr =
-						tensor_to_be_aggregate.flat<float>().data();
-					auto iter = map_gradient.find(variable_name);
-					if (iter == map_gradient.end()) {
-						tensorflow::Tensor new_tensor(tensorflow::DataType::DT_FLOAT,
-							tensor_to_be_aggregate.shape());
-						float* new_tensor_ptr = new_tensor.flat<float>().data();
-						size_t num_new_tensor = new_tensor.NumElements();
-						std::copy(tensor_to_be_aggregate_ptr,
-							tensor_to_be_aggregate_ptr + num_new_tensor,
-							new_tensor_ptr);
-						map_gradient.insert(
-							std::make_pair(variable_name, new_tensor));
-					}
-					else {
-						tensorflow::Tensor& tensor_sum = iter->second;
-						float* tensor_sum_ptr = tensor_sum.flat<float>().data();
-						size_t num_new_tensor = tensor_sum.NumElements();
-						for (size_t i = 0; i < num_new_tensor; i++) {
-							tensor_sum_ptr[i] += tensor_to_be_aggregate_ptr[i];
-						}
-					}
-				});
-			});
-		}
-
-		void average_gradients(std::map<std::string, tensorflow::Tensor> map_gradient) {
-			std::for_each(map_gradient.begin(), map_gradient.end(),
-				[this](std::pair<const std::string, tensorflow::Tensor>& pair) {
-				tensorflow::Tensor & tensor = pair.second;
-				float * tensor_ptr = tensor.flat<float>().data();
-				size_t length = tensor.NumElements();
-				std::for_each(tensor_ptr, tensor_ptr + length, [this](float& ref) { ref = ref / _number_of_workers; });
-			});
-		}*/
-		void adjust_rl_model(std::vector<PartialState> const& vector_partial_state) {
-			tensorflow::Tensor state_tensor = get_final_state_from_partial_state(vector_partial_state);//S'
-			size_t length = state_tensor.NumElements();
-			float* state_tensor_ptr = state_tensor.flat<float>().data();// S'
-			float* last_tensor_ptr = _last_state.flat<float>().data();//S
-			moving_average(length, last_tensor_ptr, state_tensor_ptr, 0.9f);
-			print_state_to_file(state_tensor);
-			//get reward
-			auto now_time_point = std::chrono::high_resolution_clock::now();
-			std::chrono::duration<float> diff = now_time_point - _time_point_last;
-			float diff_seconds = diff.count();
-			float loss_sum = std::accumulate(_vector_loss_history.begin(), _vector_loss_history.end(), 0.0f);
-			float average = loss_sum / _interval;
-			moving_average(1, &_last_loss, &average, 0.9f);
-			float reward = get_reward(_last_state, _grad_quant_level_order, diff_seconds, _last_loss, average);
-			//adjust actor critic model
-			float update = _actor_critic.get_update_value(reward, state_tensor, _last_state);
-			_actor_critic.update_value_function_parameter(_last_state, update);
-			_actor_critic.update_policy_parameter(_last_state, _grad_quant_level_order, update);
-			//sample new action from current state
-			_grad_quant_level_order = _actor_critic.sample_action_from_policy(state_tensor);
+		
+		void adjust_rl_model() {
+			std::vector<float> moving_average_losses;
+			const float r = 0.5;
+			moving_average_v2(_vector_loss_history[0],
+				_vector_loss_history,
+				moving_average_losses, r);
 			
-			std::cout << "diff_seconds is: " << diff_seconds << " reward is " << reward
-				<< " quantization level become: " << std::pow(2, static_cast<int>(_grad_quant_level_order)) << std::endl;
+			int new_action_order = _multi_bandit.sample_new_action();
+			int old_action_order = _grad_quant_level_order;
+
+			standard_times(_vector_time_history);
+			float slope = get_slope(_vector_time_history, //_vector_loss_history);
+				moving_average_losses);
+			std::cout << "slope is " << slope << " new level is " << new_action_order << std::endl;
+			float reward = get_reward_v3(slope); // -slope * 100
+			_multi_bandit.adjust_model(reward, old_action_order);
+			_grad_quant_level_order = new_action_order;
+
+			_level = get_real_level_6_8_10(_grad_quant_level_order);
+			_file_action_stream << std::to_string(_current_iter_number) << "::"
+				<< std::to_string(new_action_order) << "::" << std::to_string(_level) << "\n";
+			_file_action_stream.flush();
 			_vector_loss_history.clear();
-			_last_loss = average;
-			_last_state = state_tensor;
-			_time_point_last = std::chrono::high_resolution_clock::now();
+			_vector_time_history.clear();
+			
 		}
+		
 
 		// private data member
 	private:
@@ -366,13 +301,15 @@ namespace adaptive_system {
 		const float _lr;
 		const int _total_iter;
 		const int _number_of_workers;
+		int _level = 6;
 		int _current_iter_number = 0;
 		int _grad_quant_level_order = 0;
 
 		std::chrono::time_point<std::chrono::high_resolution_clock> _init_time_point;
 		std::chrono::time_point<std::chrono::high_resolution_clock> _time_point_last;
 
-
+		int _count = 0;
+		std::mutex _mutex_tuple;
 		std::mutex _mutex_gradient;
 		std::mutex _mutex_state;
 		std::mutex _mutex_loss;
@@ -383,6 +320,7 @@ namespace adaptive_system {
 		std::vector<PartialState> _vector_partial_state;
 		float _last_loss;
 		std::vector<float> _vector_loss;
+		std::vector<float> _vector_time_history;
 		std::vector<float> _vector_loss_history;
 		std::string _tuple_local_path;
 		bool _bool_gradient;
@@ -393,15 +331,14 @@ namespace adaptive_system {
 
 		tensorflow::Session* _session;
 		Tuple _tuple;
-		std::ofstream _file_out_stream;
+		std::ofstream _file_loss_stream;
+		std::ofstream _file_action_stream;
 		std::ofstream _file_state_stream;
 
-		actor_critic _actor_critic;
-		tensorflow::Tensor _last_state;
+		multi_bandit<3, 0.5, 0.1> _multi_bandit;
 		std::string _label;
 	};
 }
-
 
 int main(int argc, char** argv) {
 	std::string server_address("0.0.0.0:50051");
@@ -411,16 +348,11 @@ int main(int argc, char** argv) {
 	int number_of_workers = atoi(argv[4]);
 	int level = atoi(argv[5]);
 	std::string tuple_path = argv[6];
-	std::string actor_critic_path = argv[7];
-	float r = atof(argv[8]);
-	float beta = atof(argv[9]);
-	float alpha = atof(argv[10]);
-	size_t T = atoi(argv[11]);
-	std::string material_path = argv[12];
+	std::string material_path = argv[10];
 
-	adaptive_system::RPCService_actor_critic_Impl service(
+	adaptive_system::RPCServiceImpl service(
 		interval, learning_rate, total_iter, number_of_workers,
-		0, tuple_path, actor_critic_path, r, beta, alpha, T, material_path);
+		0, tuple_path, material_path);
 
 	ServerBuilder builder;
 	// Listen on the given address without any authentication mechanism.

@@ -218,7 +218,7 @@ namespace adaptive_system {
 	
 
 
-	void do_training(std::string const & raw_data_path, const int level) {
+	void do_training(std::string const & raw_data_path, int level) {
 		word2vec::init(raw_data_path, get_tuple()->word_to_index());
 		for (int i = 0; i < total_iter; i++) {
 			PRINT_INFO;
@@ -240,7 +240,7 @@ namespace adaptive_system {
 			stub->sendLoss(&loss_context, loss_to_send, &empty);
 			PRINT_INFO;
 			if (i % interval == 0) {
-				PartialState partial_state = collect_partial_state(map_gradients, loss);
+				PartialState partial_state;
 				ClientContext state_context;
 				QuantizationLevel quantization_level;
 				PRINT_INFO;
@@ -252,6 +252,7 @@ namespace adaptive_system {
 					std::terminate();
 				}
 				grad_quant_level_order = quantization_level.level_order();
+				level = get_real_level_6_8_10(grad_quant_level_order);
 			}
 			//fake
 			//now_sleep(grad_quant_level);

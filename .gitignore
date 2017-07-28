@@ -20,4 +20,4 @@ state_result/
 Debug/
 test/
 *.log
-*.sh
+temp/
