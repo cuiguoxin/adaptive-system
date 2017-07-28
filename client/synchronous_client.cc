@@ -240,7 +240,7 @@ namespace adaptive_system {
 			stub->sendLoss(&loss_context, loss_to_send, &empty);
 			PRINT_INFO;
 			if (i % interval == 0) {
-				PartialState partial_state = collect_partial_state(map_gradients, loss);
+				PartialState partial_state;
 				ClientContext state_context;
 				QuantizationLevel quantization_level;
 				PRINT_INFO;
@@ -252,17 +252,12 @@ namespace adaptive_system {
 					std::terminate();
 				}
 				grad_quant_level_order = quantization_level.level_order();
+				level = get_real_level_6_8_10(grad_quant_level_order);
 			}
 			//fake
 			//now_sleep(grad_quant_level);
 			NamedGradients named_gradients_send, named_gradients_receive;
 			PRINT_INFO;
-			if (i == 250) {
-				level = 8;
-			}
-			if (i == 750) {
-				level = 10;
-			}
 			quantize_gradients(
 				map_gradients, &named_gradients_send, level);
 				//get_tuple()->order_to_level().find(grad_quant_level_order)->second);

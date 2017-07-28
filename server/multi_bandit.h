@@ -4,6 +4,8 @@
 #include <chrono>
 #include <random>
 #include <vector>
+#include <algorithm>
+#include <functional>
 
 namespace adaptive_system {
 	template <int action_size, float step_size, float eps>
@@ -25,7 +27,11 @@ namespace adaptive_system {
 			return ret_vec;
 		}
 	public:
-		int sample_action() {
+		multi_bandit() {
+			std::fill(action_value, action_value + action_size, 0.0f);
+		}
+
+		int sample_new_action() {
 			static unsigned seed =
 				std::chrono::system_clock::now().time_since_epoch().count();
 			static std::default_random_engine generator(seed);
@@ -34,6 +40,7 @@ namespace adaptive_system {
 			size_t sample = discrete(generator);
 			return sample;
 		}
+
 		void adjust_model(float reward, int action_index) {
 			action_value[action_index] += step_size * (reward - action_value[action_index]);
 		}

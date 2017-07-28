@@ -44,32 +44,19 @@ using grpc::ServerContext;
 using grpc::Status;
 
 namespace adaptive_system {
-	class RPCServiceImpl final : public SystemControl::Service {
-	private:
-		void print_state_to_file(tensorflow::Tensor const & state) {
-			size_t feature_number = state.NumElements();
-			const float * state_ptr = state.flat<float>().data();
-			for (size_t i = 0; i < feature_number; i++) {
-				_file_state_stream << std::to_string(state_ptr[i]) << " ";
-			}
-			_file_state_stream << "\n";
-			_file_state_stream.flush();
-		}
+	class RPCServiceImpl final : public SystemControl::Service {	
 	public:
 		RPCServiceImpl(int interval, float lr, int total_iter, int number_of_workers,
 			int grad_quant_level_order,
 			std::string const& tuple_local_path,
-			std::string const & sarsa_path, float r, float eps_greedy, std::string const & material_path,
-			int const level)
+		    std::string const & material_path)
 			: SystemControl::Service(),
 			_interval(interval),
 			_lr(lr),
 			_total_iter(total_iter),
 			_number_of_workers(number_of_workers),
 			_grad_quant_level_order(grad_quant_level_order),
-			_tuple_local_path(tuple_local_path),
-			_sarsa(sarsa_path, r, eps_greedy), 
-			_level(level)
+			_tuple_local_path(tuple_local_path)
 		{
 			_session = tensorflow::NewSession(tensorflow::SessionOptions());
 			std::fstream input(_tuple_local_path, std::ios::in | std::ios::binary);
@@ -134,7 +121,7 @@ namespace adaptive_system {
 			_tuple.set_interval(_interval);
 			_tuple.set_lr(_lr);
 			_tuple.set_total_iter(_total_iter);
-			//set_tuple_with_order_to_level(_tuple);
+			set_tuple_with_order_to_level(_tuple);
 			_init_time_point = std::chrono::high_resolution_clock::now();
 			auto now = std::chrono::system_clock::now();
 			auto init_time_t = std::chrono::system_clock::to_time_t(now);
@@ -142,15 +129,18 @@ namespace adaptive_system {
 			std::string store_loss_file_path =
 				"loss_result/adaptive" + _label +
 				"_interval:" + std::to_string(_interval) +
-				"_number_of_workers:" + std::to_string(_number_of_workers) + "_base_level:" +
-				std::to_string(_level);
-			_file_out_stream.open(store_loss_file_path);
+				"_number_of_workers:" + std::to_string(_number_of_workers);
+			_file_loss_stream.open(store_loss_file_path);
 			std::string store_state_file_path =
 				"state_result/adaptive" + _label +
 				"_interval:" + std::to_string(_interval) +
-				"_number_of_workers:" + std::to_string(_number_of_workers) + "_base_level:" +
-				std::to_string(_level);
+				"_number_of_workers:" + std::to_string(_number_of_workers);
 			_file_state_stream.open(store_state_file_path);
+			std::string store_action_file_path =
+				"action_result/adaptive" + _label +
+				"_interval:" + std::to_string(_interval) +
+				"_number_of_workers:" + std::to_string(_number_of_workers);
+			_file_action_stream.open(store_action_file_path);
 			std::cout << "files opened" << std::endl;
 			PRINT_INFO;
 			set_tuple_with_word_to_index(material_path, _tuple);
@@ -160,6 +150,12 @@ namespace adaptive_system {
 		grpc::Status retrieveTuple(ServerContext* context, const Empty* request,
 			Tuple* reply) override {
 			*reply = _tuple;
+			_mutex_tuple.lock();
+			_count++;
+			if (_count == _number_of_workers) {
+				_tuple.mutable_map_parameters()->clear();
+			}
+			_mutex_tuple.unlock();
 			return grpc::Status::OK;
 		}
 
@@ -179,13 +175,12 @@ namespace adaptive_system {
 				std::cout << "iteratino :" << _current_iter_number
 					<< ", average loss is " << average << std::endl;
 				auto now = std::chrono::high_resolution_clock::now();
-				//std::time_t now_t = std::chrono::system_clock::to_time_t(now);
-				//using seconds
 				std::chrono::duration<double> diff_time = (now - _init_time_point);
-				_file_out_stream << std::to_string(diff_time.count())
-				<< ":: iter num ::" << std::to_string(_current_iter_number)
+				_vector_time_history.push_back(diff_time.count());
+				_file_loss_stream << std::to_string(diff_time.count())
+					<< ":: iter num ::" << std::to_string(_current_iter_number)
 					<< ":: loss is ::" << average << "\n";
-				_file_out_stream.flush();
+				_file_loss_stream.flush();
 				_vector_loss_history.push_back(average);
 				_vector_loss.clear();
 				_bool_loss = true;
@@ -214,7 +209,7 @@ namespace adaptive_system {
 				aggregate_indexed_slices(_vector_map_gradient, _vector_map_indice,
 					merged_gradient, merged_indice);
 				average_gradients(_number_of_workers, merged_gradient);
-				_store_named_gradient = NamedGradients();		
+				_store_named_gradient = NamedGradients();
 				quantize_gradients(
 					merged_gradient, &_store_named_gradient,
 					_level);
@@ -242,19 +237,16 @@ namespace adaptive_system {
 			if (_vector_partial_state.size() == _number_of_workers) {
 				if (_bool_is_first_iteration) {
 					_bool_is_first_iteration = false;
-					_last_state = get_final_state_from_partial_state(_vector_partial_state);
-					print_state_to_file(_last_state);
 					//need not to store last action because _grad_quant_level can represent it
 					if (_vector_loss_history.size() != 1) {
 						PRINT_ERROR_MESSAGE("when in first iteration, the _vector_loss_history's size must be 1");
 						std::terminate();
-					}
-					_last_loss = _vector_loss_history[0];
+					}				
 					_vector_loss_history.clear();
-					_time_point_last = std::chrono::high_resolution_clock::now();
+					_vector_time_history.clear();
 				}
 				else {
-					//adjust_rl_model(_vector_partial_state);
+					adjust_rl_model();
 				}
 				_vector_partial_state.clear();
 				_bool_state = true;
@@ -268,14 +260,37 @@ namespace adaptive_system {
 			}
 			lk.unlock();
 			response->set_level_order(_grad_quant_level_order);
-			
+
 			return grpc::Status::OK;
 		}
 
 		// private member functions
 	private:
 		
-		void adjust_rl_model(std::vector<PartialState> const& vector_partial_state) {
+		void adjust_rl_model() {
+			std::vector<float> moving_average_losses;
+			const float r = 0.5;
+			moving_average_v2(_vector_loss_history[0],
+				_vector_loss_history,
+				moving_average_losses, r);
+			
+			int new_action_order = _multi_bandit.sample_new_action();
+			int old_action_order = _grad_quant_level_order;
+
+			standard_times(_vector_time_history);
+			float slope = get_slope(_vector_time_history, //_vector_loss_history);
+				moving_average_losses);
+			std::cout << "slope is " << slope << " new level is " << new_action_order << std::endl;
+			float reward = get_reward_v3(slope); // -slope * 100
+			_multi_bandit.adjust_model(reward, old_action_order);
+			_grad_quant_level_order = new_action_order;
+
+			_level = get_real_level_6_8_10(_grad_quant_level_order);
+			_file_action_stream << std::to_string(_current_iter_number) << "::"
+				<< std::to_string(new_action_order) << "::" << std::to_string(_level) << "\n";
+			_file_action_stream.flush();
+			_vector_loss_history.clear();
+			_vector_time_history.clear();
 			
 		}
 		
@@ -293,7 +308,8 @@ namespace adaptive_system {
 		std::chrono::time_point<std::chrono::high_resolution_clock> _init_time_point;
 		std::chrono::time_point<std::chrono::high_resolution_clock> _time_point_last;
 
-
+		int _count = 0;
+		std::mutex _mutex_tuple;
 		std::mutex _mutex_gradient;
 		std::mutex _mutex_state;
 		std::mutex _mutex_loss;
@@ -304,6 +320,7 @@ namespace adaptive_system {
 		std::vector<PartialState> _vector_partial_state;
 		float _last_loss;
 		std::vector<float> _vector_loss;
+		std::vector<float> _vector_time_history;
 		std::vector<float> _vector_loss_history;
 		std::string _tuple_local_path;
 		bool _bool_gradient;
@@ -314,11 +331,11 @@ namespace adaptive_system {
 
 		tensorflow::Session* _session;
 		Tuple _tuple;
-		std::ofstream _file_out_stream;
+		std::ofstream _file_loss_stream;
+		std::ofstream _file_action_stream;
 		std::ofstream _file_state_stream;
 
 		multi_bandit<3, 0.5, 0.1> _multi_bandit;
-		tensorflow::Tensor _last_state;
 		std::string _label;
 	};
 }
@@ -331,15 +348,11 @@ int main(int argc, char** argv) {
 	int number_of_workers = atoi(argv[4]);
 	int level = atoi(argv[5]);
 	std::string tuple_path = argv[6];
-	std::string sarsa_path = argv[7];
-	float r = atof(argv[8]);
-	float eps_greedy = atof(argv[9]);
 	std::string material_path = argv[10];
-	const int base_level = atoi(argv[11]);
 
 	adaptive_system::RPCServiceImpl service(
 		interval, learning_rate, total_iter, number_of_workers,
-		0, tuple_path, sarsa_path, r, eps_greedy, material_path, base_level);
+		0, tuple_path, material_path);
 
 	ServerBuilder builder;
 	// Listen on the given address without any authentication mechanism.

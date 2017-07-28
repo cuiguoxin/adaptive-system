@@ -192,5 +192,18 @@ namespace adaptive_system {
 		PRINT_ERROR_MESSAGE("order must between 0 and 2");
 		std::terminate();
 	}
+
+	int get_real_level_6_8_10(int order) {
+		switch (order) {
+		case 0:
+			return 6;
+		case 1:
+			return 8;
+		case 2:
+			return 10;
+		}
+		PRINT_ERROR_MESSAGE("order should be in the range of 0 to 2");
+		std::terminate();
+	}
 }
 

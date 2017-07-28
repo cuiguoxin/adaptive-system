@@ -50,5 +50,7 @@ namespace adaptive_system {
 	void average_gradients(int const number_workers, std::map<std::string, tensorflow::Tensor> & name2gradient);
 
 	int get_real_level(int const order, int const level);
+
+	int get_real_level_6_8_10(int order);
 }
 #endif
