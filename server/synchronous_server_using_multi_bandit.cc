@@ -349,7 +349,7 @@ int main(int argc, char** argv) {
 	int number_of_workers = atoi(argv[4]);
 	int level = atoi(argv[5]);
 	std::string tuple_path = argv[6];
-	std::string material_path = argv[10];
+	std::string material_path = argv[7];
 
 	adaptive_system::RPCServiceImpl service(
 		interval, learning_rate, total_iter, number_of_workers,
