@@ -13,6 +13,7 @@ bin/
 *.pyc
 loss_result/
 state_result/
+action_result/
 *.sln
 *.vcxproj
 *.filters
