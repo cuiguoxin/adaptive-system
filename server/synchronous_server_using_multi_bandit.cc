@@ -56,7 +56,8 @@ namespace adaptive_system {
 			_total_iter(total_iter),
 			_number_of_workers(number_of_workers),
 			_grad_quant_level_order(grad_quant_level_order),
-			_tuple_local_path(tuple_local_path)
+			_tuple_local_path(tuple_local_path),
+			_multi_bandit(0.5, 0.1)
 		{
 			_session = tensorflow::NewSession(tensorflow::SessionOptions());
 			std::fstream input(_tuple_local_path, std::ios::in | std::ios::binary);
@@ -335,7 +336,7 @@ namespace adaptive_system {
 		std::ofstream _file_action_stream;
 		std::ofstream _file_state_stream;
 
-		multi_bandit<3, 0.5, 0.1> _multi_bandit;
+		multi_bandit<3> _multi_bandit;
 		std::string _label;
 	};
 }

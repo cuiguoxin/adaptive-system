@@ -8,9 +8,11 @@
 #include <functional>
 
 namespace adaptive_system {
-	template <int action_size, float step_size, float eps>
+	template <int action_size>
 	class multi_bandit {
 	private:
+		float step_size;
+		float eps;
 		float action_value[action_size];
 		std::vector<float> get_greedy_probability() {
 			int index = 0; 
@@ -27,7 +29,7 @@ namespace adaptive_system {
 			return ret_vec;
 		}
 	public:
-		multi_bandit() {
+		multi_bandit(float st_size, float e): step_size(st_size), eps(e) {
 			std::fill(action_value, action_value + action_size, 0.0f);
 		}
 
