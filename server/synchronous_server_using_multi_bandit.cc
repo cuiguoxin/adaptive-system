@@ -48,8 +48,7 @@ namespace adaptive_system {
 	public:
 		RPCServiceImpl(int interval, float lr, int total_iter, int number_of_workers,
 			int grad_quant_level_order,
-			std::string const& tuple_local_path,
-		    std::string const & material_path)
+			std::string const& tuple_local_path)
 			: SystemControl::Service(),
 			_interval(interval),
 			_lr(lr),
@@ -143,8 +142,6 @@ namespace adaptive_system {
 				"_number_of_workers:" + std::to_string(_number_of_workers);
 			_file_action_stream.open(store_action_file_path);
 			std::cout << "files opened" << std::endl;
-			PRINT_INFO;
-			set_tuple_with_word_to_index(material_path, _tuple);
 			PRINT_INFO;
 		}
 
@@ -294,8 +291,7 @@ namespace adaptive_system {
 				<< std::to_string(new_action_order) << "::" << std::to_string(_level) << "\n";
 			_file_action_stream.flush();
 			_vector_loss_history.clear();
-			_vector_time_history.clear();
-			
+			_vector_time_history.clear();		
 		}
 		
 
@@ -352,11 +348,10 @@ int main(int argc, char** argv) {
 	int number_of_workers = atoi(argv[4]);
 	int level = atoi(argv[5]);
 	std::string tuple_path = argv[6];
-	std::string material_path = argv[7];
 
 	adaptive_system::RPCServiceImpl service(
 		interval, learning_rate, total_iter, number_of_workers,
-		0, tuple_path, material_path);
+		0, tuple_path);
 
 	ServerBuilder builder;
 	// Listen on the given address without any authentication mechanism.

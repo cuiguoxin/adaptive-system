@@ -38,9 +38,6 @@ namespace adaptive_system {
 
 	tensorflow::Tensor get_feed_tensor_from_action(int action_order);
 
-	void add_indices_to_named_gradients(std::map<std::string, tensorflow::Tensor> const & map_indices,
-		NamedGradients& named_gradients);
-
 	void set_tuple_with_word_to_index(std::string const & material_path, Tuple& tuple);
 
 	void set_tuple_with_order_to_level(Tuple& tuple);

@@ -23,14 +23,10 @@ def _variable_on_cpu(name, shape, initializer, tup):
     var = tf.get_variable(name, shape, initializer=initializer, dtype=dtype)
     placeholder_assign_node = tf.placeholder(dtype, shape=shape)
     assign_node = tf.assign(var, placeholder_assign_node)
-    placeholder_assign_add_node = tf.placeholder(dtype, shape=shape)
-    assign_add_node = tf.assign_add(var, placeholder_assign_add_node)
     var_name = var.name
     tup.map_names[var_name].variable_name = var_name
     tup.map_names[var_name].assign_name = assign_node.name
-    tup.map_names[var_name].assign_add_name = assign_add_node.name
     tup.map_names[var_name].placeholder_assign_name = placeholder_assign_node.name
-    tup.map_names[var_name].placeholder_assign_add_name = placeholder_assign_add_node.name
 
   return var
 
@@ -114,17 +110,17 @@ def inference(images, tup):
     # Move everything into depth so we can perform a single matrix multiply.
     reshape = tf.reshape(pool2, [batch_size, -1])
     dim = reshape.get_shape()[1].value
-    weights = _variable_with_weight_decay('weights', shape=[dim, 384],
+    weights = _variable_with_weight_decay('weights', shape=[dim, 3840],
                                           stddev=0.04, wd=0.004, tup=tup)
-    biases = _variable_on_cpu('biases', [384], tf.constant_initializer(0.1), tup)
+    biases = _variable_on_cpu('biases', [3840], tf.constant_initializer(0.1), tup)
     local3 = tf.nn.relu(tf.matmul(reshape, weights) + biases, name=scope.name)
 
 
   # local4
   with tf.variable_scope('local4') as scope:
-    weights = _variable_with_weight_decay('weights', shape=[384, 192],
+    weights = _variable_with_weight_decay('weights', shape=[3840, 1920],
                                           stddev=0.04, wd=0.004, tup=tup)
-    biases = _variable_on_cpu('biases', [192], tf.constant_initializer(0.1), tup)
+    biases = _variable_on_cpu('biases', [1920], tf.constant_initializer(0.1), tup)
     local4 = tf.nn.relu(tf.matmul(local3, weights) + biases, name=scope.name)
 
 
@@ -133,8 +129,8 @@ def inference(images, tup):
   # tf.nn.sparse_softmax_cross_entropy_with_logits accepts the unscaled logits
   # and performs the softmax internally for efficiency.
   with tf.variable_scope('softmax_linear') as scope:
-    weights = _variable_with_weight_decay('weights', [192, NUM_CLASSES],
-                                          stddev=1/192.0, wd=0.0, tup=tup)
+    weights = _variable_with_weight_decay('weights', [1920, NUM_CLASSES],
+                                          stddev=1/1920.0, wd=0.0, tup=tup)
     biases = _variable_on_cpu('biases', [NUM_CLASSES],
                               tf.constant_initializer(0.0), tup)
     softmax_linear = tf.add(tf.matmul(local4, weights), biases, name=scope.name)
@@ -170,7 +166,7 @@ with tf.Session() as sess:
   tup = rpc.Tuple()
   images = tf.placeholder(tf.float32, shape=[batch_size, 28, 28, 3])
   labels = tf.placeholder(tf.int32, shape=[batch_size])
-  tup.image_placeholder_name = images.name
+  tup.batch_placeholder_name = images.name
   tup.label_placeholder_name = labels.name
   logits = inference(images, tup)
 
@@ -193,10 +189,7 @@ with tf.Session() as sess:
   # Build an initialization operation to run below.
   init = tf.global_variables_initializer()
 
-
-  tf.train.write_graph(sess.graph_def, './', 'primary_adam.pb', as_text=False)
   tup.lr = 0.1
-  tup.interval = 3;
   tup.graph.CopyFrom(sess.graph_def)
   tup.loss_name = losses.name
   tup.init_name = init.name
