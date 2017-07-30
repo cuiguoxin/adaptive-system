@@ -57,7 +57,7 @@ namespace adaptive_system {
 			_number_of_workers(number_of_workers),
 			_grad_quant_level_order(grad_quant_level_order),
 			_tuple_local_path(tuple_local_path),
-			_multi_bandit(0.5, 0.1)
+			_multi_bandit(0.1, 0.1)
 		{
 			_session = tensorflow::NewSession(tensorflow::SessionOptions());
 			std::fstream input(_tuple_local_path, std::ios::in | std::ios::binary);
@@ -270,7 +270,7 @@ namespace adaptive_system {
 		
 		void adjust_rl_model() {
 			std::vector<float> moving_average_losses;
-			const float r = 0.9;
+			const float r = 0.95;
 			moving_average_v2(_vector_loss_history[0],
 				_vector_loss_history,
 				moving_average_losses, r);
