@@ -120,7 +120,6 @@ namespace adaptive_system {
 			_tuple.set_interval(_interval);
 			_tuple.set_lr(_lr);
 			_tuple.set_total_iter(_total_iter);
-			set_tuple_with_order_to_level(_tuple);
 			_init_time_point = std::chrono::high_resolution_clock::now();
 			auto now = std::chrono::system_clock::now();
 			auto init_time_t = std::chrono::system_clock::to_time_t(now);

@@ -46,6 +46,7 @@ namespace adaptive_system {
 
 	int get_real_level_6_8_10(int order);
 
-	void aggregate_gradients(std::vector<std::map<std::string, tensorflow::Tensor>> vector_of_map);
+	void aggregate_gradients(std::vector<std::map<std::string, tensorflow::Tensor>>& vector_of_map, 
+		std::map<std::string, tensorflow::Tensor> & return_result);
 }
 #endif
