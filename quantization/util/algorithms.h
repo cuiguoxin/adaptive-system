@@ -38,10 +38,6 @@ namespace adaptive_system {
 
 	tensorflow::Tensor get_feed_tensor_from_action(int action_order);
 
-	void set_tuple_with_word_to_index(std::string const & material_path, Tuple& tuple);
-
-	void set_tuple_with_order_to_level(Tuple& tuple);
-
 	float get_slope(std::vector<float> const & times, std::vector<float> const & move_average_losses);
 
 	void average_gradients(int const number_workers, std::map<std::string, tensorflow::Tensor> & name2gradient);
@@ -49,5 +45,7 @@ namespace adaptive_system {
 	int get_real_level(int const order, int const level);
 
 	int get_real_level_6_8_10(int order);
+
+	void aggregate_gradients(std::vector<std::map<std::string, tensorflow::Tensor>> vector_of_map);
 }
 #endif

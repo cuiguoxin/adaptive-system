@@ -201,18 +201,16 @@ namespace adaptive_system {
 				map_gradient);  // result in copy which may slow down the process!!!!
 			if (_vector_map_gradient.size() == _number_of_workers) {
 				std::map<std::string, tensorflow::Tensor> merged_gradient;
-				aggregate_indexed_slices(_vector_map_gradient, _vector_map_indice,
-					merged_gradient, merged_indice);
+				aggregate_gradients(_vector_map_gradient, merged_gradient);
 				average_gradients(_number_of_workers, merged_gradient);
 				_store_named_gradient = NamedGradients();
 				quantize_gradients(
 					merged_gradient, &_store_named_gradient,
 					_level);
-				add_indices_to_named_gradients(merged_indice, _store_named_gradient);
 				apply_quantized_gradient_to_model(_store_named_gradient,
 					_session, _tuple);
 				_vector_map_gradient.clear();
-				_vector_map_indice.clear();
+				
 				_bool_gradient = true;
 				_condition_variable_gradient.notify_all();
 			}
@@ -313,7 +311,7 @@ namespace adaptive_system {
 		std::condition_variable _condition_variable_gradient;
 		std::condition_variable _condition_variable_state;
 		std::condition_variable _condition_variable_loss;
-		std::vector<std::map<std::string, tensorflow::Tensor>> _vector_map_gradient, _vector_map_indice;
+		std::vector<std::map<std::string, tensorflow::Tensor>> _vector_map_gradient;
 		std::vector<PartialState> _vector_partial_state;
 		float _last_loss;
 		std::vector<float> _vector_loss;

@@ -11,6 +11,7 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <thread>
 
 namespace adaptive_system {
 
@@ -96,6 +97,7 @@ namespace adaptive_system {
 		bool greater_compare_pair(std::pair<std::string, int> const & a, std::pair<std::string, int> const & b) {
 			return b.second < a.second;
 		}
+		
 	}
 
 	float get_slope(std::vector<float> const & times, std::vector<float> const & move_average_losses) {
@@ -170,5 +172,57 @@ namespace adaptive_system {
 		PRINT_ERROR_MESSAGE("order should be in the range of 0 to 2");
 		std::terminate();
 	}
+
+	namespace {
+		void sum_tensor_vector(std::vector<tensorflow::Tensor> const & vec_tensor,
+			tensorflow::Tensor& out_tensor) {
+			auto shape = vec_tensor[0].shape();
+			tensorflow::Tensor return_tensor(tensorflow::DataType::DT_FLOAT, shape);
+			size_t size = return_tensor.NumElements();
+			float* return_tensor_ptr = return_tensor.flat<float>().data();
+			std::fill(return_tensor_ptr, return_tensor_ptr + size, 0.0f);
+			for (int i = 0; i < vec_tensor.size(); i++) {
+				auto & tensor = vec_tensor[i];
+				float const * tensor_ptr = tensor.flat<float>().data();
+				for (int j = 0; j < size; j++) {
+					return_tensor_ptr[j] += tensor_ptr[j];
+				}
+			}
+			out_tensor = std::move(return_tensor);
+		}
+	}
+
+	void aggregate_gradients(std::vector<std::map<std::string, tensorflow::Tensor>>& vector_of_map,
+		std::map<std::string, tensorflow::Tensor> & return_result) {
+		std::map<std::string, std::vector<tensorflow::Tensor>> map_tensor_vector;
+		for (auto iter = vector_of_map.begin(); iter != vector_of_map.end(); iter++) {
+			std::map<std::string, tensorflow::Tensor> & map_current = *iter;
+			for (auto iter_name_tensor = map_current.begin();
+				iter_name_tensor != map_current.end(); iter++) {
+				std::string var_name = iter_name_tensor->first;
+				tensorflow::Tensor& gradient = iter_name_tensor->second;
+				map_tensor_vector[var_name].push_back(gradient);
+			}
+		}
+		std::vector<std::thread> vector_threads;
+		std::vector<std::pair<std::string, tensorflow::Tensor>> vector_name_tensor;
+		int index = 0; 
+		for (auto iter = map_tensor_vector.begin(); iter != map_tensor_vector.end(); iter++) {
+			std::string var_name = iter->first;
+			auto& vector_tensor = iter->second;
+			vector_name_tensor.push_back(std::make_pair(var_name, tensorflow::Tensor()));
+			auto& ref_tensor = vector_name_tensor[index++].second;
+			vector_threads.push_back(
+				std::thread(sum_tensor_vector, std::ref(vector_tensor), std::ref(ref_tensor)));
+		}
+		for (auto iter = vector_threads.begin(); iter != vector_threads.end(); iter++) {
+			iter->join();
+		}
+		return_result.clear();
+		for (auto iter = vector_name_tensor.begin(); iter != vector_name_tensor.end(); iter++) {
+			return_result[iter->first] = iter->second;
+		}
+	}
+
 }
 
