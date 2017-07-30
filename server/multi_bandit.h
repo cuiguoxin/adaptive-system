@@ -6,6 +6,7 @@
 #include <vector>
 #include <algorithm>
 #include <functional>
+#include <fstream>
 
 namespace adaptive_system {
 	template <int action_size>
@@ -41,6 +42,13 @@ namespace adaptive_system {
 			std::discrete_distribution<int> discrete{ prob.begin(), prob.end() };
 			size_t sample = discrete(generator);
 			return sample;
+		}
+
+		void print_value(std::ofstream& stream) {
+			for (int i = 0; i < action_size; i++) {
+				stream << std::to_string(action_value[i]) << " ";
+			}
+			stream << "\n";
 		}
 
 		void adjust_model(float reward, int action_index) {

@@ -270,7 +270,7 @@ namespace adaptive_system {
 		
 		void adjust_rl_model() {
 			std::vector<float> moving_average_losses;
-			const float r = 0.5;
+			const float r = 0.9;
 			moving_average_v2(_vector_loss_history[0],
 				_vector_loss_history,
 				moving_average_losses, r);
@@ -282,11 +282,14 @@ namespace adaptive_system {
 			float slope = get_slope(_vector_time_history, //_vector_loss_history);
 				moving_average_losses);
 			std::cout << "slope is " << slope << " new level is " << new_action_order << std::endl;
+			_file_action_stream << "slope: " << std::to_string(slope)
+				<< " , new level: " << std::to_string(new_action_order) << "\n";
 			float reward = get_reward_v3(slope); // -slope * 100
 			_multi_bandit.adjust_model(reward, old_action_order);
 			_grad_quant_level_order = new_action_order;
 
 			_level = get_real_level_6_8_10(_grad_quant_level_order);
+			_multi_bandit.print_value(_file_action_stream);
 			_file_action_stream << std::to_string(_current_iter_number) << "::"
 				<< std::to_string(new_action_order) << "::" << std::to_string(_level) << "\n";
 			_file_action_stream.flush();
