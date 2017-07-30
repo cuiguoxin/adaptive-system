@@ -22,7 +22,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='rpc_service.proto',
   package='adaptive_system',
   syntax='proto3',
-  serialized_pb=_b('\n\x11rpc_service.proto\x12\x0f\x61\x64\x61ptive_system\x1a&tensorflow/core/framework/tensor.proto\x1a%tensorflow/core/framework/graph.proto\x1a,tensorflow/core/framework/tensor_shape.proto\"\x07\n\x05\x45mpty\"\xa1\x01\n\x05Names\x12\x15\n\rvariable_name\x18\x01 \x01(\t\x12\x15\n\rgradient_name\x18\x02 \x01(\t\x12\x13\n\x0b\x61ssign_name\x18\x03 \x01(\t\x12\x17\n\x0f\x61ssign_add_name\x18\x04 \x01(\t\x12\x1f\n\x17placeholder_assign_name\x18\x05 \x01(\t\x12\x1b\n\x13gradient_index_name\x18\x07 \x01(\t\"(\n\x11QuantizationLevel\x12\x13\n\x0blevel_order\x18\x01 \x01(\x05\"\xf1\x05\n\x05Tuple\x12\x37\n\tmap_names\x18\x01 \x03(\x0b\x32$.adaptive_system.Tuple.MapNamesEntry\x12\x41\n\x0emap_parameters\x18\x02 \x03(\x0b\x32).adaptive_system.Tuple.MapParametersEntry\x12\n\n\x02lr\x18\x03 \x01(\x02\x12\x10\n\x08interval\x18\x04 \x01(\x05\x12#\n\x05graph\x18\x05 \x01(\x0b\x32\x14.tensorflow.GraphDef\x12\x11\n\tloss_name\x18\x06 \x01(\t\x12\x11\n\tinit_name\x18\x07 \x01(\t\x12\x1e\n\x16\x62\x61tch_placeholder_name\x18\x08 \x01(\t\x12\x1e\n\x16label_placeholder_name\x18\t \x01(\t\x12\x18\n\x10training_op_name\x18\n \x01(\t\x12\x12\n\ntotal_iter\x18\x0b \x01(\x05\x12\x12\n\nbatch_size\x18\x0c \x01(\x05\x12>\n\rword_to_index\x18\r \x03(\x0b\x32\'.adaptive_system.Tuple.WordToIndexEntry\x12@\n\x0eorder_to_level\x18\x0e \x03(\x0b\x32(.adaptive_system.Tuple.OrderToLevelEntry\x1aG\n\rMapNamesEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12%\n\x05value\x18\x02 \x01(\x0b\x32\x16.adaptive_system.Names:\x02\x38\x01\x1aM\n\x12MapParametersEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12&\n\x05value\x18\x02 \x01(\x0b\x32\x17.tensorflow.TensorProto:\x02\x38\x01\x1a\x32\n\x10WordToIndexEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\x05:\x02\x38\x01\x1a\x33\n\x11OrderToLevelEntry\x12\x0b\n\x03key\x18\x01 \x01(\x05\x12\r\n\x05value\x18\x02 \x01(\x05:\x02\x38\x01\"\x88\x02\n\x08Gradient\x12\x1a\n\x12quantization_level\x18\x01 \x01(\x05\x12\x33\n\x12unquantized_tensor\x18\x02 \x01(\x0b\x32\x17.tensorflow.TensorProto\x12\x18\n\x10quantized_tensor\x18\x03 \x01(\x0c\x12\x0b\n\x03max\x18\x04 \x01(\x02\x12\x0b\n\x03min\x18\x05 \x01(\x02\x12\x32\n\x0ctensor_shape\x18\x06 \x01(\x0b\x32\x1c.tensorflow.TensorShapeProto\x12-\n\x0ctensor_index\x18\x07 \x01(\x0b\x32\x17.tensorflow.TensorProto\x12\x14\n\x0cis_quantized\x18\x08 \x01(\x08\"\xb1\x01\n\x0eNamedGradients\x12M\n\x10name_to_gradient\x18\x01 \x03(\x0b\x32\x33.adaptive_system.NamedGradients.NameToGradientEntry\x1aP\n\x13NameToGradientEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12(\n\x05value\x18\x02 \x01(\x0b\x32\x19.adaptive_system.Gradient:\x02\x38\x01\"E\n\x0cPartialState\x12\'\n\x06tensor\x18\x01 \x01(\x0b\x32\x17.tensorflow.TensorProto\x12\x0c\n\x04loss\x18\x02 \x01(\x02\"\x14\n\x04Loss\x12\x0c\n\x04loss\x18\x01 \x01(\x02\x32\xad\x02\n\rSystemControl\x12?\n\rretrieveTuple\x12\x16.adaptive_system.Empty\x1a\x16.adaptive_system.Tuple\x12\x39\n\x08sendLoss\x12\x15.adaptive_system.Loss\x1a\x16.adaptive_system.Empty\x12P\n\x0csendGradient\x12\x1f.adaptive_system.NamedGradients\x1a\x1f.adaptive_system.NamedGradients\x12N\n\tsendState\x12\x1d.adaptive_system.PartialState\x1a\".adaptive_system.QuantizationLevelb\x06proto3')
+  serialized_pb=_b('\n\x11rpc_service.proto\x12\x0f\x61\x64\x61ptive_system\x1a&tensorflow/core/framework/tensor.proto\x1a%tensorflow/core/framework/graph.proto\x1a,tensorflow/core/framework/tensor_shape.proto\"\x07\n\x05\x45mpty\"k\n\x05Names\x12\x15\n\rvariable_name\x18\x01 \x01(\t\x12\x15\n\rgradient_name\x18\x02 \x01(\t\x12\x13\n\x0b\x61ssign_name\x18\x03 \x01(\t\x12\x1f\n\x17placeholder_assign_name\x18\x05 \x01(\t\"(\n\x11QuantizationLevel\x12\x13\n\x0blevel_order\x18\x01 \x01(\x05\"\xfd\x04\n\x05Tuple\x12\x37\n\tmap_names\x18\x01 \x03(\x0b\x32$.adaptive_system.Tuple.MapNamesEntry\x12\x41\n\x0emap_parameters\x18\x02 \x03(\x0b\x32).adaptive_system.Tuple.MapParametersEntry\x12\n\n\x02lr\x18\x03 \x01(\x02\x12\x10\n\x08interval\x18\x04 \x01(\x05\x12#\n\x05graph\x18\x05 \x01(\x0b\x32\x14.tensorflow.GraphDef\x12\x11\n\tloss_name\x18\x06 \x01(\t\x12\x11\n\tinit_name\x18\x07 \x01(\t\x12\x1e\n\x16\x62\x61tch_placeholder_name\x18\x08 \x01(\t\x12\x1e\n\x16label_placeholder_name\x18\t \x01(\t\x12\x18\n\x10training_op_name\x18\n \x01(\t\x12\x12\n\ntotal_iter\x18\x0b \x01(\x05\x12\x12\n\nbatch_size\x18\x0c \x01(\x05\x12@\n\x0eorder_to_level\x18\x0e \x03(\x0b\x32(.adaptive_system.Tuple.OrderToLevelEntry\x1aG\n\rMapNamesEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12%\n\x05value\x18\x02 \x01(\x0b\x32\x16.adaptive_system.Names:\x02\x38\x01\x1aM\n\x12MapParametersEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12&\n\x05value\x18\x02 \x01(\x0b\x32\x17.tensorflow.TensorProto:\x02\x38\x01\x1a\x33\n\x11OrderToLevelEntry\x12\x0b\n\x03key\x18\x01 \x01(\x05\x12\r\n\x05value\x18\x02 \x01(\x05:\x02\x38\x01\"\x8e\x01\n\x08Gradient\x12\x1a\n\x12quantization_level\x18\x01 \x01(\x05\x12\x18\n\x10quantized_tensor\x18\x03 \x01(\x0c\x12\x0b\n\x03max\x18\x04 \x01(\x02\x12\x0b\n\x03min\x18\x05 \x01(\x02\x12\x32\n\x0ctensor_shape\x18\x06 \x01(\x0b\x32\x1c.tensorflow.TensorShapeProto\"\xb1\x01\n\x0eNamedGradients\x12M\n\x10name_to_gradient\x18\x01 \x03(\x0b\x32\x33.adaptive_system.NamedGradients.NameToGradientEntry\x1aP\n\x13NameToGradientEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12(\n\x05value\x18\x02 \x01(\x0b\x32\x19.adaptive_system.Gradient:\x02\x38\x01\"E\n\x0cPartialState\x12\'\n\x06tensor\x18\x01 \x01(\x0b\x32\x17.tensorflow.TensorProto\x12\x0c\n\x04loss\x18\x02 \x01(\x02\"\x14\n\x04Loss\x12\x0c\n\x04loss\x18\x01 \x01(\x02\x32\xad\x02\n\rSystemControl\x12?\n\rretrieveTuple\x12\x16.adaptive_system.Empty\x1a\x16.adaptive_system.Tuple\x12\x39\n\x08sendLoss\x12\x15.adaptive_system.Loss\x1a\x16.adaptive_system.Empty\x12P\n\x0csendGradient\x12\x1f.adaptive_system.NamedGradients\x1a\x1f.adaptive_system.NamedGradients\x12N\n\tsendState\x12\x1d.adaptive_system.PartialState\x1a\".adaptive_system.QuantizationLevelb\x06proto3')
   ,
   dependencies=[tensorflow_dot_core_dot_framework_dot_tensor__pb2.DESCRIPTOR,tensorflow_dot_core_dot_framework_dot_graph__pb2.DESCRIPTOR,tensorflow_dot_core_dot_framework_dot_tensor__shape__pb2.DESCRIPTOR,])
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
@@ -83,22 +83,8 @@ _NAMES = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='assign_add_name', full_name='adaptive_system.Names.assign_add_name', index=3,
-      number=4, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='placeholder_assign_name', full_name='adaptive_system.Names.placeholder_assign_name', index=4,
+      name='placeholder_assign_name', full_name='adaptive_system.Names.placeholder_assign_name', index=3,
       number=5, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='gradient_index_name', full_name='adaptive_system.Names.gradient_index_name', index=5,
-      number=7, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -115,8 +101,8 @@ _NAMES = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=173,
-  serialized_end=334,
+  serialized_start=172,
+  serialized_end=279,
 )
 
 
@@ -146,8 +132,8 @@ _QUANTIZATIONLEVEL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=336,
-  serialized_end=376,
+  serialized_start=281,
+  serialized_end=321,
 )
 
 
@@ -184,8 +170,8 @@ _TUPLE_MAPNAMESENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=877,
-  serialized_end=948,
+  serialized_start=758,
+  serialized_end=829,
 )
 
 _TUPLE_MAPPARAMETERSENTRY = _descriptor.Descriptor(
@@ -221,45 +207,8 @@ _TUPLE_MAPPARAMETERSENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=950,
-  serialized_end=1027,
-)
-
-_TUPLE_WORDTOINDEXENTRY = _descriptor.Descriptor(
-  name='WordToIndexEntry',
-  full_name='adaptive_system.Tuple.WordToIndexEntry',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='key', full_name='adaptive_system.Tuple.WordToIndexEntry.key', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='value', full_name='adaptive_system.Tuple.WordToIndexEntry.value', index=1,
-      number=2, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  options=_descriptor._ParseOptions(descriptor_pb2.MessageOptions(), _b('8\001')),
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=1029,
-  serialized_end=1079,
+  serialized_start=831,
+  serialized_end=908,
 )
 
 _TUPLE_ORDERTOLEVELENTRY = _descriptor.Descriptor(
@@ -295,8 +244,8 @@ _TUPLE_ORDERTOLEVELENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1081,
-  serialized_end=1132,
+  serialized_start=910,
+  serialized_end=961,
 )
 
 _TUPLE = _descriptor.Descriptor(
@@ -391,14 +340,7 @@ _TUPLE = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='word_to_index', full_name='adaptive_system.Tuple.word_to_index', index=12,
-      number=13, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='order_to_level', full_name='adaptive_system.Tuple.order_to_level', index=13,
+      name='order_to_level', full_name='adaptive_system.Tuple.order_to_level', index=12,
       number=14, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -407,7 +349,7 @@ _TUPLE = _descriptor.Descriptor(
   ],
   extensions=[
   ],
-  nested_types=[_TUPLE_MAPNAMESENTRY, _TUPLE_MAPPARAMETERSENTRY, _TUPLE_WORDTOINDEXENTRY, _TUPLE_ORDERTOLEVELENTRY, ],
+  nested_types=[_TUPLE_MAPNAMESENTRY, _TUPLE_MAPPARAMETERSENTRY, _TUPLE_ORDERTOLEVELENTRY, ],
   enum_types=[
   ],
   options=None,
@@ -416,8 +358,8 @@ _TUPLE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=379,
-  serialized_end=1132,
+  serialized_start=324,
+  serialized_end=961,
 )
 
 
@@ -436,51 +378,30 @@ _GRADIENT = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='unquantized_tensor', full_name='adaptive_system.Gradient.unquantized_tensor', index=1,
-      number=2, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='quantized_tensor', full_name='adaptive_system.Gradient.quantized_tensor', index=2,
+      name='quantized_tensor', full_name='adaptive_system.Gradient.quantized_tensor', index=1,
       number=3, type=12, cpp_type=9, label=1,
       has_default_value=False, default_value=_b(""),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='max', full_name='adaptive_system.Gradient.max', index=3,
+      name='max', full_name='adaptive_system.Gradient.max', index=2,
       number=4, type=2, cpp_type=6, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='min', full_name='adaptive_system.Gradient.min', index=4,
+      name='min', full_name='adaptive_system.Gradient.min', index=3,
       number=5, type=2, cpp_type=6, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='tensor_shape', full_name='adaptive_system.Gradient.tensor_shape', index=5,
+      name='tensor_shape', full_name='adaptive_system.Gradient.tensor_shape', index=4,
       number=6, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='tensor_index', full_name='adaptive_system.Gradient.tensor_index', index=6,
-      number=7, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='is_quantized', full_name='adaptive_system.Gradient.is_quantized', index=7,
-      number=8, type=8, cpp_type=7, label=1,
-      has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
@@ -496,8 +417,8 @@ _GRADIENT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1135,
-  serialized_end=1399,
+  serialized_start=964,
+  serialized_end=1106,
 )
 
 
@@ -534,8 +455,8 @@ _NAMEDGRADIENTS_NAMETOGRADIENTENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1499,
-  serialized_end=1579,
+  serialized_start=1206,
+  serialized_end=1286,
 )
 
 _NAMEDGRADIENTS = _descriptor.Descriptor(
@@ -564,8 +485,8 @@ _NAMEDGRADIENTS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1402,
-  serialized_end=1579,
+  serialized_start=1109,
+  serialized_end=1286,
 )
 
 
@@ -602,8 +523,8 @@ _PARTIALSTATE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1581,
-  serialized_end=1650,
+  serialized_start=1288,
+  serialized_end=1357,
 )
 
 
@@ -633,24 +554,20 @@ _LOSS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1652,
-  serialized_end=1672,
+  serialized_start=1359,
+  serialized_end=1379,
 )
 
 _TUPLE_MAPNAMESENTRY.fields_by_name['value'].message_type = _NAMES
 _TUPLE_MAPNAMESENTRY.containing_type = _TUPLE
 _TUPLE_MAPPARAMETERSENTRY.fields_by_name['value'].message_type = tensorflow_dot_core_dot_framework_dot_tensor__pb2._TENSORPROTO
 _TUPLE_MAPPARAMETERSENTRY.containing_type = _TUPLE
-_TUPLE_WORDTOINDEXENTRY.containing_type = _TUPLE
 _TUPLE_ORDERTOLEVELENTRY.containing_type = _TUPLE
 _TUPLE.fields_by_name['map_names'].message_type = _TUPLE_MAPNAMESENTRY
 _TUPLE.fields_by_name['map_parameters'].message_type = _TUPLE_MAPPARAMETERSENTRY
 _TUPLE.fields_by_name['graph'].message_type = tensorflow_dot_core_dot_framework_dot_graph__pb2._GRAPHDEF
-_TUPLE.fields_by_name['word_to_index'].message_type = _TUPLE_WORDTOINDEXENTRY
 _TUPLE.fields_by_name['order_to_level'].message_type = _TUPLE_ORDERTOLEVELENTRY
-_GRADIENT.fields_by_name['unquantized_tensor'].message_type = tensorflow_dot_core_dot_framework_dot_tensor__pb2._TENSORPROTO
 _GRADIENT.fields_by_name['tensor_shape'].message_type = tensorflow_dot_core_dot_framework_dot_tensor__shape__pb2._TENSORSHAPEPROTO
-_GRADIENT.fields_by_name['tensor_index'].message_type = tensorflow_dot_core_dot_framework_dot_tensor__pb2._TENSORPROTO
 _NAMEDGRADIENTS_NAMETOGRADIENTENTRY.fields_by_name['value'].message_type = _GRADIENT
 _NAMEDGRADIENTS_NAMETOGRADIENTENTRY.containing_type = _NAMEDGRADIENTS
 _NAMEDGRADIENTS.fields_by_name['name_to_gradient'].message_type = _NAMEDGRADIENTS_NAMETOGRADIENTENTRY
@@ -701,13 +618,6 @@ Tuple = _reflection.GeneratedProtocolMessageType('Tuple', (_message.Message,), d
     ))
   ,
 
-  WordToIndexEntry = _reflection.GeneratedProtocolMessageType('WordToIndexEntry', (_message.Message,), dict(
-    DESCRIPTOR = _TUPLE_WORDTOINDEXENTRY,
-    __module__ = 'rpc_service_pb2'
-    # @@protoc_insertion_point(class_scope:adaptive_system.Tuple.WordToIndexEntry)
-    ))
-  ,
-
   OrderToLevelEntry = _reflection.GeneratedProtocolMessageType('OrderToLevelEntry', (_message.Message,), dict(
     DESCRIPTOR = _TUPLE_ORDERTOLEVELENTRY,
     __module__ = 'rpc_service_pb2'
@@ -721,7 +631,6 @@ Tuple = _reflection.GeneratedProtocolMessageType('Tuple', (_message.Message,), d
 _sym_db.RegisterMessage(Tuple)
 _sym_db.RegisterMessage(Tuple.MapNamesEntry)
 _sym_db.RegisterMessage(Tuple.MapParametersEntry)
-_sym_db.RegisterMessage(Tuple.WordToIndexEntry)
 _sym_db.RegisterMessage(Tuple.OrderToLevelEntry)
 
 Gradient = _reflection.GeneratedProtocolMessageType('Gradient', (_message.Message,), dict(
@@ -765,8 +674,6 @@ _TUPLE_MAPNAMESENTRY.has_options = True
 _TUPLE_MAPNAMESENTRY._options = _descriptor._ParseOptions(descriptor_pb2.MessageOptions(), _b('8\001'))
 _TUPLE_MAPPARAMETERSENTRY.has_options = True
 _TUPLE_MAPPARAMETERSENTRY._options = _descriptor._ParseOptions(descriptor_pb2.MessageOptions(), _b('8\001'))
-_TUPLE_WORDTOINDEXENTRY.has_options = True
-_TUPLE_WORDTOINDEXENTRY._options = _descriptor._ParseOptions(descriptor_pb2.MessageOptions(), _b('8\001'))
 _TUPLE_ORDERTOLEVELENTRY.has_options = True
 _TUPLE_ORDERTOLEVELENTRY._options = _descriptor._ParseOptions(descriptor_pb2.MessageOptions(), _b('8\001'))
 _NAMEDGRADIENTS_NAMETOGRADIENTENTRY.has_options = True
