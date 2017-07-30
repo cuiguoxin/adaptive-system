@@ -36,7 +36,6 @@
 
 #include "server/multi_bandit.h"
 #include "server/reward.h"
-#include "server/indexed_slices.h"
 
 using grpc::Server;
 using grpc::ServerBuilder;
@@ -194,16 +193,14 @@ namespace adaptive_system {
 		grpc::Status sendGradient(ServerContext* context, const NamedGradients* request,
 			NamedGradients* response) override {
 			NamedGradients& named_gradients = const_cast<NamedGradients&>(*request);
-			std::map<std::string, tensorflow::Tensor> map_gradient, map_indices;
+			std::map<std::string, tensorflow::Tensor> map_gradient;
 			dequantize_gradients(named_gradients, map_gradient);
-			extract_indices_from_named_gradient(named_gradients, map_indices);
 			std::unique_lock<std::mutex> lk(_mutex_gradient);
 			_bool_gradient = false;
 			_vector_map_gradient.push_back(
 				map_gradient);  // result in copy which may slow down the process!!!!
-			_vector_map_indice.push_back(map_indices);
 			if (_vector_map_gradient.size() == _number_of_workers) {
-				std::map<std::string, tensorflow::Tensor> merged_gradient, merged_indice;
+				std::map<std::string, tensorflow::Tensor> merged_gradient;
 				aggregate_indexed_slices(_vector_map_gradient, _vector_map_indice,
 					merged_gradient, merged_indice);
 				average_gradients(_number_of_workers, merged_gradient);
