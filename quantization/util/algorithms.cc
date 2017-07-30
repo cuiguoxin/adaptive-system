@@ -39,7 +39,6 @@ namespace adaptive_system {
 			else {
 				Names& names = iter_map_names->second;
 				std::string grad_name = names.gradient_name();
-				std::string index_name = names.gradient_index_name();
 				tensorflow::Tensor feed_grad;  // nothing need to do to initialize feed
 										  // tensor, dequantize function will do all
 										  // stuff
