@@ -42,14 +42,9 @@ namespace adaptive_system {
 				tensorflow::Tensor feed_grad;  // nothing need to do to initialize feed
 										  // tensor, dequantize function will do all
 										  // stuff
-				tensorflow::Tensor feed_index;
 				dequantize_gradient(grad, feed_grad);
-				feed_index.FromProto(grad.tensor_index());
-				std::cout << feed_grad.dim_size(0) << " " << feed_index.dim_size(0) << std::endl;
 				feeds.push_back(
 					std::pair<std::string, tensorflow::Tensor>(grad_name, feed_grad));
-				feeds.push_back(
-					std::pair<std::string, tensorflow::Tensor>(index_name, feed_index));
 			}
 		});
 		tensorflow::Status status = sess->Run(feeds, {},  actions_to_do, nullptr);
@@ -95,41 +90,11 @@ namespace adaptive_system {
 		return ret;
 	}
 
-	void add_indices_to_named_gradients(std::map<std::string, tensorflow::Tensor> const & map_indices,
-		NamedGradients& named_gradients) {
-		for (auto iter = map_indices.begin(); iter != map_indices.end(); iter++) {
-			tensorflow::Tensor const & index = iter->second;
-			std::string var_name = iter->first;
-			auto iter_named_gradients = (named_gradients.mutable_name_to_gradient())->find(var_name);
-			Gradient& grad = iter_named_gradients->second;
-			index.AsProtoField(grad.mutable_tensor_index());
-		}
-	}
+	
 
 	namespace {
 		bool greater_compare_pair(std::pair<std::string, int> const & a, std::pair<std::string, int> const & b) {
 			return b.second < a.second;
-		}
-	}
-
-	void set_tuple_with_word_to_index(std::string const & material_path, Tuple& tuple) {
-		auto & word_to_index = *tuple.mutable_word_to_index();
-		std::ifstream input_stream(material_path);
-		std::string line;
-		while (std::getline(input_stream, line)) {
-			std::istringstream iss(line);
-			std::string word;
-			int index;
-			iss >> word;
-			iss >> index;
-			word_to_index[word] = index;
-		}	
-	}
-
-	void set_tuple_with_order_to_level(Tuple& tuple) {
-		auto & order2level = *tuple.mutable_order_to_level();
-		for (int i = 0; i < 5; i++) {
-			order2level[i] = 8 + i * 2;
 		}
 	}
 

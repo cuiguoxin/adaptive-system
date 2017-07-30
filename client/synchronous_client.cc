@@ -25,7 +25,7 @@
 #include "tensorflow/core/platform/types.h"
 #include "tensorflow/core/public/session.h"
 
-#include "input/word2vec/input.h"
+#include "input/cifar10/input.h"
 #include "quantization/util/algorithms.h"
 #include "quantization/util/extract_feature.h"
 #include "quantization/util/helper.h"
@@ -90,7 +90,7 @@ namespace adaptive_system {
 		lr = tuple.lr();
 		interval = tuple.interval();
 		total_iter = tuple.total_iter();
-		batch_size = tuple.batch_size();
+		//batch_size = tuple.batch_size();
 		std::string init_name = tuple.init_name();
 		batch_placeholder_name = tuple.batch_placeholder_name();
 		label_placeholder_name = tuple.label_placeholder_name();
@@ -132,8 +132,7 @@ namespace adaptive_system {
 	// return loss and set gradient to the first parameter
 	float compute_gradient_and_loss(
 		std::vector<std::pair<std::string, tensorflow::Tensor>> feeds,
-		std::map<std::string, tensorflow::Tensor>& gradients,
-		std::map<std::string, tensorflow::Tensor>& indices) {
+		std::map<std::string, tensorflow::Tensor>& gradients) {
 
 		std::vector<std::string> fetch;
 		std::string loss_name = get_tuple()->loss_name();
@@ -148,7 +147,6 @@ namespace adaptive_system {
 			Names const& names = pair.second;
 			std::string const& variable_name = pair.first;
 			fetch.push_back(names.gradient_name());
-			fetch.push_back(names.gradient_index_name());
 			variable_names_in_order.push_back(variable_name);
 		});
 		tensorflow::Status tf_status = get_session()->Run(feeds, fetch, {}, &outputs);
@@ -162,15 +160,9 @@ namespace adaptive_system {
 		outputs.erase(outputs.begin());
 
 		size_t size = outputs.size();
-		for (size_t i = 0; i < size; i = i + 2) {
+		for (size_t i = 0; i < size; i++) {
 			gradients.insert(std::pair<std::string, tensorflow::Tensor>(
-				variable_names_in_order[i / 2], outputs[i]));
-			indices.insert(std::pair<std::string, tensorflow::Tensor>(
-				variable_names_in_order[i / 2], outputs[i + 1]));
-		}
-		if (gradients.size() != indices.size()) {
-			PRINT_ERROR_MESSAGE("value and index's sizes are not the same");
-			std::terminate();
+				variable_names_in_order[i], outputs[i]));
 		}
 		return loss_ret;
 	}
@@ -179,19 +171,6 @@ namespace adaptive_system {
 		std::map<std::string, tensorflow::Tensor> const& gradients,
 		const float loss) {
 		PartialState partial_state_ret;
-		static const std::string variable_name_to_collect = "Variable:0";
-		auto iter = gradients.find(variable_name_to_collect);
-		if (iter == gradients.end()) {
-			PRINT_ERROR;
-			std::terminate();
-		}
-		else {
-			tensorflow::Tensor const & tensor_to_be_collected = iter->second;
-			tensorflow::Tensor feature_tensor = get_feature(tensor_to_be_collected, loss);
-			tensorflow::TensorProto feature_tensor_proto;
-			feature_tensor.AsProtoField(&feature_tensor_proto);
-			*partial_state_ret.mutable_tensor() = feature_tensor_proto;
-		}
 		return partial_state_ret;
 	}
 
@@ -200,37 +179,24 @@ namespace adaptive_system {
 		std::map<std::string, tensorflow::Tensor> const& gradients,
 		const std::vector<float>& recent_losses) {
 		PartialState partial_state_ret;
-		static const std::string variable_name_to_collect = "Variable:0";
-		auto iter = gradients.find(variable_name_to_collect);
-		if (iter == gradients.end()) {
-			PRINT_ERROR;
-			std::terminate();
-		}
-		else {
-			tensorflow::Tensor const & tensor_to_be_collected = iter->second;
-			tensorflow::Tensor feature_tensor = get_feature_v2(tensor_to_be_collected, recent_losses);
-			tensorflow::TensorProto feature_tensor_proto;
-			feature_tensor.AsProtoField(&feature_tensor_proto);
-			*partial_state_ret.mutable_tensor() = feature_tensor_proto;
-		}
 		return partial_state_ret;
 	}
 	
 
 
-	void do_training(std::string const & raw_data_path, int level) {
-		word2vec::init(raw_data_path, get_tuple()->word_to_index());
+	void do_training(std::string const & raw_data_path, std::string const & preprocess_graph_path) {
+		int level = 0;
+		cifar10::turn_raw_tensors_to_standard_version(raw_data_path, preprocess_graph_path);
 		for (int i = 0; i < total_iter; i++) {
 			PRINT_INFO;
 			std::map<std::string, tensorflow::Tensor> map_gradients;
-			std::map<std::string, tensorflow::Tensor> map_indices;
 			std::pair<tensorflow::Tensor, tensorflow::Tensor> feeds =
-				word2vec::get_next_batch(batch_size);
+				cifar10::get_next_batch();
 			PRINT_INFO;
 			float loss = compute_gradient_and_loss(
 			{ {batch_placeholder_name, feeds.first},
 			 {label_placeholder_name, feeds.second} },
-				map_gradients, map_indices);  // compute gradient and loss now
+				map_gradients);  // compute gradient and loss now
 			PRINT_INFO;
 			Loss loss_to_send;
 			loss_to_send.set_loss(loss);
@@ -261,8 +227,7 @@ namespace adaptive_system {
 			quantize_gradients(
 				map_gradients, &named_gradients_send, level);
 				//get_tuple()->order_to_level().find(grad_quant_level_order)->second);
-			PRINT_INFO;
-			add_indices_to_named_gradients(map_indices, named_gradients_send);
+			
 			ClientContext gradient_context;
 			PRINT_INFO;
 			grpc::Status grpc_status = stub->sendGradient(
@@ -283,9 +248,9 @@ namespace adaptive_system {
 
 	void close_session() { get_session()->Close(); }
 
-	void run_logic(std::string const & raw_data_path, int const level) {
+	void run_logic(std::string const & raw_data_path, std::string const & preprocess_graph_path) {
 		init_everything();
-		do_training(raw_data_path, level);
+		do_training(raw_data_path, preprocess_graph_path);
 		close_session();
 	}
 }
@@ -293,7 +258,7 @@ namespace adaptive_system {
 int main(int argc, char* argv[]) {
 	std::string ip_port = argv[1];
 	std::string raw_data_path = argv[2];
-	const int level = atoi(argv[3]);
+	std::string preprocess_graph_path = argv[3];
 	adaptive_system::init_stub(ip_port);
-	adaptive_system::run_logic(raw_data_path, level);
+	adaptive_system::run_logic(raw_data_path, preprocess_graph_path);
 }
