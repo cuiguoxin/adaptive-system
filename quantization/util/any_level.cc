@@ -102,7 +102,6 @@ namespace adaptive_system {
 		gradient.set_quantization_level(level);
 		gradient.set_max(max);
 		gradient.set_min(min);
-		gradient.set_is_quantized(true);
 		tensor.shape().AsProto(gradient.mutable_tensor_shape());
 
 		size_t quantized_size = std::ceil(((float)size) * level / 8); //number of byte
