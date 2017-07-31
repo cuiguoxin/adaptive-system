@@ -198,7 +198,7 @@ namespace adaptive_system {
 		for (auto iter = vector_of_map.begin(); iter != vector_of_map.end(); iter++) {
 			std::map<std::string, tensorflow::Tensor> & map_current = *iter;
 			for (auto iter_name_tensor = map_current.begin();
-				iter_name_tensor != map_current.end(); iter++) {
+				iter_name_tensor != map_current.end(); iter_name_tensor++) {
 				std::string var_name = iter_name_tensor->first;
 				tensorflow::Tensor& gradient = iter_name_tensor->second;
 				map_tensor_vector[var_name].push_back(gradient);
