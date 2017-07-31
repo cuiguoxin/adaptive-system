@@ -220,10 +220,12 @@ namespace adaptive_system {
 		for (auto iter = vector_threads.begin(); iter != vector_threads.end(); iter++) {
 			iter->join();
 		}
+		PRINT_INFO;
 		return_result.clear();
 		for (auto iter = vector_name_tensor.begin(); iter != vector_name_tensor.end(); iter++) {
 			return_result[iter->first] = iter->second;
 		}
+		PRINT_INFO;
 	}
 
 }
