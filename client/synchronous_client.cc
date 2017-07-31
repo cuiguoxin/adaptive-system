@@ -41,7 +41,7 @@ namespace adaptive_system {
 		int interval = 0;
 		int total_iter = 1000;
 		size_t batch_size = 0;
-		int grad_quant_level_order = 0;
+		//int grad_quant_level_order = 0;
 		std::string label_placeholder_name, batch_placeholder_name;
 		Tuple* get_tuple() {
 			static Tuple tuple;
@@ -217,8 +217,8 @@ namespace adaptive_system {
 					PRINT_ERROR_MESSAGE(grpc_status.error_message());
 					std::terminate();
 				}
-				grad_quant_level_order = quantization_level.level_order();
-				level = get_real_level_6_8_10(grad_quant_level_order);
+				level = quantization_level.level_order();
+				//level = get_real_level_6_8_10(grad_quant_level_order);
 			}
 			//fake
 			//now_sleep(grad_quant_level);

@@ -47,7 +47,7 @@ namespace adaptive_system {
 	public:
 		RPCServiceImpl(int interval, float lr, int total_iter, int number_of_workers,
 			int grad_quant_level_order,
-			std::string const& tuple_local_path)
+			std::string const& tuple_local_path, const int const_level)
 			: SystemControl::Service(),
 			_interval(interval),
 			_lr(lr),
@@ -55,7 +55,8 @@ namespace adaptive_system {
 			_number_of_workers(number_of_workers),
 			_grad_quant_level_order(grad_quant_level_order),
 			_tuple_local_path(tuple_local_path),
-			_multi_bandit(0.1, 0.1)
+			_multi_bandit(0.1, 0.1), 
+			_const_level(const_level)
 		{
 			_session = tensorflow::NewSession(tensorflow::SessionOptions());
 			std::fstream input(_tuple_local_path, std::ios::in | std::ios::binary);
@@ -257,7 +258,7 @@ namespace adaptive_system {
 				std::cout << "got line " << __LINE__ << std::endl;
 			}
 			lk.unlock();
-			response->set_level_order(_grad_quant_level_order);
+			response->set_level_order(_const_level);
 
 			return grpc::Status::OK;
 		}
@@ -302,6 +303,7 @@ namespace adaptive_system {
 		const int _total_iter;
 		const int _number_of_workers;
 		int _level = 6;
+		const int _const_level;
 		int _current_iter_number = 0;
 		int _grad_quant_level_order = 0;
 
@@ -346,12 +348,12 @@ int main(int argc, char** argv) {
 	float learning_rate = atof(argv[2]);
 	int total_iter = atoi(argv[3]);
 	int number_of_workers = atoi(argv[4]);
-	int level = atoi(argv[5]);
+	int const_level = atoi(argv[5]);
 	std::string tuple_path = argv[6];
 
 	adaptive_system::RPCServiceImpl service(
 		interval, learning_rate, total_iter, number_of_workers,
-		0, tuple_path);
+		0, tuple_path, const_level);
 
 	ServerBuilder builder;
 	// Listen on the given address without any authentication mechanism.
