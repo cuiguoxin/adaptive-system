@@ -178,6 +178,7 @@ namespace adaptive_system {
 			auto shape = vec_tensor[0].shape();
 			tensorflow::Tensor return_tensor(tensorflow::DataType::DT_FLOAT, shape);
 			size_t size = return_tensor.NumElements();
+			std::cout << "size is " << size << std::endl;
 			float* return_tensor_ptr = return_tensor.flat<float>().data();
 			std::fill(return_tensor_ptr, return_tensor_ptr + size, 0.0f);
 			for (int i = 0; i < vec_tensor.size(); i++) {
@@ -207,11 +208,12 @@ namespace adaptive_system {
 		PRINT_INFO;
 		std::vector<std::thread> vector_threads;
 		std::vector<std::pair<std::string, tensorflow::Tensor>> vector_name_tensor;
+		vector_name_tensor.resize(map_tensor_vector.size());
 		int index = 0; 
 		for (auto iter = map_tensor_vector.begin(); iter != map_tensor_vector.end(); iter++) {
 			std::string var_name = iter->first;
 			auto& vector_tensor = iter->second;
-			vector_name_tensor.push_back(std::make_pair(var_name, tensorflow::Tensor()));
+			vector_name_tensor[index].first = var_name;
 			auto& ref_tensor = vector_name_tensor[index++].second;
 			vector_threads.push_back(
 				std::thread(sum_tensor_vector, std::ref(vector_tensor), std::ref(ref_tensor)));
