@@ -194,6 +194,7 @@ namespace adaptive_system {
 	void aggregate_gradients(std::vector<std::map<std::string, tensorflow::Tensor>>& vector_of_map,
 		std::map<std::string, tensorflow::Tensor> & return_result) {
 		std::map<std::string, std::vector<tensorflow::Tensor>> map_tensor_vector;
+		PRINT_INFO;
 		for (auto iter = vector_of_map.begin(); iter != vector_of_map.end(); iter++) {
 			std::map<std::string, tensorflow::Tensor> & map_current = *iter;
 			for (auto iter_name_tensor = map_current.begin();
@@ -203,6 +204,7 @@ namespace adaptive_system {
 				map_tensor_vector[var_name].push_back(gradient);
 			}
 		}
+		PRINT_INFO;
 		std::vector<std::thread> vector_threads;
 		std::vector<std::pair<std::string, tensorflow::Tensor>> vector_name_tensor;
 		int index = 0; 
@@ -214,6 +216,7 @@ namespace adaptive_system {
 			vector_threads.push_back(
 				std::thread(sum_tensor_vector, std::ref(vector_tensor), std::ref(ref_tensor)));
 		}
+		PRINT_INFO;
 		for (auto iter = vector_threads.begin(); iter != vector_threads.end(); iter++) {
 			iter->join();
 		}

@@ -193,6 +193,7 @@ namespace adaptive_system {
 			NamedGradients* response) override {
 			NamedGradients& named_gradients = const_cast<NamedGradients&>(*request);
 			std::map<std::string, tensorflow::Tensor> map_gradient;
+			PRINT_INFO;
 			dequantize_gradients(named_gradients, map_gradient);
 			std::unique_lock<std::mutex> lk(_mutex_gradient);
 			_bool_gradient = false;
@@ -200,14 +201,19 @@ namespace adaptive_system {
 				map_gradient);  // result in copy which may slow down the process!!!!
 			if (_vector_map_gradient.size() == _number_of_workers) {
 				std::map<std::string, tensorflow::Tensor> merged_gradient;
+				PRINT_INFO;
 				aggregate_gradients(_vector_map_gradient, merged_gradient);
+				PRINT_INFO;
 				average_gradients(_number_of_workers, merged_gradient);
 				_store_named_gradient = NamedGradients();
+				PRINT_INFO;
 				quantize_gradients(
 					merged_gradient, &_store_named_gradient,
 					_level);
+				PRINT_INFO;
 				apply_quantized_gradient_to_model(_store_named_gradient,
 					_session, _tuple);
+				PRINT_INFO;
 				_vector_map_gradient.clear();
 				
 				_bool_gradient = true;
