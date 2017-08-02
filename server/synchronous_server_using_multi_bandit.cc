@@ -261,7 +261,13 @@ namespace adaptive_system {
 				std::cout << "got line " << __LINE__ << std::endl;
 			}
 			lk.unlock();
-			response->set_level_order(_const_level);
+			if (_current_iter_number > 30) {
+				response->set_level_order(6);
+			}
+			else {
+				response->set_level_order(4);
+			}
+			
 
 			return grpc::Status::OK;
 		}
