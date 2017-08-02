@@ -201,19 +201,14 @@ namespace adaptive_system {
 				map_gradient);  // result in copy which may slow down the process!!!!
 			if (_vector_map_gradient.size() == _number_of_workers) {
 				std::map<std::string, tensorflow::Tensor> merged_gradient;
-				PRINT_INFO;
 				aggregate_gradients(_vector_map_gradient, merged_gradient);
-				PRINT_INFO;
 				average_gradients(_number_of_workers, merged_gradient);
 				_store_named_gradient = NamedGradients();
-				PRINT_INFO;
 				quantize_gradients(
 					merged_gradient, &_store_named_gradient,
 					_level);
-				PRINT_INFO;
 				apply_quantized_gradient_to_model(_store_named_gradient,
 					_session, _tuple);
-				PRINT_INFO;
 				_vector_map_gradient.clear();
 				
 				_bool_gradient = true;
@@ -249,12 +244,12 @@ namespace adaptive_system {
 				_vector_partial_state.clear();
 				_bool_state = true;
 				_condition_variable_state.notify_all();
-				std::cout << "got line " << __LINE__ << std::endl;
+				//std::cout << "got line " << __LINE__ << std::endl;
 			}
 			else {
-				std::cout << "got line " << __LINE__ << std::endl;
+				//std::cout << "got line " << __LINE__ << std::endl;
 				_condition_variable_state.wait(lk, [this] { return _bool_state; });
-				std::cout << "got line " << __LINE__ << std::endl;
+				//std::cout << "got line " << __LINE__ << std::endl;
 			}
 			lk.unlock();
 			response->set_level_order(_grad_quant_level_order);
@@ -267,7 +262,7 @@ namespace adaptive_system {
 		
 		void adjust_rl_model() {
 			std::vector<float> moving_average_losses;
-			const float r = 0.95;
+			const float r = 0.7;
 			moving_average_v2(_vector_loss_history[0],
 				_vector_loss_history,
 				moving_average_losses, r);
@@ -285,7 +280,7 @@ namespace adaptive_system {
 			_multi_bandit.adjust_model(reward, old_action_order);
 			_grad_quant_level_order = new_action_order;
 
-			_level = get_real_level_6_8_10(_grad_quant_level_order);
+			_level = get_real_level_4_8_12(_grad_quant_level_order);
 			_multi_bandit.print_value(_file_action_stream);
 			_file_action_stream << std::to_string(_current_iter_number) << "::"
 				<< std::to_string(new_action_order) << "::" << std::to_string(_level) << "\n";
