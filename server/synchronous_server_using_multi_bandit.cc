@@ -296,7 +296,7 @@ namespace adaptive_system {
 		const float _lr;
 		const int _total_iter;
 		const int _number_of_workers;
-		int _level = 6;
+		int _level = 4;
 		int _current_iter_number = 0;
 		int _grad_quant_level_order = 0;
 
