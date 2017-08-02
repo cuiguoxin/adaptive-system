@@ -217,8 +217,8 @@ namespace adaptive_system {
 					PRINT_ERROR_MESSAGE(grpc_status.error_message());
 					std::terminate();
 				}
-				grad_quant_level_order = quantization_level.level_order();
-				level = get_real_level_6_8_10(grad_quant_level_order);
+				level = quantization_level.level_order();
+				
 			}
 			//fake
 			//now_sleep(grad_quant_level);

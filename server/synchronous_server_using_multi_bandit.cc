@@ -252,7 +252,7 @@ namespace adaptive_system {
 				//std::cout << "got line " << __LINE__ << std::endl;
 			}
 			lk.unlock();
-			response->set_level_order(_grad_quant_level_order);
+			response->set_level_order(_level);
 
 			return grpc::Status::OK;
 		}
