@@ -213,7 +213,7 @@ namespace adaptive_system {
 				PRINT_INFO;
 				quantize_gradients(
 					merged_gradient, &_store_named_gradient,
-					_level);
+					_const_level);
 				PRINT_INFO;
 				apply_quantized_gradient_to_model(_store_named_gradient,
 					_session, _tuple);
@@ -248,7 +248,7 @@ namespace adaptive_system {
 					_vector_time_history.clear();
 				}
 				else {
-					adjust_rl_model();
+					//adjust_rl_model();
 				}
 				_vector_partial_state.clear();
 				_bool_state = true;
@@ -289,7 +289,7 @@ namespace adaptive_system {
 			_multi_bandit.adjust_model(reward, old_action_order);
 			_grad_quant_level_order = new_action_order;
 
-			_level = get_real_level_6_8_10(_grad_quant_level_order);
+			//_level = get_real_level_6_8_10(_grad_quant_level_order);
 			_multi_bandit.print_value(_file_action_stream);
 			_file_action_stream << std::to_string(_current_iter_number) << "::"
 				<< std::to_string(new_action_order) << "::" << std::to_string(_level) << "\n";
@@ -305,7 +305,6 @@ namespace adaptive_system {
 		const float _lr;
 		const int _total_iter;
 		const int _number_of_workers;
-		int _level = 6;
 		const int _const_level;
 		int _current_iter_number = 0;
 		int _grad_quant_level_order = 0;
