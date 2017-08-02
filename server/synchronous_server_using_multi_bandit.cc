@@ -266,7 +266,6 @@ namespace adaptive_system {
 			}
 			lk.unlock();
 			if (_current_iter_number > 30) {
-				_level = 6;
 				response->set_level_order(6);
 			}
 			else {
