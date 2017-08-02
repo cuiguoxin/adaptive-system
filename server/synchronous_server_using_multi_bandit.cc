@@ -292,7 +292,7 @@ namespace adaptive_system {
 			//_level = get_real_level_6_8_10(_grad_quant_level_order);
 			_multi_bandit.print_value(_file_action_stream);
 			_file_action_stream << std::to_string(_current_iter_number) << "::"
-				<< std::to_string(new_action_order) << "::" << std::to_string(_level) << "\n";
+				<< std::to_string(new_action_order) << "::" << std::to_string(_const_level) << "\n";
 			_file_action_stream.flush();
 			_vector_loss_history.clear();
 			_vector_time_history.clear();		
