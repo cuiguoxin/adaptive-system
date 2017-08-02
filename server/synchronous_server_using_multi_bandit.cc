@@ -211,9 +211,13 @@ namespace adaptive_system {
 				average_gradients(_number_of_workers, merged_gradient);
 				_store_named_gradient = NamedGradients();
 				PRINT_INFO;
+				int level = 4;
+				if (_current_iter_number > 30) {
+					level = 6;
+				} 
 				quantize_gradients(
 					merged_gradient, &_store_named_gradient,
-					_const_level);
+					level);
 				PRINT_INFO;
 				apply_quantized_gradient_to_model(_store_named_gradient,
 					_session, _tuple);
@@ -262,6 +266,7 @@ namespace adaptive_system {
 			}
 			lk.unlock();
 			if (_current_iter_number > 30) {
+				_level = 6;
 				response->set_level_order(6);
 			}
 			else {
