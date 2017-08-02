@@ -172,6 +172,19 @@ namespace adaptive_system {
 		std::terminate();
 	}
 
+	int get_real_level_4_8_12(int order) {
+		switch (order) {
+		case 0:
+			return 4;
+		case 1:
+			return 8;
+		case 2:
+			return 12;
+		}
+		PRINT_ERROR_MESSAGE("order should be in the range of 0 to 2");
+		std::terminate();
+	}
+
 	namespace {
 		void sum_tensor_vector(std::vector<tensorflow::Tensor> const & vec_tensor,
 			tensorflow::Tensor& out_tensor) {
