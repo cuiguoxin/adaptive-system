@@ -52,7 +52,14 @@ namespace adaptive_system {
 		}
 
 		void adjust_model(float reward, int action_index) {
-			action_value[action_index] += step_size * (reward - action_value[action_index]);
+			if (action_index == 1) {
+				action_value[action_index] += step_size * (reward - action_value[action_index]);
+			}
+			else {
+				action_value[action_index] += step_size * (reward - action_value[action_index]);
+				action_value[1] += step_size * (reward - action_value[1]);
+			}
+			
 		}
 	};
 }
