@@ -69,7 +69,7 @@ namespace adaptive_system {
 template<int start, int end>
 class multi_bandit_continous {
 public:
-	multi_bandit_continous(float st_size, float e) : step_size(st_size), eps(e) {
+	multi_bandit_continous(float st_size, float e, int init_level) : step_size(st_size), eps(e), current_abs_level(init_level) {
 		for (int i = start; i <= end; i++) {
 			action_value[i] = 0;
 		}

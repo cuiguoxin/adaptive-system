@@ -53,7 +53,7 @@ namespace adaptive_system {
 			_total_iter(total_iter),
 			_number_of_workers(number_of_workers),
 			_tuple_local_path(tuple_local_path),
-			_multi_bandit(0.1, 0.3) {
+			_multi_bandit(0.2, 0.2, 3) {
 			_session = tensorflow::NewSession(tensorflow::SessionOptions());
 			std::fstream input(_tuple_local_path, std::ios::in | std::ios::binary);
 			if (!input) {
