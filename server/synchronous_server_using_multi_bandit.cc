@@ -46,14 +46,12 @@ namespace adaptive_system {
 	class RPCServiceImpl final : public SystemControl::Service {
 	public:
 		RPCServiceImpl(int interval, float lr, int total_iter, int number_of_workers,
-			int grad_quant_level_order,
 			std::string const& tuple_local_path)
 			: SystemControl::Service(),
 			_interval(interval),
 			_lr(lr),
 			_total_iter(total_iter),
 			_number_of_workers(number_of_workers),
-			_grad_quant_level_order(grad_quant_level_order),
 			_tuple_local_path(tuple_local_path),
 			_multi_bandit(0.1, 0.3) {
 			_session = tensorflow::NewSession(tensorflow::SessionOptions());
@@ -266,26 +264,20 @@ namespace adaptive_system {
 			moving_average_v2(_vector_loss_history[0], _vector_loss_history,
 				moving_average_losses, r);
 
-			int new_action_order = _multi_bandit.sample_new_action();
-			int old_action_order = _grad_quant_level_order;
-
 			standard_times(_vector_time_history);
 			float slope = get_slope(_vector_time_history,  //_vector_loss_history);
 				moving_average_losses);
-			std::cout << "slope is " << slope << " new level is " << new_action_order
-				<< std::endl;
-			_file_action_stream << "slope: " << std::to_string(slope)
-				<< " , new level: " << std::to_string(new_action_order)
-				<< "\n";
+			std::cout << "slope is " << slope << std::endl;
 			float reward = get_reward_v3(slope);  // -slope * 100
-			_multi_bandit.adjust_model(reward, old_action_order);
-			_grad_quant_level_order = new_action_order;
 
-			_level = get_real_continuous_level(_grad_quant_level_order, _level);
+			_multi_bandit.adjust_model(reward);
+
+			_level = _multi_bandit.sample_new_abs_level();
+
 			_multi_bandit.print_value(_file_action_stream);
 			_file_action_stream << std::to_string(_current_iter_number)
-				<< "::" << std::to_string(new_action_order)
 				<< "::" << std::to_string(_level) << "\n";
+
 			_file_action_stream.flush();
 			_vector_loss_history.clear();
 			_vector_time_history.clear();
@@ -299,7 +291,7 @@ namespace adaptive_system {
 		const int _number_of_workers;
 		int _level = 6;
 		int _current_iter_number = 0;
-		int _grad_quant_level_order = 0;
+		//int _grad_quant_level_order = 0;
 
 		std::chrono::time_point<std::chrono::high_resolution_clock> _init_time_point;
 		std::chrono::time_point<std::chrono::high_resolution_clock> _time_point_last;
@@ -331,7 +323,7 @@ namespace adaptive_system {
 		std::ofstream _file_action_stream;
 		std::ofstream _file_state_stream;
 
-		multi_bandit<3> _multi_bandit;
+		multi_bandit_continous<2, 8> _multi_bandit;
 		std::string _label;
 	};
 }
@@ -346,7 +338,7 @@ int main(int argc, char** argv) {
 	std::string tuple_path = argv[6];
 
 	adaptive_system::RPCServiceImpl service(interval, learning_rate, total_iter,
-		number_of_workers, 0, tuple_path);
+		number_of_workers, tuple_path);
 
 	ServerBuilder builder;
 	// Listen on the given address without any authentication mechanism.
