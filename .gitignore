@@ -22,3 +22,4 @@ Debug/
 test/
 *.log
 temp/
+adas.vcxpro*
