@@ -112,20 +112,6 @@ private:
 	std::map<int, float> action_value;
 
 	std::vector<float> get_greedy_probability() {
-		float max = action_value[index];
-		for (int i = 0; i < action_size; i++) {
-			if (max < action_value[i]) {
-				index = i;
-				max = action_value[i];
-			}
-		}
-		std::vector<float> ret_vec;
-		ret_vec.resize(action_size, eps / action_size);
-		ret_vec[index] += 1 - eps;
-		return ret_vec;
-	}
-
-	std::vector<float> get_greedy_probability() {
 		std::vector<float> ret;
 		if (current_abs_level == start) {
 			ret.resize(2, eps / 2);
