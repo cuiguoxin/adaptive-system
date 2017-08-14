@@ -1,24 +1,24 @@
 import tensorflow as tf
 
-def create_sarsa_model():
+def create_sarsa_model(input_size, output_size):
 	with tf.variable_scope("first_layer"):
-		placeholder_state = tf.placeholder(tf.float32, [8], name="state")
+		placeholder_state = tf.placeholder(tf.float32, [input_size], name="state")
 		print placeholder_state.name
-		state = tf.reshape(placeholder_state, [8, 1])
-		variable_first_layer = tf.get_variable("weight", [10, 8],
+		state = tf.reshape(placeholder_state, [input_size, 1])
+		variable_first_layer = tf.get_variable("weight", [10, input_size],
                                         tf.float32, initializer=tf.truncated_normal_initializer(stddev=5e-2, dtype=tf.float32))
 	        bias_first_layer = tf.get_variable("bias", [10, 1], tf.float32, initializer=tf.constant_initializer())
        		first_layer = tf.matmul(variable_first_layer, state) +  bias_first_layer
 		activate_first_layer = tf.tanh(first_layer)
 
 	with tf.variable_scope("second_layer"):
-		variable_second_layer = tf.get_variable("weight", [3, 10], tf.float32, initializer=tf.truncated_normal_initializer(stddev=5e-2, dtype=tf.float32))
-       		bias_second_layer = tf.get_variable("bias", [3, 1], tf.float32, initializer=tf.constant_initializer())
+		variable_second_layer = tf.get_variable("weight", [output_size, 10], tf.float32, initializer=tf.truncated_normal_initializer(stddev=5e-2, dtype=tf.float32))
+       		bias_second_layer = tf.get_variable("bias", [output_size, 1], tf.float32, initializer=tf.constant_initializer())
         	second_layer = tf.matmul(variable_second_layer, activate_first_layer) + bias_second_layer
 
-	second_layer = tf.reshape(second_layer, [3])
+	second_layer = tf.reshape(second_layer, [output_size])
 	print second_layer.name
-	placeholder_one_hot = tf.placeholder(tf.float32, [3], name="one_hot")
+	placeholder_one_hot = tf.placeholder(tf.float32, [output_size], name="one_hot")
 	print placeholder_one_hot.name
 	action_value = tf.einsum('i,i->', placeholder_one_hot, second_layer)
 	print action_value.name
@@ -37,7 +37,7 @@ def create_sarsa_model():
 	tf.train.write_graph(sess.graph_def, './', 'sarsa_continuous.pb', as_text=False)
 
 
-create_sarsa_model()
+create_sarsa_model(3, 7)
 
 
     
