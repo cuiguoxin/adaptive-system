@@ -238,13 +238,7 @@ namespace adaptive_system {
 					_vector_time_history.clear();
 				}
 				else {
-					//adjust_rl_model();
-					if(_level == 4){
-						_level = 6;
-					}
-					else if(_level == 6){
-						_level = 4;
-					}
+					adjust_rl_model();
 				}
 				_vector_partial_state.clear();
 				_bool_state = true;
@@ -329,7 +323,7 @@ namespace adaptive_system {
 		std::ofstream _file_action_stream;
 		std::ofstream _file_state_stream;
 
-		multi_bandit_continous<2, 8> _multi_bandit;
+		multi_bandit_continous<3, 8> _multi_bandit;
 		std::string _label;
 	};
 }
