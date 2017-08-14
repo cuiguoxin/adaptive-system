@@ -53,7 +53,7 @@ namespace adaptive_system {
 			_total_iter(total_iter),
 			_number_of_workers(number_of_workers),
 			_tuple_local_path(tuple_local_path),
-			_multi_bandit(0.2, 0.2, 3) {
+			_multi_bandit(0.5, 0.2, 3) {
 			_session = tensorflow::NewSession(tensorflow::SessionOptions());
 			std::fstream input(_tuple_local_path, std::ios::in | std::ios::binary);
 			if (!input) {
@@ -238,7 +238,13 @@ namespace adaptive_system {
 					_vector_time_history.clear();
 				}
 				else {
-					adjust_rl_model();
+					//adjust_rl_model();
+					if(_level == 4){
+						_level = 6;
+					}
+					else if(_level == 6){
+						_level = 4;
+					}
 				}
 				_vector_partial_state.clear();
 				_bool_state = true;
@@ -289,7 +295,7 @@ namespace adaptive_system {
 		const float _lr;
 		const int _total_iter;
 		const int _number_of_workers;
-		int _level = 6;
+		int _level = 4;
 		int _current_iter_number = 0;
 		//int _grad_quant_level_order = 0;
 
