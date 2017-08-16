@@ -34,7 +34,7 @@
 #include "quantization/util/helper.h"
 #include "quantization/util/extract_feature.h"
 
-#include "server/multi_bandit.h"
+#include "server/sarsa.h"
 #include "server/reward.h"
 
 using grpc::Server;
@@ -43,20 +43,29 @@ using grpc::ServerContext;
 using grpc::Status;
 
 namespace adaptive_system {
-	class RPCServiceImpl final : public SystemControl::Service {	
+	class RPCServiceImpl final : public SystemControl::Service {
+	private:
+		void print_state_to_file(tensorflow::Tensor const & state) {
+			size_t feature_number = state.NumElements();
+			const float * state_ptr = state.flat<float>().data();
+			for (size_t i = 0; i < feature_number; i++) {
+				_file_state_stream << std::to_string(state_ptr[i]) << " ";
+			}
+			_file_state_stream << "\n";
+			_file_state_stream.flush();
+		}
 	public:
 		RPCServiceImpl(int interval, float lr, int total_iter, int number_of_workers,
-			int grad_quant_level_order,
-			std::string const& tuple_local_path, const int const_level)
+			int init_level,
+			std::string const& tuple_local_path, std::string const& sarsa_model_path)
 			: SystemControl::Service(),
 			_interval(interval),
 			_lr(lr),
 			_total_iter(total_iter),
 			_number_of_workers(number_of_workers),
-			_grad_quant_level_order(grad_quant_level_order),
+			_level(init_level),
 			_tuple_local_path(tuple_local_path),
-			_multi_bandit(0.1, 0.1), 
-			_const_level(const_level)
+			_sarsa(sarsa_model_path, 0.9, 0.1, 1, 8, init_level)
 		{
 			_session = tensorflow::NewSession(tensorflow::SessionOptions());
 			std::fstream input(_tuple_local_path, std::ios::in | std::ios::binary);
@@ -129,19 +138,19 @@ namespace adaptive_system {
 				"loss_result/adaptive" + _label +
 				"_interval:" + std::to_string(_interval) +
 				"_number_of_workers:" + std::to_string(_number_of_workers)
-				+ "_baseline:" + std::to_string(_const_level);
+				;
 			_file_loss_stream.open(store_loss_file_path);
 			std::string store_state_file_path =
 				"state_result/adaptive" + _label +
 				"_interval:" + std::to_string(_interval) +
 				"_number_of_workers:" + std::to_string(_number_of_workers)
-				+ "_baseline:" + std::to_string(_const_level);
+				;
 			_file_state_stream.open(store_state_file_path);
 			std::string store_action_file_path =
 				"action_result/adaptive" + _label +
 				"_interval:" + std::to_string(_interval) +
 				"_number_of_workers:" + std::to_string(_number_of_workers)
-				+ "_baseline:" + std::to_string(_const_level);
+				;
 			_file_action_stream.open(store_action_file_path);
 			std::cout << "files opened" << std::endl;
 			PRINT_INFO;
@@ -213,13 +222,13 @@ namespace adaptive_system {
 				PRINT_INFO;
 				quantize_gradients(
 					merged_gradient, &_store_named_gradient,
-					_const_level);
+					_level);
 				PRINT_INFO;
 				apply_quantized_gradient_to_model(_store_named_gradient,
 					_session, _tuple);
 				PRINT_INFO;
 				_vector_map_gradient.clear();
-				
+
 				_bool_gradient = true;
 				_condition_variable_gradient.notify_all();
 			}
@@ -239,16 +248,21 @@ namespace adaptive_system {
 			if (_vector_partial_state.size() == _number_of_workers) {
 				if (_bool_is_first_iteration) {
 					_bool_is_first_iteration = false;
+					std::vector<float> temp_vector_loss;
+					temp_vector_loss.resize(_interval, _vector_loss_history[0]);
+					_last_state = get_float_tensor_from_vector(temp_vector_loss);
+					print_state_to_file(_last_state);
 					//need not to store last action because _grad_quant_level can represent it
 					if (_vector_loss_history.size() != 1) {
 						PRINT_ERROR_MESSAGE("when in first iteration, the _vector_loss_history's size must be 1");
 						std::terminate();
-					}				
+					}
+
 					_vector_loss_history.clear();
 					_vector_time_history.clear();
 				}
 				else {
-					//adjust_rl_model();
+					adjust_rl_model();
 				}
 				_vector_partial_state.clear();
 				_bool_state = true;
@@ -261,43 +275,39 @@ namespace adaptive_system {
 				std::cout << "got line " << __LINE__ << std::endl;
 			}
 			lk.unlock();
-			response->set_level_order(_const_level);
+			response->set_level_order(_level);
 
 			return grpc::Status::OK;
 		}
 
 		// private member functions
 	private:
-		
+
 		void adjust_rl_model() {
 			std::vector<float> moving_average_losses;
-			const float r = 0.95;
+			const float r = 0.9;
 			moving_average_v2(_vector_loss_history[0],
 				_vector_loss_history,
 				moving_average_losses, r);
-			
-			int new_action_order = _multi_bandit.sample_new_action();
-			int old_action_order = _grad_quant_level_order;
+			tensorflow::Tensor new_state = get_float_tensor_from_vector(moving_average_losses);
+			int new_level = _sarsa.sample_new_action(new_state);
+			int old_level = _level;
 
 			standard_times(_vector_time_history);
-			float slope = get_slope(_vector_time_history, //_vector_loss_history);
-				moving_average_losses);
-			std::cout << "slope is " << slope << " new level is " << new_action_order << std::endl;
-			_file_action_stream << "slope: " << std::to_string(slope)
-				<< " , new level: " << std::to_string(new_action_order) << "\n";
-			float reward = get_reward_v3(slope); // -slope * 100
-			_multi_bandit.adjust_model(reward, old_action_order);
-			_grad_quant_level_order = new_action_order;
+			float slope = get_slope_according_loss(moving_average_losses);
+			std::cout << "slope is " << slope << " new level is " << new_level << std::endl;
+			float reward = get_reward_v4(slope, old_level); // -slope * 100 / level
+			_sarsa.adjust_model(reward, _last_state, old_level, new_state, new_level);
+			_level = new_level;
 
-			//_level = get_real_level_6_8_10(_grad_quant_level_order);
-			_multi_bandit.print_value(_file_action_stream);
 			_file_action_stream << std::to_string(_current_iter_number) << "::"
-				<< std::to_string(new_action_order) << "::" << std::to_string(_const_level) << "\n";
+				<< std::to_string(new_level) << "\n";
 			_file_action_stream.flush();
 			_vector_loss_history.clear();
-			_vector_time_history.clear();		
+			_vector_time_history.clear();
+			_last_state = new_state;
 		}
-		
+
 
 		// private data member
 	private:
@@ -305,9 +315,8 @@ namespace adaptive_system {
 		const float _lr;
 		const int _total_iter;
 		const int _number_of_workers;
-		const int _const_level;
 		int _current_iter_number = 0;
-		int _grad_quant_level_order = 0;
+		int _level = 0;
 
 		std::chrono::time_point<std::chrono::high_resolution_clock> _init_time_point;
 		std::chrono::time_point<std::chrono::high_resolution_clock> _time_point_last;
@@ -338,8 +347,8 @@ namespace adaptive_system {
 		std::ofstream _file_loss_stream;
 		std::ofstream _file_action_stream;
 		std::ofstream _file_state_stream;
-
-		multi_bandit<3> _multi_bandit;
+		tensorflow::Tensor _last_state;
+		sarsa_model _sarsa;
 		std::string _label;
 	};
 }
@@ -350,12 +359,13 @@ int main(int argc, char** argv) {
 	float learning_rate = atof(argv[2]);
 	int total_iter = atoi(argv[3]);
 	int number_of_workers = atoi(argv[4]);
-	int const_level = atoi(argv[5]);
+	int init_level = atoi(argv[5]);
 	std::string tuple_path = argv[6];
+	std::string sarsa_path = argv[7];
 
 	adaptive_system::RPCServiceImpl service(
 		interval, learning_rate, total_iter, number_of_workers,
-		0, tuple_path, const_level);
+		init_level, tuple_path, sarsa_path);
 
 	ServerBuilder builder;
 	// Listen on the given address without any authentication mechanism.

@@ -80,15 +80,15 @@ namespace adaptive_system {
 		}
 	}
 
-	tensorflow::Tensor get_feed_tensor_from_action(int action_order // begin from 0
-	) {
-		const size_t total_actions = 3;
-		tensorflow::Tensor ret(tensorflow::DataType::DT_FLOAT, tensorflow::TensorShape({ total_actions }));
-		float* ret_ptr = ret.flat<float>().data();
-		std::fill(ret_ptr, ret_ptr + total_actions, 0.0f);
-		ret_ptr[action_order] = 1.0;
-		return ret;
-	}
+	//tensorflow::Tensor get_feed_tensor_from_action(int action_order // begin from 0
+	//) {
+	//	const size_t total_actions = 3;
+	//	tensorflow::Tensor ret(tensorflow::DataType::DT_FLOAT, tensorflow::TensorShape({ total_actions }));
+	//	float* ret_ptr = ret.flat<float>().data();
+	//	std::fill(ret_ptr, ret_ptr + total_actions, 0.0f);
+	//	ret_ptr[action_order] = 1.0;
+	//	return ret;
+	//}
 
 	
 
@@ -117,6 +117,29 @@ namespace adaptive_system {
 		VectorXf b = VectorXf::Random(size);
 		for (int i = 0; i < size; i++) {
 			A(i, 0) = times[i];
+			A(i, 1) = 1.0f;
+			b(i) = move_average_losses[i];
+		}
+		//std::cout << A << std::endl << b << std::endl;
+		auto qr = A.fullPivHouseholderQr();
+		auto w = qr.solve(b);
+		std::cout << "slope is " << w << std::endl;
+		return w(0);
+	}
+
+	float get_slope_according_loss(std::vector<float> const & move_average_losses) {
+		using namespace Eigen;
+		int const size = move_average_losses.size();
+		
+		std::cout << "average is ::" << std::endl;
+		for (int i = 0; i < size; i++) {
+			std::cout << move_average_losses[i] << "  ";
+		}
+		std::cout << std::endl;
+		MatrixXf A = MatrixXf::Random(size, 2);
+		VectorXf b = VectorXf::Random(size);
+		for (int i = 0; i < size; i++) {
+			A(i, 0) = i;
 			A(i, 1) = 1.0f;
 			b(i) = move_average_losses[i];
 		}
@@ -229,6 +252,17 @@ namespace adaptive_system {
 		}
 		PRINT_INFO;
 	}
+
+	tensorflow::Tensor get_float_tensor_from_vector(std::vector<float> const & vec) {
+		size_t size = vec.size();
+		tensorflow::Tensor ret(tensorflow::DataType::DT_FLOAT, tensorflow::TensorShape({ size }));
+		float* ret_pointer = ret.flat<float>().data();
+		for (int i = 0; i < size; i++) {
+			ret_pointer[i] = vec[i];
+		}
+		return ret;
+	}
+
 
 }
 

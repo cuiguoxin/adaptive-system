@@ -47,4 +47,8 @@ namespace adaptive_system {
 	float get_reward_v3(float slope) {
 		return -slope * 100;
 	}
+
+	float get_reward_v4(float slope, int level) {
+		return -slope * 100 / level;
+	}
 }

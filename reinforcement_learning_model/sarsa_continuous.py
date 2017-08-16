@@ -37,7 +37,7 @@ def create_sarsa_model(input_size, output_size):
 	tf.train.write_graph(sess.graph_def, './', 'sarsa_continuous.pb', as_text=False)
 
 
-create_sarsa_model(3, 7)
+create_sarsa_model(4, 8)
 
 
     

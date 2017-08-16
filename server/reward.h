@@ -26,6 +26,8 @@ namespace adaptive_system {
 	float get_reward_v2(float slope);
 
 	float get_reward_v3(float slope);
+
+	float get_reward_v4(float slope, int level);
 }
 
 #endif // !REWARD_H
