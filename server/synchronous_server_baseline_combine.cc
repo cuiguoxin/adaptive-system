@@ -147,10 +147,21 @@ namespace adaptive_system {
 			PRINT_INFO;
 			_level_vec.resize(2000, 6);
 			for (int i = 0; i < 50; i++) {
-				_level_vec[i] = 1;
+				if (i % 2 == 1) {
+					_level_vec[i] = 1;
+				}
+				else {
+					_level_vec[i] = 2;
+				}
+				
 			}
 			for (int i = 50; i < 200; i++) {
-				_level_vec[i] = 3;
+				if (i % 2 == 1) {
+					_level_vec[i] = 3;
+				}
+				else {
+					_level_vec[i] = 4;
+				}
 			}
 		}
 
