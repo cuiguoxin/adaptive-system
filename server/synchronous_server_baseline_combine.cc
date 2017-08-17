@@ -284,7 +284,7 @@ namespace adaptive_system {
 			lk.unlock();
 
 			response->set_level_order(_level_vec[_current_iter_number]);
-			
+			return grpc::Status::OK;
 		}
 		
 
