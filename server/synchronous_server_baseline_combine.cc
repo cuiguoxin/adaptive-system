@@ -145,6 +145,13 @@ namespace adaptive_system {
 			_file_action_stream.open(store_action_file_path);
 			std::cout << "files opened" << std::endl;
 			PRINT_INFO;
+			_level_vec.resize(2000, 6);
+			for (int i = 0; i < 50; i++) {
+				_level_vec[i] = 1;
+			}
+			for (int i = 50; i < 200; i++) {
+				_level_vec[i] = 3;
+			}
 		}
 
 		grpc::Status retrieveTuple(ServerContext* context, const Empty* request,
