@@ -118,7 +118,7 @@ namespace adaptive_system {
 						var_names[i], var_proto));
 			}
 			PRINT_INFO;
-			_tuple.set_interval(_interval);
+			_tuple.set_interval(1);
 			_tuple.set_lr(_lr);
 			_tuple.set_total_iter(_total_iter);
 			_init_time_point = std::chrono::high_resolution_clock::now();
@@ -211,13 +211,12 @@ namespace adaptive_system {
 				average_gradients(_number_of_workers, merged_gradient);
 				_store_named_gradient = NamedGradients();
 				PRINT_INFO;
-				int level = 4;
-				if (_current_iter_number > 30) {
-					level = 6;
-				} 
+
+				int level = _level_vec[_current_iter_number];		 
 				quantize_gradients(
 					merged_gradient, &_store_named_gradient,
 					level);
+
 				PRINT_INFO;
 				apply_quantized_gradient_to_model(_store_named_gradient,
 					_session, _tuple);
@@ -265,47 +264,10 @@ namespace adaptive_system {
 				std::cout << "got line " << __LINE__ << std::endl;
 			}
 			lk.unlock();
-			if (_current_iter_number > 30) {
-				response->set_level_order(6);
-			}
-			else {
-				response->set_level_order(4);
-			}
-			
 
+			response->set_level_order(_level_vec[_current_iter_number]);
+			
 			return grpc::Status::OK;
-		}
-
-		// private member functions
-	private:
-		
-		void adjust_rl_model() {
-			std::vector<float> moving_average_losses;
-			const float r = 0.95;
-			moving_average_v2(_vector_loss_history[0],
-				_vector_loss_history,
-				moving_average_losses, r);
-			
-			int new_action_order = _multi_bandit.sample_new_action();
-			int old_action_order = _grad_quant_level_order;
-
-			standard_times(_vector_time_history);
-			float slope = get_slope(_vector_time_history, //_vector_loss_history);
-				moving_average_losses);
-			std::cout << "slope is " << slope << " new level is " << new_action_order << std::endl;
-			_file_action_stream << "slope: " << std::to_string(slope)
-				<< " , new level: " << std::to_string(new_action_order) << "\n";
-			float reward = get_reward_v3(slope); // -slope * 100
-			_multi_bandit.adjust_model(reward, old_action_order);
-			_grad_quant_level_order = new_action_order;
-
-			//_level = get_real_level_6_8_10(_grad_quant_level_order);
-			_multi_bandit.print_value(_file_action_stream);
-			_file_action_stream << std::to_string(_current_iter_number) << "::"
-				<< std::to_string(new_action_order) << "::" << std::to_string(_level) << "\n";
-			_file_action_stream.flush();
-			_vector_loss_history.clear();
-			_vector_time_history.clear();		
 		}
 		
 
@@ -351,6 +313,7 @@ namespace adaptive_system {
 
 		multi_bandit<3> _multi_bandit;
 		std::string _label;
+		std::vector<int> _level_vec;
 	};
 }
 
