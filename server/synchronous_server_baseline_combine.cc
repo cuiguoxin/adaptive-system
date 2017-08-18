@@ -146,21 +146,21 @@ namespace adaptive_system {
 			std::cout << "files opened" << std::endl;
 			PRINT_INFO;
 			_level_vec.resize(2000, 6);
-			for (int i = 0; i < 50; i++) {
+			for (int i = 0; i < 100; i++) {
 				if (i % 2 == 1) {
-					_level_vec[i] = 1;
-				}
-				else {
-					_level_vec[i] = 2;
-				}
-				
-			}
-			for (int i = 50; i < 200; i++) {
-				if (i % 2 == 1) {
-					_level_vec[i] = 3;
+					_level_vec[i] = 4;
 				}
 				else {
 					_level_vec[i] = 4;
+				}
+				
+			}
+			for (int i = 100; i < 500; i++) {
+				if (i % 2 == 1) {
+					_level_vec[i] = 6;
+				}
+				else {
+					_level_vec[i] = 6;
 				}
 			}
 		}
