@@ -315,6 +315,7 @@ namespace adaptive_system {
 				std::string image_name = batch_placeholder_name;
 				std::string label_name = label_placeholder_name;
 				std::string loss_name_copy = loss_name;
+				PRINT_INFO;
 				while (true) {
 					std::vector<tensorflow::Tensor> loss_vec;
 					tensorflow::Status status = _session->Run({ {image_name, _images},
@@ -323,6 +324,7 @@ namespace adaptive_system {
 						PRINT_ERROR_MESSAGE("predict failed");
 						std::terminate();
 					}
+					PRINT_INFO;
 					auto loss_tensor = loss_vec[0];
 					float* loss = loss_tensor.flat<float>().data();
 					_file_predict_stream << std::to_string(_current_iter_number) << "::"
