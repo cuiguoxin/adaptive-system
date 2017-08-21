@@ -171,6 +171,7 @@ namespace adaptive_system {
 			}
 
 			init_image_label(predict_file_path, preprocess_graph_path);
+			PRINT_INFO;
 			std::string image_placeholder_name = _tuple.batch_placeholder_name();
 			std::string label_placeholder_name = _tuple.label_placeholder_name();
 			std::string loss_name = _tuple.loss_name();
