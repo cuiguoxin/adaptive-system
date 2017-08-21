@@ -14,6 +14,7 @@
 #include <mutex>
 #include <numeric>
 #include <string>
+#include <thread>
 #include <vector>
 
 #include <grpc++/grpc++.h>
@@ -37,6 +38,8 @@
 #include "server/multi_bandit.h"
 #include "server/reward.h"
 
+#include "input/cifar10/input.h"
+
 using grpc::Server;
 using grpc::ServerBuilder;
 using grpc::ServerContext;
@@ -46,17 +49,14 @@ namespace adaptive_system {
 	class RPCServiceImpl final : public SystemControl::Service {	
 	public:
 		RPCServiceImpl(int interval, float lr, int total_iter, int number_of_workers,
-			int grad_quant_level_order,
-			std::string const& tuple_local_path, const int const_level)
+			std::string const& tuple_local_path, std::string const& predict_file_path, 
+			std::string const& preprocess_graph_path)
 			: SystemControl::Service(),
 			_interval(interval),
 			_lr(lr),
 			_total_iter(total_iter),
 			_number_of_workers(number_of_workers),
-			_grad_quant_level_order(grad_quant_level_order),
-			_tuple_local_path(tuple_local_path),
-			_multi_bandit(0.1, 0.1), 
-			_const_level(const_level)
+			_tuple_local_path(tuple_local_path)	
 		{
 			_session = tensorflow::NewSession(tensorflow::SessionOptions());
 			std::fstream input(_tuple_local_path, std::ios::in | std::ios::binary);
@@ -129,20 +129,26 @@ namespace adaptive_system {
 				"loss_result/adaptive" + _label +
 				"_interval:" + std::to_string(_interval) +
 				"_number_of_workers:" + std::to_string(_number_of_workers)
-				+ "_baseline:" + std::to_string(_const_level);
+				+ "_baseline_combine";
 			_file_loss_stream.open(store_loss_file_path);
 			std::string store_state_file_path =
 				"state_result/adaptive" + _label +
 				"_interval:" + std::to_string(_interval) +
 				"_number_of_workers:" + std::to_string(_number_of_workers)
-				+ "_baseline:" + std::to_string(_const_level);
+				+ "_baseline_combine";
 			_file_state_stream.open(store_state_file_path);
 			std::string store_action_file_path =
 				"action_result/adaptive" + _label +
 				"_interval:" + std::to_string(_interval) +
 				"_number_of_workers:" + std::to_string(_number_of_workers)
-				+ "_baseline:" + std::to_string(_const_level);
+				+ "_baseline_combine";
 			_file_action_stream.open(store_action_file_path);
+			std::string store_predict_file_path =
+				"predict_result/adaptive" + _label +
+				"_interval:" + std::to_string(_interval) +
+				"_number_of_workers:" + std::to_string(_number_of_workers)
+				+ "_baseline_combine";
+			_file_predict_stream.open(store_predict_file_path);
 			std::cout << "files opened" << std::endl;
 			PRINT_INFO;
 			_level_vec.resize(2000, 6);
@@ -163,6 +169,14 @@ namespace adaptive_system {
 					_level_vec[i] = 6;
 				}
 			}
+
+			init_image_label(predict_file_path, preprocess_graph_path);
+			std::string image_placeholder_name = _tuple.batch_placeholder_name();
+			std::string label_placeholder_name = _tuple.label_placeholder_name();
+			std::string loss_name = _tuple.loss_name();
+			std::thread predict_thread(predict_periodically, this, std::ref(image_placeholder_name),
+				std::ref(label_placeholder_name), std::ref(loss_name));
+			predict_thread.detach();
 		}
 
 		grpc::Status retrieveTuple(ServerContext* context, const Empty* request,
@@ -286,6 +300,32 @@ namespace adaptive_system {
 			response->set_level_order(_level_vec[_current_iter_number]);
 			return grpc::Status::OK;
 		}
+
+		private:
+			void init_image_label(const std::string& binary_file_path,
+				const std::string& preprocess_graph_path) {
+				cifar10::turn_raw_tensors_to_standard_version(binary_file_path, preprocess_graph_path);
+				auto image_and_label = cifar10::get_next_batch(10000);
+				_images = image_and_label.first;
+				_labels = image_and_label.second;
+			}
+			void predict_periodically(std::string const& batch_placeholder_name,
+				std::string const & label_placeholder_name, std::string const& loss_name) {
+				while (true) {
+					std::vector<tensorflow::Tensor> loss_vec;
+					tensorflow::Status status = _session->Run({ {batch_placeholder_name, _images},
+					{label_placeholder_name, _labes} }, { loss_name }, {}, &loss_vec);
+					if (!status.ok()) {
+						PRINT_ERROR_MESSAGE("predict failed");
+						std::terminate();
+					}
+					auto loss_tensor = loss_vec[0];
+					float loss = loss_tensor.flat<float>().data();
+					_file_predict_stream << std::to_string(_current_iter_number) << "::"
+						<< std::to_string(loss) << "\n";
+					_file_predict_stream.flush();
+				}
+			}
 		
 
 		// private data member
@@ -296,7 +336,6 @@ namespace adaptive_system {
 		const int _number_of_workers;
 		const int _const_level;
 		int _current_iter_number = 0;
-		int _grad_quant_level_order = 0;
 
 		std::chrono::time_point<std::chrono::high_resolution_clock> _init_time_point;
 		std::chrono::time_point<std::chrono::high_resolution_clock> _time_point_last;
@@ -327,10 +366,14 @@ namespace adaptive_system {
 		std::ofstream _file_loss_stream;
 		std::ofstream _file_action_stream;
 		std::ofstream _file_state_stream;
+		std::ofstream _file_predict_stream;
 
-		multi_bandit<3> _multi_bandit;
+		//multi_bandit<3> _multi_bandit;
 		std::string _label;
 		std::vector<int> _level_vec;
+
+		tensorflow::Tensor _images;
+		tensorflow::Tensor _labels;
 	};
 }
 
@@ -340,12 +383,12 @@ int main(int argc, char** argv) {
 	float learning_rate = atof(argv[2]);
 	int total_iter = atoi(argv[3]);
 	int number_of_workers = atoi(argv[4]);
-	int const_level = atoi(argv[5]);
-	std::string tuple_path = argv[6];
-
+	std::string tuple_path = argv[5];
+	std::string predict_file_path = argv[6];
+	std::string preprocess_file_path = argv[7];
 	adaptive_system::RPCServiceImpl service(
 		interval, learning_rate, total_iter, number_of_workers,
-		0, tuple_path, const_level);
+		tuple_path, predict_file_path, preprocess_file_path);
 
 	ServerBuilder builder;
 	// Listen on the given address without any authentication mechanism.

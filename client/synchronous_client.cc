@@ -191,7 +191,7 @@ namespace adaptive_system {
 			PRINT_INFO;
 			std::map<std::string, tensorflow::Tensor> map_gradients;
 			std::pair<tensorflow::Tensor, tensorflow::Tensor> feeds =
-				cifar10::get_next_batch();
+				cifar10::get_next_batch(64);
 			PRINT_INFO;
 			float loss = compute_gradient_and_loss(
 			{ {batch_placeholder_name, feeds.first},

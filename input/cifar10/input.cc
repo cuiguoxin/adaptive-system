@@ -5,49 +5,52 @@ namespace cifar10 {
 
 	namespace {
 		unsigned int index_current = 0;
-		int const batch_size = 64;
+		//int const batch_size = 64;
 		std::vector<Tensor> raw_tensors, standard_images, standard_labels;
 		const int record_size = 3073;
 		const int label_size = 1;
 		const int image_size = 3072;
 
-		Session* load_graph_and_create_session(const std::string& graph_path) {
-			GraphDef graph_def;
-			Status status = ReadBinaryProto(Env::Default(), graph_path, &graph_def);
-			if (!status.ok()) {
-				std::cout << status.ToString() << "\n";
-				std::terminate();
-			}
-			Session* session;
-			status = NewSession(SessionOptions(), &session);
-			if (!status.ok()) {
-				std::cout << status.ToString() << "\n";
-				std::terminate();
-			}
-			status = session->Create(graph_def);
-			if (!status.ok()) {
-				std::cout << status.ToString() << "\n";
-				std::terminate();
-			}
-			return session;
-		}
+		namespace {
 
-		void read_raw_tensors_from_file(const std::string& binary_file_path) {
-			std::ifstream input_stream(binary_file_path, std::ios::binary);
-			TensorShape raw_tensor_shape({ record_size });
-			if (input_stream.is_open()) {
-				for (int i = 0; i < 10000; i++) {
-					Tensor raw_tensor(DataType::DT_UINT8, raw_tensor_shape);
-					uint8* raw_tensor_ptr = raw_tensor.flat<uint8>().data();
-					input_stream.read(reinterpret_cast<char*>(raw_tensor_ptr), record_size);
-					raw_tensors.push_back(raw_tensor);
+			Session* load_graph_and_create_session(const std::string& graph_path) {
+				GraphDef graph_def;
+				Status status = ReadBinaryProto(Env::Default(), graph_path, &graph_def);
+				if (!status.ok()) {
+					std::cout << status.ToString() << "\n";
+					std::terminate();
 				}
+				Session* session;
+				status = NewSession(SessionOptions(), &session);
+				if (!status.ok()) {
+					std::cout << status.ToString() << "\n";
+					std::terminate();
+				}
+				status = session->Create(graph_def);
+				if (!status.ok()) {
+					std::cout << status.ToString() << "\n";
+					std::terminate();
+				}
+				return session;
 			}
-			input_stream.close();
-			// shuffle the vector raw_tensors
-			unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-			std::shuffle(raw_tensors.begin(), raw_tensors.end(),
-				std::default_random_engine(seed));
+
+			void read_raw_tensors_from_file(const std::string& binary_file_path) {
+				std::ifstream input_stream(binary_file_path, std::ios::binary);
+				TensorShape raw_tensor_shape({ record_size });
+				if (input_stream.is_open()) {
+					for (int i = 0; i < 10000; i++) {
+						Tensor raw_tensor(DataType::DT_UINT8, raw_tensor_shape);
+						uint8* raw_tensor_ptr = raw_tensor.flat<uint8>().data();
+						input_stream.read(reinterpret_cast<char*>(raw_tensor_ptr), record_size);
+						raw_tensors.push_back(raw_tensor);
+					}
+				}
+				input_stream.close();
+				// shuffle the vector raw_tensors
+				unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+				std::shuffle(raw_tensors.begin(), raw_tensors.end(),
+					std::default_random_engine(seed));
+			}
 		}
 	}
 
@@ -71,7 +74,7 @@ namespace cifar10 {
 		raw_tensors.clear();
 	}
 
-	std::pair<Tensor, Tensor> get_next_batch() {
+	std::pair<Tensor, Tensor> get_next_batch(const int batch_size) {
 		int standard_images_size = 3 * 28 * 28;
 		TensorShape images_batch_shape({ batch_size, 28, 28, 3 }),
 			labels_batch_shape({ batch_size });
