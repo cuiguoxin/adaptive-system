@@ -172,11 +172,11 @@ namespace adaptive_system {
 
 			init_image_label(predict_file_path, preprocess_graph_path);
 			PRINT_INFO;
-			std::string image_placeholder_name = _tuple.batch_placeholder_name();
-			std::string label_placeholder_name = _tuple.label_placeholder_name();
-			std::string loss_name = _tuple.loss_name();
-			std::thread predict_thread(&RPCServiceImpl::predict_periodically, this, std::ref(image_placeholder_name),
-				std::ref(label_placeholder_name), std::ref(loss_name));
+			_image_placeholder_name = _tuple.batch_placeholder_name();
+			_label_placeholder_name = _tuple.label_placeholder_name();
+			_loss_name = _tuple.loss_name();
+			std::thread predict_thread(&RPCServiceImpl::predict_periodically, this, std::ref(_image_placeholder_name),
+				std::ref(_label_placeholder_name), std::ref(_loss_name));
 			predict_thread.detach();
 		}
 
@@ -377,6 +377,9 @@ namespace adaptive_system {
 
 		tensorflow::Tensor _images;
 		tensorflow::Tensor _labels;
+		std::string _image_placeholder_name;
+		std::string _label_placeholder_name;
+		std::string _loss_name;
 	};
 }
 
