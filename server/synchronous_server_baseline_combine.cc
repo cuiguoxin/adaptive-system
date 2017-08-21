@@ -174,7 +174,7 @@ namespace adaptive_system {
 			std::string image_placeholder_name = _tuple.batch_placeholder_name();
 			std::string label_placeholder_name = _tuple.label_placeholder_name();
 			std::string loss_name = _tuple.loss_name();
-			std::thread predict_thread(&predict_periodically, this, std::ref(image_placeholder_name),
+			std::thread predict_thread(&RPCServiceImpl::predict_periodically, this, std::ref(image_placeholder_name),
 				std::ref(label_placeholder_name), std::ref(loss_name));
 			predict_thread.detach();
 		}
