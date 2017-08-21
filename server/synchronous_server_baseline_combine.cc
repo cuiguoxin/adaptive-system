@@ -314,15 +314,15 @@ namespace adaptive_system {
 				while (true) {
 					std::vector<tensorflow::Tensor> loss_vec;
 					tensorflow::Status status = _session->Run({ {batch_placeholder_name, _images},
-					{label_placeholder_name, _labes} }, { loss_name }, {}, &loss_vec);
+					{label_placeholder_name, _labels} }, { loss_name }, {}, &loss_vec);
 					if (!status.ok()) {
 						PRINT_ERROR_MESSAGE("predict failed");
 						std::terminate();
 					}
 					auto loss_tensor = loss_vec[0];
-					float loss = loss_tensor.flat<float>().data();
+					float* loss = loss_tensor.flat<float>().data();
 					_file_predict_stream << std::to_string(_current_iter_number) << "::"
-						<< std::to_string(loss) << "\n";
+						<< std::to_string(*loss) << "\n";
 					_file_predict_stream.flush();
 				}
 			}
@@ -334,7 +334,6 @@ namespace adaptive_system {
 		const float _lr;
 		const int _total_iter;
 		const int _number_of_workers;
-		const int _const_level;
 		int _current_iter_number = 0;
 
 		std::chrono::time_point<std::chrono::high_resolution_clock> _init_time_point;
