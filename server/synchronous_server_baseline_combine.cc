@@ -316,8 +316,7 @@ namespace adaptive_system {
 			void predict_periodically(std::string const& batch_placeholder_name,
 				std::string const & label_placeholder_name, 
 				std::string const& loss_name,
-				std::string const tuple_predict_path,
-				std::vector<std::string> var_names) {
+				std::string const tuple_predict_path) {
 				std::string image_name = batch_placeholder_name;
 				std::string label_name = label_placeholder_name;
 				std::string loss_name_copy = loss_name;
