@@ -382,10 +382,10 @@ namespace adaptive_system {
 				std::vector<std::pair<std::string, tensorflow::Tensor>> feeds;
 				int i = 0;
 				for (std::string const & variable_name : variable_names) {
-					auto& names = map_names[variable_name];
+					auto& names = map_names.find(variable_name)->second;
 					assign_names.push_back(names.assign_name());
 					feeds.push_back(
-						std::pair<std::string, tensorflow::Tensor>(names.placeholder_assign_name, values[i]));
+						std::pair<std::string, tensorflow::Tensor>(names.placeholder_assign_name(), values[i]));
 					i++;
 				}
 				tensorflow::Status tf_status  = to->Run(feeds, {}, assign_names, nullptr);
