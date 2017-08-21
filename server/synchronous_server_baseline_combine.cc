@@ -341,7 +341,7 @@ namespace adaptive_system {
 				std::fstream input(tuple_predict_path, std::ios::in | std::ios::binary);
 				Tuple tuple_predict;
 				if (!input) {
-					std::cout << tuple_predict
+					std::cout << tuple_predict_path
 						<< ": File not found.  Creating a new file." << std::endl;
 				}
 				else if (!tuple_predict.ParseFromIstream(&input)) {
