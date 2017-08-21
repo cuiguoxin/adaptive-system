@@ -314,13 +314,18 @@ namespace adaptive_system {
 				_labels = image_and_label.second;
 			}
 			void predict_periodically(std::string const& batch_placeholder_name,
-				std::string const & label_placeholder_name, std::string const& loss_name,
-				std::string const tuple_predict_path) {
+				std::string const & label_placeholder_name, 
+				std::string const& loss_name,
+				std::string const tuple_predict_path,
+				std::vector<std::string> var_names) {
 				std::string image_name = batch_placeholder_name;
 				std::string label_name = label_placeholder_name;
 				std::string loss_name_copy = loss_name;
 				tensorflow::Session* session = init_predict_session(tuple_predict_path);
 				while (true) {
+					//first assign
+					assign_predict_variables(_session, session, _tuple);
+					//then predict
 					std::vector<tensorflow::Tensor> loss_vec;
 					tensorflow::Status status = session->Run({ {image_name, _images},
 					{label_name, _labels} }, { loss_name_copy }, {}, &loss_vec);
@@ -356,6 +361,38 @@ namespace adaptive_system {
 					std::terminate();
 				}
 				return session;
+			}
+
+			void assign_predict_variables(tensorflow::Session* from,
+				tensorflow::Session* to, 
+				Tuple const & tuple) {
+				std::vector<std::string> variable_names;
+				for (auto& pair : tuple.map_names()) {
+					variable_names.push_back(pair.first);
+				}
+				std::vector<tensorflow::Tensor> values;
+				tensorflow::Status status =  from->Run({}, variable_names, {}, &values);
+				if (!status.ok()) {
+					PRINT_ERROR_MESSAGE(status.error_message());
+					std::terminate();
+				}
+				google::protobuf::Map<std::string, Names> const&
+					map_names = tuple.map_names();
+				std::vector<std::string> assign_names;
+				std::vector<std::pair<std::string, tensorflow::Tensor>> feeds;
+				int i = 0;
+				for (std::string const & variable_name : variable_names) {
+					auto& names = map_names[variable_name];
+					assign_names.push_back(names.assign_name());
+					feeds.push_back(
+						std::pair<std::string, tensorflow::Tensor>(names.placeholder_assign_name, values[i]));
+					i++;
+				}
+				tensorflow::Status tf_status  = to->Run(feeds, {}, assign_names, nullptr);
+				if (!tf_status.ok()) {
+					PRINT_ERROR_MESSAGE(tf_status.error_message());
+					std::terminate();
+				}
 			}
 		
 
