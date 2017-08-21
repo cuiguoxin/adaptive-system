@@ -312,10 +312,13 @@ namespace adaptive_system {
 			}
 			void predict_periodically(std::string const& batch_placeholder_name,
 				std::string const & label_placeholder_name, std::string const& loss_name) {
+				std::string image_name = batch_placeholder_name;
+				std::string label_name = label_placeholder_name;
+				std::string loss_name_copy = loss_name;
 				while (true) {
 					std::vector<tensorflow::Tensor> loss_vec;
-					tensorflow::Status status = _session->Run({ {batch_placeholder_name, _images},
-					{label_placeholder_name, _labels} }, { loss_name }, {}, &loss_vec);
+					tensorflow::Status status = _session->Run({ {image_name, _images},
+					{label_name, _labels} }, { loss_name_copy }, {}, &loss_vec);
 					if (!status.ok()) {
 						PRINT_ERROR_MESSAGE("predict failed");
 						std::terminate();
