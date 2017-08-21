@@ -50,7 +50,7 @@ namespace adaptive_system {
 	public:
 		RPCServiceImpl(int interval, float lr, int total_iter, int number_of_workers,
 			std::string const& tuple_local_path, std::string const& predict_file_path, 
-			std::string const& preprocess_graph_path)
+			std::string const& preprocess_graph_path, std::string const tuple_predict_path)
 			: SystemControl::Service(),
 			_interval(interval),
 			_lr(lr),
@@ -175,8 +175,11 @@ namespace adaptive_system {
 			_image_placeholder_name = _tuple.batch_placeholder_name();
 			_label_placeholder_name = _tuple.label_placeholder_name();
 			_loss_name = _tuple.loss_name();
-			std::thread predict_thread(&RPCServiceImpl::predict_periodically, this, std::ref(_image_placeholder_name),
-				std::ref(_label_placeholder_name), std::ref(_loss_name));
+			std::thread predict_thread(&RPCServiceImpl::predict_periodically, this, 
+				std::ref(_image_placeholder_name),
+				std::ref(_label_placeholder_name),
+				std::ref(_loss_name),
+				tuple_predict_path);
 			predict_thread.detach();
 		}
 
@@ -311,14 +314,15 @@ namespace adaptive_system {
 				_labels = image_and_label.second;
 			}
 			void predict_periodically(std::string const& batch_placeholder_name,
-				std::string const & label_placeholder_name, std::string const& loss_name) {
+				std::string const & label_placeholder_name, std::string const& loss_name,
+				std::string const tuple_predict_path) {
 				std::string image_name = batch_placeholder_name;
 				std::string label_name = label_placeholder_name;
 				std::string loss_name_copy = loss_name;
-				
+				tensorflow::Session* session = init_predict_session(tuple_predict_path);
 				while (true) {
 					std::vector<tensorflow::Tensor> loss_vec;
-					tensorflow::Status status = _session->Run({ {image_name, _images},
+					tensorflow::Status status = session->Run({ {image_name, _images},
 					{label_name, _labels} }, { loss_name_copy }, {}, &loss_vec);
 					if (!status.ok()) {
 						PRINT_ERROR_MESSAGE(status.error_message());
@@ -326,10 +330,32 @@ namespace adaptive_system {
 					}
 					auto loss_tensor = loss_vec[0];
 					float* loss = loss_tensor.flat<float>().data();
-					_file_predict_stream << std::to_string(_current_iter_number) << "::"
+					_file_predict_stream << std::to_string(_current_iter_number) << " :: "
 						<< std::to_string(*loss) << "\n";
 					_file_predict_stream.flush();
 				}
+			}
+
+			tensorflow::Session* init_predict_session(std::string tuple_predict_path) {
+				tensorflow::Session* session = tensorflow::NewSession(tensorflow::SessionOptions());
+				std::fstream input(tuple_predict_path, std::ios::in | std::ios::binary);
+				Tuple tuple_predict;
+				if (!input) {
+					std::cout << tuple_predict
+						<< ": File not found.  Creating a new file." << std::endl;
+				}
+				else if (!tuple_predict.ParseFromIstream(&input)) {
+					std::cerr << "Failed to parse tuple." << std::endl;
+					std::terminate();
+				}
+
+				tensorflow::GraphDef graph_def = tuple_predict.graph();
+				tensorflow::Status tf_status = session->Create(graph_def);
+				if (!tf_status.ok()) {
+					std::cout << tf_status.error_message() << std::endl;
+					std::terminate();
+				}
+				return session;
 			}
 		
 
@@ -393,9 +419,10 @@ int main(int argc, char** argv) {
 	std::string tuple_path = argv[5];
 	std::string predict_file_path = argv[6];
 	std::string preprocess_file_path = argv[7];
+	std::string tuple_predict_path = argv[8];
 	adaptive_system::RPCServiceImpl service(
 		interval, learning_rate, total_iter, number_of_workers,
-		tuple_path, predict_file_path, preprocess_file_path);
+		tuple_path, predict_file_path, preprocess_file_path, tuple_predict_path);
 
 	ServerBuilder builder;
 	// Listen on the given address without any authentication mechanism.
