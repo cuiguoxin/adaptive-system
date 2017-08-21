@@ -321,7 +321,7 @@ namespace adaptive_system {
 					tensorflow::Status status = _session->Run({ {image_name, _images},
 					{label_name, _labels} }, { loss_name_copy }, {}, &loss_vec);
 					if (!status.ok()) {
-						PRINT_ERROR_MESSAGE("predict failed");
+						PRINT_ERROR_MESSAGE(status.error_message());
 						std::terminate();
 					}
 					PRINT_INFO;
