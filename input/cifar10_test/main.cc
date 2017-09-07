@@ -40,8 +40,12 @@ void train(Tuple const & tuple,
 	fetch.push_back(loss_name);
 	int const iteration_num = 2000;
 
+	std::string const raw_binary_path = "/home/cgx/git_project/adaptive-system/resources/cifar-10-batches-bin/data_batch_1.bin";
+	std::string const preprocess_path = "/home/cgx/git_project/adaptive-system/input/cifar10/preprocess.pb";
+	cifar10::turn_raw_tensors_to_standard_version(raw_binary_path, preprocess_path);
+
 	for (int i = 0; i < iteration_num; i++) {
-		auto train_pair = mnist::get_next_train_batch(batch_size);
+		auto train_pair = cifar10::get_next_batch(batch_size);
 		auto& image_tensor = train_pair.first;
 		auto& label_tensor = train_pair.second;
 		std::vector<tensorflow::Tensor> result;
@@ -75,7 +79,7 @@ int main(int argc, char* argv[]) {
 	int const level = atoi(argv[1]);
 	int const batch_size = atoi(argv[2]);
 	float const lr = atof(argv[3]);
-	std::string command = "python create_lr_model.py " + std::to_string(lr);
+	std::string command = "python create_primary_model_using_adam.py " + std::to_string(lr) + " " + std::to_string(batch_size);
 	int code = system(command.c_str());
 	if (code != 0) {
 		PRINT_ERROR_MESSAGE("failed in generate tuple file, error code is " + std::to_string(code));
@@ -83,7 +87,7 @@ int main(int argc, char* argv[]) {
 	}
 	using namespace adaptive_system;
 	Tuple tuple;
-	std::string tuple_path = "/home/cgx/git_project/adaptive-system/input/mnist_nn/tuple_mnist_nn.pb";
+	std::string tuple_path = "/home/cgx/git_project/adaptive-system/input/cifar10_test/tuple_adam_test.pb";
 	tensorflow::Session* session = tensorflow::NewSession(tensorflow::SessionOptions());
 	std::fstream input(tuple_path, std::ios::in | std::ios::binary);
 	if (!input) {
@@ -109,7 +113,6 @@ int main(int argc, char* argv[]) {
 		std::terminate();
 	}
 	PRINT_INFO;
-	mnist::read_tensor_from_directory("/home/cgx/git_project/adaptive-system/resources/mnist/");
 	train(tuple, session, level, batch_size, lr);
 
 	return 0;
