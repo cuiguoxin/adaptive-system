@@ -1,0 +1,116 @@
+#include "input/cifar10/input.h"
+#include "quantization/util/helper.h"
+#include "proto/rpc_service.pb.h"
+#include "quantization/util/any_level.h"
+#include <cstdlib>
+#include <fstream>
+
+using namespace adaptive_system;
+
+tensorflow::Tensor quantize_then_dequantize(int const level,
+	tensorflow::Tensor const & origin_tensor) {
+	Gradient gradient;
+	tensorflow::Tensor return_tensor;
+	quantize_gradient(level, origin_tensor, gradient);
+	dequantize_gradient(gradient, return_tensor);
+	return return_tensor;
+}
+
+void train(Tuple const & tuple,
+	tensorflow::Session* session, int const level, int const batch_size, float const lr) {
+	auto now = std::chrono::system_clock::now();
+	auto init_time_t = std::chrono::system_clock::to_time_t(now);
+	auto label = std::to_string(init_time_t);
+	std::string loss_file_name = "/home/cgx/git_project/adaptive-system/input/cifar10_test/log/loss" + label +
+		"_level_" + std::to_string(level) + "_batch_size_" + std::to_string(batch_size)
+		+ "_lr_" + std::to_string(lr);
+	std::ofstream loss_stream(loss_file_name);
+	auto image_ph_name = tuple.batch_placeholder_name();
+	auto label_ph_name = tuple.label_placeholder_name();
+	auto train_op_name = tuple.training_op_name();
+	auto loss_name = tuple.loss_name();
+	auto& map_names = tuple.map_names();
+	PRINT_INFO;
+	std::vector<std::string> fetch, gradient_names;
+	for (auto& pair : map_names) {
+		gradient_names.push_back(pair.second.gradient_name());
+		fetch.push_back(pair.second.gradient_name());
+		//std::cout << pair.second.gradient_name() << std::endl;
+	}
+	fetch.push_back(loss_name);
+	int const iteration_num = 2000;
+
+	for (int i = 0; i < iteration_num; i++) {
+		auto train_pair = mnist::get_next_train_batch(batch_size);
+		auto& image_tensor = train_pair.first;
+		auto& label_tensor = train_pair.second;
+		std::vector<tensorflow::Tensor> result;
+		tensorflow::Status tf_status = session->Run(
+		{ { image_ph_name, image_tensor },{ label_ph_name, label_tensor } },
+			fetch, {}, &result);
+		if (!tf_status.ok()) {
+			PRINT_ERROR_MESSAGE(tf_status.error_message());
+			std::terminate();
+		}
+		int size = result.size();
+		float* loss_ptr = result[size - 1].flat<float>().data();
+		std::cout << "loss is : " << loss_ptr[0] << std::endl;
+		loss_stream << "loss is : " << loss_ptr[0] << std::endl;
+		result.resize(size - 1);
+		std::vector<std::pair<std::string, tensorflow::Tensor>> feed;
+		for (int j = 0; j < size - 1; j++) {
+			tensorflow::Tensor tensor_feed = quantize_then_dequantize(level, result[j]);
+			feed.push_back(std::pair<std::string, tensorflow::Tensor>(gradient_names[j], tensor_feed));
+		}
+		tf_status = session->Run(feed, {}, { train_op_name }, nullptr);
+		if (!tf_status.ok()) {
+			PRINT_ERROR_MESSAGE(tf_status.error_message());
+			std::terminate();
+		}
+
+	}
+}
+
+int main(int argc, char* argv[]) {
+	int const level = atoi(argv[1]);
+	int const batch_size = atoi(argv[2]);
+	float const lr = atof(argv[3]);
+	std::string command = "python create_lr_model.py " + std::to_string(lr);
+	int code = system(command.c_str());
+	if (code != 0) {
+		PRINT_ERROR_MESSAGE("failed in generate tuple file, error code is " + std::to_string(code));
+		std::terminate();
+	}
+	using namespace adaptive_system;
+	Tuple tuple;
+	std::string tuple_path = "/home/cgx/git_project/adaptive-system/input/mnist_nn/tuple_mnist_nn.pb";
+	tensorflow::Session* session = tensorflow::NewSession(tensorflow::SessionOptions());
+	std::fstream input(tuple_path, std::ios::in | std::ios::binary);
+	if (!input) {
+		std::cout << tuple_path
+			<< ": File not found.  Creating a new file." << std::endl;
+	}
+	else if (!tuple.ParseFromIstream(&input)) {
+		std::cerr << "Failed to parse tuple." << std::endl;
+		std::terminate();
+	}
+
+	tensorflow::GraphDef graph_def = tuple.graph();
+	tensorflow::Status tf_status = session->Create(graph_def);
+	if (!tf_status.ok()) {
+		PRINT_ERROR_MESSAGE(tf_status.error_message());
+		std::terminate();
+	}
+	std::string init_name = tuple.init_name();
+	std::cout << init_name << std::endl;
+	tf_status = session->Run({}, {}, { init_name }, nullptr);
+	if (!tf_status.ok()) {
+		PRINT_ERROR_MESSAGE(tf_status.error_message());
+		std::terminate();
+	}
+	PRINT_INFO;
+	mnist::read_tensor_from_directory("/home/cgx/git_project/adaptive-system/resources/mnist/");
+	train(tuple, session, level, batch_size, lr);
+
+	return 0;
+}
