@@ -9,6 +9,10 @@ using namespace adaptive_system;
 
 tensorflow::Tensor quantize_then_dequantize(int const level,
 	tensorflow::Tensor const & origin_tensor) {
+	int size = origin_tensor.NumElements();
+	if (size < 1024 * 101) {
+		return origin_tensor;
+	}
 	Gradient gradient;
 	tensorflow::Tensor return_tensor;
 	quantize_gradient(level, origin_tensor, gradient);
