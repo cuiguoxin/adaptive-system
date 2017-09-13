@@ -21,12 +21,16 @@ tensorflow::Tensor quantize_then_dequantize(int const level,
 }
 
 void train(Tuple const & tuple,
-	tensorflow::Session* session, int const level, int const batch_size, float const lr) {
+	tensorflow::Session* session,
+	int const pre_level, int const split_iter, int const post_level, 
+	int const batch_size, float const lr) {
 	auto now = std::chrono::system_clock::now();
 	auto init_time_t = std::chrono::system_clock::to_time_t(now);
 	auto label = std::to_string(init_time_t);
 	std::string loss_file_name = "/home/cgx/git_project/adaptive-system/input/cifar10_test/log/loss" + label +
-		"_level_" + std::to_string(level) + "_batch_size_" + std::to_string(batch_size)
+		"_level_" + std::to_string(pre_level) + "-" +
+		std::to_string(split_iter) + "-" + std::to_string(post_level)+ "_"
+		+ "_batch_size_" + std::to_string(batch_size)
 		+ "_lr_" + std::to_string(lr);
 	std::ofstream loss_stream(loss_file_name);
 	auto image_ph_name = tuple.batch_placeholder_name();
@@ -66,6 +70,10 @@ void train(Tuple const & tuple,
 		loss_stream << "loss is : " << loss_ptr[0] << std::endl;
 		result.resize(size - 1);
 		std::vector<std::pair<std::string, tensorflow::Tensor>> feed;
+		int level = pre_level;
+		if (i > split_iter) {
+			level = post_level;
+		}
 		for (int j = 0; j < size - 1; j++) {
 			tensorflow::Tensor tensor_feed = quantize_then_dequantize(level, result[j]);
 			feed.push_back(std::pair<std::string, tensorflow::Tensor>(gradient_names[j], tensor_feed));
@@ -80,9 +88,11 @@ void train(Tuple const & tuple,
 }
 
 int main(int argc, char* argv[]) {
-	int const level = atoi(argv[1]);
-	int const batch_size = atoi(argv[2]);
-	float const lr = atof(argv[3]);
+	int const pre_level = atoi(argv[1]);
+	int const split_iter = atoi(argv[2]);
+	int const post_level = atoi(argv[3]);
+	int const batch_size = atoi(argv[4]);
+	float const lr = atof(argv[5]);
 	std::string command = "python create_primary_model_using_adam.py " + std::to_string(lr) + " " + std::to_string(batch_size);
 	int code = system(command.c_str());
 	if (code != 0) {
@@ -117,7 +127,7 @@ int main(int argc, char* argv[]) {
 		std::terminate();
 	}
 	PRINT_INFO;
-	train(tuple, session, level, batch_size, lr);
+	train(tuple, session, pre_level, split_iter, post_level, batch_size, lr);
 
 	return 0;
 }
