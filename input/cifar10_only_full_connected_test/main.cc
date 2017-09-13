@@ -27,7 +27,8 @@ void train(Tuple const & tuple,
 	auto now = std::chrono::system_clock::now();
 	auto init_time_t = std::chrono::system_clock::to_time_t(now);
 	auto label = std::to_string(init_time_t);
-	std::string loss_file_name = "/home/cgx/git_project/adaptive-system/input/cifar10_test/log/loss" + label +
+	std::string loss_file_name = "/home/cgx/git_project/adaptive-system/input/"
+		"cifar10_only_full_connected_test/log/loss" + label +
 		"_level_" + std::to_string(pre_level) + "-" +
 		std::to_string(split_iter) + "-" + std::to_string(post_level)+ "_"
 		+ "_batch_size_" + std::to_string(batch_size)
@@ -101,7 +102,8 @@ int main(int argc, char* argv[]) {
 	}
 	using namespace adaptive_system;
 	Tuple tuple;
-	std::string tuple_path = "/home/cgx/git_project/adaptive-system/input/cifar10_test/tuple_adam_test.pb";
+	std::string tuple_path = "/home/cgx/git_project/adaptive-system/input/"
+		"cifar10_only_full_connected_test/tuple_adam_test.pb";
 	tensorflow::Session* session = tensorflow::NewSession(tensorflow::SessionOptions());
 	std::fstream input(tuple_path, std::ios::in | std::ios::binary);
 	if (!input) {
