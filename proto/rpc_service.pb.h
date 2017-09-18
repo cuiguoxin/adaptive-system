@@ -41,6 +41,9 @@ extern EmptyDefaultTypeInternal _Empty_default_instance_;
 class Gradient;
 class GradientDefaultTypeInternal;
 extern GradientDefaultTypeInternal _Gradient_default_instance_;
+class GradientAccordingColumn;
+class GradientAccordingColumnDefaultTypeInternal;
+extern GradientAccordingColumnDefaultTypeInternal _GradientAccordingColumn_default_instance_;
 class Loss;
 class LossDefaultTypeInternal;
 extern LossDefaultTypeInternal _Loss_default_instance_;
@@ -761,6 +764,154 @@ class Gradient : public ::google::protobuf::Message /* @@protoc_insertion_point(
   ::google::protobuf::int32 quantization_level_;
   float max_;
   float min_;
+  mutable int _cached_size_;
+  friend struct protobuf_rpc_5fservice_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
+class GradientAccordingColumn : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:adaptive_system.GradientAccordingColumn) */ {
+ public:
+  GradientAccordingColumn();
+  virtual ~GradientAccordingColumn();
+
+  GradientAccordingColumn(const GradientAccordingColumn& from);
+
+  inline GradientAccordingColumn& operator=(const GradientAccordingColumn& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const GradientAccordingColumn& default_instance();
+
+  static inline const GradientAccordingColumn* internal_default_instance() {
+    return reinterpret_cast<const GradientAccordingColumn*>(
+               &_GradientAccordingColumn_default_instance_);
+  }
+
+  void Swap(GradientAccordingColumn* other);
+
+  // implements Message ----------------------------------------------
+
+  inline GradientAccordingColumn* New() const PROTOBUF_FINAL { return New(NULL); }
+
+  GradientAccordingColumn* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
+  void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void CopyFrom(const GradientAccordingColumn& from);
+  void MergeFrom(const GradientAccordingColumn& from);
+  void Clear() PROTOBUF_FINAL;
+  bool IsInitialized() const PROTOBUF_FINAL;
+
+  size_t ByteSizeLong() const PROTOBUF_FINAL;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output)
+      const PROTOBUF_FINAL {
+    return InternalSerializeWithCachedSizesToArray(
+        ::google::protobuf::io::CodedOutputStream::IsDefaultSerializationDeterministic(), output);
+  }
+  int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const PROTOBUF_FINAL;
+  void InternalSwap(GradientAccordingColumn* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated bytes quantized_columns = 2;
+  int quantized_columns_size() const;
+  void clear_quantized_columns();
+  static const int kQuantizedColumnsFieldNumber = 2;
+  const ::std::string& quantized_columns(int index) const;
+  ::std::string* mutable_quantized_columns(int index);
+  void set_quantized_columns(int index, const ::std::string& value);
+  #if LANG_CXX11
+  void set_quantized_columns(int index, ::std::string&& value);
+  #endif
+  void set_quantized_columns(int index, const char* value);
+  void set_quantized_columns(int index, const void* value, size_t size);
+  ::std::string* add_quantized_columns();
+  void add_quantized_columns(const ::std::string& value);
+  #if LANG_CXX11
+  void add_quantized_columns(::std::string&& value);
+  #endif
+  void add_quantized_columns(const char* value);
+  void add_quantized_columns(const void* value, size_t size);
+  const ::google::protobuf::RepeatedPtrField< ::std::string>& quantized_columns() const;
+  ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_quantized_columns();
+
+  // repeated float maxes = 3;
+  int maxes_size() const;
+  void clear_maxes();
+  static const int kMaxesFieldNumber = 3;
+  float maxes(int index) const;
+  void set_maxes(int index, float value);
+  void add_maxes(float value);
+  const ::google::protobuf::RepeatedField< float >&
+      maxes() const;
+  ::google::protobuf::RepeatedField< float >*
+      mutable_maxes();
+
+  // repeated float mins = 4;
+  int mins_size() const;
+  void clear_mins();
+  static const int kMinsFieldNumber = 4;
+  float mins(int index) const;
+  void set_mins(int index, float value);
+  void add_mins(float value);
+  const ::google::protobuf::RepeatedField< float >&
+      mins() const;
+  ::google::protobuf::RepeatedField< float >*
+      mutable_mins();
+
+  // int32 quantization_level = 1;
+  void clear_quantization_level();
+  static const int kQuantizationLevelFieldNumber = 1;
+  ::google::protobuf::int32 quantization_level() const;
+  void set_quantization_level(::google::protobuf::int32 value);
+
+  // int32 dim1 = 5;
+  void clear_dim1();
+  static const int kDim1FieldNumber = 5;
+  ::google::protobuf::int32 dim1() const;
+  void set_dim1(::google::protobuf::int32 value);
+
+  // int32 dim2 = 6;
+  void clear_dim2();
+  static const int kDim2FieldNumber = 6;
+  ::google::protobuf::int32 dim2() const;
+  void set_dim2(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:adaptive_system.GradientAccordingColumn)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::RepeatedPtrField< ::std::string> quantized_columns_;
+  ::google::protobuf::RepeatedField< float > maxes_;
+  mutable int _maxes_cached_byte_size_;
+  ::google::protobuf::RepeatedField< float > mins_;
+  mutable int _mins_cached_byte_size_;
+  ::google::protobuf::int32 quantization_level_;
+  ::google::protobuf::int32 dim1_;
+  ::google::protobuf::int32 dim2_;
   mutable int _cached_size_;
   friend struct protobuf_rpc_5fservice_2eproto::TableStruct;
 };
@@ -1846,6 +1997,179 @@ inline void Gradient::set_allocated_tensor_shape(::tensorflow::TensorShapeProto*
 
 // -------------------------------------------------------------------
 
+// GradientAccordingColumn
+
+// int32 quantization_level = 1;
+inline void GradientAccordingColumn::clear_quantization_level() {
+  quantization_level_ = 0;
+}
+inline ::google::protobuf::int32 GradientAccordingColumn::quantization_level() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.GradientAccordingColumn.quantization_level)
+  return quantization_level_;
+}
+inline void GradientAccordingColumn::set_quantization_level(::google::protobuf::int32 value) {
+  
+  quantization_level_ = value;
+  // @@protoc_insertion_point(field_set:adaptive_system.GradientAccordingColumn.quantization_level)
+}
+
+// repeated bytes quantized_columns = 2;
+inline int GradientAccordingColumn::quantized_columns_size() const {
+  return quantized_columns_.size();
+}
+inline void GradientAccordingColumn::clear_quantized_columns() {
+  quantized_columns_.Clear();
+}
+inline const ::std::string& GradientAccordingColumn::quantized_columns(int index) const {
+  // @@protoc_insertion_point(field_get:adaptive_system.GradientAccordingColumn.quantized_columns)
+  return quantized_columns_.Get(index);
+}
+inline ::std::string* GradientAccordingColumn::mutable_quantized_columns(int index) {
+  // @@protoc_insertion_point(field_mutable:adaptive_system.GradientAccordingColumn.quantized_columns)
+  return quantized_columns_.Mutable(index);
+}
+inline void GradientAccordingColumn::set_quantized_columns(int index, const ::std::string& value) {
+  // @@protoc_insertion_point(field_set:adaptive_system.GradientAccordingColumn.quantized_columns)
+  quantized_columns_.Mutable(index)->assign(value);
+}
+#if LANG_CXX11
+inline void GradientAccordingColumn::set_quantized_columns(int index, ::std::string&& value) {
+  // @@protoc_insertion_point(field_set:adaptive_system.GradientAccordingColumn.quantized_columns)
+  quantized_columns_.Mutable(index)->assign(std::move(value));
+}
+#endif
+inline void GradientAccordingColumn::set_quantized_columns(int index, const char* value) {
+  quantized_columns_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:adaptive_system.GradientAccordingColumn.quantized_columns)
+}
+inline void GradientAccordingColumn::set_quantized_columns(int index, const void* value, size_t size) {
+  quantized_columns_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:adaptive_system.GradientAccordingColumn.quantized_columns)
+}
+inline ::std::string* GradientAccordingColumn::add_quantized_columns() {
+  // @@protoc_insertion_point(field_add_mutable:adaptive_system.GradientAccordingColumn.quantized_columns)
+  return quantized_columns_.Add();
+}
+inline void GradientAccordingColumn::add_quantized_columns(const ::std::string& value) {
+  quantized_columns_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:adaptive_system.GradientAccordingColumn.quantized_columns)
+}
+#if LANG_CXX11
+inline void GradientAccordingColumn::add_quantized_columns(::std::string&& value) {
+  quantized_columns_.Add()->assign(std::move(value));
+  // @@protoc_insertion_point(field_add:adaptive_system.GradientAccordingColumn.quantized_columns)
+}
+#endif
+inline void GradientAccordingColumn::add_quantized_columns(const char* value) {
+  quantized_columns_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:adaptive_system.GradientAccordingColumn.quantized_columns)
+}
+inline void GradientAccordingColumn::add_quantized_columns(const void* value, size_t size) {
+  quantized_columns_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:adaptive_system.GradientAccordingColumn.quantized_columns)
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
+GradientAccordingColumn::quantized_columns() const {
+  // @@protoc_insertion_point(field_list:adaptive_system.GradientAccordingColumn.quantized_columns)
+  return quantized_columns_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
+GradientAccordingColumn::mutable_quantized_columns() {
+  // @@protoc_insertion_point(field_mutable_list:adaptive_system.GradientAccordingColumn.quantized_columns)
+  return &quantized_columns_;
+}
+
+// repeated float maxes = 3;
+inline int GradientAccordingColumn::maxes_size() const {
+  return maxes_.size();
+}
+inline void GradientAccordingColumn::clear_maxes() {
+  maxes_.Clear();
+}
+inline float GradientAccordingColumn::maxes(int index) const {
+  // @@protoc_insertion_point(field_get:adaptive_system.GradientAccordingColumn.maxes)
+  return maxes_.Get(index);
+}
+inline void GradientAccordingColumn::set_maxes(int index, float value) {
+  maxes_.Set(index, value);
+  // @@protoc_insertion_point(field_set:adaptive_system.GradientAccordingColumn.maxes)
+}
+inline void GradientAccordingColumn::add_maxes(float value) {
+  maxes_.Add(value);
+  // @@protoc_insertion_point(field_add:adaptive_system.GradientAccordingColumn.maxes)
+}
+inline const ::google::protobuf::RepeatedField< float >&
+GradientAccordingColumn::maxes() const {
+  // @@protoc_insertion_point(field_list:adaptive_system.GradientAccordingColumn.maxes)
+  return maxes_;
+}
+inline ::google::protobuf::RepeatedField< float >*
+GradientAccordingColumn::mutable_maxes() {
+  // @@protoc_insertion_point(field_mutable_list:adaptive_system.GradientAccordingColumn.maxes)
+  return &maxes_;
+}
+
+// repeated float mins = 4;
+inline int GradientAccordingColumn::mins_size() const {
+  return mins_.size();
+}
+inline void GradientAccordingColumn::clear_mins() {
+  mins_.Clear();
+}
+inline float GradientAccordingColumn::mins(int index) const {
+  // @@protoc_insertion_point(field_get:adaptive_system.GradientAccordingColumn.mins)
+  return mins_.Get(index);
+}
+inline void GradientAccordingColumn::set_mins(int index, float value) {
+  mins_.Set(index, value);
+  // @@protoc_insertion_point(field_set:adaptive_system.GradientAccordingColumn.mins)
+}
+inline void GradientAccordingColumn::add_mins(float value) {
+  mins_.Add(value);
+  // @@protoc_insertion_point(field_add:adaptive_system.GradientAccordingColumn.mins)
+}
+inline const ::google::protobuf::RepeatedField< float >&
+GradientAccordingColumn::mins() const {
+  // @@protoc_insertion_point(field_list:adaptive_system.GradientAccordingColumn.mins)
+  return mins_;
+}
+inline ::google::protobuf::RepeatedField< float >*
+GradientAccordingColumn::mutable_mins() {
+  // @@protoc_insertion_point(field_mutable_list:adaptive_system.GradientAccordingColumn.mins)
+  return &mins_;
+}
+
+// int32 dim1 = 5;
+inline void GradientAccordingColumn::clear_dim1() {
+  dim1_ = 0;
+}
+inline ::google::protobuf::int32 GradientAccordingColumn::dim1() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.GradientAccordingColumn.dim1)
+  return dim1_;
+}
+inline void GradientAccordingColumn::set_dim1(::google::protobuf::int32 value) {
+  
+  dim1_ = value;
+  // @@protoc_insertion_point(field_set:adaptive_system.GradientAccordingColumn.dim1)
+}
+
+// int32 dim2 = 6;
+inline void GradientAccordingColumn::clear_dim2() {
+  dim2_ = 0;
+}
+inline ::google::protobuf::int32 GradientAccordingColumn::dim2() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.GradientAccordingColumn.dim2)
+  return dim2_;
+}
+inline void GradientAccordingColumn::set_dim2(::google::protobuf::int32 value) {
+  
+  dim2_ = value;
+  // @@protoc_insertion_point(field_set:adaptive_system.GradientAccordingColumn.dim2)
+}
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // NamedGradients
@@ -1949,6 +2273,8 @@ inline void Loss::set_loss(float value) {
 }
 
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

@@ -13,10 +13,10 @@ tensorflow::Tensor quantize_then_dequantize(int const level,
 	if (size < 1024 * 101) {
 		return origin_tensor;
 	}
-	Gradient gradient;
+	GradientAccordingColumn gradient;
 	tensorflow::Tensor return_tensor;
-	quantize_gradient(level, origin_tensor, gradient);
-	dequantize_gradient(gradient, return_tensor);
+	quantize_gradient_according_column(level, origin_tensor, gradient);
+	dequantize_gradient_according_column(gradient, return_tensor);
 	return return_tensor;
 }
 
