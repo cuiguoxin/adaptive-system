@@ -29,5 +29,18 @@ namespace adaptive_system {
 	void dequantize_gradients(
 		NamedGradients& named_gradients,
 		std::map<std::string, tensorflow::Tensor>& map_gradient);
+	
+	void quantize_gradient_according_column(uint32_t const level, tensorflow::Tensor const & tensor,
+		GradientAccordingColumn& gradient);
+
+	void dequantize_gradient_according_column(GradientAccordingColumn const & gradient,
+		tensorflow::Tensor& tensor);
+
+	void quantize_gradients_according_column(std::map<std::string, tensorflow::Tensor>& map_gradient,
+		NamedGradients* named_gradients, int level);
+
+	void dequantize_gradients_according_column(NamedGradients& named_gradients,
+		std::map<std::string, tensorflow::Tensor>& map_gradient);
+
 }
 #endif // !ADAPTIVE_SYSTEM_ANY_LEVEL

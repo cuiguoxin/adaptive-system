@@ -47,8 +47,23 @@ message Gradient {
     tensorflow.TensorShapeProto tensor_shape = 6;
 }
 
+message GradientAccordingColumn {
+	int32 quantization_level = 1;
+	repeated bytes quantized_columns = 2;
+	repeated float maxes = 3;
+	repeated float mins = 4;
+	int32 dim1 = 5;
+	int32 dim2 = 6;
+	tensorflow.TensorProto tensor = 7;
+	bool is_quantized = 8;
+}
+
 message NamedGradients {
     map<string, Gradient> name_to_gradient = 1;
+}
+
+message NamedGradientsAccordingColumn {
+	map<string, GradientAccordingColumn> name_to_gradient = 1;
 }
 
 message PartialState {
