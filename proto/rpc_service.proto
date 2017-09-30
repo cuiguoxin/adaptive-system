@@ -79,7 +79,7 @@ service SystemControl {
 
     rpc retrieveTuple(Empty) returns (Tuple);
     rpc sendLoss(Loss) returns (Empty);
-    rpc sendGradient(NamedGradients) returns (NamedGradients);
+    rpc sendGradient(NamedGradientsAccordingColumn) returns (NamedGradientsAccordingColumn);
     rpc sendState(PartialState) returns (QuantizationLevel);
 
 }

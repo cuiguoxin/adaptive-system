@@ -270,12 +270,41 @@ namespace adaptive_system {
 	}
 
 	void quantize_gradients_according_column(std::map<std::string, tensorflow::Tensor>& map_gradient,
-		NamedGradients* named_gradients, int level) {
-
+		NamedGradientsAccordingColumn* named_gradients, int level, int threshold) {
+		for (auto pair : map_gradient) {
+			auto name = pair.first;
+			auto& tensor = pair.second;
+			auto size = tensor.NumElements();
+			GradientAccordingColumn gac;
+			if (size > threshold) {
+				gac.set_is_quantized(true);
+				quantize_gradient_according_column(level, tensor, gac);				
+			}
+			else {
+				tensorflow::TensorProto tp;
+				tensor.AsProtoField(&tp);			
+				gac.set_is_quantized(false);
+				*gac.mutable_tensor() = tp;
+			}
+			named_gradients->mutable_name_to_gradient()->insert({ name, gac });
+		}
 	}
 
-	void dequantize_gradients_according_column(NamedGradients& named_gradients,
+	void dequantize_gradients_according_column(NamedGradientsAccordingColumn& named_gradients,
 		std::map<std::string, tensorflow::Tensor>& map_gradient) {
-
+		auto& map = *named_gradients.mutable_name_to_gradient();
+		for (auto pair : map) {
+			auto name = pair.first;
+			auto& gradient = pair.second;
+			bool is_quantized = gradient.is_quantized();
+			tensorflow::Tensor tensor;
+			if (is_quantized) {
+				dequantize_gradient_according_column(gradient, tensor);
+			}
+			else {
+				tensor.FromProto(gradient.tensor());
+			}
+			map_gradient.insert({ name, tensor });
+		}
 	}
 }

@@ -37,9 +37,9 @@ namespace adaptive_system {
 		tensorflow::Tensor& tensor);
 
 	void quantize_gradients_according_column(std::map<std::string, tensorflow::Tensor>& map_gradient,
-		NamedGradients* named_gradients, int level);
+		NamedGradientsAccordingColumn* named_gradients, int level, int threshold);
 
-	void dequantize_gradients_according_column(NamedGradients& named_gradients,
+	void dequantize_gradients_according_column(NamedGradientsAccordingColumn& named_gradients,
 		std::map<std::string, tensorflow::Tensor>& map_gradient);
 
 }
