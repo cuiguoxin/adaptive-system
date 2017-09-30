@@ -22,4 +22,5 @@ predict_result/
 Debug/
 test/
 *.log
+log/
 temp/
