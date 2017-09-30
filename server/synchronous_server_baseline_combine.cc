@@ -50,13 +50,14 @@ namespace adaptive_system {
 	public:
 		RPCServiceImpl(int interval, float lr, int total_iter, int number_of_workers,
 			std::string const& tuple_local_path, std::string const& predict_file_path, 
-			std::string const& preprocess_graph_path, std::string const tuple_predict_path)
+			std::string const& preprocess_graph_path, std::string const tuple_predict_path, int const threshold)
 			: SystemControl::Service(),
 			_interval(interval),
 			_lr(lr),
 			_total_iter(total_iter),
 			_number_of_workers(number_of_workers),
-			_tuple_local_path(tuple_local_path)	
+			_tuple_local_path(tuple_local_path),
+			_threshold(threshold)
 		{
 			_session = tensorflow::NewSession(tensorflow::SessionOptions());
 			std::fstream input(_tuple_local_path, std::ios::in | std::ios::binary);
@@ -229,12 +230,13 @@ namespace adaptive_system {
 			return grpc::Status::OK;
 		}
 
-		grpc::Status sendGradient(ServerContext* context, const NamedGradients* request,
-			NamedGradients* response) override {
-			NamedGradients& named_gradients = const_cast<NamedGradients&>(*request);
+		grpc::Status sendGradient(ServerContext* context, const NamedGradientsAccordingColumn* request,
+			NamedGradientsAccordingColumn* response) override {
+			NamedGradientsAccordingColumn& named_gradients = 
+				const_cast<NamedGradientsAccordingColumn&>(*request);
 			std::map<std::string, tensorflow::Tensor> map_gradient;
 			PRINT_INFO;
-			dequantize_gradients(named_gradients, map_gradient);
+			dequantize_gradients_according_column(named_gradients, map_gradient);
 			std::unique_lock<std::mutex> lk(_mutex_gradient);
 			_bool_gradient = false;
 			_vector_map_gradient.push_back(
@@ -245,13 +247,13 @@ namespace adaptive_system {
 				aggregate_gradients(_vector_map_gradient, merged_gradient);
 				PRINT_INFO;
 				average_gradients(_number_of_workers, merged_gradient);
-				_store_named_gradient = NamedGradients();
+				_store_named_gradient = NamedGradientsAccordingColumn();
 				PRINT_INFO;
 
 				int level = _level_vec[_current_iter_number];		 
-				quantize_gradients(
+				quantize_gradients_according_column(
 					merged_gradient, &_store_named_gradient,
-					level);
+					level, _threshold);
 
 				PRINT_INFO;
 				apply_quantized_gradient_to_model(_store_named_gradient,
@@ -401,6 +403,7 @@ namespace adaptive_system {
 		const float _lr;
 		const int _total_iter;
 		const int _number_of_workers;
+		const int _threshold;
 		int _current_iter_number = 0;
 
 		std::chrono::time_point<std::chrono::high_resolution_clock> _init_time_point;
@@ -425,7 +428,7 @@ namespace adaptive_system {
 		bool _bool_state;
 		bool _bool_loss;
 		bool _bool_is_first_iteration = true;
-		NamedGradients _store_named_gradient;
+		NamedGradientsAccordingColumn _store_named_gradient;
 
 		tensorflow::Session* _session;
 		Tuple _tuple;
@@ -456,9 +459,10 @@ int main(int argc, char** argv) {
 	std::string predict_file_path = argv[6];
 	std::string preprocess_file_path = argv[7];
 	std::string tuple_predict_path = argv[8];
+	int threshold = atoi(argv[9]);
 	adaptive_system::RPCServiceImpl service(
 		interval, learning_rate, total_iter, number_of_workers,
-		tuple_path, predict_file_path, preprocess_file_path, tuple_predict_path);
+		tuple_path, predict_file_path, preprocess_file_path, tuple_predict_path, threshold);
 
 	ServerBuilder builder;
 	// Listen on the given address without any authentication mechanism.

@@ -184,7 +184,8 @@ namespace adaptive_system {
 	
 
 
-	void do_training(std::string const & raw_data_path, std::string const & preprocess_graph_path) {
+	void do_training(std::string const & raw_data_path, std::string const & preprocess_graph_path, 
+		int const threshold) {
 		int level = 0;
 		cifar10::turn_raw_tensors_to_standard_version(raw_data_path, preprocess_graph_path);
 		for (int i = 0; i < total_iter; i++) {
@@ -222,10 +223,10 @@ namespace adaptive_system {
 			}
 			//fake
 			//now_sleep(grad_quant_level);
-			NamedGradients named_gradients_send, named_gradients_receive;
+			NamedGradientsAccordingColumn named_gradients_send, named_gradients_receive;
 			PRINT_INFO;
-			quantize_gradients(
-				map_gradients, &named_gradients_send, level);
+			quantize_gradients_according_column(
+				map_gradients, &named_gradients_send, level, threshold);
 				//get_tuple()->order_to_level().find(grad_quant_level_order)->second);
 			
 			ClientContext gradient_context;
@@ -248,9 +249,10 @@ namespace adaptive_system {
 
 	void close_session() { get_session()->Close(); }
 
-	void run_logic(std::string const & raw_data_path, std::string const & preprocess_graph_path) {
+	void run_logic(std::string const & raw_data_path, std::string const & preprocess_graph_path, 
+		int const threshold) {
 		init_everything();
-		do_training(raw_data_path, preprocess_graph_path);
+		do_training(raw_data_path, preprocess_graph_path, threshold);
 		close_session();
 	}
 }
@@ -259,6 +261,7 @@ int main(int argc, char* argv[]) {
 	std::string ip_port = argv[1];
 	std::string raw_data_path = argv[2];
 	std::string preprocess_graph_path = argv[3];
+	int const threshold = atoi(argv[4]);
 	adaptive_system::init_stub(ip_port);
-	adaptive_system::run_logic(raw_data_path, preprocess_graph_path);
+	adaptive_system::run_logic(raw_data_path, preprocess_graph_path, threshold);
 }

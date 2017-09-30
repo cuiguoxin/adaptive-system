@@ -15,10 +15,10 @@
 
 namespace adaptive_system {
 
-	void apply_quantized_gradient_to_model(NamedGradients& named_gradients,
+	void apply_quantized_gradient_to_model(NamedGradientsAccordingColumn& named_gradients,
 		tensorflow::Session* sess,
 		Tuple& tuple) {
-		google::protobuf::Map<std::string, Gradient>& map_gradient =
+		google::protobuf::Map<std::string, GradientAccordingColumn>& map_gradient =
 			*named_gradients.mutable_name_to_gradient();
 		google::protobuf::Map<std::string, Names>& map_names =
 			*tuple.mutable_map_names();
@@ -28,9 +28,9 @@ namespace adaptive_system {
 		std::for_each(
 			map_gradient.begin(), map_gradient.end(),
 			[&feeds, &map_names,
-			&tuple](google::protobuf::MapPair<std::string, Gradient>& pair) {
+			&tuple](google::protobuf::MapPair<std::string, GradientAccordingColumn>& pair) {
 			std::string const& variable_name = pair.first;
-			Gradient& grad = pair.second;
+			GradientAccordingColumn& grad = pair.second;
 			auto iter_map_names = map_names.find(variable_name);
 			if (iter_map_names == map_names.end()) {
 				std::cout << "this is impossible Line " << __LINE__ << std::endl;
@@ -42,7 +42,7 @@ namespace adaptive_system {
 				tensorflow::Tensor feed_grad;  // nothing need to do to initialize feed
 										  // tensor, dequantize function will do all
 										  // stuff
-				dequantize_gradient(grad, feed_grad);
+				dequantize_gradient_according_column(grad, feed_grad);
 				feeds.push_back(
 					std::pair<std::string, tensorflow::Tensor>(grad_name, feed_grad));
 			}

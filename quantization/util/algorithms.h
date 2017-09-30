@@ -24,7 +24,7 @@
 
 namespace adaptive_system {
 
-	void apply_quantized_gradient_to_model(NamedGradients& named_gradients,
+	void apply_quantized_gradient_to_model(NamedGradientsAccordingColumn& named_gradients,
 		tensorflow::Session* sess, Tuple& tuple);
 
 
