@@ -32,6 +32,8 @@ class GradientAccordingColumnDefaultTypeInternal : public ::google::protobuf::in
 } _GradientAccordingColumn_default_instance_;
 class NamedGradientsDefaultTypeInternal : public ::google::protobuf::internal::ExplicitlyConstructed<NamedGradients> {
 } _NamedGradients_default_instance_;
+class NamedGradientsAccordingColumnDefaultTypeInternal : public ::google::protobuf::internal::ExplicitlyConstructed<NamedGradientsAccordingColumn> {
+} _NamedGradientsAccordingColumn_default_instance_;
 class PartialStateDefaultTypeInternal : public ::google::protobuf::internal::ExplicitlyConstructed<PartialState> {
 } _PartialState_default_instance_;
 class LossDefaultTypeInternal : public ::google::protobuf::internal::ExplicitlyConstructed<Loss> {
@@ -42,7 +44,7 @@ namespace protobuf_rpc_5fservice_2eproto {
 
 namespace {
 
-::google::protobuf::Metadata file_level_metadata[13];
+::google::protobuf::Metadata file_level_metadata[15];
 
 }  // namespace
 
@@ -100,11 +102,18 @@ const ::google::protobuf::uint32 TableStruct::offsets[] = {
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GradientAccordingColumn, mins_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GradientAccordingColumn, dim1_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GradientAccordingColumn, dim2_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GradientAccordingColumn, tensor_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GradientAccordingColumn, is_quantized_),
   ~0u,  // no _has_bits_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NamedGradients, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NamedGradients, name_to_gradient_),
+  ~0u,  // no _has_bits_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NamedGradientsAccordingColumn, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NamedGradientsAccordingColumn, name_to_gradient_),
   ~0u,  // no _has_bits_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PartialState, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -125,9 +134,10 @@ static const ::google::protobuf::internal::MigrationSchema schemas[] = {
   { 17, -1, sizeof(Tuple)},
   { 34, -1, sizeof(Gradient)},
   { 43, -1, sizeof(GradientAccordingColumn)},
-  { 53, -1, sizeof(NamedGradients)},
-  { 58, -1, sizeof(PartialState)},
-  { 64, -1, sizeof(Loss)},
+  { 55, -1, sizeof(NamedGradients)},
+  { 60, -1, sizeof(NamedGradientsAccordingColumn)},
+  { 65, -1, sizeof(PartialState)},
+  { 71, -1, sizeof(Loss)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -138,6 +148,7 @@ static ::google::protobuf::Message const * const file_default_instances[] = {
   reinterpret_cast<const ::google::protobuf::Message*>(&_Gradient_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&_GradientAccordingColumn_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&_NamedGradients_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&_NamedGradientsAccordingColumn_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&_PartialState_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&_Loss_default_instance_),
 };
@@ -160,7 +171,7 @@ void protobuf_AssignDescriptorsOnce() {
 void protobuf_RegisterTypes(const ::std::string&) GOOGLE_ATTRIBUTE_COLD;
 void protobuf_RegisterTypes(const ::std::string&) {
   protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 13);
+  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 15);
   const ::google::protobuf::Descriptor* Tuple_MapNamesEntry_descriptor = protobuf_rpc_5fservice_2eproto::file_level_metadata[3].descriptor;
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
         Tuple_MapNamesEntry_descriptor,
@@ -201,6 +212,16 @@ void protobuf_RegisterTypes(const ::std::string&) {
             ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE,
             0>::CreateDefaultInstance(
                 NamedGradients_NameToGradientEntry_descriptor));
+  const ::google::protobuf::Descriptor* NamedGradientsAccordingColumn_NameToGradientEntry_descriptor = protobuf_rpc_5fservice_2eproto::file_level_metadata[11].descriptor;
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+        NamedGradientsAccordingColumn_NameToGradientEntry_descriptor,
+        ::google::protobuf::internal::MapEntry<
+            ::std::string,
+            ::adaptive_system::GradientAccordingColumn,
+            ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+            ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE,
+            0>::CreateDefaultInstance(
+                NamedGradientsAccordingColumn_NameToGradientEntry_descriptor));
 }
 
 }  // namespace
@@ -220,10 +241,12 @@ void TableStruct::Shutdown() {
   delete file_level_metadata[8].reflection;
   _NamedGradients_default_instance_.Shutdown();
   delete file_level_metadata[10].reflection;
-  _PartialState_default_instance_.Shutdown();
-  delete file_level_metadata[11].reflection;
-  _Loss_default_instance_.Shutdown();
+  _NamedGradientsAccordingColumn_default_instance_.Shutdown();
   delete file_level_metadata[12].reflection;
+  _PartialState_default_instance_.Shutdown();
+  delete file_level_metadata[13].reflection;
+  _Loss_default_instance_.Shutdown();
+  delete file_level_metadata[14].reflection;
 }
 
 void TableStruct::InitDefaultsImpl() {
@@ -240,12 +263,15 @@ void TableStruct::InitDefaultsImpl() {
   _Gradient_default_instance_.DefaultConstruct();
   _GradientAccordingColumn_default_instance_.DefaultConstruct();
   _NamedGradients_default_instance_.DefaultConstruct();
+  _NamedGradientsAccordingColumn_default_instance_.DefaultConstruct();
   _PartialState_default_instance_.DefaultConstruct();
   _Loss_default_instance_.DefaultConstruct();
   _Tuple_default_instance_.get_mutable()->graph_ = const_cast< ::tensorflow::GraphDef*>(
       ::tensorflow::GraphDef::internal_default_instance());
   _Gradient_default_instance_.get_mutable()->tensor_shape_ = const_cast< ::tensorflow::TensorShapeProto*>(
       ::tensorflow::TensorShapeProto::internal_default_instance());
+  _GradientAccordingColumn_default_instance_.get_mutable()->tensor_ = const_cast< ::tensorflow::TensorProto*>(
+      ::tensorflow::TensorProto::internal_default_instance());
   _PartialState_default_instance_.get_mutable()->tensor_ = const_cast< ::tensorflow::TensorProto*>(
       ::tensorflow::TensorProto::internal_default_instance());
 }
@@ -284,28 +310,35 @@ void AddDescriptorsImpl() {
       "\001\"\216\001\n\010Gradient\022\032\n\022quantization_level\030\001 \001"
       "(\005\022\030\n\020quantized_tensor\030\003 \001(\014\022\013\n\003max\030\004 \001("
       "\002\022\013\n\003min\030\005 \001(\002\0222\n\014tensor_shape\030\006 \001(\0132\034.t"
-      "ensorflow.TensorShapeProto\"\211\001\n\027GradientA"
+      "ensorflow.TensorShapeProto\"\310\001\n\027GradientA"
       "ccordingColumn\022\032\n\022quantization_level\030\001 \001"
       "(\005\022\031\n\021quantized_columns\030\002 \003(\014\022\r\n\005maxes\030\003"
       " \003(\002\022\014\n\004mins\030\004 \003(\002\022\014\n\004dim1\030\005 \001(\005\022\014\n\004dim2"
-      "\030\006 \001(\005\"\261\001\n\016NamedGradients\022M\n\020name_to_gra"
-      "dient\030\001 \003(\01323.adaptive_system.NamedGradi"
-      "ents.NameToGradientEntry\032P\n\023NameToGradie"
-      "ntEntry\022\013\n\003key\030\001 \001(\t\022(\n\005value\030\002 \001(\0132\031.ad"
-      "aptive_system.Gradient:\0028\001\"E\n\014PartialSta"
-      "te\022\'\n\006tensor\030\001 \001(\0132\027.tensorflow.TensorPr"
-      "oto\022\014\n\004loss\030\002 \001(\002\"\024\n\004Loss\022\014\n\004loss\030\001 \001(\0022"
-      "\255\002\n\rSystemControl\022\?\n\rretrieveTuple\022\026.ada"
-      "ptive_system.Empty\032\026.adaptive_system.Tup"
-      "le\0229\n\010sendLoss\022\025.adaptive_system.Loss\032\026."
-      "adaptive_system.Empty\022P\n\014sendGradient\022\037."
-      "adaptive_system.NamedGradients\032\037.adaptiv"
-      "e_system.NamedGradients\022N\n\tsendState\022\035.a"
-      "daptive_system.PartialState\032\".adaptive_s"
-      "ystem.QuantizationLevelb\006proto3"
+      "\030\006 \001(\005\022\'\n\006tensor\030\007 \001(\0132\027.tensorflow.Tens"
+      "orProto\022\024\n\014is_quantized\030\010 \001(\010\"\261\001\n\016NamedG"
+      "radients\022M\n\020name_to_gradient\030\001 \003(\01323.ada"
+      "ptive_system.NamedGradients.NameToGradie"
+      "ntEntry\032P\n\023NameToGradientEntry\022\013\n\003key\030\001 "
+      "\001(\t\022(\n\005value\030\002 \001(\0132\031.adaptive_system.Gra"
+      "dient:\0028\001\"\336\001\n\035NamedGradientsAccordingCol"
+      "umn\022\\\n\020name_to_gradient\030\001 \003(\0132B.adaptive"
+      "_system.NamedGradientsAccordingColumn.Na"
+      "meToGradientEntry\032_\n\023NameToGradientEntry"
+      "\022\013\n\003key\030\001 \001(\t\0227\n\005value\030\002 \001(\0132(.adaptive_"
+      "system.GradientAccordingColumn:\0028\001\"E\n\014Pa"
+      "rtialState\022\'\n\006tensor\030\001 \001(\0132\027.tensorflow."
+      "TensorProto\022\014\n\004loss\030\002 \001(\002\"\024\n\004Loss\022\014\n\004los"
+      "s\030\001 \001(\0022\255\002\n\rSystemControl\022\?\n\rretrieveTup"
+      "le\022\026.adaptive_system.Empty\032\026.adaptive_sy"
+      "stem.Tuple\0229\n\010sendLoss\022\025.adaptive_system"
+      ".Loss\032\026.adaptive_system.Empty\022P\n\014sendGra"
+      "dient\022\037.adaptive_system.NamedGradients\032\037"
+      ".adaptive_system.NamedGradients\022N\n\tsendS"
+      "tate\022\035.adaptive_system.PartialState\032\".ad"
+      "aptive_system.QuantizationLevelb\006proto3"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 1831);
+      descriptor, 2119);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "rpc_service.proto", &protobuf_RegisterTypes);
   ::tensorflow::protobuf_tensorflow_2fcore_2fframework_2ftensor_2eproto::AddDescriptors();
@@ -3382,6 +3415,8 @@ const int GradientAccordingColumn::kMaxesFieldNumber;
 const int GradientAccordingColumn::kMinsFieldNumber;
 const int GradientAccordingColumn::kDim1FieldNumber;
 const int GradientAccordingColumn::kDim2FieldNumber;
+const int GradientAccordingColumn::kTensorFieldNumber;
+const int GradientAccordingColumn::kIsQuantizedFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 GradientAccordingColumn::GradientAccordingColumn()
@@ -3400,15 +3435,20 @@ GradientAccordingColumn::GradientAccordingColumn(const GradientAccordingColumn& 
       mins_(from.mins_),
       _cached_size_(0) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
+  if (from.has_tensor()) {
+    tensor_ = new ::tensorflow::TensorProto(*from.tensor_);
+  } else {
+    tensor_ = NULL;
+  }
   ::memcpy(&quantization_level_, &from.quantization_level_,
-    reinterpret_cast<char*>(&dim2_) -
-    reinterpret_cast<char*>(&quantization_level_) + sizeof(dim2_));
+    reinterpret_cast<char*>(&is_quantized_) -
+    reinterpret_cast<char*>(&quantization_level_) + sizeof(is_quantized_));
   // @@protoc_insertion_point(copy_constructor:adaptive_system.GradientAccordingColumn)
 }
 
 void GradientAccordingColumn::SharedCtor() {
-  ::memset(&quantization_level_, 0, reinterpret_cast<char*>(&dim2_) -
-    reinterpret_cast<char*>(&quantization_level_) + sizeof(dim2_));
+  ::memset(&tensor_, 0, reinterpret_cast<char*>(&is_quantized_) -
+    reinterpret_cast<char*>(&tensor_) + sizeof(is_quantized_));
   _cached_size_ = 0;
 }
 
@@ -3418,6 +3458,9 @@ GradientAccordingColumn::~GradientAccordingColumn() {
 }
 
 void GradientAccordingColumn::SharedDtor() {
+  if (this != internal_default_instance()) {
+    delete tensor_;
+  }
 }
 
 void GradientAccordingColumn::SetCachedSize(int size) const {
@@ -3448,8 +3491,12 @@ void GradientAccordingColumn::Clear() {
   quantized_columns_.Clear();
   maxes_.Clear();
   mins_.Clear();
-  ::memset(&quantization_level_, 0, reinterpret_cast<char*>(&dim2_) -
-    reinterpret_cast<char*>(&quantization_level_) + sizeof(dim2_));
+  if (GetArenaNoVirtual() == NULL && tensor_ != NULL) {
+    delete tensor_;
+  }
+  tensor_ = NULL;
+  ::memset(&quantization_level_, 0, reinterpret_cast<char*>(&is_quantized_) -
+    reinterpret_cast<char*>(&quantization_level_) + sizeof(is_quantized_));
 }
 
 bool GradientAccordingColumn::MergePartialFromCodedStream(
@@ -3552,6 +3599,32 @@ bool GradientAccordingColumn::MergePartialFromCodedStream(
         break;
       }
 
+      // .tensorflow.TensorProto tensor = 7;
+      case 7: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(58u)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_tensor()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // bool is_quantized = 8;
+      case 8: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(64u)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &is_quantized_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       default: {
       handle_unusual:
         if (tag == 0 ||
@@ -3613,6 +3686,17 @@ void GradientAccordingColumn::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(6, this->dim2(), output);
   }
 
+  // .tensorflow.TensorProto tensor = 7;
+  if (this->has_tensor()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      7, *this->tensor_, output);
+  }
+
+  // bool is_quantized = 8;
+  if (this->is_quantized() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(8, this->is_quantized(), output);
+  }
+
   // @@protoc_insertion_point(serialize_end:adaptive_system.GradientAccordingColumn)
 }
 
@@ -3669,6 +3753,18 @@ void GradientAccordingColumn::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(6, this->dim2(), target);
   }
 
+  // .tensorflow.TensorProto tensor = 7;
+  if (this->has_tensor()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      InternalWriteMessageNoVirtualToArray(
+        7, *this->tensor_, false, target);
+  }
+
+  // bool is_quantized = 8;
+  if (this->is_quantized() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(8, this->is_quantized(), target);
+  }
+
   // @@protoc_insertion_point(serialize_to_array_end:adaptive_system.GradientAccordingColumn)
   return target;
 }
@@ -3715,6 +3811,13 @@ size_t GradientAccordingColumn::ByteSizeLong() const {
     total_size += data_size;
   }
 
+  // .tensorflow.TensorProto tensor = 7;
+  if (this->has_tensor()) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        *this->tensor_);
+  }
+
   // int32 quantization_level = 1;
   if (this->quantization_level() != 0) {
     total_size += 1 +
@@ -3734,6 +3837,11 @@ size_t GradientAccordingColumn::ByteSizeLong() const {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::Int32Size(
         this->dim2());
+  }
+
+  // bool is_quantized = 8;
+  if (this->is_quantized() != 0) {
+    total_size += 1 + 1;
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
@@ -3765,6 +3873,9 @@ void GradientAccordingColumn::MergeFrom(const GradientAccordingColumn& from) {
   quantized_columns_.MergeFrom(from.quantized_columns_);
   maxes_.MergeFrom(from.maxes_);
   mins_.MergeFrom(from.mins_);
+  if (from.has_tensor()) {
+    mutable_tensor()->::tensorflow::TensorProto::MergeFrom(from.tensor());
+  }
   if (from.quantization_level() != 0) {
     set_quantization_level(from.quantization_level());
   }
@@ -3773,6 +3884,9 @@ void GradientAccordingColumn::MergeFrom(const GradientAccordingColumn& from) {
   }
   if (from.dim2() != 0) {
     set_dim2(from.dim2());
+  }
+  if (from.is_quantized() != 0) {
+    set_is_quantized(from.is_quantized());
   }
 }
 
@@ -3802,9 +3916,11 @@ void GradientAccordingColumn::InternalSwap(GradientAccordingColumn* other) {
   quantized_columns_.UnsafeArenaSwap(&other->quantized_columns_);
   maxes_.UnsafeArenaSwap(&other->maxes_);
   mins_.UnsafeArenaSwap(&other->mins_);
+  std::swap(tensor_, other->tensor_);
   std::swap(quantization_level_, other->quantization_level_);
   std::swap(dim1_, other->dim1_);
   std::swap(dim2_, other->dim2_);
+  std::swap(is_quantized_, other->is_quantized_);
   std::swap(_cached_size_, other->_cached_size_);
 }
 
@@ -3983,6 +4099,64 @@ void GradientAccordingColumn::set_dim2(::google::protobuf::int32 value) {
   
   dim2_ = value;
   // @@protoc_insertion_point(field_set:adaptive_system.GradientAccordingColumn.dim2)
+}
+
+// .tensorflow.TensorProto tensor = 7;
+bool GradientAccordingColumn::has_tensor() const {
+  return this != internal_default_instance() && tensor_ != NULL;
+}
+void GradientAccordingColumn::clear_tensor() {
+  if (GetArenaNoVirtual() == NULL && tensor_ != NULL) delete tensor_;
+  tensor_ = NULL;
+}
+const ::tensorflow::TensorProto& GradientAccordingColumn::tensor() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.GradientAccordingColumn.tensor)
+  return tensor_ != NULL ? *tensor_
+                         : *::tensorflow::TensorProto::internal_default_instance();
+}
+::tensorflow::TensorProto* GradientAccordingColumn::mutable_tensor() {
+  
+  if (tensor_ == NULL) {
+    tensor_ = new ::tensorflow::TensorProto;
+  }
+  // @@protoc_insertion_point(field_mutable:adaptive_system.GradientAccordingColumn.tensor)
+  return tensor_;
+}
+::tensorflow::TensorProto* GradientAccordingColumn::release_tensor() {
+  // @@protoc_insertion_point(field_release:adaptive_system.GradientAccordingColumn.tensor)
+  
+  ::tensorflow::TensorProto* temp = tensor_;
+  tensor_ = NULL;
+  return temp;
+}
+void GradientAccordingColumn::set_allocated_tensor(::tensorflow::TensorProto* tensor) {
+  delete tensor_;
+  if (tensor != NULL && tensor->GetArena() != NULL) {
+    ::tensorflow::TensorProto* new_tensor = new ::tensorflow::TensorProto;
+    new_tensor->CopyFrom(*tensor);
+    tensor = new_tensor;
+  }
+  tensor_ = tensor;
+  if (tensor) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_set_allocated:adaptive_system.GradientAccordingColumn.tensor)
+}
+
+// bool is_quantized = 8;
+void GradientAccordingColumn::clear_is_quantized() {
+  is_quantized_ = false;
+}
+bool GradientAccordingColumn::is_quantized() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.GradientAccordingColumn.is_quantized)
+  return is_quantized_;
+}
+void GradientAccordingColumn::set_is_quantized(bool value) {
+  
+  is_quantized_ = value;
+  // @@protoc_insertion_point(field_set:adaptive_system.GradientAccordingColumn.is_quantized)
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
@@ -4340,6 +4514,357 @@ NamedGradients::mutable_name_to_gradient() {
 
 // ===================================================================
 
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
+
+// ===================================================================
+
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int NamedGradientsAccordingColumn::kNameToGradientFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+NamedGradientsAccordingColumn::NamedGradientsAccordingColumn()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
+    protobuf_rpc_5fservice_2eproto::InitDefaults();
+  }
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:adaptive_system.NamedGradientsAccordingColumn)
+}
+NamedGradientsAccordingColumn::NamedGradientsAccordingColumn(const NamedGradientsAccordingColumn& from)
+  : ::google::protobuf::Message(),
+      _internal_metadata_(NULL),
+      _cached_size_(0) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  const ::google::protobuf::Descriptor*& NamedGradientsAccordingColumn_NameToGradientEntry_descriptor = protobuf_rpc_5fservice_2eproto::file_level_metadata[11].descriptor;
+  name_to_gradient_.SetAssignDescriptorCallback(
+      protobuf_rpc_5fservice_2eproto::protobuf_AssignDescriptorsOnce);
+  name_to_gradient_.SetEntryDescriptor(
+      &NamedGradientsAccordingColumn_NameToGradientEntry_descriptor);
+  name_to_gradient_.MergeFrom(from.name_to_gradient_);
+  // @@protoc_insertion_point(copy_constructor:adaptive_system.NamedGradientsAccordingColumn)
+}
+
+void NamedGradientsAccordingColumn::SharedCtor() {
+  const ::google::protobuf::Descriptor*& NamedGradientsAccordingColumn_NameToGradientEntry_descriptor = protobuf_rpc_5fservice_2eproto::file_level_metadata[11].descriptor;
+  name_to_gradient_.SetAssignDescriptorCallback(
+      protobuf_rpc_5fservice_2eproto::protobuf_AssignDescriptorsOnce);
+  name_to_gradient_.SetEntryDescriptor(
+      &NamedGradientsAccordingColumn_NameToGradientEntry_descriptor);
+  _cached_size_ = 0;
+}
+
+NamedGradientsAccordingColumn::~NamedGradientsAccordingColumn() {
+  // @@protoc_insertion_point(destructor:adaptive_system.NamedGradientsAccordingColumn)
+  SharedDtor();
+}
+
+void NamedGradientsAccordingColumn::SharedDtor() {
+}
+
+void NamedGradientsAccordingColumn::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* NamedGradientsAccordingColumn::descriptor() {
+  protobuf_rpc_5fservice_2eproto::protobuf_AssignDescriptorsOnce();
+  return protobuf_rpc_5fservice_2eproto::file_level_metadata[12].descriptor;
+}
+
+const NamedGradientsAccordingColumn& NamedGradientsAccordingColumn::default_instance() {
+  protobuf_rpc_5fservice_2eproto::InitDefaults();
+  return *internal_default_instance();
+}
+
+NamedGradientsAccordingColumn* NamedGradientsAccordingColumn::New(::google::protobuf::Arena* arena) const {
+  NamedGradientsAccordingColumn* n = new NamedGradientsAccordingColumn;
+  if (arena != NULL) {
+    arena->Own(n);
+  }
+  return n;
+}
+
+void NamedGradientsAccordingColumn::Clear() {
+// @@protoc_insertion_point(message_clear_start:adaptive_system.NamedGradientsAccordingColumn)
+  name_to_gradient_.Clear();
+}
+
+bool NamedGradientsAccordingColumn::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:adaptive_system.NamedGradientsAccordingColumn)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // map<string, .adaptive_system.GradientAccordingColumn> name_to_gradient = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(10u)) {
+          DO_(input->IncrementRecursionDepth());
+          NamedGradientsAccordingColumn_NameToGradientEntry::Parser< ::google::protobuf::internal::MapField<
+              ::std::string, ::adaptive_system::GradientAccordingColumn,
+              ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+              ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE,
+              0 >,
+            ::google::protobuf::Map< ::std::string, ::adaptive_system::GradientAccordingColumn > > parser(&name_to_gradient_);
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+              input, &parser));
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+            parser.key().data(), parser.key().length(),
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "adaptive_system.NamedGradientsAccordingColumn.NameToGradientEntry.key"));
+        } else {
+          goto handle_unusual;
+        }
+        input->UnsafeDecrementRecursionDepth();
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(input, tag));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:adaptive_system.NamedGradientsAccordingColumn)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:adaptive_system.NamedGradientsAccordingColumn)
+  return false;
+#undef DO_
+}
+
+void NamedGradientsAccordingColumn::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:adaptive_system.NamedGradientsAccordingColumn)
+  // map<string, .adaptive_system.GradientAccordingColumn> name_to_gradient = 1;
+  if (!this->name_to_gradient().empty()) {
+    typedef ::google::protobuf::Map< ::std::string, ::adaptive_system::GradientAccordingColumn >::const_pointer
+        ConstPtr;
+    typedef ConstPtr SortItem;
+    typedef ::google::protobuf::internal::CompareByDerefFirst<SortItem> Less;
+    struct Utf8Check {
+      static void Check(ConstPtr p) {
+        ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          p->first.data(), p->first.length(),
+          ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+          "adaptive_system.NamedGradientsAccordingColumn.NameToGradientEntry.key");
+      }
+    };
+
+    if (output->IsSerializationDeterministic() &&
+        this->name_to_gradient().size() > 1) {
+      ::google::protobuf::scoped_array<SortItem> items(
+          new SortItem[this->name_to_gradient().size()]);
+      typedef ::google::protobuf::Map< ::std::string, ::adaptive_system::GradientAccordingColumn >::size_type size_type;
+      size_type n = 0;
+      for (::google::protobuf::Map< ::std::string, ::adaptive_system::GradientAccordingColumn >::const_iterator
+          it = this->name_to_gradient().begin();
+          it != this->name_to_gradient().end(); ++it, ++n) {
+        items[n] = SortItem(&*it);
+      }
+      ::std::sort(&items[0], &items[n], Less());
+      ::google::protobuf::scoped_ptr<NamedGradientsAccordingColumn_NameToGradientEntry> entry;
+      for (size_type i = 0; i < n; i++) {
+        entry.reset(name_to_gradient_.NewEntryWrapper(
+            items[i]->first, items[i]->second));
+        ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+            1, *entry, output);
+        Utf8Check::Check(items[i]);
+      }
+    } else {
+      ::google::protobuf::scoped_ptr<NamedGradientsAccordingColumn_NameToGradientEntry> entry;
+      for (::google::protobuf::Map< ::std::string, ::adaptive_system::GradientAccordingColumn >::const_iterator
+          it = this->name_to_gradient().begin();
+          it != this->name_to_gradient().end(); ++it) {
+        entry.reset(name_to_gradient_.NewEntryWrapper(
+            it->first, it->second));
+        ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+            1, *entry, output);
+        Utf8Check::Check(&*it);
+      }
+    }
+  }
+
+  // @@protoc_insertion_point(serialize_end:adaptive_system.NamedGradientsAccordingColumn)
+}
+
+::google::protobuf::uint8* NamedGradientsAccordingColumn::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
+  (void)deterministic;  // Unused
+  // @@protoc_insertion_point(serialize_to_array_start:adaptive_system.NamedGradientsAccordingColumn)
+  // map<string, .adaptive_system.GradientAccordingColumn> name_to_gradient = 1;
+  if (!this->name_to_gradient().empty()) {
+    typedef ::google::protobuf::Map< ::std::string, ::adaptive_system::GradientAccordingColumn >::const_pointer
+        ConstPtr;
+    typedef ConstPtr SortItem;
+    typedef ::google::protobuf::internal::CompareByDerefFirst<SortItem> Less;
+    struct Utf8Check {
+      static void Check(ConstPtr p) {
+        ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          p->first.data(), p->first.length(),
+          ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+          "adaptive_system.NamedGradientsAccordingColumn.NameToGradientEntry.key");
+      }
+    };
+
+    if (deterministic &&
+        this->name_to_gradient().size() > 1) {
+      ::google::protobuf::scoped_array<SortItem> items(
+          new SortItem[this->name_to_gradient().size()]);
+      typedef ::google::protobuf::Map< ::std::string, ::adaptive_system::GradientAccordingColumn >::size_type size_type;
+      size_type n = 0;
+      for (::google::protobuf::Map< ::std::string, ::adaptive_system::GradientAccordingColumn >::const_iterator
+          it = this->name_to_gradient().begin();
+          it != this->name_to_gradient().end(); ++it, ++n) {
+        items[n] = SortItem(&*it);
+      }
+      ::std::sort(&items[0], &items[n], Less());
+      ::google::protobuf::scoped_ptr<NamedGradientsAccordingColumn_NameToGradientEntry> entry;
+      for (size_type i = 0; i < n; i++) {
+        entry.reset(name_to_gradient_.NewEntryWrapper(
+            items[i]->first, items[i]->second));
+        target = ::google::protobuf::internal::WireFormatLite::
+                   InternalWriteMessageNoVirtualToArray(
+                       1, *entry, deterministic, target);
+;
+        Utf8Check::Check(items[i]);
+      }
+    } else {
+      ::google::protobuf::scoped_ptr<NamedGradientsAccordingColumn_NameToGradientEntry> entry;
+      for (::google::protobuf::Map< ::std::string, ::adaptive_system::GradientAccordingColumn >::const_iterator
+          it = this->name_to_gradient().begin();
+          it != this->name_to_gradient().end(); ++it) {
+        entry.reset(name_to_gradient_.NewEntryWrapper(
+            it->first, it->second));
+        target = ::google::protobuf::internal::WireFormatLite::
+                   InternalWriteMessageNoVirtualToArray(
+                       1, *entry, deterministic, target);
+;
+        Utf8Check::Check(&*it);
+      }
+    }
+  }
+
+  // @@protoc_insertion_point(serialize_to_array_end:adaptive_system.NamedGradientsAccordingColumn)
+  return target;
+}
+
+size_t NamedGradientsAccordingColumn::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:adaptive_system.NamedGradientsAccordingColumn)
+  size_t total_size = 0;
+
+  // map<string, .adaptive_system.GradientAccordingColumn> name_to_gradient = 1;
+  total_size += 1 *
+      ::google::protobuf::internal::FromIntSize(this->name_to_gradient_size());
+  {
+    ::google::protobuf::scoped_ptr<NamedGradientsAccordingColumn_NameToGradientEntry> entry;
+    for (::google::protobuf::Map< ::std::string, ::adaptive_system::GradientAccordingColumn >::const_iterator
+        it = this->name_to_gradient().begin();
+        it != this->name_to_gradient().end(); ++it) {
+      entry.reset(name_to_gradient_.NewEntryWrapper(it->first, it->second));
+      total_size += ::google::protobuf::internal::WireFormatLite::
+          MessageSizeNoVirtual(*entry);
+    }
+  }
+
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = cached_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void NamedGradientsAccordingColumn::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:adaptive_system.NamedGradientsAccordingColumn)
+  GOOGLE_DCHECK_NE(&from, this);
+  const NamedGradientsAccordingColumn* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const NamedGradientsAccordingColumn>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:adaptive_system.NamedGradientsAccordingColumn)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:adaptive_system.NamedGradientsAccordingColumn)
+    MergeFrom(*source);
+  }
+}
+
+void NamedGradientsAccordingColumn::MergeFrom(const NamedGradientsAccordingColumn& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:adaptive_system.NamedGradientsAccordingColumn)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  name_to_gradient_.MergeFrom(from.name_to_gradient_);
+}
+
+void NamedGradientsAccordingColumn::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:adaptive_system.NamedGradientsAccordingColumn)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void NamedGradientsAccordingColumn::CopyFrom(const NamedGradientsAccordingColumn& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:adaptive_system.NamedGradientsAccordingColumn)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool NamedGradientsAccordingColumn::IsInitialized() const {
+  return true;
+}
+
+void NamedGradientsAccordingColumn::Swap(NamedGradientsAccordingColumn* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void NamedGradientsAccordingColumn::InternalSwap(NamedGradientsAccordingColumn* other) {
+  name_to_gradient_.Swap(&other->name_to_gradient_);
+  std::swap(_cached_size_, other->_cached_size_);
+}
+
+::google::protobuf::Metadata NamedGradientsAccordingColumn::GetMetadata() const {
+  protobuf_rpc_5fservice_2eproto::protobuf_AssignDescriptorsOnce();
+  return protobuf_rpc_5fservice_2eproto::file_level_metadata[12];
+}
+
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+// NamedGradientsAccordingColumn
+
+// map<string, .adaptive_system.GradientAccordingColumn> name_to_gradient = 1;
+int NamedGradientsAccordingColumn::name_to_gradient_size() const {
+  return name_to_gradient_.size();
+}
+void NamedGradientsAccordingColumn::clear_name_to_gradient() {
+  name_to_gradient_.Clear();
+}
+ const ::google::protobuf::Map< ::std::string, ::adaptive_system::GradientAccordingColumn >&
+NamedGradientsAccordingColumn::name_to_gradient() const {
+  // @@protoc_insertion_point(field_map:adaptive_system.NamedGradientsAccordingColumn.name_to_gradient)
+  return name_to_gradient_.GetMap();
+}
+ ::google::protobuf::Map< ::std::string, ::adaptive_system::GradientAccordingColumn >*
+NamedGradientsAccordingColumn::mutable_name_to_gradient() {
+  // @@protoc_insertion_point(field_mutable_map:adaptive_system.NamedGradientsAccordingColumn.name_to_gradient)
+  return name_to_gradient_.MutableMap();
+}
+
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
+
+// ===================================================================
+
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int PartialState::kTensorFieldNumber;
 const int PartialState::kLossFieldNumber;
@@ -4391,7 +4916,7 @@ void PartialState::SetCachedSize(int size) const {
 }
 const ::google::protobuf::Descriptor* PartialState::descriptor() {
   protobuf_rpc_5fservice_2eproto::protobuf_AssignDescriptorsOnce();
-  return protobuf_rpc_5fservice_2eproto::file_level_metadata[11].descriptor;
+  return protobuf_rpc_5fservice_2eproto::file_level_metadata[13].descriptor;
 }
 
 const PartialState& PartialState::default_instance() {
@@ -4590,7 +5115,7 @@ void PartialState::InternalSwap(PartialState* other) {
 
 ::google::protobuf::Metadata PartialState::GetMetadata() const {
   protobuf_rpc_5fservice_2eproto::protobuf_AssignDescriptorsOnce();
-  return protobuf_rpc_5fservice_2eproto::file_level_metadata[11];
+  return protobuf_rpc_5fservice_2eproto::file_level_metadata[13];
 }
 
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
@@ -4699,7 +5224,7 @@ void Loss::SetCachedSize(int size) const {
 }
 const ::google::protobuf::Descriptor* Loss::descriptor() {
   protobuf_rpc_5fservice_2eproto::protobuf_AssignDescriptorsOnce();
-  return protobuf_rpc_5fservice_2eproto::file_level_metadata[12].descriptor;
+  return protobuf_rpc_5fservice_2eproto::file_level_metadata[14].descriptor;
 }
 
 const Loss& Loss::default_instance() {
@@ -4858,7 +5383,7 @@ void Loss::InternalSwap(Loss* other) {
 
 ::google::protobuf::Metadata Loss::GetMetadata() const {
   protobuf_rpc_5fservice_2eproto::protobuf_AssignDescriptorsOnce();
-  return protobuf_rpc_5fservice_2eproto::file_level_metadata[12];
+  return protobuf_rpc_5fservice_2eproto::file_level_metadata[14];
 }
 
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
