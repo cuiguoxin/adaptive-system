@@ -328,17 +328,18 @@ void AddDescriptorsImpl() {
       "system.GradientAccordingColumn:\0028\001\"E\n\014Pa"
       "rtialState\022\'\n\006tensor\030\001 \001(\0132\027.tensorflow."
       "TensorProto\022\014\n\004loss\030\002 \001(\002\"\024\n\004Loss\022\014\n\004los"
-      "s\030\001 \001(\0022\255\002\n\rSystemControl\022\?\n\rretrieveTup"
+      "s\030\001 \001(\0022\313\002\n\rSystemControl\022\?\n\rretrieveTup"
       "le\022\026.adaptive_system.Empty\032\026.adaptive_sy"
       "stem.Tuple\0229\n\010sendLoss\022\025.adaptive_system"
-      ".Loss\032\026.adaptive_system.Empty\022P\n\014sendGra"
-      "dient\022\037.adaptive_system.NamedGradients\032\037"
-      ".adaptive_system.NamedGradients\022N\n\tsendS"
-      "tate\022\035.adaptive_system.PartialState\032\".ad"
-      "aptive_system.QuantizationLevelb\006proto3"
+      ".Loss\032\026.adaptive_system.Empty\022n\n\014sendGra"
+      "dient\022..adaptive_system.NamedGradientsAc"
+      "cordingColumn\032..adaptive_system.NamedGra"
+      "dientsAccordingColumn\022N\n\tsendState\022\035.ada"
+      "ptive_system.PartialState\032\".adaptive_sys"
+      "tem.QuantizationLevelb\006proto3"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 2119);
+      descriptor, 2149);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "rpc_service.proto", &protobuf_RegisterTypes);
   ::tensorflow::protobuf_tensorflow_2fcore_2fframework_2ftensor_2eproto::AddDescriptors();
