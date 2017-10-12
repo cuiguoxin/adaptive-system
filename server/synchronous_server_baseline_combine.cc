@@ -50,14 +50,18 @@ namespace adaptive_system {
 	public:
 		RPCServiceImpl(int interval, float lr, int total_iter, int number_of_workers,
 			std::string const& tuple_local_path, std::string const& predict_file_path, 
-			std::string const& preprocess_graph_path, std::string const tuple_predict_path, int const threshold)
+			std::string const& preprocess_graph_path, std::string const tuple_predict_path, int const threshold, 
+			int const pre_level, int const split_iter, int const post_level)
 			: SystemControl::Service(),
 			_interval(interval),
 			_lr(lr),
 			_total_iter(total_iter),
 			_number_of_workers(number_of_workers),
 			_tuple_local_path(tuple_local_path),
-			_threshold(threshold)
+			_threshold(threshold), 
+			_pre_level(pre_level), 
+			_split_iter(split_iter), 
+			_post_level(post_level)
 		{
 			_session = tensorflow::NewSession(tensorflow::SessionOptions());
 			std::fstream input(_tuple_local_path, std::ios::in | std::ios::binary);
@@ -127,10 +131,12 @@ namespace adaptive_system {
 			auto init_time_t = std::chrono::system_clock::to_time_t(now);
 			_label = std::to_string(init_time_t);
 			std::string store_loss_file_path =
-				"loss_result/adaptive" + _label +
+				"loss_result/" + _label +
 				"_interval:" + std::to_string(_interval) +
 				"_number_of_workers:" + std::to_string(_number_of_workers)
-				+ "_baseline_combine";
+				+ "_baseline_combine_" 
+				+ std::to_string(_pre_level) + "-" +
+				std::to_string(_split_iter) + "-" + std::to_string(_post_level);
 			_file_loss_stream.open(store_loss_file_path);
 			std::string store_state_file_path =
 				"state_result/adaptive" + _label +
@@ -152,24 +158,19 @@ namespace adaptive_system {
 			_file_predict_stream.open(store_predict_file_path);
 			std::cout << "files opened" << std::endl;
 			PRINT_INFO;
-			_level_vec.resize(2000, 6);
-			for (int i = 0; i < 100; i++) {
-				if (i % 2 == 1) {
-					_level_vec[i] = 4;
-				}
-				else {
-					_level_vec[i] = 4;
-				}
+			_level_vec.resize(_total_iter, _pre_level);
+			for (int i = _split_iter; i < _total_iter; i++) {
+				_level_vec[i] = _post_level;
 				
 			}
-			for (int i = 100; i < 500; i++) {
+			/*for (int i = 100; i < 500; i++) {
 				if (i % 2 == 1) {
 					_level_vec[i] = 6;
 				}
 				else {
 					_level_vec[i] = 6;
 				}
-			}
+			}*/
 
 			init_image_label(predict_file_path, preprocess_graph_path);
 			PRINT_INFO;
@@ -404,6 +405,9 @@ namespace adaptive_system {
 		const int _total_iter;
 		const int _number_of_workers;
 		const int _threshold;
+		const int _pre_level;
+		const int _split_iter;
+		const int _post_level;
 		int _current_iter_number = 0;
 
 		std::chrono::time_point<std::chrono::high_resolution_clock> _init_time_point;
@@ -460,9 +464,13 @@ int main(int argc, char** argv) {
 	std::string preprocess_file_path = argv[7];
 	std::string tuple_predict_path = argv[8];
 	int threshold = atoi(argv[9]);
+	int pre_level = atoi(argv[10]);
+	int split_iter = atoi(argv[11]);
+	int post_level = atoi(argv[12]);
 	adaptive_system::RPCServiceImpl service(
 		interval, learning_rate, total_iter, number_of_workers,
-		tuple_path, predict_file_path, preprocess_file_path, tuple_predict_path, threshold);
+		tuple_path, predict_file_path, preprocess_file_path, tuple_predict_path, threshold, 
+		pre_level, split_iter, post_level);
 
 	ServerBuilder builder;
 	// Listen on the given address without any authentication mechanism.
