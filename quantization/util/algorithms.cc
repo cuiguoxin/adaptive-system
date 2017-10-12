@@ -42,7 +42,14 @@ namespace adaptive_system {
 				tensorflow::Tensor feed_grad;  // nothing need to do to initialize feed
 										  // tensor, dequantize function will do all
 										  // stuff
-				dequantize_gradient_according_column(grad, feed_grad);
+				bool is_quantized = grad.is_quantized();
+				if (is_quantized) {
+					dequantize_gradient_according_column(grad, feed_grad);
+				}
+				else {
+					feed_grad.FromProto(grad.tensor());
+				}
+				
 				feeds.push_back(
 					std::pair<std::string, tensorflow::Tensor>(grad_name, feed_grad));
 			}
