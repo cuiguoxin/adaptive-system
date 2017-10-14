@@ -275,7 +275,9 @@ namespace adaptive_system {
 
 		grpc::Status sendState(ServerContext* context, const PartialState* request,
 			QuantizationLevel* response) override {
+			PRINT_INFO;
 			std::unique_lock<std::mutex> lk(_mutex_state);
+			PRINT_INFO;
 			_bool_state = false;
 			_vector_partial_state.push_back(*request);
 			if (_vector_partial_state.size() == _number_of_workers) {
@@ -294,6 +296,7 @@ namespace adaptive_system {
 				}
 				_vector_partial_state.clear();
 				_bool_state = true;
+				PRINT_INFO;
 				_condition_variable_state.notify_all();
 				std::cout << "got line " << __LINE__ << std::endl;
 			}
