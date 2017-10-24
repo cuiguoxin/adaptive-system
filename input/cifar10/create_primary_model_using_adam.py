@@ -67,7 +67,7 @@ def inference(images, tup):
   # If we only ran this model on a single GPU, we could simplify this function
   # by replacing all instances of tf.get_variable() with tf.Variable().
   #
-  # conv1
+  # conv1, 5*5*3*64 = 4.8k, 4.8*4=19.2kB
   with tf.variable_scope('conv1') as scope:
     kernel = _variable_with_weight_decay('weights',
                                          shape=[5, 5, 3, 64],
@@ -86,7 +86,7 @@ def inference(images, tup):
   norm1 = tf.nn.lrn(pool1, 4, bias=1.0, alpha=0.001 / 9.0, beta=0.75,
                     name='norm1')
 
-  # conv2
+  # conv2, 5*5*64*64 = 102.4k, 102.4k*4=409.6kB
   with tf.variable_scope('conv2') as scope:
     kernel = _variable_with_weight_decay('weights',
                                          shape=[5, 5, 64, 64],
@@ -105,7 +105,7 @@ def inference(images, tup):
   pool2 = tf.nn.max_pool(norm2, ksize=[1, 3, 3, 1],
                          strides=[1, 2, 2, 1], padding='SAME', name='pool2')
 
-  # local3
+  # local3, 7*7*64*384*3 = 3.612672M 3.612672M*4 = 14.450688MB
   with tf.variable_scope('local3') as scope:
     # Move everything into depth so we can perform a single matrix multiply.
     reshape = tf.reshape(pool2, [batch_size, -1])
@@ -116,7 +116,7 @@ def inference(images, tup):
     local3 = tf.nn.relu(tf.matmul(reshape, weights) + biases, name=scope.name)
 
 
-  # local4
+  # local4, 384*3*1920 = 2.211840M, 2.211840*4 = 8.847360MB
   with tf.variable_scope('local4') as scope:
     weights = _variable_with_weight_decay('weights', shape=[384*3, 1920],
                                           stddev=0.04, wd=0.004, tup=tup)
@@ -127,7 +127,7 @@ def inference(images, tup):
   # linear layer(WX + b),
   # We don't apply softmax here because
   # tf.nn.sparse_softmax_cross_entropy_with_logits accepts the unscaled logits
-  # and performs the softmax internally for efficiency.
+  # and performs the softmax internally for efficiency. 1920*10=19.2k, 19.2k*4=76.8k
   with tf.variable_scope('softmax_linear') as scope:
     weights = _variable_with_weight_decay('weights', [1920, NUM_CLASSES],
                                           stddev=1/1920.0, wd=0.0, tup=tup)
