@@ -15,10 +15,10 @@
 
 namespace adaptive_system {
 
-	void apply_quantized_gradient_to_model(NamedGradients& named_gradients,
+	void apply_quantized_gradient_to_model(NamedGradientsAccordingColumn& named_gradients,
 		tensorflow::Session* sess,
 		Tuple& tuple) {
-		google::protobuf::Map<std::string, Gradient>& map_gradient =
+		google::protobuf::Map<std::string, GradientAccordingColumn>& map_gradient =
 			*named_gradients.mutable_name_to_gradient();
 		google::protobuf::Map<std::string, Names>& map_names =
 			*tuple.mutable_map_names();
@@ -28,9 +28,9 @@ namespace adaptive_system {
 		std::for_each(
 			map_gradient.begin(), map_gradient.end(),
 			[&feeds, &map_names,
-			&tuple](google::protobuf::MapPair<std::string, Gradient>& pair) {
+			&tuple](google::protobuf::MapPair<std::string, GradientAccordingColumn>& pair) {
 			std::string const& variable_name = pair.first;
-			Gradient& grad = pair.second;
+			GradientAccordingColumn& grad = pair.second;
 			auto iter_map_names = map_names.find(variable_name);
 			if (iter_map_names == map_names.end()) {
 				std::cout << "this is impossible Line " << __LINE__ << std::endl;
@@ -42,7 +42,14 @@ namespace adaptive_system {
 				tensorflow::Tensor feed_grad;  // nothing need to do to initialize feed
 										  // tensor, dequantize function will do all
 										  // stuff
-				dequantize_gradient(grad, feed_grad);
+				bool is_quantized = grad.is_quantized();
+				if (is_quantized) {
+					dequantize_gradient_according_column(grad, feed_grad);
+				}
+				else {
+					feed_grad.FromProto(grad.tensor());
+				}
+				
 				feeds.push_back(
 					std::pair<std::string, tensorflow::Tensor>(grad_name, feed_grad));
 			}
@@ -80,15 +87,15 @@ namespace adaptive_system {
 		}
 	}
 
-	//tensorflow::Tensor get_feed_tensor_from_action(int action_order // begin from 0
-	//) {
-	//	const size_t total_actions = 3;
-	//	tensorflow::Tensor ret(tensorflow::DataType::DT_FLOAT, tensorflow::TensorShape({ total_actions }));
-	//	float* ret_ptr = ret.flat<float>().data();
-	//	std::fill(ret_ptr, ret_ptr + total_actions, 0.0f);
-	//	ret_ptr[action_order] = 1.0;
-	//	return ret;
-	//}
+	tensorflow::Tensor get_feed_tensor_from_action(int action_order // begin from 0
+	) {
+		const size_t total_actions = 3;
+		tensorflow::Tensor ret(tensorflow::DataType::DT_FLOAT, tensorflow::TensorShape({ total_actions }));
+		float* ret_ptr = ret.flat<float>().data();
+		std::fill(ret_ptr, ret_ptr + total_actions, 0.0f);
+		ret_ptr[action_order] = 1.0;
+		return ret;
+	}
 
 	
 
@@ -117,29 +124,6 @@ namespace adaptive_system {
 		VectorXf b = VectorXf::Random(size);
 		for (int i = 0; i < size; i++) {
 			A(i, 0) = times[i];
-			A(i, 1) = 1.0f;
-			b(i) = move_average_losses[i];
-		}
-		//std::cout << A << std::endl << b << std::endl;
-		auto qr = A.fullPivHouseholderQr();
-		auto w = qr.solve(b);
-		std::cout << "slope is " << w << std::endl;
-		return w(0);
-	}
-
-	float get_slope_according_loss(std::vector<float> const & move_average_losses) {
-		using namespace Eigen;
-		int const size = move_average_losses.size();
-		
-		std::cout << "average is ::" << std::endl;
-		for (int i = 0; i < size; i++) {
-			std::cout << move_average_losses[i] << "  ";
-		}
-		std::cout << std::endl;
-		MatrixXf A = MatrixXf::Random(size, 2);
-		VectorXf b = VectorXf::Random(size);
-		for (int i = 0; i < size; i++) {
-			A(i, 0) = i;
 			A(i, 1) = 1.0f;
 			b(i) = move_average_losses[i];
 		}
@@ -252,17 +236,6 @@ namespace adaptive_system {
 		}
 		PRINT_INFO;
 	}
-
-	tensorflow::Tensor get_float_tensor_from_vector(std::vector<float> const & vec) {
-		size_t size = vec.size();
-		tensorflow::Tensor ret(tensorflow::DataType::DT_FLOAT, tensorflow::TensorShape({ size }));
-		float* ret_pointer = ret.flat<float>().data();
-		for (int i = 0; i < size; i++) {
-			ret_pointer[i] = vec[i];
-		}
-		return ret;
-	}
-
 
 }
 

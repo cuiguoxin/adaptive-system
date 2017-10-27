@@ -1,6 +1,8 @@
 #include "quantization/util/any_level.h"
+#include "quantization/util/helper.h"
 #include <thread>
 #include <utility>
+#include <limits>
 
 namespace adaptive_system {
 	namespace {
@@ -109,18 +111,15 @@ namespace adaptive_system {
 		unsigned long long const scope = ((long long)1) << level;
 		float const eps = 0.000001;
 		float const multiplier = scope / (max + eps - min);
-		//std::cout << "multiplier: " << multiplier << " scope is: " << scope << std::endl;
 		size_t begin = 0;
 		for (size_t i = 0; i < size; i++) {
 			uint64_t value = multiplier * (tensor_ptr[i] - min);
 			if(value == scope) {
 				value--;
 			}
-			//std::cout << value << " ";
 			set_value(quantized_data, begin, level, value);
 			begin += level;
 		}
-		//std::cout << std::endl;
 		gradient.set_quantized_tensor(quantized_data, quantized_size);
 		delete[] quantized_data;
 	}
@@ -138,11 +137,9 @@ namespace adaptive_system {
 		size_t begin = 0;
 		for (size_t i = 0; i < size; i++) {
 			uint32_t value = read_value(quantized_array, begin, level);
-			//std::cout << value << " ";
 			tensor_ptr[i] = multiplier * value + min + multiplier / 2;
 			begin += level;
 		}
-		//std::cout << std::endl;
 	}
 
 	void quantize_gradients(std::map<std::string, tensorflow::Tensor>& map_gradient,
@@ -153,18 +150,6 @@ namespace adaptive_system {
 		grads.resize(size);
 		std::vector<std::string> variable_names;
 		int index = 0;
-		//std::for_each(map_gradient.begin(), map_gradient.end(),
-		//	[named_gradients, level, ](std::pair<std::string const, tensorflow::Tensor>& pair) {
-		//	std::string const& variable_name = pair.first;
-		//	variable_names.push_back
-		//	tensorflow::Tensor& raw_tensor = pair.second;
-		//	threads.push_back(
-		//		std::thread(quantize_gradient, level, std::ref(raw_tensor), std::ref(grads[i++]));
-		//	//quantize_gradient(level, raw_tensor, grad);
-		//	named_gradients->mutable_name_to_gradient()->insert(
-		//		google::protobuf::MapPair<::std::string, Gradient>(
-		//			variable_name, grad));
-		//});
 		for (auto iter = map_gradient.begin(); iter != map_gradient.end(); iter++) {
 			std::string const & variable_name = iter->first;
 			variable_names.push_back(variable_name);
@@ -182,19 +167,6 @@ namespace adaptive_system {
 	void dequantize_gradients(
 		NamedGradients& named_gradients,
 		std::map<std::string, tensorflow::Tensor>& map_gradient) {
-		//auto map_quantized_gradient =
-		//	named_gradients.mutable_name_to_gradient();  // const reference
-		//std::for_each(
-		//	map_quantized_gradient->begin(), map_quantized_gradient->end(),
-		//	[&map_gradient](
-		//		::google::protobuf::MapPair<std::string, Gradient>& pair) {
-		//	Gradient& gradient = pair.second;
-		//	std::string const& variable_name = pair.first;
-		//	tensorflow::Tensor temp_tensor;
-		//	dequantize_gradient(gradient, temp_tensor);
-		//	map_gradient.insert(std::pair<std::string, tensorflow::Tensor>(
-		//		variable_name, temp_tensor));
-		//});
 		int const size = named_gradients.name_to_gradient().size();
 		std::vector<tensorflow::Tensor> tensors;
 		std::vector<std::thread> threads;
@@ -213,6 +185,126 @@ namespace adaptive_system {
 			threads[i].join();
 			map_gradient.insert(
 				std::pair<std::string, tensorflow::Tensor>(variable_names[i], tensors[i]));
+		}
+	}
+
+	void quantize_gradient_according_column(uint32_t const level, tensorflow::Tensor const & tensor,
+		GradientAccordingColumn& gradient) {
+		auto dims = tensor.dims();
+		if (dims != 2) {
+			PRINT_ERROR_MESSAGE("dims is not 2");
+			std::terminate();
+		}
+		int dim1 = tensor.dim_size(0);
+		int dim2 = tensor.dim_size(1);
+		std::vector<float> max_vector, min_vector;
+		max_vector.resize(dim2, std::numeric_limits<float>::min());
+		min_vector.resize(dim2, std::numeric_limits<float>::max());
+		float const* tensor_ptr = tensor.flat<float>().data();
+		//get the max and min values
+		for (int i = 0; i < dim2; i++) {
+			for (int j = 0; j < dim1; j++) {
+				float current_value = tensor_ptr[dim2*j + i];
+				if (max_vector[i] < current_value) {
+					max_vector[i] = current_value;
+				}
+				if (min_vector[i] > current_value) {
+					min_vector[i] = current_value;
+				}
+			}
+		}
+		unsigned long long const scope = ((long long)1) << level;
+		float const eps = 0.000001;
+		//quantize each column
+		for (int i = 0; i < dim2; i++) {
+			float* col_ptr = new float[dim1]();
+			for (int j = 0; j < dim1; j++) {
+				col_ptr[j] = tensor_ptr[dim2* j + i];
+			}
+			size_t quantized_size = std::ceil(((float)dim1) * level / 8); //number of byte
+			uint8_t* quantized_data = new uint8_t[quantized_size]();
+			float const max = max_vector[i], min = min_vector[i];
+			float const multiplier = scope / (max + eps - min);
+			size_t begin = 0;
+			for (size_t j = 0; j < dim1; j++) {
+				uint64_t value = multiplier * (col_ptr[j] - min);
+				if (value == scope) {
+					value--;
+				}
+				set_value(quantized_data, begin, level, value);
+				begin += level;
+			}
+			gradient.add_maxes(max);
+			gradient.add_mins(min);
+			gradient.add_quantized_columns(quantized_data, quantized_size);
+			delete[] col_ptr;
+		}
+		//assign to gradient
+		gradient.set_dim1(dim1);
+		gradient.set_dim2(dim2);
+		gradient.set_quantization_level(level);
+
+	}
+
+	void dequantize_gradient_according_column(GradientAccordingColumn const & gradient,
+		tensorflow::Tensor& tensor) {
+		int const level = gradient.quantization_level();
+		unsigned long long const scope = ((long long)1) << level;
+		int const dim1 = gradient.dim1();
+		int const dim2 = gradient.dim2();
+		tensor = tensorflow::Tensor(tensorflow::DataType::DT_FLOAT, tensorflow::TensorShape({ dim1, dim2 }));
+		float * tensor_ptr = tensor.flat<float>().data();
+
+		for (int i = 0; i < dim2; i++) {
+			float const max = gradient.maxes(i), min = gradient.mins(i);
+			uint8_t const * quantized_array 
+				= reinterpret_cast<uint8_t const*>(gradient.quantized_columns(i).data());
+			float const multiplier = (max - min) / scope;
+			size_t begin = 0;
+			for (size_t j = 0; j < dim1; j++) {
+				uint32_t value = read_value(quantized_array, begin, level);
+				tensor_ptr[dim2*j + i] = multiplier * value + min + multiplier / 2;
+				begin += level;
+			}
+		}
+	}
+
+	void quantize_gradients_according_column(std::map<std::string, tensorflow::Tensor>& map_gradient,
+		NamedGradientsAccordingColumn* named_gradients, int level, int threshold) {
+		for (auto pair : map_gradient) {
+			auto name = pair.first;
+			auto& tensor = pair.second;
+			auto size = tensor.NumElements();
+			GradientAccordingColumn gac;
+			if (size > threshold) {
+				gac.set_is_quantized(true);
+				quantize_gradient_according_column(level, tensor, gac);				
+			}
+			else {
+				tensorflow::TensorProto tp;
+				tensor.AsProtoField(&tp);			
+				gac.set_is_quantized(false);
+				*gac.mutable_tensor() = tp;
+			}
+			named_gradients->mutable_name_to_gradient()->insert({ name, gac });
+		}
+	}
+
+	void dequantize_gradients_according_column(NamedGradientsAccordingColumn& named_gradients,
+		std::map<std::string, tensorflow::Tensor>& map_gradient) {
+		auto& map = *named_gradients.mutable_name_to_gradient();
+		for (auto pair : map) {
+			auto name = pair.first;
+			auto& gradient = pair.second;
+			bool is_quantized = gradient.is_quantized();
+			tensorflow::Tensor tensor;
+			if (is_quantized) {
+				dequantize_gradient_according_column(gradient, tensor);
+			}
+			else {
+				tensor.FromProto(gradient.tensor());
+			}
+			map_gradient.insert({ name, tensor });
 		}
 	}
 }

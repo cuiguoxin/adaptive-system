@@ -85,6 +85,8 @@ namespace adaptive_system {
 					<< __FILE__ << std::endl;
 				std::terminate();
 			}
+
+			//init parameters
 			std::string init_name = _tuple.init_name();
 			std::cout << init_name << std::endl;
 			tf_status = _session->Run({}, {}, { init_name }, nullptr);
@@ -135,19 +137,19 @@ namespace adaptive_system {
 			auto init_time_t = std::chrono::system_clock::to_time_t(now);
 			_label = std::to_string(init_time_t);
 			std::string store_loss_file_path =
-				"loss_result/adaptive" + _label +
+				"loss_result/sarsa_adaptive" + _label +
 				"_interval:" + std::to_string(_interval) +
 				"_number_of_workers:" + std::to_string(_number_of_workers)
 				;
 			_file_loss_stream.open(store_loss_file_path);
 			std::string store_state_file_path =
-				"state_result/adaptive" + _label +
+				"state_result/sarsa_adaptive" + _label +
 				"_interval:" + std::to_string(_interval) +
 				"_number_of_workers:" + std::to_string(_number_of_workers)
 				;
 			_file_state_stream.open(store_state_file_path);
 			std::string store_action_file_path =
-				"action_result/adaptive" + _label +
+				"action_result/sarsa_adaptive" + _label +
 				"_interval:" + std::to_string(_interval) +
 				"_number_of_workers:" + std::to_string(_number_of_workers)
 				;
@@ -202,8 +204,8 @@ namespace adaptive_system {
 			return grpc::Status::OK;
 		}
 
-		grpc::Status sendGradient(ServerContext* context, const NamedGradients* request,
-			NamedGradients* response) override {
+		grpc::Status sendGradient(ServerContext* context, const NamedGradientsAccordingColumn* request,
+			NamedGradientsAccordingColumn* response) override {
 			NamedGradients& named_gradients = const_cast<NamedGradients&>(*request);
 			std::map<std::string, tensorflow::Tensor> map_gradient;
 			PRINT_INFO;

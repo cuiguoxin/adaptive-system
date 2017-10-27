@@ -50,12 +50,12 @@ SystemControl::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& chan
   return new ::grpc::ClientAsyncResponseReader< ::adaptive_system::Empty>(channel_.get(), cq, rpcmethod_sendLoss_, context, request);
 }
 
-::grpc::Status SystemControl::Stub::sendGradient(::grpc::ClientContext* context, const ::adaptive_system::NamedGradients& request, ::adaptive_system::NamedGradients* response) {
+::grpc::Status SystemControl::Stub::sendGradient(::grpc::ClientContext* context, const ::adaptive_system::NamedGradientsAccordingColumn& request, ::adaptive_system::NamedGradientsAccordingColumn* response) {
   return ::grpc::BlockingUnaryCall(channel_.get(), rpcmethod_sendGradient_, context, request, response);
 }
 
-::grpc::ClientAsyncResponseReader< ::adaptive_system::NamedGradients>* SystemControl::Stub::AsyncsendGradientRaw(::grpc::ClientContext* context, const ::adaptive_system::NamedGradients& request, ::grpc::CompletionQueue* cq) {
-  return new ::grpc::ClientAsyncResponseReader< ::adaptive_system::NamedGradients>(channel_.get(), cq, rpcmethod_sendGradient_, context, request);
+::grpc::ClientAsyncResponseReader< ::adaptive_system::NamedGradientsAccordingColumn>* SystemControl::Stub::AsyncsendGradientRaw(::grpc::ClientContext* context, const ::adaptive_system::NamedGradientsAccordingColumn& request, ::grpc::CompletionQueue* cq) {
+  return new ::grpc::ClientAsyncResponseReader< ::adaptive_system::NamedGradientsAccordingColumn>(channel_.get(), cq, rpcmethod_sendGradient_, context, request);
 }
 
 ::grpc::Status SystemControl::Stub::sendState(::grpc::ClientContext* context, const ::adaptive_system::PartialState& request, ::adaptive_system::QuantizationLevel* response) {
@@ -80,7 +80,7 @@ SystemControl::Service::Service() {
   AddMethod(new ::grpc::RpcServiceMethod(
       SystemControl_method_names[2],
       ::grpc::RpcMethod::NORMAL_RPC,
-      new ::grpc::RpcMethodHandler< SystemControl::Service, ::adaptive_system::NamedGradients, ::adaptive_system::NamedGradients>(
+      new ::grpc::RpcMethodHandler< SystemControl::Service, ::adaptive_system::NamedGradientsAccordingColumn, ::adaptive_system::NamedGradientsAccordingColumn>(
           std::mem_fn(&SystemControl::Service::sendGradient), this)));
   AddMethod(new ::grpc::RpcServiceMethod(
       SystemControl_method_names[3],
@@ -106,7 +106,7 @@ SystemControl::Service::~Service() {
   return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
 }
 
-::grpc::Status SystemControl::Service::sendGradient(::grpc::ServerContext* context, const ::adaptive_system::NamedGradients* request, ::adaptive_system::NamedGradients* response) {
+::grpc::Status SystemControl::Service::sendGradient(::grpc::ServerContext* context, const ::adaptive_system::NamedGradientsAccordingColumn* request, ::adaptive_system::NamedGradientsAccordingColumn* response) {
   (void) context;
   (void) request;
   (void) response;
