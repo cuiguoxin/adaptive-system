@@ -22,3 +22,6 @@ Debug/
 test/
 *.log
 temp/
+predict_result/
+cifar10_only_full_connected_test/
+cifar10_test/
