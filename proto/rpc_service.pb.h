@@ -598,6 +598,12 @@ class Tuple : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   ::google::protobuf::int32 batch_size() const;
   void set_batch_size(::google::protobuf::int32 value);
 
+  // int32 threshold_to_quantize = 15;
+  void clear_threshold_to_quantize();
+  static const int kThresholdToQuantizeFieldNumber = 15;
+  ::google::protobuf::int32 threshold_to_quantize() const;
+  void set_threshold_to_quantize(::google::protobuf::int32 value);
+
   // @@protoc_insertion_point(class_scope:adaptive_system.Tuple)
  private:
 
@@ -645,6 +651,7 @@ class Tuple : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   ::google::protobuf::int32 interval_;
   ::google::protobuf::int32 total_iter_;
   ::google::protobuf::int32 batch_size_;
+  ::google::protobuf::int32 threshold_to_quantize_;
   mutable int _cached_size_;
   friend struct protobuf_rpc_5fservice_2eproto::TableStruct;
 };
@@ -1971,6 +1978,20 @@ inline ::google::protobuf::Map< ::google::protobuf::int32, ::google::protobuf::i
 Tuple::mutable_order_to_level() {
   // @@protoc_insertion_point(field_mutable_map:adaptive_system.Tuple.order_to_level)
   return order_to_level_.MutableMap();
+}
+
+// int32 threshold_to_quantize = 15;
+inline void Tuple::clear_threshold_to_quantize() {
+  threshold_to_quantize_ = 0;
+}
+inline ::google::protobuf::int32 Tuple::threshold_to_quantize() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.Tuple.threshold_to_quantize)
+  return threshold_to_quantize_;
+}
+inline void Tuple::set_threshold_to_quantize(::google::protobuf::int32 value) {
+  
+  threshold_to_quantize_ = value;
+  // @@protoc_insertion_point(field_set:adaptive_system.Tuple.threshold_to_quantize)
 }
 
 // -------------------------------------------------------------------
