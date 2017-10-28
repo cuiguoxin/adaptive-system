@@ -1,6 +1,7 @@
 
 #include "server/sarsa.h"
 #include <random>
+#include <cstdlib>
 
 using namespace tensorflow;
 
@@ -27,6 +28,7 @@ namespace adaptive_system {
 		}
 	}
 
+	//keep level continous
 	int sarsa_model::index_of_max(float* array) {
 		int index = get_current_index();
 		int level = get_current_level();
@@ -124,11 +126,22 @@ namespace adaptive_system {
 		}
 	}
 
-	sarsa_model::sarsa_model(std::string const& path, float r, float eps_greedy, int start, int end, int init)
+	sarsa_model::sarsa_model(std::string const& path, int const input_size,
+		float r, float eps_greedy, int start, int end, int init)
 		: _sarsa_model_path(path), _r(r), _eps_greedy(eps_greedy), _start_level(start),
 		_end_level(end), _current_level(init) {
 		_session = NewSession(SessionOptions());
 		GraphDef graph_def;
+		//may first generate the .pb file
+		int output_size = end - start + 1;
+		std::string command = "python sarsa_continous.py "
+			+ std::to_string(input_size) + " " + std::to_string(output_size);
+		int error_code = system(command.c_str());
+		if (error_code != 0) {
+			PRINT_ERROR_MESSAGE("python sarsa_continous.py failed and error code is " +
+				std::to_string(error_code));
+			std::terminate();
+		}
 		Status status = ReadBinaryProto(Env::Default(), path, &graph_def);
 		if (!status.ok()) {
 			PRINT_ERROR_MESSAGE(status.error_message());

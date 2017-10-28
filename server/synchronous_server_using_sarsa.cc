@@ -57,7 +57,10 @@ namespace adaptive_system {
 	public:
 		RPCServiceImpl(int interval, float lr, int total_iter, int number_of_workers,
 			int init_level,
-			std::string const& tuple_local_path, std::string const& sarsa_model_path)
+			std::string const& tuple_local_path,
+			std::string const& sarsa_model_path,
+			int const threshold,
+			int const sarsa_model_input_size)
 			: SystemControl::Service(),
 			_interval(interval),
 			_lr(lr),
@@ -65,7 +68,8 @@ namespace adaptive_system {
 			_number_of_workers(number_of_workers),
 			_level(init_level),
 			_tuple_local_path(tuple_local_path),
-			_sarsa(sarsa_model_path, 0.9, 0.1, 1, 8, init_level)
+			_sarsa(sarsa_model_path, sarsa_model_input_size, 0.9, 0.1, 1, 8, init_level), 
+			_threshold(threshold)
 		{
 			_session = tensorflow::NewSession(tensorflow::SessionOptions());
 			std::fstream input(_tuple_local_path, std::ios::in | std::ios::binary);
@@ -206,10 +210,11 @@ namespace adaptive_system {
 
 		grpc::Status sendGradient(ServerContext* context, const NamedGradientsAccordingColumn* request,
 			NamedGradientsAccordingColumn* response) override {
-			NamedGradients& named_gradients = const_cast<NamedGradients&>(*request);
+			NamedGradientsAccordingColumn& named_gradients 
+				= const_cast<NamedGradientsAccordingColumn&>(*request);
 			std::map<std::string, tensorflow::Tensor> map_gradient;
 			PRINT_INFO;
-			dequantize_gradients(named_gradients, map_gradient);
+			dequantize_gradients_according_column(named_gradients, map_gradient);
 			std::unique_lock<std::mutex> lk(_mutex_gradient);
 			_bool_gradient = false;
 			_vector_map_gradient.push_back(
@@ -220,11 +225,11 @@ namespace adaptive_system {
 				aggregate_gradients(_vector_map_gradient, merged_gradient);
 				PRINT_INFO;
 				average_gradients(_number_of_workers, merged_gradient);
-				_store_named_gradient = NamedGradients();
+				_store_named_gradient = NamedGradientsAccordingColumn();
 				PRINT_INFO;
-				quantize_gradients(
+				quantize_gradients_according_column(
 					merged_gradient, &_store_named_gradient,
-					_level);
+					_level, _threshold);
 				PRINT_INFO;
 				apply_quantized_gradient_to_model(_store_named_gradient,
 					_session, _tuple);
@@ -319,6 +324,7 @@ namespace adaptive_system {
 		const int _number_of_workers;
 		int _current_iter_number = 0;
 		int _level = 0;
+		const int _threshold;
 
 		std::chrono::time_point<std::chrono::high_resolution_clock> _init_time_point;
 		std::chrono::time_point<std::chrono::high_resolution_clock> _time_point_last;
@@ -342,7 +348,7 @@ namespace adaptive_system {
 		bool _bool_state;
 		bool _bool_loss;
 		bool _bool_is_first_iteration = true;
-		NamedGradients _store_named_gradient;
+		NamedGradientsAccordingColumn _store_named_gradient;
 
 		tensorflow::Session* _session;
 		Tuple _tuple;
@@ -364,10 +370,12 @@ int main(int argc, char** argv) {
 	int init_level = atoi(argv[5]);
 	std::string tuple_path = argv[6];
 	std::string sarsa_path = argv[7];
+	int threshold = atoi(argv[8]);
+	int sarsa_model_input_size = atoi(argv[9]);
 
 	adaptive_system::RPCServiceImpl service(
 		interval, learning_rate, total_iter, number_of_workers,
-		init_level, tuple_path, sarsa_path);
+		init_level, tuple_path, sarsa_path, threshold, sarsa_model_input_size);
 
 	ServerBuilder builder;
 	// Listen on the given address without any authentication mechanism.

@@ -56,7 +56,7 @@ namespace adaptive_system {
 		int index_of_max(float* array);
 
 	public:
-		sarsa_model(std::string const& path, float r, float eps_greedy, int start, int end, int init);
+		sarsa_model(std::string const& path, int const input_size, float r, float eps_greedy, int start, int end, int init);
 
 		float get_q_value(tensorflow::Tensor const& state, int action_order);
 

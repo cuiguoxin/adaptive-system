@@ -1,4 +1,5 @@
 import tensorflow as tf
+import sys
 
 def create_sarsa_model(input_size, output_size):
 	with tf.variable_scope("first_layer"):
@@ -36,8 +37,9 @@ def create_sarsa_model(input_size, output_size):
 	sess = tf.Session()
 	tf.train.write_graph(sess.graph_def, './', 'sarsa_continous.pb', as_text=False)
 
-
-create_sarsa_model(4, 8)
+input_size = int(sys.argv[1])
+output_size = int(sys.argv[2])
+create_sarsa_model(input_size, output_size)
 
 
     

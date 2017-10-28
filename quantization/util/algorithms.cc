@@ -237,5 +237,37 @@ namespace adaptive_system {
 		PRINT_INFO;
 	}
 
+	tensorflow::Tensor get_float_tensor_from_vector(const std::vector<float> & vec) {
+		int size = vec.size();
+		tensorflow::Tensor ret(tensorflow::DataType::DT_FLOAT, tensorflow::TensorShape({ size }));
+		float* ptr_ret = ret.flat<float>().data();
+		for (int i = 0; i < size; i++) {
+			ptr_ret[i] = vec[i];
+		}
+		return ret;
+	}
+
+	float get_slope_according_loss(const std::vector<float> & loss_vec) {
+		using namespace Eigen;
+		int const size = loss_vec.size();
+		std::cout << "loss is ::" << std::endl;
+		for (int i = 0; i < size; i++) {
+			std::cout << loss_vec[i] << "  ";
+		}
+		std::cout << std::endl;
+
+		MatrixXf A = MatrixXf::Random(size, 2);
+		VectorXf b = VectorXf::Random(size);
+		for (int i = 0; i < size; i++) {
+			A(i, 0) = i;
+			A(i, 1) = 1.0f;
+			b(i) = loss_vec[i];
+		}
+		//std::cout << A << std::endl << b << std::endl;
+		auto qr = A.fullPivHouseholderQr();
+		auto w = qr.solve(b);
+		std::cout << "slope is " << w << std::endl;
+		return w(0);
+	}
 }
 
