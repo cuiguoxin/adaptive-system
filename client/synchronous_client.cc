@@ -41,6 +41,7 @@ namespace adaptive_system {
 		int interval = 0;
 		int total_iter = 1000;
 		size_t batch_size = 0;
+		int threshold_to_quantize = 0;
 		//int grad_quant_level_order = 0;
 		std::string label_placeholder_name, batch_placeholder_name;
 		Tuple* get_tuple() {
@@ -90,6 +91,7 @@ namespace adaptive_system {
 		lr = tuple.lr();
 		interval = tuple.interval();
 		total_iter = tuple.total_iter();
+		threshold_to_quantize = tuple.threshold_to_quantize();
 		//batch_size = tuple.batch_size();
 		std::string init_name = tuple.init_name();
 		batch_placeholder_name = tuple.batch_placeholder_name();
@@ -184,7 +186,8 @@ namespace adaptive_system {
 	
 
 
-	void do_training(std::string const & raw_data_path, std::string const & preprocess_graph_path) {
+	void do_training(std::string const & raw_data_path,
+		std::string const & preprocess_graph_path) {
 		int level = 0;
 		cifar10::turn_raw_tensors_to_standard_version(raw_data_path, preprocess_graph_path);
 		for (int i = 0; i < total_iter; i++) {
@@ -222,10 +225,10 @@ namespace adaptive_system {
 			}
 			//fake
 			//now_sleep(grad_quant_level);
-			NamedGradients named_gradients_send, named_gradients_receive;
+			NamedGradientsAccordingColumn named_gradients_send, named_gradients_receive;
 			PRINT_INFO;
-			quantize_gradients(
-				map_gradients, &named_gradients_send, level);
+			quantize_gradients_according_column(map_gradients, 
+				&named_gradients_send, level, threshold_to_quantize);
 				//get_tuple()->order_to_level().find(grad_quant_level_order)->second);
 			
 			ClientContext gradient_context;
