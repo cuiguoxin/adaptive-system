@@ -134,7 +134,8 @@ namespace adaptive_system {
 		GraphDef graph_def;
 		//may first generate the .pb file
 		int output_size = end - start + 1;
-		std::string command = "python sarsa_continous.py "
+		std::string command = "python /home/cgx/git_project/"
+			"adaptive-system/reinforcement_learning_model/sarsa_continous.py "
 			+ std::to_string(input_size) + " " + std::to_string(output_size);
 		int error_code = system(command.c_str());
 		if (error_code != 0) {
