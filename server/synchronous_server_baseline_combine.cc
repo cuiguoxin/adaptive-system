@@ -177,12 +177,12 @@ namespace adaptive_system {
 			_image_placeholder_name = _tuple.batch_placeholder_name();
 			_label_placeholder_name = _tuple.label_placeholder_name();
 			_loss_name = _tuple.loss_name();
-			std::thread predict_thread(&RPCServiceImpl::predict_periodically, this, 
+			/*std::thread predict_thread(&RPCServiceImpl::predict_periodically, this, 
 				std::ref(_image_placeholder_name),
 				std::ref(_label_placeholder_name),
 				std::ref(_loss_name),
 				tuple_predict_path);
-			predict_thread.detach();
+			predict_thread.detach();*/
 		}
 
 		grpc::Status retrieveTuple(ServerContext* context, const Empty* request,
