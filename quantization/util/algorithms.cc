@@ -12,6 +12,7 @@
 #include <vector>
 #include <unordered_map>
 #include <thread>
+#include <numeric>
 
 namespace adaptive_system {
 
@@ -79,6 +80,25 @@ namespace adaptive_system {
 		}
 		return new_losses[size - 1];
 	}
+
+	float moving_average_with_minus_average(
+		std::vector<float> const& losses,
+		std::vector<float> & new_losses, float const r) {
+		size_t size = losses.size();
+		new_losses.resize(size);
+		int sum = std::accumulate(losses.begin(), losses.end(), 0);
+		float average = float(sum) / size;
+		std::vector<float> temp;
+		for (float f : losses) {
+			temp.push_back(f - average);
+		}
+		new_losses[0] = temp[0];
+		for (size_t i = 1; i < size; i++) {
+			new_losses[i] = r * new_losses[i - 1] + (1 - r) * temp[i];
+		}
+		return new_losses[size - 1];
+	}
+
 	void standard_times(std::vector<float> & times) {
 		size_t size = times.size();
 		float base = times[0];

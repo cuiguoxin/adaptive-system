@@ -195,7 +195,7 @@ namespace adaptive_system {
 				_vector_time_history.push_back(diff_time.count());
 				_file_loss_stream << std::to_string(diff_time.count())
 					<< ":: iter num ::" << std::to_string(_current_iter_number)
-					<< ":: loss is ::" << average << "\n";
+					<< ":: loss is ::" << average << "::" << _level <<  "\n";
 				_file_loss_stream.flush();
 				_vector_loss_history.push_back(average);
 				_vector_loss.clear();
@@ -294,7 +294,7 @@ namespace adaptive_system {
 		void adjust_rl_model() {
 			std::vector<float> moving_average_losses;
 			const float r = 0.9;
-			moving_average_v2(_vector_loss_history[0],
+			moving_average_with_minus_average(
 				_vector_loss_history,
 				moving_average_losses, r);
 			tensorflow::Tensor new_state = get_float_tensor_from_vector(moving_average_losses);
