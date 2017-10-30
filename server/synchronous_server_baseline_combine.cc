@@ -217,7 +217,7 @@ namespace adaptive_system {
 				_vector_time_history.push_back(diff_time.count());
 				_file_loss_stream << std::to_string(diff_time.count())
 					<< ":: iter num ::" << std::to_string(_current_iter_number)
-					<< ":: loss is ::" << average << "\n";
+					<< ":: loss is ::" << average << "::" << _level_vec[_current_iter_number] << "\n";
 				_file_loss_stream.flush();
 				_vector_loss_history.push_back(average);
 				_vector_loss.clear();
