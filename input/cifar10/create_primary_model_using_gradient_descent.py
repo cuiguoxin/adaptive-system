@@ -194,7 +194,7 @@ with tf.Session() as sess:
   tup.loss_name = losses.name
   tup.init_name = init.name
 
-  f = open("tuple_adam.pb", "wb")
+  f = open("tuple_gradient_descent.pb", "wb")
   f.write(tup.SerializeToString())
   f.close()
 
