@@ -274,7 +274,7 @@ namespace client {
 		int const init_level, 
 		int const interval,
 		int const pre_level, int const split_point, int const post_level) {
-		log::init_log(interval, total_worker_num);
+		log::init_log(interval, total_worker_num, pre_level, split_point, post_level);
 		load_primary_model_and_init();
 		int level = init_level;
 		for (int i = 0; i < total_iter_num; i++) {
