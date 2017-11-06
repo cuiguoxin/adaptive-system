@@ -81,14 +81,14 @@ namespace input {
 
 	void turn_raw_tensors_to_standard_version(
 		const std::string& binary_file_prefix
-		="/git_project/adaptive-system/resources/cifar-10-batches-bin/data_batch_",
+		="/home/cgx/git_project/adaptive-system/resources/cifar-10-batches-bin/data_batch_",
 		const std::string& preprocess_graph_path
 		= "/home/cgx/git_project/adaptive-system/input/cifar10/preprocess.pb") {
 		PRINT_INFO;
 		Session* session = load_graph_and_create_session(preprocess_graph_path);
 		PRINT_INFO;
 		read_raw_tensors_from_file(binary_file_prefix);
-		std::cout << raw_tensors.size << std::endl;
+		std::cout << raw_tensors.size() << std::endl;
 		for (int i = 0; i < 50000; i++) {
 			Tensor raw_tensor = raw_tensors[i];
 			std::vector<Tensor> image_and_label;
