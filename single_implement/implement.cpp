@@ -241,16 +241,21 @@ namespace client {
 
 		std::ofstream file_loss_stream;
 
-		void init_log(int const interval, int const total_worker_num) {
+		void init_log(int const interval,
+			int const total_worker_num, 
+			int const pre_level,
+			int const split_point,
+			int const post_level) {
 			//init log
 			auto now = std::chrono::system_clock::now();
 			auto init_time_t = std::chrono::system_clock::to_time_t(now);
 			std::string label = std::to_string(init_time_t);
 			std::string store_loss_file_path =
-				"loss_result/sarsa_adaptive" + label +
+				"loss_result/baseline_" + label +
 				"_interval:" + std::to_string(interval) +
-				"_number_of_workers:" + std::to_string(total_worker_num)
-				;
+				"_number_of_workers:" + std::to_string(total_worker_num) + "_" 
+				+ std::to_string(pre_level) + "-" + std::to_string(split_point) + "-"
+				+ std::to_string(post_level);
 			file_loss_stream.open(store_loss_file_path);
 		}
 		inline void log(float const time,
