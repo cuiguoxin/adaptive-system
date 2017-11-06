@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 #include <numeric>
+#include <thread>
 
 #include "tensorflow/core/framework/graph.pb.h"
 #include "tensorflow/core/framework/tensor.h"
@@ -61,7 +62,7 @@ namespace input {
 					binary_file_prefix + std::to_string(i) + ".bin", std::ios::binary);
 				TensorShape raw_tensor_shape({ record_size });
 				if (input_stream.is_open()) {
-					for (int i = 0; i < 10000; i++) {
+					for (int j = 0; j < 10000; j++) {
 						Tensor raw_tensor(DataType::DT_UINT8, raw_tensor_shape);
 						uint8* raw_tensor_ptr = raw_tensor.flat<uint8>().data();
 						input_stream.read(reinterpret_cast<char*>(raw_tensor_ptr), record_size);
@@ -70,6 +71,7 @@ namespace input {
 				}
 				input_stream.close();
 			}
+			PRINT_INFO;
 			// shuffle the vector raw_tensors
 			unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 			std::shuffle(raw_tensors.begin(), raw_tensors.end(),
@@ -79,11 +81,14 @@ namespace input {
 
 	void turn_raw_tensors_to_standard_version(
 		const std::string& binary_file_prefix
-		="/git_project/adaptive-system/resources/cifar-10-batches-bin/data_batch_",
+		="/home/cgx/git_project/adaptive-system/resources/cifar-10-batches-bin/data_batch_",
 		const std::string& preprocess_graph_path
 		= "/home/cgx/git_project/adaptive-system/input/cifar10/preprocess.pb") {
+		PRINT_INFO;
 		Session* session = load_graph_and_create_session(preprocess_graph_path);
+		PRINT_INFO;
 		read_raw_tensors_from_file(binary_file_prefix);
+		std::cout << raw_tensors.size() << std::endl;
 		for (int i = 0; i < 50000; i++) {
 			Tensor raw_tensor = raw_tensors[i];
 			std::vector<Tensor> image_and_label;
@@ -98,6 +103,7 @@ namespace input {
 			standard_labels.push_back(image_and_label[1]);
 		}
 		raw_tensors.clear();
+		PRINT_INFO;
 	}
 	std::pair<Tensor, Tensor> get_next_batch() {
 		static std::mutex mu;
@@ -258,12 +264,16 @@ namespace client {
 		}
 	}
 
+	namespace sarsa {
+
+	}
+
 	void do_work(int const total_iter_num,
 		int const total_worker_num,
 		int const init_level, 
 		int const interval) {
 		log::init_log(interval, total_worker_num);
-
+		load_primary_model_and_init();
 		int level = init_level;
 		for (int i = 0; i < total_iter_num; i++) {
 			std::vector<std::map<std::string, tensorflow::Tensor>> vec_grads;
