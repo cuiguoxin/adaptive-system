@@ -62,7 +62,7 @@ namespace input {
 					binary_file_prefix + std::to_string(i) + ".bin", std::ios::binary);
 				TensorShape raw_tensor_shape({ record_size });
 				if (input_stream.is_open()) {
-					for (int i = 0; i < 10000; i++) {
+					for (int j = 0; j < 10000; j++) {
 						Tensor raw_tensor(DataType::DT_UINT8, raw_tensor_shape);
 						uint8* raw_tensor_ptr = raw_tensor.flat<uint8>().data();
 						input_stream.read(reinterpret_cast<char*>(raw_tensor_ptr), record_size);
@@ -71,6 +71,7 @@ namespace input {
 				}
 				input_stream.close();
 			}
+			PRINT_INFO;
 			// shuffle the vector raw_tensors
 			unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 			std::shuffle(raw_tensors.begin(), raw_tensors.end(),
