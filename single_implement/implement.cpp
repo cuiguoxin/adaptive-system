@@ -267,11 +267,18 @@ namespace client {
 	void do_work(int const total_iter_num,
 		int const total_worker_num,
 		int const init_level, 
-		int const interval) {
+		int const interval,
+		int const pre_level, int const split_point, int const post_level) {
 		log::init_log(interval, total_worker_num);
 		load_primary_model_and_init();
 		int level = init_level;
 		for (int i = 0; i < total_iter_num; i++) {
+			if (i < split_point) {
+				level = pre_level;
+			}
+			else {
+				level = post_level;
+			}
 			std::vector<std::map<std::string, tensorflow::Tensor>> vec_grads;
 			std::vector<std::thread> vec_threads;
 			std::vector<float> vec_losses;
@@ -322,8 +329,12 @@ int main(int argc, char** argv) {
 	int const total_worker_num = atoi(argv[2]);
 	int const init_level = atoi(argv[3]);
 	int const interval = atoi(argv[4]);
+	int const pre_level = atoi(argv[5]);
+	int const split_point = atoi(argv[6]);
+	int const post_level = atoi(argv[7]);
 	input::turn_raw_tensors_to_standard_version();
-	client::do_work(total_iter_num, total_worker_num, init_level, interval);
+	client::do_work(total_iter_num, total_worker_num, init_level, interval,
+		pre_level, split_point, post_level);
 
 	return 0;
 }
