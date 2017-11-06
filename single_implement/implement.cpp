@@ -88,6 +88,7 @@ namespace input {
 		Session* session = load_graph_and_create_session(preprocess_graph_path);
 		PRINT_INFO;
 		read_raw_tensors_from_file(binary_file_prefix);
+		std::cout << raw_tensors.size << std::endl;
 		for (int i = 0; i < 50000; i++) {
 			Tensor raw_tensor = raw_tensors[i];
 			std::vector<Tensor> image_and_label;
