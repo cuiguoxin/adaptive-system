@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 #include <numeric>
+#include <thread>
 
 #include "tensorflow/core/framework/graph.pb.h"
 #include "tensorflow/core/framework/tensor.h"
@@ -82,7 +83,9 @@ namespace input {
 		="/git_project/adaptive-system/resources/cifar-10-batches-bin/data_batch_",
 		const std::string& preprocess_graph_path
 		= "/home/cgx/git_project/adaptive-system/input/cifar10/preprocess.pb") {
+		PRINT_INFO;
 		Session* session = load_graph_and_create_session(preprocess_graph_path);
+		PRINT_INFO;
 		read_raw_tensors_from_file(binary_file_prefix);
 		for (int i = 0; i < 50000; i++) {
 			Tensor raw_tensor = raw_tensors[i];
@@ -98,6 +101,7 @@ namespace input {
 			standard_labels.push_back(image_and_label[1]);
 		}
 		raw_tensors.clear();
+		PRINT_INFO;
 	}
 	std::pair<Tensor, Tensor> get_next_batch() {
 		static std::mutex mu;
@@ -263,7 +267,7 @@ namespace client {
 		int const init_level, 
 		int const interval) {
 		log::init_log(interval, total_worker_num);
-
+		load_primary_model_and_init();
 		int level = init_level;
 		for (int i = 0; i < total_iter_num; i++) {
 			std::vector<std::map<std::string, tensorflow::Tensor>> vec_grads;
