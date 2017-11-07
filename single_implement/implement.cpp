@@ -86,9 +86,9 @@ namespace input {
 		="/home/cgx/git_project/adaptive-system/resources/cifar-10-batches-bin/data_batch_",
 		const std::string& preprocess_graph_path
 		= "/home/cgx/git_project/adaptive-system/input/cifar10/preprocess.pb") {
-		PRINT_INFO;
+		//PRINT_INFO;
 		Session* session = load_graph_and_create_session(preprocess_graph_path);
-		PRINT_INFO;
+		//PRINT_INFO;
 		read_raw_tensors_from_file(binary_file_prefix);
 		std::cout << raw_tensors.size() << std::endl;
 		for (int i = 0; i < 50000; i++) {
@@ -105,7 +105,7 @@ namespace input {
 			standard_labels.push_back(image_and_label[1]);
 		}
 		raw_tensors.clear();
-		PRINT_INFO;
+		//PRINT_INFO;
 	}
 	std::pair<Tensor, Tensor> get_next_batch() {
 		static std::mutex mu;
@@ -223,15 +223,15 @@ namespace client {
 
 	void compute_gradient_loss_and_quantize(const int level,
 		std::map<std::string, tensorflow::Tensor>& map_gradients, float& loss) {
-		PRINT_INFO;
+		//PRINT_INFO;
 		std::pair<tensorflow::Tensor, tensorflow::Tensor> feeds =
 			input::get_next_batch();
-		PRINT_INFO;
+		//PRINT_INFO;
 		loss = compute_gradient_and_loss(
 		{ { batch_placeholder_name, feeds.first },
 		{ label_placeholder_name, feeds.second } },
 			map_gradients);
-		PRINT_INFO;
+		//PRINT_INFO;
 		NamedGradientsAccordingColumn named_gradients_send;
 		quantize_gradients_according_column(map_gradients,
 			&named_gradients_send, level, threshold_to_quantize);
@@ -296,8 +296,10 @@ namespace client {
 		int const init_level,
 		int const interval) {
 		//init sarsa
+		PRINT_INFO;
 		sarsa_model sm("/home/cgx/git_project/adaptive-system/reinforcement_learning_model/sarsa_continous.pb",
 			interval, 0.9, 0.1, 1, 8, init_level);
+		PRINT_INFO;
 		sarsa::last_state = tensorflow::Tensor(tensorflow::DataType::DT_FLOAT,
 			tensorflow::TensorShape({interval}));
 		float* ptr_last_state = sarsa::last_state.flat<float>().data();
