@@ -237,6 +237,7 @@ namespace adaptive_system {
 			gradient.add_maxes(max);
 			gradient.add_mins(min);
 			gradient.add_quantized_columns(quantized_data, quantized_size);
+			delete[] quantized_data;
 			delete[] col_ptr;
 		}
 		//assign to gradient
