@@ -345,10 +345,17 @@ namespace client {
 				vec_losses.end(),
 				0.0f) / total_worker_num;
 			log::log(0, average, i, level);
+			
+			//check if it's time to change level
+			const int start_iter_num = 10;
+			int real_num = i - start_iter_num;
+			if (real_num <= 0) {
+				continue;
+			}
 			//add average to loss_history
 			sarsa::loss_history.push_back(average);
-			//check if it's time to change level
-			if (i % interval == 0 && i > 0) {
+
+			if (real_num % interval == 0) {
 				sarsa::adjust_rl_model(sm, level);
 			}
 		}
