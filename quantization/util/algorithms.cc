@@ -86,8 +86,8 @@ namespace adaptive_system {
 		std::vector<float> & new_losses, float const r) {
 		size_t size = losses.size();
 		new_losses.resize(size);
-		int sum = std::accumulate(losses.begin(), losses.end(), 0);
-		float average = float(sum) / size;
+		float sum = std::accumulate(losses.begin(), losses.end(), 0.0f);
+		float average = sum / size;
 		std::vector<float> temp;
 		for (float f : losses) {
 			temp.push_back(f - average);
