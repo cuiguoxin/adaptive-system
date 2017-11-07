@@ -24,6 +24,8 @@
 #include "quantization/util/any_level.h"
 #include "quantization/util/helper.h"
 #include "quantization/util/algorithms.h"
+#include "server/sarsa.h"
+#include "server/reward.h"
 
 namespace input {
 	using namespace tensorflow;
@@ -266,12 +268,41 @@ namespace client {
 
 	namespace sarsa {
 
+		tensorflow::Tensor last_state;
+		std::vector<float> loss_history;
+
+		void adjust_rl_model(sarsa_model& sm, int& level) {
+			std::vector<float> moving_average_losses;
+			const float r = 0.9;
+			moving_average_with_minus_average(
+				loss_history,
+				moving_average_losses, r);
+			tensorflow::Tensor new_state = get_float_tensor_from_vector(moving_average_losses);
+			int new_level = sm.sample_new_action(new_state);
+			int old_level = level;
+
+			float slope = get_slope_according_loss(moving_average_losses);
+			std::cout << "slope is " << slope << " new level is " << new_level << std::endl;
+			float reward = get_reward_v4(slope, old_level); // -slope * 100 / level
+			sm.adjust_model(reward, last_state, old_level, new_state, new_level);
+			level = new_level;
+			last_state = new_state;
+			loss_history.clear();
+		}
 	}
 
 	void do_work(int const total_iter_num,
 		int const total_worker_num,
-		int const init_level, 
+		int const init_level,
 		int const interval) {
+		//init sarsa
+		sarsa_model sm("/home/cgx/git_project/adaptive-system/reinforcement_learning_model/sarsa_continous.pb",
+			interval, 0.9, 0.1, 1, 8, init_level);
+		sarsa::last_state = tensorflow::Tensor(tensorflow::DataType::DT_FLOAT,
+			tensorflow::TensorShape({interval}));
+		float* ptr_last_state = sarsa::last_state.flat<float>().data();
+		std::fill(ptr_last_state, ptr_last_state + interval, 0.0f);
+		//init log
 		log::init_log(interval, total_worker_num);
 		load_primary_model_and_init();
 		int level = init_level;
@@ -312,9 +343,11 @@ namespace client {
 				vec_losses.end(),
 				0.0f) / total_worker_num;
 			log::log(0, average, i, level);
+			//add average to loss_history
+			sarsa::loss_history.push_back(average);
 			//check if it's time to change level
-			if (i % interval == 0) {
-
+			if (i % interval == 0 && i > 0) {
+				sarsa::adjust_rl_model(sm, level);
 			}
 		}
 	}
