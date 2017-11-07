@@ -12,6 +12,7 @@
 #include <vector>
 #include <unordered_map>
 #include <thread>
+#include <numeric>
 
 namespace adaptive_system {
 
@@ -79,6 +80,25 @@ namespace adaptive_system {
 		}
 		return new_losses[size - 1];
 	}
+
+	float moving_average_with_minus_average(
+		std::vector<float> const& losses,
+		std::vector<float> & new_losses, float const r) {
+		size_t size = losses.size();
+		new_losses.resize(size);
+		int sum = std::accumulate(losses.begin(), losses.end(), 0);
+		float average = float(sum) / size;
+		std::vector<float> temp;
+		for (float f : losses) {
+			temp.push_back(f - average);
+		}
+		new_losses[0] = temp[0];
+		for (size_t i = 1; i < size; i++) {
+			new_losses[i] = r * new_losses[i - 1] + (1 - r) * temp[i];
+		}
+		return new_losses[size - 1];
+	}
+
 	void standard_times(std::vector<float> & times) {
 		size_t size = times.size();
 		float base = times[0];
@@ -237,5 +257,37 @@ namespace adaptive_system {
 		PRINT_INFO;
 	}
 
+	tensorflow::Tensor get_float_tensor_from_vector(const std::vector<float> & vec) {
+		int size = vec.size();
+		tensorflow::Tensor ret(tensorflow::DataType::DT_FLOAT, tensorflow::TensorShape({ size }));
+		float* ptr_ret = ret.flat<float>().data();
+		for (int i = 0; i < size; i++) {
+			ptr_ret[i] = vec[i];
+		}
+		return ret;
+	}
+
+	float get_slope_according_loss(const std::vector<float> & loss_vec) {
+		using namespace Eigen;
+		int const size = loss_vec.size();
+		std::cout << "loss is ::" << std::endl;
+		for (int i = 0; i < size; i++) {
+			std::cout << loss_vec[i] << "  ";
+		}
+		std::cout << std::endl;
+
+		MatrixXf A = MatrixXf::Random(size, 2);
+		VectorXf b = VectorXf::Random(size);
+		for (int i = 0; i < size; i++) {
+			A(i, 0) = i;
+			A(i, 1) = 1.0f;
+			b(i) = loss_vec[i];
+		}
+		//std::cout << A << std::endl << b << std::endl;
+		auto qr = A.fullPivHouseholderQr();
+		auto w = qr.solve(b);
+		std::cout << "slope is " << w << std::endl;
+		return w(0);
+	}
 }
 

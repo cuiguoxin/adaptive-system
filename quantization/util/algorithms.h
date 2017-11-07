@@ -34,6 +34,10 @@ namespace adaptive_system {
 		std::vector<float> const& losses,
 		std::vector<float> & new_losses, float const r);
 
+	float moving_average_with_minus_average(
+		std::vector<float> const& losses,
+		std::vector<float> & new_losses, float const r);
+
 	void standard_times(std::vector<float> & times);
 
 	tensorflow::Tensor get_feed_tensor_from_action(int action_order);
@@ -48,5 +52,9 @@ namespace adaptive_system {
 
 	void aggregate_gradients(std::vector<std::map<std::string, tensorflow::Tensor>>& vector_of_map, 
 		std::map<std::string, tensorflow::Tensor> & return_result);
+
+	tensorflow::Tensor get_float_tensor_from_vector(const std::vector<float> & vec);
+
+	float get_slope_according_loss(const std::vector<float> & loss_vec);
 }
 #endif
