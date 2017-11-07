@@ -86,9 +86,9 @@ namespace input {
 		="/home/cgx/git_project/adaptive-system/resources/cifar-10-batches-bin/data_batch_",
 		const std::string& preprocess_graph_path
 		= "/home/cgx/git_project/adaptive-system/input/cifar10/preprocess.pb") {
-		//PRINT_INFO;
+		PRINT_INFO;
 		Session* session = load_graph_and_create_session(preprocess_graph_path);
-		//PRINT_INFO;
+		PRINT_INFO;
 		read_raw_tensors_from_file(binary_file_prefix);
 		std::cout << raw_tensors.size() << std::endl;
 		for (int i = 0; i < 50000; i++) {
@@ -105,7 +105,7 @@ namespace input {
 			standard_labels.push_back(image_and_label[1]);
 		}
 		raw_tensors.clear();
-		//PRINT_INFO;
+		PRINT_INFO;
 	}
 	std::pair<Tensor, Tensor> get_next_batch() {
 		static std::mutex mu;
@@ -361,6 +361,7 @@ int main(int argc, char** argv) {
 	int const total_worker_num = atoi(argv[2]);
 	int const init_level = atoi(argv[3]);
 	int const interval = atoi(argv[4]);
+	PRINT_INFO;
 	input::turn_raw_tensors_to_standard_version();
 	client::do_work(total_iter_num, total_worker_num, init_level, interval);
 
