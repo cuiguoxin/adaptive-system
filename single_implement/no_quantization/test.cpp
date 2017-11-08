@@ -31,7 +31,7 @@ namespace input {
 	using namespace tensorflow;
 
 	unsigned int index_current = 0;
-	int const batch_size = 64;
+	int batch_size = 0;
 	std::vector<Tensor> raw_tensors, standard_images, standard_labels;
 	const int record_size = 3073;
 	const int label_size = 1;
@@ -226,6 +226,7 @@ namespace client {
 
 int main(int argc, char** argv) {
 	int const total_iter_num = atoi(argv[1]);
+	input::batch_size = atoi(argv[2]);
 	input::turn_raw_tensors_to_standard_version();
 	client::do_work(total_iter_num);
 
