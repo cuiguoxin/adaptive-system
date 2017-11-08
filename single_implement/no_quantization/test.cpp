@@ -8,6 +8,7 @@
 #include <vector>
 #include <numeric>
 #include <thread>
+#include <cstdlib>
 
 #include "tensorflow/core/framework/graph.pb.h"
 #include "tensorflow/core/framework/tensor.h"
@@ -166,9 +167,15 @@ namespace client {
 		}
 	}
 
-	void load_primary_model_and_init() {
+	void load_primary_model_and_init(int const batch_size) {
 		const std::string tuple_local_path =
-			"/home/cgx/git_project/adaptive-system/input/cifar10/tuple_gradient_descent.pb";
+			"/home/cgx/git_project/adaptive-system/single_implement/no_quantization/tuple_gradient_descent.pb";
+		std::string command = "python test_gradient_descent.py " + std::to_string(batch_size);
+		int err_code = system(command.c_str());
+		if (err_code != 0) {
+			std::cout << "error happens in line " << __LINE__ << std::endl;
+			std::terminate();
+		}
 		session = tensorflow::NewSession(tensorflow::SessionOptions());
 		std::fstream input(tuple_local_path, std::ios::in | std::ios::binary);
 
@@ -206,9 +213,9 @@ namespace client {
 
 	
 
-	void do_work(int const total_iter_num) {
+	void do_work(int const total_iter_num, int const batch_size) {
 
-		load_primary_model_and_init();
+		load_primary_model_and_init(batch_size);
 		auto pic_name = tuple.batch_placeholder_name();
 		auto lab_name = tuple.label_placeholder_name();
 
@@ -226,7 +233,7 @@ int main(int argc, char** argv) {
 	int const total_iter_num = atoi(argv[1]);
 	input::batch_size = atoi(argv[2]);
 	input::turn_raw_tensors_to_standard_version();
-	client::do_work(total_iter_num);
+	client::do_work(total_iter_num, batch_size);
 
 	return 0;
 }
