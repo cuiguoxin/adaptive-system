@@ -233,7 +233,7 @@ int main(int argc, char** argv) {
 	int const total_iter_num = atoi(argv[1]);
 	input::batch_size = atoi(argv[2]);
 	input::turn_raw_tensors_to_standard_version();
-	client::do_work(total_iter_num, batch_size);
+	client::do_work(total_iter_num, input::batch_size);
 
 	return 0;
 }
