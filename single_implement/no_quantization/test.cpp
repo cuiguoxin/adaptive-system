@@ -24,8 +24,6 @@
 #include "quantization/util/any_level.h"
 #include "quantization/util/helper.h"
 #include "quantization/util/algorithms.h"
-#include "server/sarsa.h"
-#include "server/reward.h"
 
 namespace input {
 	using namespace tensorflow;
