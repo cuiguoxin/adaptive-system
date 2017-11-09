@@ -116,7 +116,7 @@ namespace input {
 		int* label_batch_ptr = labels_batch.flat<int>().data();
 		std::unique_lock<std::mutex> lk(mu);
 		for (int i = 0; i < batch_size; i++) {
-			int real_index = index_current % 10000;
+			int real_index = index_current % 50000;
 			Tensor& image_current = standard_images[real_index];
 			float* image_current_ptr = image_current.flat<float>().data();
 			std::copy(image_current_ptr, image_current_ptr + standard_images_size,
