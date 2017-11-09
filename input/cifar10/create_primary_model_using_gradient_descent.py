@@ -111,7 +111,7 @@ def inference(images, tup):
     reshape = tf.reshape(pool2, [batch_size, -1])
     dim = reshape.get_shape()[1].value
     weights = _variable_with_weight_decay('weights', shape=[dim, 384*3],
-                                          stddev=5e-4, wd=0.0, tup=tup)
+                                          stddev=0.04, wd=0.004, tup=tup)
     biases = _variable_on_cpu('biases', [384*3], tf.constant_initializer(0.1), tup)
     local3 = tf.nn.relu(tf.matmul(reshape, weights) + biases, name=scope.name)
 
@@ -119,8 +119,8 @@ def inference(images, tup):
   # local4, 384*3*1920 = 2.211840M, 2.211840*4 = 8.847360MB
   with tf.variable_scope('local4') as scope:
     weights = _variable_with_weight_decay('weights', shape=[384*3, 1920],
-                                          stddev=0.00067, wd=0.0, tup=tup)
-    biases = _variable_on_cpu('biases', [1920], tf.constant_initializer(0.001), tup)
+                                          stddev=0.04, wd=0.004, tup=tup)
+    biases = _variable_on_cpu('biases', [1920], tf.constant_initializer(0.1), tup)
     local4 = tf.nn.relu(tf.matmul(local3, weights) + biases, name=scope.name)
 
 
@@ -130,7 +130,7 @@ def inference(images, tup):
   # and performs the softmax internally for efficiency. 1920*10=19.2k, 19.2k*4=76.8k
   with tf.variable_scope('softmax_linear') as scope:
     weights = _variable_with_weight_decay('weights', [1920, NUM_CLASSES],
-                                          stddev=0.007, wd=0.0, tup=tup)
+                                          stddev=1/1920.0, wd=0.0, tup=tup)
     biases = _variable_on_cpu('biases', [NUM_CLASSES],
                               tf.constant_initializer(0.0), tup)
     softmax_linear = tf.add(tf.matmul(local4, weights), biases, name=scope.name)
