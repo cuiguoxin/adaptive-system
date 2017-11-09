@@ -297,7 +297,7 @@ namespace client {
 		int const interval) {
 		//init sarsa
 		PRINT_INFO;
-		sarsa_model sm("/home/cgx/git_project/adaptive-system/reinforcement_learning_model/sarsa_continous.pb",
+		sarsa_model sm("/home/cgx/git_project/adaptive-system/single_implement/sarsa_continous.pb",
 			interval, 0.9, 0.1, 1, 8, init_level);
 		PRINT_INFO;
 		sarsa::last_state = tensorflow::Tensor(tensorflow::DataType::DT_FLOAT,
