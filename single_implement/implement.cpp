@@ -73,9 +73,9 @@ namespace input {
 			}
 			PRINT_INFO;
 			// shuffle the vector raw_tensors
-			/*unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+			unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 			std::shuffle(raw_tensors.begin(), raw_tensors.end(),
-				std::default_random_engine(seed));*/
+				std::default_random_engine(seed));
 		}
 	}
 
