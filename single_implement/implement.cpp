@@ -294,11 +294,13 @@ namespace client {
 	void do_work(int const total_iter_num,
 		int const total_worker_num,
 		int const init_level,
-		int const interval) {
+		int const interval, 
+		int const start_level, 
+		int const end_level) {
 		//init sarsa
 		PRINT_INFO;
 		sarsa_model sm("/home/cgx/git_project/adaptive-system/single_implement/sarsa_continous.pb",
-			interval, 0.9, 0.1, 1, 8, init_level);
+			interval, 0.9, 0.1, start_level, end_level, init_level);
 		PRINT_INFO;
 		sarsa::last_state = tensorflow::Tensor(tensorflow::DataType::DT_FLOAT,
 			tensorflow::TensorShape({interval}));
@@ -368,9 +370,11 @@ int main(int argc, char** argv) {
 	int const total_worker_num = atoi(argv[2]);
 	int const init_level = atoi(argv[3]);
 	int const interval = atoi(argv[4]);
+	int const start_level = atoi(argv[5]);
+	int const end_level = atoi(argv[6]);
 	PRINT_INFO;
 	input::turn_raw_tensors_to_standard_version();
-	client::do_work(total_iter_num, total_worker_num, init_level, interval);
+	client::do_work(total_iter_num, total_worker_num, init_level, interval, start_level, end_level);
 
 	return 0;
 }
