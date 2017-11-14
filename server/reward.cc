@@ -51,4 +51,21 @@ namespace adaptive_system {
 	float get_reward_v4(float slope, int level) {
 		return -slope * 100 / level;
 	}
+
+	namespace {
+		float get_real_size(int level) {
+			static const float layer1_size = 0.0192;
+			static const float layer2_size = 0.4096;
+			static const float layer3_size = 14.450688;
+			static const float layer4_size = 8.847360;
+			static const float layer5_size = 0.0768;
+			float q = 32.0 / level;
+			return layer1_size + layer2_size + (layer3_size + layer4_size) / q + layer5_size;
+		}
+	}
+
+	float get_reward_v5(float slope, int level) {
+		float com_oh = get_real_size(level);
+		return -slope * 200.0f / com_oh;
+	}
 }

@@ -283,7 +283,7 @@ namespace client {
 
 			float slope = get_slope_according_loss(moving_average_losses);
 			std::cout << "slope is " << slope << " new level is " << new_level << std::endl;
-			float reward = get_reward_v4(slope, old_level); // -slope * 100 / level
+			float reward = get_reward_v5(slope, old_level); // -slope * 100 / level
 			sm.adjust_model(reward, last_state, old_level, new_state, new_level);
 			level = new_level;
 			last_state = new_state;
