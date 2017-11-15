@@ -81,7 +81,24 @@ namespace adaptive_system {
 		return new_losses[size - 1];
 	}
 
-	float moving_average_with_minus_average(
+	void moving_average_then_minus_average(
+		std::vector<float> const& losses,
+		std::vector<float> & new_losses, float const r) {
+		size_t size = losses.size();
+		new_losses.resize(size);
+		new_losses[0] = losses[0];
+		for (int i = 1; i < size; i++) {
+			new_losses[i] = r * new_losses[i - 1] + (1 - r) * losses[i];
+		}
+		float sum = std::accumulate(new_losses.begin(), new_losses.end(), 0.0f);
+		float average = sum / size;
+		for (int i = 0; i < size; i++) {
+			new_losses[i] -= average;
+		}
+
+	}
+
+	float minus_average_then_moving_average(
 		std::vector<float> const& losses,
 		std::vector<float> & new_losses, float const r) {
 		size_t size = losses.size();

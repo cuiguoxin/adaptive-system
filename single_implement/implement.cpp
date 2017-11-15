@@ -273,8 +273,8 @@ namespace client {
 
 		void adjust_rl_model(sarsa_model& sm, int& level) {
 			std::vector<float> moving_average_losses;
-			const float r = 0.9;
-			moving_average_with_minus_average(
+			const float r = 0.8;
+			moving_average_then_minus_average(
 				loss_history,
 				moving_average_losses, r);
 			tensorflow::Tensor new_state = get_float_tensor_from_vector(moving_average_losses);
