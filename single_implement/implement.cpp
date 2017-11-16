@@ -243,7 +243,10 @@ namespace client {
 
 		std::ofstream file_loss_stream;
 
-		void init_log(int const interval, int const total_worker_num) {
+		void init_log(int const interval, 
+			int const total_worker_num,
+			int const start_level, 
+			int const end_level) {
 			//init log
 			auto now = std::chrono::system_clock::now();
 			auto init_time_t = std::chrono::system_clock::to_time_t(now);
@@ -252,6 +255,7 @@ namespace client {
 				"loss_result/sarsa_adaptive" + label +
 				"_interval:" + std::to_string(interval) +
 				"_number_of_workers:" + std::to_string(total_worker_num)
+				+ "_level" + std::to_string(start_level) + "-" + std::to_string(end_level)
 				;
 			file_loss_stream.open(store_loss_file_path);
 		}
@@ -300,14 +304,14 @@ namespace client {
 		//init sarsa
 		PRINT_INFO;
 		sarsa_model sm("/home/cgx/git_project/adaptive-system/single_implement/sarsa_continous.pb",
-			interval, 0.9, 0.1, start_level, end_level, init_level);
+			interval, 0.8, 0.15, start_level, end_level, init_level);
 		PRINT_INFO;
 		sarsa::last_state = tensorflow::Tensor(tensorflow::DataType::DT_FLOAT,
 			tensorflow::TensorShape({interval}));
 		float* ptr_last_state = sarsa::last_state.flat<float>().data();
 		std::fill(ptr_last_state, ptr_last_state + interval, 0.0f);
 		//init log
-		log::init_log(interval, total_worker_num);
+		log::init_log(interval, total_worker_num, start_level, end_level);
 		load_primary_model_and_init();
 		int level = init_level;
 		for (int i = 0; i < total_iter_num; i++) {
