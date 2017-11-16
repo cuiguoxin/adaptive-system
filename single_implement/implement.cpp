@@ -353,7 +353,7 @@ namespace client {
 			log::log(0, average, i, level);
 			
 			//check if it's time to change level
-			const int start_iter_num = 10;
+			const int start_iter_num = 60;
 			int real_num = i - start_iter_num;
 			if (real_num <= 0) {
 				continue;
