@@ -198,6 +198,7 @@ namespace client {
 				log_stream << m << " " << am << " " << n << " " << d << " ";
 			}
 			log_stream << "\n";
+			log_stream.flush();
 		}
 
 		float one_iteration(
