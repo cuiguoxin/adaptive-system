@@ -9,6 +9,7 @@
 #include <numeric>
 #include <thread>
 #include <cstdlib>
+#include <cmath>
 
 #include "tensorflow/core/framework/graph.pb.h"
 #include "tensorflow/core/framework/tensor.h"
@@ -144,9 +145,59 @@ namespace client {
 	const int threshold_to_quantize = 105000;
 
 	namespace {
+		std::ofstream& get_log_stream() {
+			auto now = std::chrono::system_clock::now();
+			auto init_time_t = std::chrono::system_clock::to_time_t(now);
+			std::string label = std::to_string(init_time_t);
+			static std::ofstream log_stream;
+			std::string path = "/home/cgx/git_project/adaptive-system/single_implement/no_quantization"
+				"/gradient_log/" + label + ".log";
+			log_stream.open(path);
+			return log_stream;
+		}
+		float mean(const float* ptr, const int size) {
+			float sum = 0;
+			for (int i = 0; i < size; i++) {
+				sum += ptr[i];
+			}
+			return sum / size;
+		}
+		float norm(const float* ptr, const int size) {
+			float sum = 0;
+			for (int i = 0; i < size; i++) {
+				sum += std::pow(ptr[i], 2);
+			}
+			const float mean_sum = sum / size;
+			return std::pow(mean_sum, 0.5);
+		}
+		float abs_mean(const float* ptr, const int size) {
+			float sum = 0; 
+			for (int i = 0; i < size; i++) {
+				sum += std::abs(ptr[i]);
+			}
+			return sum / size;
+		}
+		float deviation(const float * ptr, const int size, float const mean) {
+			float sum = 0; 
+			for (int i = 0; i < size; i++) {
+				sum += std::pow(ptr[i] - mean, 2);
+			}
+			float mean_sum = sum / size;
+			return std::pow(mean_sum, 0.5);
+		}
 
 		void print_gradient_summary(std::vector<tensorflow::Tensor> const& tensors) {
-
+			static std::ofstream& log_stream = get_log_stream();
+			for (auto& tensor : tensors) {
+				const float* tensor_ptr = tensor.flat<float>().data();
+				auto size = tensor.NumElements();
+				float m = mean(tensor_ptr, size);
+				float am = abs_mean(tensor_ptr, size);
+				float n = norm(tensor_ptr, size);
+				float d = deviation(tensor_ptr, size, m);
+				log_stream << m << " " << am << " " << n << " " << d << " ";
+			}
+			log_stream << "\n";
 		}
 
 		float one_iteration(

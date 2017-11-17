@@ -300,11 +300,12 @@ namespace client {
 		int const init_level,
 		int const interval, 
 		int const start_level, 
-		int const end_level) {
+		int const end_level,
+		float const eps_greedy) {
 		//init sarsa
 		PRINT_INFO;
 		sarsa_model sm("/home/cgx/git_project/adaptive-system/single_implement/sarsa_continous.pb",
-			interval, 0.8, 0.15, start_level, end_level, init_level);
+			interval, 0.8, eps_greedy, start_level, end_level, init_level);
 		PRINT_INFO;
 		sarsa::last_state = tensorflow::Tensor(tensorflow::DataType::DT_FLOAT,
 			tensorflow::TensorShape({interval}));
@@ -376,9 +377,16 @@ int main(int argc, char** argv) {
 	int const interval = atoi(argv[4]);
 	int const start_level = atoi(argv[5]);
 	int const end_level = atoi(argv[6]);
+	float const eps_greedy = atof(argv[7]);
 	PRINT_INFO;
 	input::turn_raw_tensors_to_standard_version();
-	client::do_work(total_iter_num, total_worker_num, init_level, interval, start_level, end_level);
+	client::do_work(total_iter_num,
+		total_worker_num,
+		init_level,
+		interval,
+		start_level,
+		end_level,
+		eps_greedy);
 
 	return 0;
 }
