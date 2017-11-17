@@ -96,12 +96,12 @@ namespace adaptive_system {
 	}
 
 	std::vector<float> sarsa_model::get_greedy_probability(size_t index_of_max) {
-		int level_number = get_total_level_number();
-		float value = _eps_greedy / 3;
+		int const level_number = get_total_level_number();
+		float const value = _eps_greedy / 3;
 		std::vector<float> ret(level_number, 0);
 		if (_current_level == _start_level) {
-			if (index_of_max == _current_level) {
-				ret[0] = 1 - _eps_greedy + value;
+			if (index_of_max == 0) {
+				ret[0] = 1 - _eps_greedy + value; 
 				ret[1] = value * 2;
 				return ret;
 			}
@@ -112,7 +112,7 @@ namespace adaptive_system {
 			}
 		}
 		else if (_current_level == _end_level) {
-			if (index_of_max == _current_level) {
+			if (index_of_max == (level_number - 1)) {
 				ret[level_number - 1] = 1 - _eps_greedy + value;
 				ret[level_number - 2] = value * 2;
 				return ret;
