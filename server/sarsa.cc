@@ -121,7 +121,7 @@ namespace adaptive_system {
 		else {
 			int index = get_current_index();
 			ret[index] = ret[index + 1] = ret[index - 1] = value;
-			ret[index_of_max] += 1 - -_eps_greedy;
+			ret[index_of_max] += 1 - _eps_greedy;
 			return ret;
 		}
 	}
