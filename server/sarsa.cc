@@ -30,6 +30,11 @@ namespace adaptive_system {
 
 	//keep level continous
 	int sarsa_model::index_of_max(float* array) {
+		const int total = get_total_level_number();
+		for (int i = 0; i < total; i++) {
+			std::cout << array[i] << " ";
+		}
+		std::cout << std::endl;
 		int index = get_current_index();
 		int level = get_current_level();
 		if (level == _start_level) {
@@ -195,6 +200,7 @@ namespace adaptive_system {
 		Tensor& result_tensor = result[0];
 		float* result_tensor_ptr = result_tensor.flat<float>().data();
 		size_t max_index = index_of_max(result_tensor_ptr);
+		std::cout << "max index is: " << max_index << std::endl;
 		std::vector<float> prob = get_greedy_probability(max_index); //prob.length = _total_level_number
 		std::discrete_distribution<int> discrete{ prob.begin(), prob.end() };
 		size_t sample = discrete(generator);

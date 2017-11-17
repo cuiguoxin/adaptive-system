@@ -144,12 +144,21 @@ namespace client {
 	const int threshold_to_quantize = 105000;
 
 	namespace {
+
+		void print_gradient_summary(std::vector<tensorflow::Tensor> const& tensors) {
+
+		}
+
 		float one_iteration(
 			std::vector<std::pair<std::string, tensorflow::Tensor>> const & feeds) {
-
+			auto& map_names = tuple.map_names();
 			std::vector<std::string> fetch;
 			std::string loss_name = tuple.loss_name();
 			fetch.push_back(loss_name);
+			for (auto& pair : map_names) {
+				auto gradient_name = pair.second.gradient_name();
+				fetch.push_back(gradient_name);
+			}
 			std::vector<tensorflow::Tensor> outputs;
 			std::vector<std::string> no_fetch;
 			no_fetch.push_back(tuple.training_op_name());
@@ -161,7 +170,15 @@ namespace client {
 			}
 			tensorflow::Tensor& loss_tensor = outputs[0];
 			float* loss_ptr = loss_tensor.flat<float>().data();
-			float loss_ret = loss_ptr[0];
+			const float loss_ret = loss_ptr[0];
+			std::vector<tensorflow::Tensor> to_be_summaried;
+			for (auto& tensor : outputs) {
+				int size = tensor.NumElements();
+				if (size > 105000) {
+					to_be_summaried.push_back(tensor);
+				}
+			}
+			print_gradient_summary(to_be_summaried);
 			
 			return loss_ret;
 		}

@@ -222,7 +222,7 @@ namespace adaptive_system {
 			auto shape = vec_tensor[0].shape();
 			tensorflow::Tensor return_tensor(tensorflow::DataType::DT_FLOAT, shape);
 			size_t size = return_tensor.NumElements();
-			std::cout << "size is " << size << std::endl;
+			//std::cout << "size is " << size << std::endl;
 			float* return_tensor_ptr = return_tensor.flat<float>().data();
 			std::fill(return_tensor_ptr, return_tensor_ptr + size, 0.0f);
 			for (int i = 0; i < vec_tensor.size(); i++) {
