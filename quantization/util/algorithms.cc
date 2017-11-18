@@ -98,6 +98,17 @@ namespace adaptive_system {
 
 	}
 
+	void moving_average_not_minus_average(
+		std::vector<float> const& losses,
+		std::vector<float> & new_losses, float const r) {
+		size_t size = losses.size();
+		new_losses.resize(size);
+		new_losses[0] = losses[0];
+		for (int i = 1; i < size; i++) {
+			new_losses[i] = r * new_losses[i - 1] + (1 - r) * losses[i];
+		}	
+	}
+
 	float minus_average_then_moving_average(
 		std::vector<float> const& losses,
 		std::vector<float> & new_losses, float const r) {

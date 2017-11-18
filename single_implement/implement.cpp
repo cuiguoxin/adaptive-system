@@ -278,7 +278,7 @@ namespace client {
 		void adjust_rl_model(sarsa_model& sm, int& level) {
 			std::vector<float> moving_average_losses;
 			const float r = 0.8;
-			moving_average_then_minus_average(
+			moving_average_not_minus_average(
 				loss_history,
 				moving_average_losses, r);
 			tensorflow::Tensor new_state = get_float_tensor_from_vector(moving_average_losses);
@@ -310,7 +310,7 @@ namespace client {
 		sarsa::last_state = tensorflow::Tensor(tensorflow::DataType::DT_FLOAT,
 			tensorflow::TensorShape({interval}));
 		float* ptr_last_state = sarsa::last_state.flat<float>().data();
-		std::fill(ptr_last_state, ptr_last_state + interval, 0.0f);
+		std::fill(ptr_last_state, ptr_last_state + interval, 16.0f);
 		//init log
 		log::init_log(interval, total_worker_num, start_level, end_level);
 		load_primary_model_and_init();
