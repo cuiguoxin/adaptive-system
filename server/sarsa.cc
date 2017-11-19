@@ -13,7 +13,7 @@ namespace adaptive_system {
 	static std::string const action_value_name = "Reshape_3:0";
 	static std::string const learning_rate_placeholder_name = "learning_rate:0";
 	static std::string const training_op_name = "GradientDescent";
-	static float const alpha = 0.1;
+	static float const alpha = 0.05;
 	//static int const total_actions = 3;
 
 	namespace {
@@ -101,25 +101,25 @@ namespace adaptive_system {
 		std::vector<float> ret(level_number, 0);
 		if (_current_level == _start_level) {
 			if (index_of_max == 0) {
-				ret[0] = 1 - _eps_greedy + value; 
-				ret[1] = value * 2;
+				ret[0] = 1 - value; 
+				ret[1] = value;
 				return ret;
 			}
 			else {
-				ret[1] = 1 - _eps_greedy + value;
-				ret[0] = value * 2;
+				ret[1] = 1 - value;
+				ret[0] = value;
 				return ret;
 			}
 		}
 		else if (_current_level == _end_level) {
 			if (index_of_max == (level_number - 1)) {
-				ret[level_number - 1] = 1 - _eps_greedy + value;
-				ret[level_number - 2] = value * 2;
+				ret[level_number - 1] = 1 - value;
+				ret[level_number - 2] = value;
 				return ret;
 			}
 			else {
-				ret[level_number - 2] = 1 - _eps_greedy + value;
-				ret[level_number - 1] = value * 2;
+				ret[level_number - 2] = 1 - value;
+				ret[level_number - 1] = value;
 				return ret;
 			}
 		}
