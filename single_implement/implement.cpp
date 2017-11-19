@@ -274,11 +274,12 @@ namespace client {
 
 		tensorflow::Tensor last_state;
 		std::vector<float> loss_history;
+		float _last_loss = 16.0f;
 
 		void adjust_rl_model(sarsa_model& sm, int& level) {
 			std::vector<float> moving_average_losses;
-			const float r = 0.8;
-			moving_average_not_minus_average(
+			const float r = 0.98;
+			_last_loss = moving_average_from_last_loss(_last_loss,
 				loss_history,
 				moving_average_losses, r);
 			tensorflow::Tensor new_state = get_float_tensor_from_vector(moving_average_losses);
@@ -354,9 +355,10 @@ namespace client {
 			log::log(0, average, i, level);
 			
 			//check if it's time to change level
-			const int start_iter_num = 60;
+			const int start_iter_num = 25;
 			int real_num = i - start_iter_num;
 			if (real_num <= 0) {
+				sarsa::_last_loss = average;
 				continue;
 			}
 			//add average to loss_history

@@ -50,13 +50,13 @@ namespace adaptive_system {
 				else {
 					feed_grad.FromProto(grad.tensor());
 				}
-				
+
 				feeds.push_back(
 					std::pair<std::string, tensorflow::Tensor>(grad_name, feed_grad));
 			}
 		});
-		tensorflow::Status status = sess->Run(feeds, {},  actions_to_do, nullptr);
-		if(!status.ok()){
+		tensorflow::Status status = sess->Run(feeds, {}, actions_to_do, nullptr);
+		if (!status.ok()) {
 			PRINT_ERROR_MESSAGE(status.error_message());
 			std::terminate();
 		}
@@ -68,7 +68,7 @@ namespace adaptive_system {
 			current[i] = r * previous[i] + (1 - r) * current[i];
 		}
 	}
-	
+
 	float moving_average_v2(float const previous,
 		std::vector<float> const& losses,
 		std::vector<float> & new_losses, float const r) {
@@ -106,8 +106,22 @@ namespace adaptive_system {
 		new_losses[0] = losses[0];
 		for (int i = 1; i < size; i++) {
 			new_losses[i] = r * new_losses[i - 1] + (1 - r) * losses[i];
-		}	
+		}
 	}
+
+	float moving_average_from_last_loss(float const last_loss,
+		std::vector<float> const& losses,
+		std::vector<float> & new_losses,
+		float const r) {
+		int size = losses.size();
+		new_losses.resize(size);
+		new_losses[0] = r * last_loss + (1 - r) * losses[0];
+		for (int i = 1; i < size; i++) {
+			new_losses[i] = r * new_losses[i - 1] + (1 - r) * losses[i];
+		}
+		return new_losses[size - 1];
+	}
+
 
 	float minus_average_then_moving_average(
 		std::vector<float> const& losses,
@@ -145,13 +159,13 @@ namespace adaptive_system {
 		return ret;
 	}
 
-	
+
 
 	namespace {
 		bool greater_compare_pair(std::pair<std::string, int> const & a, std::pair<std::string, int> const & b) {
 			return b.second < a.second;
 		}
-		
+
 	}
 
 	float get_slope(std::vector<float> const & times, std::vector<float> const & move_average_losses) {
@@ -264,7 +278,7 @@ namespace adaptive_system {
 		std::vector<std::thread> vector_threads;
 		std::vector<std::pair<std::string, tensorflow::Tensor>> vector_name_tensor;
 		vector_name_tensor.resize(map_tensor_vector.size());
-		int index = 0; 
+		int index = 0;
 		for (auto iter = map_tensor_vector.begin(); iter != map_tensor_vector.end(); iter++) {
 			std::string var_name = iter->first;
 			auto& vector_tensor = iter->second;
