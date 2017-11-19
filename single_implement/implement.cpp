@@ -393,7 +393,8 @@ int main(int argc, char** argv) {
 		interval,
 		start_level,
 		end_level,
-		eps_greedy);
+		eps_greedy, 
+		loss_threshold);
 
 	return 0;
 }
