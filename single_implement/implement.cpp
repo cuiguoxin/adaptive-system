@@ -302,7 +302,8 @@ namespace client {
 		int const interval, 
 		int const start_level, 
 		int const end_level,
-		float const eps_greedy) {
+		float const eps_greedy, 
+		float const loss_threshold) {
 		//init sarsa
 		PRINT_INFO;
 		sarsa_model sm("/home/cgx/git_project/adaptive-system/single_implement/sarsa_continous.pb",
@@ -367,6 +368,9 @@ namespace client {
 			if (real_num % interval == 0) {
 				sarsa::adjust_rl_model(sm, level);
 			}
+			if (average < loss_threshold) {
+				level = 4;
+			}
 		}
 	}
 
@@ -380,6 +384,7 @@ int main(int argc, char** argv) {
 	int const start_level = atoi(argv[5]);
 	int const end_level = atoi(argv[6]);
 	float const eps_greedy = atof(argv[7]);
+	float const loss_threshold = atof(argv[8]);
 	PRINT_INFO;
 	input::turn_raw_tensors_to_standard_version();
 	client::do_work(total_iter_num,
