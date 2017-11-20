@@ -175,7 +175,7 @@ with tf.Session() as sess:
   # Calculate loss.
   losses = loss(logits, labels)
 
-  opt = tf.train.GradientDescentOptimizer(learning_rate=0.3)
+  opt = tf.train.GradientDescentOptimizer(learning_rate=0.25)
   grads = opt.compute_gradients(losses)
   for grad_var in grads:
     print grad_var[1].name
