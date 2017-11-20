@@ -110,7 +110,7 @@ def inference(images, tup):
     # Move everything into depth so we can perform a single matrix multiply.
     reshape = tf.reshape(pool2, [batch_size, -1])
     dim = reshape.get_shape()[1].value
-    weights = _variable_with_weight_decay('weights', shape=[dim, 384*3],
+    weights = _variable_with_weight_decay('weights', shape=[dim, 384*30],
                                           stddev=0.04, wd=0.004, tup=tup)
     biases = _variable_on_cpu('biases', [384*3], tf.constant_initializer(0.1), tup)
     local3 = tf.nn.relu(tf.matmul(reshape, weights) + biases, name=scope.name)
@@ -118,7 +118,7 @@ def inference(images, tup):
 
   # local4, 384*3*1920 = 2.211840M, 2.211840*4 = 8.847360MB
   with tf.variable_scope('local4') as scope:
-    weights = _variable_with_weight_decay('weights', shape=[384*3, 1920],
+    weights = _variable_with_weight_decay('weights', shape=[384*30, 1920],
                                           stddev=0.04, wd=0.004, tup=tup)
     biases = _variable_on_cpu('biases', [1920], tf.constant_initializer(0.1), tup)
     local4 = tf.nn.relu(tf.matmul(local3, weights) + biases, name=scope.name)
