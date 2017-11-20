@@ -106,7 +106,7 @@ def inference(images, tup):
   pool2 = tf.nn.max_pool(norm2, ksize=[1, 3, 3, 1],
                          strides=[1, 2, 2, 1], padding='SAME', name='pool2')
 
-  factor = 3 * 5
+  factor = 3 * 2
   a = 0.00
   # local3, 7*7*64*384*3 = 3.612672M 3.612672M*4 = 14.450688MB
   with tf.variable_scope('local3') as scope:
