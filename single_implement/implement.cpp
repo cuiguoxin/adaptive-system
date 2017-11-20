@@ -320,6 +320,7 @@ namespace client {
 				vec_losses.end(),
 				0.0f) / total_worker_num;
 			log::log(0, average, i, level);
+			std::cout << "iter num is : " << i << " loss is : " << average << std::endl;
 			//check if it's time to change level
 			if (i % interval == 0) {
 
