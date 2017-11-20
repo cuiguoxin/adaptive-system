@@ -131,7 +131,7 @@ def inference(images, tup):
   # tf.nn.sparse_softmax_cross_entropy_with_logits accepts the unscaled logits
   # and performs the softmax internally for efficiency. 1920*10=19.2k, 19.2k*4=76.8k
   with tf.variable_scope('softmax_linear') as scope:
-    weights = _variable_with_weight_decay('weights', [1920, NUM_CLASSES],
+    weights = _variable_with_weight_decay('weights', [dim2, NUM_CLASSES],
                                           stddev=1/1920.0, wd=0.0, tup=tup)
     biases = _variable_on_cpu('biases', [NUM_CLASSES],
                               tf.constant_initializer(0.0), tup)
