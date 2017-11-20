@@ -112,7 +112,7 @@ def inference(images, tup):
     dim = reshape.get_shape()[1].value
     weights = _variable_with_weight_decay('weights', shape=[dim, 384*30],
                                           stddev=0.04, wd=0.004, tup=tup)
-    biases = _variable_on_cpu('biases', [384*3], tf.constant_initializer(0.1), tup)
+    biases = _variable_on_cpu('biases', [384*30], tf.constant_initializer(0.1), tup)
     local3 = tf.nn.relu(tf.matmul(reshape, weights) + biases, name=scope.name)
 
 
