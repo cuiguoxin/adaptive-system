@@ -107,7 +107,7 @@ def inference(images, tup):
 
 
   factor = 3 * 3
-  a = 0.001
+  a = 0.00175
   # local3, 7*7*64*384*3 = 3.612672M 3.612672M*4 = 14.450688MB
   with tf.variable_scope('local3') as scope:
     # Move everything into depth so we can perform a single matrix multiply.
