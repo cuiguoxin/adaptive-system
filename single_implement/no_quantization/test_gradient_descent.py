@@ -106,7 +106,7 @@ def inference(images, tup):
   pool2 = tf.nn.max_pool(norm2, ksize=[1, 3, 3, 1],
                          strides=[1, 2, 2, 1], padding='SAME', name='pool2')
 
-  factor = 3 * 3
+  factor = 3 * 2
   a = 0.00175
   # local3, 7*7*64*384*3 = 3.612672M 3.612672M*4 = 14.450688MB
   with tf.variable_scope('local3') as scope:
@@ -118,7 +118,7 @@ def inference(images, tup):
     biases = _variable_on_cpu('biases', [384*factor], tf.constant_initializer(0.1), tup)
     local3 = tf.nn.relu(tf.matmul(reshape, weights) + biases, name=scope.name)
 
-  dim2 = 1920
+  dim2 = 3840
   # local4, 384*3*1920 = 2.211840M, 2.211840*4 = 8.847360MB
   with tf.variable_scope('local4') as scope:
     weights = _variable_with_weight_decay('weights', shape=[384*factor, dim2],
