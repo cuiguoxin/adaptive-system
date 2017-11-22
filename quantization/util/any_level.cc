@@ -336,7 +336,7 @@ namespace adaptive_system {
 		for (int i = 0; i < size; i++) {
 			threads.push_back(
 				std::thread(dequantize_gradient_according_column,
-					std::cref(to_be_dequantized[i]),
+					std::cref(to_be_dequantized[i].second),
 					std::ref(dequantized_gradients[i])));
 		}
 		for (int i = 0; i < size; i++) {
