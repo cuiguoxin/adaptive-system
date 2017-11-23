@@ -81,7 +81,7 @@ namespace input {
 
 	void turn_raw_tensors_to_standard_version(
 		const std::string& binary_file_prefix
-		="/home/cgx/git_project/adaptive-system/resources/cifar-10-batches-bin/data_batch_",
+		= "/home/cgx/git_project/adaptive-system/resources/cifar-10-batches-bin/data_batch_",
 		const std::string& preprocess_graph_path
 		= "/home/cgx/git_project/adaptive-system/input/cifar10/preprocess.pb") {
 		PRINT_INFO;
@@ -143,13 +143,15 @@ namespace client {
 	const int threshold_to_quantize = 105000;
 
 	namespace {
-		float compute_gradient_and_loss(
+		std::pair<float, float> compute_gradient_and_loss(
 			std::vector<std::pair<std::string, tensorflow::Tensor>> feeds,
 			std::map<std::string, tensorflow::Tensor>& gradients) {
 
 			std::vector<std::string> fetch;
 			std::string loss_name = tuple.loss_name();
 			fetch.push_back(loss_name);
+			auto cross_entropy_loss_name = tuple.cross_entropy_loss_name();
+			fetch.push_back(cross_entropy_loss_name);
 			std::vector<tensorflow::Tensor> outputs;
 			std::vector<std::string> variable_names_in_order;
 			google::protobuf::Map<std::string, Names> const& map_names =
@@ -170,6 +172,10 @@ namespace client {
 			tensorflow::Tensor& loss_tensor = outputs[0];
 			float* loss_ptr = loss_tensor.flat<float>().data();
 			float loss_ret = loss_ptr[0];
+			auto& cross_entropy_loss_tensor = outputs[1];
+			float* cross_entropy_loss_ptr = cross_entropy_loss_tensor.flat<float>().data();
+			float cross_entropy_loss = cross_entropy_loss_ptr[0];
+			outputs.erase(outputs.begin());
 			outputs.erase(outputs.begin());
 
 			size_t size = outputs.size();
@@ -177,12 +183,12 @@ namespace client {
 				gradients.insert(std::pair<std::string, tensorflow::Tensor>(
 					variable_names_in_order[i], outputs[i]));
 			}
-			return loss_ret;
+			return { loss_ret, cross_entropy_loss };
 		}
 	}
 
 	void load_primary_model_and_init() {
-		const std::string tuple_local_path = 
+		const std::string tuple_local_path =
 			"/home/cgx/git_project/adaptive-system/input/cifar10/tuple_gradient_descent.pb";
 		session = tensorflow::NewSession(tensorflow::SessionOptions());
 		std::fstream input(tuple_local_path, std::ios::in | std::ios::binary);
@@ -216,11 +222,11 @@ namespace client {
 		//init some names
 		batch_placeholder_name = tuple.batch_placeholder_name();
 		label_placeholder_name = tuple.label_placeholder_name();
-		
+
 	}
 
 	void compute_gradient_loss_and_quantize(const int level,
-		std::map<std::string, tensorflow::Tensor>& map_gradients, float& loss) {
+		std::map<std::string, tensorflow::Tensor>& map_gradients, std::pair<float, float>& loss) {
 		PRINT_INFO;
 		std::pair<tensorflow::Tensor, tensorflow::Tensor> feeds =
 			input::get_next_batch();
@@ -242,7 +248,7 @@ namespace client {
 		std::ofstream file_loss_stream;
 
 		void init_log(int const interval,
-			int const total_worker_num, 
+			int const total_worker_num,
 			int const pre_level,
 			int const split_point,
 			int const post_level) {
@@ -253,25 +259,27 @@ namespace client {
 			std::string store_loss_file_path =
 				"loss_result/baseline_" + label +
 				"_interval:" + std::to_string(interval) +
-				"_number_of_workers:" + std::to_string(total_worker_num) + "_" 
+				"_number_of_workers:" + std::to_string(total_worker_num) + "_"
 				+ std::to_string(pre_level) + "-" + std::to_string(split_point) + "-"
 				+ std::to_string(post_level);
 			file_loss_stream.open(store_loss_file_path);
 		}
 		inline void log(float const time,
-			float const loss,
+			float const total_loss,
+			float const cross_entropy_loss,
 			int const current_iter,
 			int const current_level) {
 			file_loss_stream << std::to_string(time)
 				<< ":: iter num ::" << std::to_string(current_iter)
-				<< ":: loss is ::" << loss << "::" << current_level << "\n";
+				<< ":: loss is ::" << total_loss << "::" << current_level
+				<< ":: cross_entropy_loss is ::" << cross_entropy_loss << "\n";
 			file_loss_stream.flush();
 		}
 	}
 
 	void do_work(int const total_iter_num,
 		int const total_worker_num,
-		int const init_level, 
+		int const init_level,
 		int const interval,
 		int const pre_level, int const split_point, int const post_level) {
 		log::init_log(interval, total_worker_num, pre_level, split_point, post_level);
@@ -286,7 +294,7 @@ namespace client {
 			}
 			std::vector<std::map<std::string, tensorflow::Tensor>> vec_grads;
 			std::vector<std::thread> vec_threads;
-			std::vector<float> vec_losses;
+			std::vector<std::pair<float, float>> vec_losses;
 			vec_losses.resize(total_worker_num);
 			vec_grads.resize(total_worker_num);
 			for (int j = 0; j < total_worker_num; j++) {
@@ -315,12 +323,24 @@ namespace client {
 			apply_quantized_gradient_to_model(store_named_gradient,
 				session, tuple);
 			//log
-			float const average = std::accumulate(
-				vec_losses.begin(), 
-				vec_losses.end(),
+			std::vector<float> total_losses;
+			std::vector<float> cross_entropy_losses;
+			for (auto pair : vec_losses) {
+				total_losses.push_back(pair.first);
+				cross_entropy_losses.push_back(pair.second);
+			}
+			float const total_average = std::accumulate(
+				total_losses.begin(),
+				total_losses.end(),
 				0.0f) / total_worker_num;
-			log::log(0, average, i, level);
-			std::cout << "iter num is : " << i << " loss is : " << average << std::endl;
+			float const cross_entropy_average = std::accumulate(
+				cross_entropy_losses.begin(),
+				cross_entropy_losses.end(),
+				0.0f
+			) / total_worker_num;
+			log::log(0, total_average, cross_entropy_average i, level);
+			std::cout << "iter num is : " << i << " loss is : " << total_average
+				<< " cross entropy loss is " << cross_entropy_average <<std::endl;
 			//check if it's time to change level
 			if (i % interval == 0) {
 

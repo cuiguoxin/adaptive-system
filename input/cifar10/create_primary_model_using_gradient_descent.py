@@ -142,7 +142,7 @@ def inference(images, tup):
   return softmax_linear
 
 
-def loss(logits, labels):
+def loss(logits, labels, tup):
   """Add L2Loss to all the trainable variables.
   Add summary for "Loss" and "Loss/avg".
   Args:
@@ -157,6 +157,7 @@ def loss(logits, labels):
   cross_entropy = tf.nn.sparse_softmax_cross_entropy_with_logits(
       logits=logits, labels=labels, name='cross_entropy_per_example')
   cross_entropy_mean = tf.reduce_mean(cross_entropy, name='cross_entropy')
+  tup.cross_entropy_loss_name = cross_entropy_mean.name
   tf.add_to_collection('losses', cross_entropy_mean)
 
   # The total loss is defined as the cross entropy loss plus all of the weight
@@ -174,7 +175,7 @@ with tf.Session() as sess:
   logits = inference(images, tup)
 
   # Calculate loss.
-  losses = loss(logits, labels)
+  losses = loss(logits, labels, tup)
 
   opt = tf.train.GradientDescentOptimizer(learning_rate=0.2)
   grads = opt.compute_gradients(losses)
