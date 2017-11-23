@@ -338,7 +338,7 @@ namespace client {
 				cross_entropy_losses.end(),
 				0.0f
 			) / total_worker_num;
-			log::log(0, total_average, cross_entropy_average i, level);
+			log::log(0, total_average, cross_entropy_average, i, level);
 			std::cout << "iter num is : " << i << " loss is : " << total_average
 				<< " cross entropy loss is " << cross_entropy_average <<std::endl;
 			//check if it's time to change level
