@@ -565,6 +565,20 @@ class Tuple : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   ::std::string* release_training_op_name();
   void set_allocated_training_op_name(::std::string* training_op_name);
 
+  // string cross_entropy_loss_name = 15;
+  void clear_cross_entropy_loss_name();
+  static const int kCrossEntropyLossNameFieldNumber = 15;
+  const ::std::string& cross_entropy_loss_name() const;
+  void set_cross_entropy_loss_name(const ::std::string& value);
+  #if LANG_CXX11
+  void set_cross_entropy_loss_name(::std::string&& value);
+  #endif
+  void set_cross_entropy_loss_name(const char* value);
+  void set_cross_entropy_loss_name(const char* value, size_t size);
+  ::std::string* mutable_cross_entropy_loss_name();
+  ::std::string* release_cross_entropy_loss_name();
+  void set_allocated_cross_entropy_loss_name(::std::string* cross_entropy_loss_name);
+
   // .tensorflow.GraphDef graph = 5;
   bool has_graph() const;
   void clear_graph();
@@ -640,6 +654,7 @@ class Tuple : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   ::google::protobuf::internal::ArenaStringPtr batch_placeholder_name_;
   ::google::protobuf::internal::ArenaStringPtr label_placeholder_name_;
   ::google::protobuf::internal::ArenaStringPtr training_op_name_;
+  ::google::protobuf::internal::ArenaStringPtr cross_entropy_loss_name_;
   ::tensorflow::GraphDef* graph_;
   float lr_;
   ::google::protobuf::int32 interval_;
@@ -1971,6 +1986,58 @@ inline ::google::protobuf::Map< ::google::protobuf::int32, ::google::protobuf::i
 Tuple::mutable_order_to_level() {
   // @@protoc_insertion_point(field_mutable_map:adaptive_system.Tuple.order_to_level)
   return order_to_level_.MutableMap();
+}
+
+// string cross_entropy_loss_name = 15;
+inline void Tuple::clear_cross_entropy_loss_name() {
+  cross_entropy_loss_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& Tuple::cross_entropy_loss_name() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.Tuple.cross_entropy_loss_name)
+  return cross_entropy_loss_name_.GetNoArena();
+}
+inline void Tuple::set_cross_entropy_loss_name(const ::std::string& value) {
+  
+  cross_entropy_loss_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:adaptive_system.Tuple.cross_entropy_loss_name)
+}
+#if LANG_CXX11
+inline void Tuple::set_cross_entropy_loss_name(::std::string&& value) {
+  
+  cross_entropy_loss_name_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Tuple.cross_entropy_loss_name)
+}
+#endif
+inline void Tuple::set_cross_entropy_loss_name(const char* value) {
+  
+  cross_entropy_loss_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:adaptive_system.Tuple.cross_entropy_loss_name)
+}
+inline void Tuple::set_cross_entropy_loss_name(const char* value, size_t size) {
+  
+  cross_entropy_loss_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:adaptive_system.Tuple.cross_entropy_loss_name)
+}
+inline ::std::string* Tuple::mutable_cross_entropy_loss_name() {
+  
+  // @@protoc_insertion_point(field_mutable:adaptive_system.Tuple.cross_entropy_loss_name)
+  return cross_entropy_loss_name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* Tuple::release_cross_entropy_loss_name() {
+  // @@protoc_insertion_point(field_release:adaptive_system.Tuple.cross_entropy_loss_name)
+  
+  return cross_entropy_loss_name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Tuple::set_allocated_cross_entropy_loss_name(::std::string* cross_entropy_loss_name) {
+  if (cross_entropy_loss_name != NULL) {
+    
+  } else {
+    
+  }
+  cross_entropy_loss_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), cross_entropy_loss_name);
+  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Tuple.cross_entropy_loss_name)
 }
 
 // -------------------------------------------------------------------
