@@ -29,7 +29,7 @@ namespace input {
 	using namespace tensorflow;
 
 	unsigned int index_current = 0;
-	int const batch_size = 64;
+	int const batch_size = 32;
 	std::vector<Tensor> raw_tensors, standard_images, standard_labels;
 	const int record_size = 3073;
 	const int label_size = 1;

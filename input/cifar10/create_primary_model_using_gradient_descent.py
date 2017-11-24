@@ -7,7 +7,7 @@ import tensorflow as tf
 import rpc_service_pb2 as rpc
 
 NUM_CLASSES = 10
-batch_size = 64
+batch_size = 32
 
 def _variable_on_cpu(name, shape, initializer, tup):
   """Helper to create a Variable stored on CPU memory.
