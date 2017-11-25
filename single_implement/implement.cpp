@@ -375,8 +375,8 @@ namespace client {
 				0.0f) / total_worker_num;
 			log::log(0, average, entropy_average, i, level);
 			std::cout << "iter num is : " << i << " "
-				<< " loss is : " << average << "cross_entropy loss is "
-				<< entropy_average << std::endl;
+				<< " loss is : " << average << " , cross_entropy loss is "
+				<< entropy_average << " level is " << level << std::endl;
 			
 			//check if it's time to change level
 			const int start_iter_num = 6;
