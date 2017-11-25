@@ -83,7 +83,7 @@ const ::google::protobuf::uint32 TableStruct::offsets[] = {
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tuple, total_iter_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tuple, batch_size_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tuple, order_to_level_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tuple, threshold_to_quantize_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tuple, cross_entropy_loss_name_),
   ~0u,  // no _has_bits_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Gradient, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -292,7 +292,7 @@ void AddDescriptorsImpl() {
       "(\t\022\025\n\rgradient_name\030\002 \001(\t\022\023\n\013assign_name"
       "\030\003 \001(\t\022\037\n\027placeholder_assign_name\030\005 \001(\t\""
       "(\n\021QuantizationLevel\022\023\n\013level_order\030\001 \001("
-      "\005\"\234\005\n\005Tuple\0227\n\tmap_names\030\001 \003(\0132$.adaptiv"
+      "\005\"\236\005\n\005Tuple\0227\n\tmap_names\030\001 \003(\0132$.adaptiv"
       "e_system.Tuple.MapNamesEntry\022A\n\016map_para"
       "meters\030\002 \003(\0132).adaptive_system.Tuple.Map"
       "ParametersEntry\022\n\n\002lr\030\003 \001(\002\022\020\n\010interval\030"
@@ -302,46 +302,46 @@ void AddDescriptorsImpl() {
       "l_placeholder_name\030\t \001(\t\022\030\n\020training_op_"
       "name\030\n \001(\t\022\022\n\ntotal_iter\030\013 \001(\005\022\022\n\nbatch_"
       "size\030\014 \001(\005\022@\n\016order_to_level\030\016 \003(\0132(.ada"
-      "ptive_system.Tuple.OrderToLevelEntry\022\035\n\025"
-      "threshold_to_quantize\030\017 \001(\005\032G\n\rMapNamesE"
-      "ntry\022\013\n\003key\030\001 \001(\t\022%\n\005value\030\002 \001(\0132\026.adapt"
-      "ive_system.Names:\0028\001\032M\n\022MapParametersEnt"
-      "ry\022\013\n\003key\030\001 \001(\t\022&\n\005value\030\002 \001(\0132\027.tensorf"
-      "low.TensorProto:\0028\001\0323\n\021OrderToLevelEntry"
-      "\022\013\n\003key\030\001 \001(\005\022\r\n\005value\030\002 \001(\005:\0028\001\"\216\001\n\010Gra"
-      "dient\022\032\n\022quantization_level\030\001 \001(\005\022\030\n\020qua"
-      "ntized_tensor\030\003 \001(\014\022\013\n\003max\030\004 \001(\002\022\013\n\003min\030"
-      "\005 \001(\002\0222\n\014tensor_shape\030\006 \001(\0132\034.tensorflow"
-      ".TensorShapeProto\"\310\001\n\027GradientAccordingC"
-      "olumn\022\032\n\022quantization_level\030\001 \001(\005\022\031\n\021qua"
-      "ntized_columns\030\002 \003(\014\022\r\n\005maxes\030\003 \003(\002\022\014\n\004m"
-      "ins\030\004 \003(\002\022\014\n\004dim1\030\005 \001(\005\022\014\n\004dim2\030\006 \001(\005\022\'\n"
-      "\006tensor\030\007 \001(\0132\027.tensorflow.TensorProto\022\024"
-      "\n\014is_quantized\030\010 \001(\010\"\261\001\n\016NamedGradients\022"
-      "M\n\020name_to_gradient\030\001 \003(\01323.adaptive_sys"
-      "tem.NamedGradients.NameToGradientEntry\032P"
-      "\n\023NameToGradientEntry\022\013\n\003key\030\001 \001(\t\022(\n\005va"
-      "lue\030\002 \001(\0132\031.adaptive_system.Gradient:\0028\001"
-      "\"\336\001\n\035NamedGradientsAccordingColumn\022\\\n\020na"
-      "me_to_gradient\030\001 \003(\0132B.adaptive_system.N"
-      "amedGradientsAccordingColumn.NameToGradi"
-      "entEntry\032_\n\023NameToGradientEntry\022\013\n\003key\030\001"
-      " \001(\t\0227\n\005value\030\002 \001(\0132(.adaptive_system.Gr"
-      "adientAccordingColumn:\0028\001\"E\n\014PartialStat"
-      "e\022\'\n\006tensor\030\001 \001(\0132\027.tensorflow.TensorPro"
-      "to\022\014\n\004loss\030\002 \001(\002\"\024\n\004Loss\022\014\n\004loss\030\001 \001(\0022\313"
-      "\002\n\rSystemControl\022\?\n\rretrieveTuple\022\026.adap"
-      "tive_system.Empty\032\026.adaptive_system.Tupl"
-      "e\0229\n\010sendLoss\022\025.adaptive_system.Loss\032\026.a"
-      "daptive_system.Empty\022n\n\014sendGradient\022..a"
-      "daptive_system.NamedGradientsAccordingCo"
-      "lumn\032..adaptive_system.NamedGradientsAcc"
-      "ordingColumn\022N\n\tsendState\022\035.adaptive_sys"
-      "tem.PartialState\032\".adaptive_system.Quant"
-      "izationLevelb\006proto3"
+      "ptive_system.Tuple.OrderToLevelEntry\022\037\n\027"
+      "cross_entropy_loss_name\030\017 \001(\t\032G\n\rMapName"
+      "sEntry\022\013\n\003key\030\001 \001(\t\022%\n\005value\030\002 \001(\0132\026.ada"
+      "ptive_system.Names:\0028\001\032M\n\022MapParametersE"
+      "ntry\022\013\n\003key\030\001 \001(\t\022&\n\005value\030\002 \001(\0132\027.tenso"
+      "rflow.TensorProto:\0028\001\0323\n\021OrderToLevelEnt"
+      "ry\022\013\n\003key\030\001 \001(\005\022\r\n\005value\030\002 \001(\005:\0028\001\"\216\001\n\010G"
+      "radient\022\032\n\022quantization_level\030\001 \001(\005\022\030\n\020q"
+      "uantized_tensor\030\003 \001(\014\022\013\n\003max\030\004 \001(\002\022\013\n\003mi"
+      "n\030\005 \001(\002\0222\n\014tensor_shape\030\006 \001(\0132\034.tensorfl"
+      "ow.TensorShapeProto\"\310\001\n\027GradientAccordin"
+      "gColumn\022\032\n\022quantization_level\030\001 \001(\005\022\031\n\021q"
+      "uantized_columns\030\002 \003(\014\022\r\n\005maxes\030\003 \003(\002\022\014\n"
+      "\004mins\030\004 \003(\002\022\014\n\004dim1\030\005 \001(\005\022\014\n\004dim2\030\006 \001(\005\022"
+      "\'\n\006tensor\030\007 \001(\0132\027.tensorflow.TensorProto"
+      "\022\024\n\014is_quantized\030\010 \001(\010\"\261\001\n\016NamedGradient"
+      "s\022M\n\020name_to_gradient\030\001 \003(\01323.adaptive_s"
+      "ystem.NamedGradients.NameToGradientEntry"
+      "\032P\n\023NameToGradientEntry\022\013\n\003key\030\001 \001(\t\022(\n\005"
+      "value\030\002 \001(\0132\031.adaptive_system.Gradient:\002"
+      "8\001\"\336\001\n\035NamedGradientsAccordingColumn\022\\\n\020"
+      "name_to_gradient\030\001 \003(\0132B.adaptive_system"
+      ".NamedGradientsAccordingColumn.NameToGra"
+      "dientEntry\032_\n\023NameToGradientEntry\022\013\n\003key"
+      "\030\001 \001(\t\0227\n\005value\030\002 \001(\0132(.adaptive_system."
+      "GradientAccordingColumn:\0028\001\"E\n\014PartialSt"
+      "ate\022\'\n\006tensor\030\001 \001(\0132\027.tensorflow.TensorP"
+      "roto\022\014\n\004loss\030\002 \001(\002\"\024\n\004Loss\022\014\n\004loss\030\001 \001(\002"
+      "2\313\002\n\rSystemControl\022\?\n\rretrieveTuple\022\026.ad"
+      "aptive_system.Empty\032\026.adaptive_system.Tu"
+      "ple\0229\n\010sendLoss\022\025.adaptive_system.Loss\032\026"
+      ".adaptive_system.Empty\022n\n\014sendGradient\022."
+      ".adaptive_system.NamedGradientsAccording"
+      "Column\032..adaptive_system.NamedGradientsA"
+      "ccordingColumn\022N\n\tsendState\022\035.adaptive_s"
+      "ystem.PartialState\032\".adaptive_system.Qua"
+      "ntizationLevelb\006proto3"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 2180);
+      descriptor, 2182);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "rpc_service.proto", &protobuf_RegisterTypes);
   ::tensorflow::protobuf_tensorflow_2fcore_2fframework_2ftensor_2eproto::AddDescriptors();
@@ -1398,7 +1398,7 @@ const int Tuple::kTrainingOpNameFieldNumber;
 const int Tuple::kTotalIterFieldNumber;
 const int Tuple::kBatchSizeFieldNumber;
 const int Tuple::kOrderToLevelFieldNumber;
-const int Tuple::kThresholdToQuantizeFieldNumber;
+const int Tuple::kCrossEntropyLossNameFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 Tuple::Tuple()
@@ -1452,14 +1452,18 @@ Tuple::Tuple(const Tuple& from)
   if (from.training_op_name().size() > 0) {
     training_op_name_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.training_op_name_);
   }
+  cross_entropy_loss_name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.cross_entropy_loss_name().size() > 0) {
+    cross_entropy_loss_name_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.cross_entropy_loss_name_);
+  }
   if (from.has_graph()) {
     graph_ = new ::tensorflow::GraphDef(*from.graph_);
   } else {
     graph_ = NULL;
   }
   ::memcpy(&lr_, &from.lr_,
-    reinterpret_cast<char*>(&threshold_to_quantize_) -
-    reinterpret_cast<char*>(&lr_) + sizeof(threshold_to_quantize_));
+    reinterpret_cast<char*>(&batch_size_) -
+    reinterpret_cast<char*>(&lr_) + sizeof(batch_size_));
   // @@protoc_insertion_point(copy_constructor:adaptive_system.Tuple)
 }
 
@@ -1484,8 +1488,9 @@ void Tuple::SharedCtor() {
   batch_placeholder_name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   label_placeholder_name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   training_op_name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  ::memset(&graph_, 0, reinterpret_cast<char*>(&threshold_to_quantize_) -
-    reinterpret_cast<char*>(&graph_) + sizeof(threshold_to_quantize_));
+  cross_entropy_loss_name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  ::memset(&graph_, 0, reinterpret_cast<char*>(&batch_size_) -
+    reinterpret_cast<char*>(&graph_) + sizeof(batch_size_));
   _cached_size_ = 0;
 }
 
@@ -1500,6 +1505,7 @@ void Tuple::SharedDtor() {
   batch_placeholder_name_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   label_placeholder_name_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   training_op_name_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  cross_entropy_loss_name_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (this != internal_default_instance()) {
     delete graph_;
   }
@@ -1538,12 +1544,13 @@ void Tuple::Clear() {
   batch_placeholder_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   label_placeholder_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   training_op_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  cross_entropy_loss_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (GetArenaNoVirtual() == NULL && graph_ != NULL) {
     delete graph_;
   }
   graph_ = NULL;
-  ::memset(&lr_, 0, reinterpret_cast<char*>(&threshold_to_quantize_) -
-    reinterpret_cast<char*>(&lr_) + sizeof(threshold_to_quantize_));
+  ::memset(&lr_, 0, reinterpret_cast<char*>(&batch_size_) -
+    reinterpret_cast<char*>(&lr_) + sizeof(batch_size_));
 }
 
 bool Tuple::MergePartialFromCodedStream(
@@ -1772,14 +1779,16 @@ bool Tuple::MergePartialFromCodedStream(
         break;
       }
 
-      // int32 threshold_to_quantize = 15;
+      // string cross_entropy_loss_name = 15;
       case 15: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(120u)) {
-
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &threshold_to_quantize_)));
+            static_cast< ::google::protobuf::uint8>(122u)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_cross_entropy_loss_name()));
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+            this->cross_entropy_loss_name().data(), this->cross_entropy_loss_name().length(),
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "adaptive_system.Tuple.cross_entropy_loss_name"));
         } else {
           goto handle_unusual;
         }
@@ -2023,9 +2032,14 @@ void Tuple::SerializeWithCachedSizes(
     }
   }
 
-  // int32 threshold_to_quantize = 15;
-  if (this->threshold_to_quantize() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(15, this->threshold_to_quantize(), output);
+  // string cross_entropy_loss_name = 15;
+  if (this->cross_entropy_loss_name().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->cross_entropy_loss_name().data(), this->cross_entropy_loss_name().length(),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "adaptive_system.Tuple.cross_entropy_loss_name");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      15, this->cross_entropy_loss_name(), output);
   }
 
   // @@protoc_insertion_point(serialize_end:adaptive_system.Tuple)
@@ -2266,9 +2280,15 @@ void Tuple::SerializeWithCachedSizes(
     }
   }
 
-  // int32 threshold_to_quantize = 15;
-  if (this->threshold_to_quantize() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(15, this->threshold_to_quantize(), target);
+  // string cross_entropy_loss_name = 15;
+  if (this->cross_entropy_loss_name().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->cross_entropy_loss_name().data(), this->cross_entropy_loss_name().length(),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "adaptive_system.Tuple.cross_entropy_loss_name");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        15, this->cross_entropy_loss_name(), target);
   }
 
   // @@protoc_insertion_point(serialize_to_array_end:adaptive_system.Tuple)
@@ -2356,6 +2376,13 @@ size_t Tuple::ByteSizeLong() const {
         this->training_op_name());
   }
 
+  // string cross_entropy_loss_name = 15;
+  if (this->cross_entropy_loss_name().size() > 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->cross_entropy_loss_name());
+  }
+
   // .tensorflow.GraphDef graph = 5;
   if (this->has_graph()) {
     total_size += 1 +
@@ -2387,13 +2414,6 @@ size_t Tuple::ByteSizeLong() const {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::Int32Size(
         this->batch_size());
-  }
-
-  // int32 threshold_to_quantize = 15;
-  if (this->threshold_to_quantize() != 0) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::Int32Size(
-        this->threshold_to_quantize());
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
@@ -2445,6 +2465,10 @@ void Tuple::MergeFrom(const Tuple& from) {
 
     training_op_name_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.training_op_name_);
   }
+  if (from.cross_entropy_loss_name().size() > 0) {
+
+    cross_entropy_loss_name_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.cross_entropy_loss_name_);
+  }
   if (from.has_graph()) {
     mutable_graph()->::tensorflow::GraphDef::MergeFrom(from.graph());
   }
@@ -2459,9 +2483,6 @@ void Tuple::MergeFrom(const Tuple& from) {
   }
   if (from.batch_size() != 0) {
     set_batch_size(from.batch_size());
-  }
-  if (from.threshold_to_quantize() != 0) {
-    set_threshold_to_quantize(from.threshold_to_quantize());
   }
 }
 
@@ -2496,12 +2517,12 @@ void Tuple::InternalSwap(Tuple* other) {
   batch_placeholder_name_.Swap(&other->batch_placeholder_name_);
   label_placeholder_name_.Swap(&other->label_placeholder_name_);
   training_op_name_.Swap(&other->training_op_name_);
+  cross_entropy_loss_name_.Swap(&other->cross_entropy_loss_name_);
   std::swap(graph_, other->graph_);
   std::swap(lr_, other->lr_);
   std::swap(interval_, other->interval_);
   std::swap(total_iter_, other->total_iter_);
   std::swap(batch_size_, other->batch_size_);
-  std::swap(threshold_to_quantize_, other->threshold_to_quantize_);
   std::swap(_cached_size_, other->_cached_size_);
 }
 
@@ -2927,18 +2948,56 @@ Tuple::mutable_order_to_level() {
   return order_to_level_.MutableMap();
 }
 
-// int32 threshold_to_quantize = 15;
-void Tuple::clear_threshold_to_quantize() {
-  threshold_to_quantize_ = 0;
+// string cross_entropy_loss_name = 15;
+void Tuple::clear_cross_entropy_loss_name() {
+  cross_entropy_loss_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-::google::protobuf::int32 Tuple::threshold_to_quantize() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.Tuple.threshold_to_quantize)
-  return threshold_to_quantize_;
+const ::std::string& Tuple::cross_entropy_loss_name() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.Tuple.cross_entropy_loss_name)
+  return cross_entropy_loss_name_.GetNoArena();
 }
-void Tuple::set_threshold_to_quantize(::google::protobuf::int32 value) {
+void Tuple::set_cross_entropy_loss_name(const ::std::string& value) {
   
-  threshold_to_quantize_ = value;
-  // @@protoc_insertion_point(field_set:adaptive_system.Tuple.threshold_to_quantize)
+  cross_entropy_loss_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:adaptive_system.Tuple.cross_entropy_loss_name)
+}
+#if LANG_CXX11
+void Tuple::set_cross_entropy_loss_name(::std::string&& value) {
+  
+  cross_entropy_loss_name_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Tuple.cross_entropy_loss_name)
+}
+#endif
+void Tuple::set_cross_entropy_loss_name(const char* value) {
+  
+  cross_entropy_loss_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:adaptive_system.Tuple.cross_entropy_loss_name)
+}
+void Tuple::set_cross_entropy_loss_name(const char* value, size_t size) {
+  
+  cross_entropy_loss_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:adaptive_system.Tuple.cross_entropy_loss_name)
+}
+::std::string* Tuple::mutable_cross_entropy_loss_name() {
+  
+  // @@protoc_insertion_point(field_mutable:adaptive_system.Tuple.cross_entropy_loss_name)
+  return cross_entropy_loss_name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+::std::string* Tuple::release_cross_entropy_loss_name() {
+  // @@protoc_insertion_point(field_release:adaptive_system.Tuple.cross_entropy_loss_name)
+  
+  return cross_entropy_loss_name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+void Tuple::set_allocated_cross_entropy_loss_name(::std::string* cross_entropy_loss_name) {
+  if (cross_entropy_loss_name != NULL) {
+    
+  } else {
+    
+  }
+  cross_entropy_loss_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), cross_entropy_loss_name);
+  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Tuple.cross_entropy_loss_name)
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS

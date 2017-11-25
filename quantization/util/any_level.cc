@@ -272,40 +272,76 @@ namespace adaptive_system {
 
 	void quantize_gradients_according_column(std::map<std::string, tensorflow::Tensor>& map_gradient,
 		NamedGradientsAccordingColumn* named_gradients, int level, int threshold) {
+		std::vector<std::pair<std::string, tensorflow::Tensor>> to_be_quantized;
 		for (auto pair : map_gradient) {
 			auto name = pair.first;
 			auto& tensor = pair.second;
 			auto size = tensor.NumElements();
 			GradientAccordingColumn gac;
 			if (size > threshold) {
-				gac.set_is_quantized(true);
-				quantize_gradient_according_column(level, tensor, gac);				
+				//gac.set_is_quantized(true);
+				//quantize_gradient_according_column(level, tensor, gac);
+				to_be_quantized.push_back({ name, tensor });
 			}
 			else {
 				tensorflow::TensorProto tp;
 				tensor.AsProtoField(&tp);			
 				gac.set_is_quantized(false);
 				*gac.mutable_tensor() = tp;
+				named_gradients->mutable_name_to_gradient()->insert({ name, gac });
 			}
-			named_gradients->mutable_name_to_gradient()->insert({ name, gac });
 		}
+		int size = to_be_quantized.size();
+		std::vector<GradientAccordingColumn> quantized_gradients;
+		quantized_gradients.resize(size);
+		std::vector<std::thread> threads;
+		for (int i = 0; i < size; i++) {
+			quantized_gradients[i].set_is_quantized(true);
+			threads.push_back(
+				std::thread(quantize_gradient_according_column,
+					level, std::cref(to_be_quantized[i].second),
+					std::ref(quantized_gradients[i])));
+		}
+		for (int i = 0; i < size; i++) {
+			threads[i].join();
+			named_gradients->mutable_name_to_gradient()->insert(
+			{ to_be_quantized[i].first, quantized_gradients[i] });
+		}
+
 	}
 
 	void dequantize_gradients_according_column(NamedGradientsAccordingColumn& named_gradients,
 		std::map<std::string, tensorflow::Tensor>& map_gradient) {
 		auto& map = *named_gradients.mutable_name_to_gradient();
+		std::vector<std::pair<std::string, GradientAccordingColumn>> to_be_dequantized;
 		for (auto pair : map) {
 			auto name = pair.first;
 			auto& gradient = pair.second;
 			bool is_quantized = gradient.is_quantized();
 			tensorflow::Tensor tensor;
 			if (is_quantized) {
-				dequantize_gradient_according_column(gradient, tensor);
+				//dequantize_gradient_according_column(gradient, tensor);
+				to_be_dequantized.push_back({ name, gradient });
 			}
 			else {
 				tensor.FromProto(gradient.tensor());
+				map_gradient.insert({ name, tensor });
 			}
-			map_gradient.insert({ name, tensor });
+			
+		}
+		int size = to_be_dequantized.size();
+		std::vector<tensorflow::Tensor> dequantized_gradients;
+		dequantized_gradients.resize(size);
+		std::vector<std::thread> threads;
+		for (int i = 0; i < size; i++) {
+			threads.push_back(
+				std::thread(dequantize_gradient_according_column,
+					std::cref(to_be_dequantized[i].second),
+					std::ref(dequantized_gradients[i])));
+		}
+		for (int i = 0; i < size; i++) {
+			threads[i].join();
+			map_gradient.insert({ to_be_dequantized[i].first, dequantized_gradients[i] });
 		}
 	}
 }

@@ -36,7 +36,7 @@ message Tuple {
     int32 total_iter = 11;
     int32 batch_size = 12;
     map<int32, int32> order_to_level = 14;
-	int32 threshold_to_quantize = 15;
+	string cross_entropy_loss_name = 15;
 }
 
 

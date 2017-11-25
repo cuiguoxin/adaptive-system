@@ -31,7 +31,7 @@ namespace input {
 	using namespace tensorflow;
 
 	unsigned int index_current = 0;
-	int const batch_size = 64;
+	int const batch_size = 32;
 	std::vector<Tensor> raw_tensors, standard_images, standard_labels;
 	const int record_size = 3073;
 	const int label_size = 1;
@@ -145,13 +145,15 @@ namespace client {
 	const int threshold_to_quantize = 105000;
 
 	namespace {
-		float compute_gradient_and_loss(
+		std::pair<float, float> compute_gradient_and_loss(
 			std::vector<std::pair<std::string, tensorflow::Tensor>> feeds,
 			std::map<std::string, tensorflow::Tensor>& gradients) {
 
 			std::vector<std::string> fetch;
 			std::string loss_name = tuple.loss_name();
+			auto entropy_loss = tuple.cross_entropy_loss_name();
 			fetch.push_back(loss_name);
+			fetch.push_back(entropy_loss);
 			std::vector<tensorflow::Tensor> outputs;
 			std::vector<std::string> variable_names_in_order;
 			google::protobuf::Map<std::string, Names> const& map_names =
@@ -172,6 +174,12 @@ namespace client {
 			tensorflow::Tensor& loss_tensor = outputs[0];
 			float* loss_ptr = loss_tensor.flat<float>().data();
 			float loss_ret = loss_ptr[0];
+
+			auto& entropy_tensor = outputs[1];
+			float* entropy_ptr = entropy_tensor.flat<float>().data();
+			float loss_entropy_ret = entropy_ptr[0];
+
+			outputs.erase(outputs.begin());
 			outputs.erase(outputs.begin());
 
 			size_t size = outputs.size();
@@ -179,7 +187,7 @@ namespace client {
 				gradients.insert(std::pair<std::string, tensorflow::Tensor>(
 					variable_names_in_order[i], outputs[i]));
 			}
-			return loss_ret;
+			return { loss_ret, loss_entropy_ret };
 		}
 	}
 
@@ -261,11 +269,13 @@ namespace client {
 		}
 		inline void log(float const time,
 			float const loss,
+			float const cross_entropy_loss,
 			int const current_iter,
 			int const current_level) {
 			file_loss_stream << std::to_string(time)
 				<< ":: iter num ::" << std::to_string(current_iter)
-				<< ":: loss is ::" << loss << "::" << current_level << "\n";
+				<< ":: loss is ::" << loss << "::" << current_level <<
+				":: cross_entropy_loss is :: " << cross_entropy_loss << "\n";
 			file_loss_stream.flush();
 		}
 	}
@@ -356,7 +366,7 @@ namespace client {
 			log::log(0, average, i, level);
 			
 			//check if it's time to change level
-			const int start_iter_num = 25;
+			const int start_iter_num = 10;
 			int real_num = i - start_iter_num;
 			if (real_num <= 0) {
 				sarsa::_last_loss = average;
