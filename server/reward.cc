@@ -62,10 +62,26 @@ namespace adaptive_system {
 			float q = 32.0 / level;
 			return layer1_size + layer2_size + (layer3_size + layer4_size) / q + layer5_size;
 		}
+		std::vector<float> time_table;
+		class TimeTable {
+		public:
+			TimeTable() {
+				time_table.resize(32);
+				//set computing time
+				time_table[0] = 5.0f;
+				//set all level
+				int const size = time_table.size();
+				for (int i = 1; i < size; i++) {
+					time_table[i] = time_table[i - 1] + 5.0f;
+				}
+			}
+		};
 	}
 
 	float get_reward_v5(float slope, int level) {
-		float com_oh = get_real_size(level);
-		return -slope * 200.0f / com_oh;
+		static TimeTable tt;
+		//float com_oh = get_real_size(level);
+		const float time = time_table[level];
+		return -slope * 300.0f / time;
 	}
 }

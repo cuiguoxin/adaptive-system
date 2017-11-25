@@ -230,7 +230,7 @@ namespace client {
 	}
 
 	void compute_gradient_loss_and_quantize(const int level,
-		std::map<std::string, tensorflow::Tensor>& map_gradients, float& loss) {
+		std::map<std::string, tensorflow::Tensor>& map_gradients, std::pair<float, float>& loss) {
 		//PRINT_INFO;
 		std::pair<tensorflow::Tensor, tensorflow::Tensor> feeds =
 			input::get_next_batch();
@@ -330,7 +330,7 @@ namespace client {
 		for (int i = 0; i < total_iter_num; i++) {
 			std::vector<std::map<std::string, tensorflow::Tensor>> vec_grads;
 			std::vector<std::thread> vec_threads;
-			std::vector<float> vec_losses;
+			std::vector<std::pair<float, float>> vec_losses;
 			vec_losses.resize(total_worker_num);
 			vec_grads.resize(total_worker_num);
 			for (int j = 0; j < total_worker_num; j++) {
@@ -359,14 +359,27 @@ namespace client {
 			apply_quantized_gradient_to_model(store_named_gradient,
 				session, tuple);
 			//log
+			std::vector<float> total_losses;
+			std::vector<float> entropy_losses;
+			for (auto pair : vec_losses) {
+				total_losses.push_back(pair.first);
+				entropy_losses.push_back(pair.second);
+			}
 			float const average = std::accumulate(
-				vec_losses.begin(), 
-				vec_losses.end(),
+				total_losses.begin(), 
+				total_losses.end(),
 				0.0f) / total_worker_num;
-			log::log(0, average, i, level);
+			float const entropy_average = std::accumulate(
+				entropy_losses.begin(),
+				entropy_losses.end(),
+				0.0f) / total_worker_num;
+			log::log(0, average, entropy_average, i, level);
+			std::cout << "iter num is : " << i << " "
+				<< " loss is : " << average << "cross_entropy loss is "
+				<< entropy_average << std::endl;
 			
 			//check if it's time to change level
-			const int start_iter_num = 10;
+			const int start_iter_num = 6;
 			int real_num = i - start_iter_num;
 			if (real_num <= 0) {
 				sarsa::_last_loss = average;
