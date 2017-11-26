@@ -199,11 +199,17 @@ namespace adaptive_system {
 		}
 		Tensor& result_tensor = result[0];
 		float* result_tensor_ptr = result_tensor.flat<float>().data();
-		size_t max_index = index_of_max(result_tensor_ptr);
+		int max_index = index_of_max(result_tensor_ptr);
 		std::cout << "max index is: " << max_index << std::endl;
 		std::vector<float> prob = get_greedy_probability(max_index); //prob.length = _total_level_number
+		std::cout << "prob is : ";
+		for (float p : prob) {
+			std::cout << p << " ";
+		}
+		std::cout << std::endl;
 		std::discrete_distribution<int> discrete{ prob.begin(), prob.end() };
-		size_t sample = discrete(generator);
+		int sample = discrete(generator);
+		std::cout << "sample index is : " << sample << std::endl;
 		_current_level = get_level_from_index(sample);
 		return _current_level;
 	}
