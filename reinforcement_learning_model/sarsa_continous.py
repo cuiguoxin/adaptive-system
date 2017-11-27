@@ -13,7 +13,7 @@ def create_sarsa_model(input_size, output_size):
 		activate_first_layer = tf.tanh(first_layer)
 
 	with tf.variable_scope("second_layer"):
-		variable_second_layer = tf.get_variable("weight", [output_size, 10], tf.float32, initializer=tf.truncated_normal_initializer(stddev=5e-2, dtype=tf.float32))
+		variable_second_layer = tf.get_variable("weight", [output_size, 10], tf.float32, initializer=tf.truncated_normal_initializer(stddev=5e-5, dtype=tf.float32))
        		bias_second_layer = tf.get_variable("bias", [output_size, 1], tf.float32, initializer=tf.constant_initializer())
         	second_layer = tf.matmul(variable_second_layer, activate_first_layer) + bias_second_layer
 

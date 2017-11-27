@@ -35,9 +35,9 @@ namespace adaptive_system {
 			std::cout << array[i] << " ";
 		}
 		std::cout << std::endl;
-		int index = get_current_index();
-		int level = get_current_level();
-		if (level == _start_level) {
+		int const index = get_current_index();
+		int const level = get_current_level();
+		/*if (level == _start_level) {
 			if (array[index] > array[index + 1]) {
 				return index;
 			}
@@ -63,7 +63,13 @@ namespace adaptive_system {
 			else {
 				return index;
 			}
-		}
+		}*/
+		if (index == (total - 1))
+			return index;
+		if (array[index] > array[index + 1])
+			return index;
+		else
+			return index + 1;
 	}
 
 	int sarsa_model::get_current_level() {
@@ -95,13 +101,13 @@ namespace adaptive_system {
 		return ret;
 	}
 
-	std::vector<float> sarsa_model::get_greedy_probability(size_t index_of_max) {
+	/*std::vector<float> sarsa_model::get_greedy_probability(size_t index_of_max) {
 		int const level_number = get_total_level_number();
 		float const value = _eps_greedy / 3;
 		std::vector<float> ret(level_number, 0);
 		if (_current_level == _start_level) {
 			if (index_of_max == 0) {
-				ret[0] = 1 - value; 
+				ret[0] = 1 - value;
 				ret[1] = value;
 				return ret;
 			}
@@ -129,12 +135,13 @@ namespace adaptive_system {
 			ret[index_of_max] += 1 - _eps_greedy;
 			return ret;
 		}
-	}
+	}*/
 
 	sarsa_model::sarsa_model(std::string const& path, int const input_size,
 		float r, float eps_greedy, int start, int end, int init)
 		: _sarsa_model_path(path), _r(r), _eps_greedy(eps_greedy), _start_level(start),
-		_end_level(end), _current_level(init) {
+		_end_level(end), _current_level(init),
+		_discrete({ 1.0 - _eps_greedy, _eps_greedy }) {
 		_session = NewSession(SessionOptions());
 		GraphDef graph_def;
 		//may first generate the .pb file
@@ -185,11 +192,17 @@ namespace adaptive_system {
 		float ret_v = *ret;
 		return ret_v;
 	}
-	//by the way, change the value of _current_level
-	int sarsa_model::sample_new_action(Tensor const& state) { // return level
+
+	int sarsa_model::sample() {
 		static unsigned seed =
 			std::chrono::system_clock::now().time_since_epoch().count();
 		static std::default_random_engine generator(seed);
+		return _discrete(generator);
+	}
+
+
+	//by the way, change the value of _current_level
+	int sarsa_model::sample_new_action(Tensor const& state) { // return level		
 		std::vector<Tensor> result;
 		Status status = _session->Run({ {state_placeholder_name, state} },
 		{ q_values_names }, {}, &result);
@@ -199,20 +212,24 @@ namespace adaptive_system {
 		}
 		Tensor& result_tensor = result[0];
 		float* result_tensor_ptr = result_tensor.flat<float>().data();
-		int max_index = index_of_max(result_tensor_ptr);
+		int const max_index = index_of_max(result_tensor_ptr);
 		std::cout << "max index is: " << max_index << std::endl;
-		std::vector<float> prob = get_greedy_probability(max_index); //prob.length = _total_level_number
-		std::cout << "prob is : ";
-		for (float p : prob) {
-			std::cout << p << " ";
+		int const index = get_current_index();
+		if (max_index == index) {
+			int const num_rand = sample();
+			if (num_rand == 0) {
+				return _current_level;
+			}
+			else {
+				return _current_level + 1;
+			}
 		}
-		std::cout << std::endl;
-		std::discrete_distribution<int> discrete{ prob.begin(), prob.end() };
-		int sample = discrete(generator);
-		std::cout << "sample index is : " << sample << std::endl;
-		_current_level = get_level_from_index(sample);
-		return _current_level;
+		else {
+			_current_level++;
+			return _current_level;
+		}
 	}
+
 	//don't change the value of _current_level, all information must be transited in the arguments
 	void sarsa_model::adjust_model(float reward, Tensor const& old_state,
 		int const old_level,
