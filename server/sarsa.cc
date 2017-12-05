@@ -37,33 +37,7 @@ namespace adaptive_system {
 		std::cout << std::endl;
 		int const index = get_current_index();
 		int const level = get_current_level();
-		/*if (level == _start_level) {
-			if (array[index] > array[index + 1]) {
-				return index;
-			}
-			else {
-				return index + 1;
-			}
-		}
-		else if (level == _end_level) {
-			if (array[index] > array[index - 1]) {
-				return index;
-			}
-			else {
-				return index - 1;
-			}
-		}
-		else {
-			if (array[index - 1] > array[index] && array[index - 1] > array[index + 1]) {
-				return index - 1;
-			}
-			else if (array[index + 1] > array[index] && array[index + 1] > array[index - 1]) {
-				return index + 1;
-			}
-			else {
-				return index;
-			}
-		}*/
+		
 		if (index == (total - 1))
 			return index;
 		if (array[index] > array[index + 1])
@@ -101,41 +75,6 @@ namespace adaptive_system {
 		return ret;
 	}
 
-	/*std::vector<float> sarsa_model::get_greedy_probability(size_t index_of_max) {
-		int const level_number = get_total_level_number();
-		float const value = _eps_greedy / 3;
-		std::vector<float> ret(level_number, 0);
-		if (_current_level == _start_level) {
-			if (index_of_max == 0) {
-				ret[0] = 1 - value;
-				ret[1] = value;
-				return ret;
-			}
-			else {
-				ret[1] = 1 - value;
-				ret[0] = value;
-				return ret;
-			}
-		}
-		else if (_current_level == _end_level) {
-			if (index_of_max == (level_number - 1)) {
-				ret[level_number - 1] = 1 - value;
-				ret[level_number - 2] = value;
-				return ret;
-			}
-			else {
-				ret[level_number - 2] = 1 - value;
-				ret[level_number - 1] = value;
-				return ret;
-			}
-		}
-		else {
-			int index = get_current_index();
-			ret[index] = ret[index + 1] = ret[index - 1] = value;
-			ret[index_of_max] += 1 - _eps_greedy;
-			return ret;
-		}
-	}*/
 
 	sarsa_model::sarsa_model(std::string const& path, int const input_size,
 		float r, float eps_greedy, int start, int end, int init)
