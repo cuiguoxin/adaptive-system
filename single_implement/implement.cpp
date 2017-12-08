@@ -322,7 +322,8 @@ void do_work(int const total_iter_num,
              int const end_level,
              float const eps_greedy,
              float r,
-             float const learning_rate_init_value) {
+             float const learning_rate_init_value,
+             int const start_iter_num) {
     // init sarsa
     PRINT_INFO;
     sarsa_model sm(
@@ -339,6 +340,7 @@ void do_work(int const total_iter_num,
     load_primary_model_and_init();
     int level = init_level;
     float learning_rate_value = learning_rate_init_value;
+    bool trick = true;
     for (int i = 0; i < total_iter_num; i++) {
         std::vector<std::map<std::string, tensorflow::Tensor>> vec_grads;
         std::vector<std::thread> vec_threads;
@@ -387,7 +389,6 @@ void do_work(int const total_iter_num,
                   << entropy_average << " level is " << level << std::endl;
 
         // check if it's time to change level
-        const int start_iter_num = 10;
         int real_num = i - start_iter_num;
         if (real_num <= 0) {
             sarsa::_last_loss = average;
@@ -398,6 +399,10 @@ void do_work(int const total_iter_num,
         learning_rate_value = 0.2f;
         if (real_num % interval == 0) {
             sarsa::adjust_rl_model(sm, level);
+            if (trick) {
+                level = 2;
+                trick = false;
+            }
         }
     }
 }
@@ -414,11 +419,12 @@ int main(int argc, char** argv) {
     float const eps_greedy = atof(argv[7]);
     float const r = atof(argv[8]);
     float const learning_rate_init_value = atof(argv[9]);
+    int const start_iter_num = atoi(argv[10]);
     PRINT_INFO;
     input::turn_raw_tensors_to_standard_version();
     client::do_work(total_iter_num, total_worker_num, init_level, interval,
                     start_level, end_level, eps_greedy, r,
-                    learning_rate_init_value);
+                    learning_rate_init_value, start_iter_num);
 
     return 0;
 }
