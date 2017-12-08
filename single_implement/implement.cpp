@@ -387,7 +387,7 @@ void do_work(int const total_iter_num,
                   << entropy_average << " level is " << level << std::endl;
 
         // check if it's time to change level
-        const int start_iter_num = 6;
+        const int start_iter_num = 10;
         int real_num = i - start_iter_num;
         if (real_num <= 0) {
             sarsa::_last_loss = average;
