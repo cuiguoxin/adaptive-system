@@ -579,6 +579,20 @@ class Tuple : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   ::std::string* release_cross_entropy_loss_name();
   void set_allocated_cross_entropy_loss_name(::std::string* cross_entropy_loss_name);
 
+  // string learning_rate_placeholder_name = 16;
+  void clear_learning_rate_placeholder_name();
+  static const int kLearningRatePlaceholderNameFieldNumber = 16;
+  const ::std::string& learning_rate_placeholder_name() const;
+  void set_learning_rate_placeholder_name(const ::std::string& value);
+  #if LANG_CXX11
+  void set_learning_rate_placeholder_name(::std::string&& value);
+  #endif
+  void set_learning_rate_placeholder_name(const char* value);
+  void set_learning_rate_placeholder_name(const char* value, size_t size);
+  ::std::string* mutable_learning_rate_placeholder_name();
+  ::std::string* release_learning_rate_placeholder_name();
+  void set_allocated_learning_rate_placeholder_name(::std::string* learning_rate_placeholder_name);
+
   // .tensorflow.GraphDef graph = 5;
   bool has_graph() const;
   void clear_graph();
@@ -655,6 +669,7 @@ class Tuple : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   ::google::protobuf::internal::ArenaStringPtr label_placeholder_name_;
   ::google::protobuf::internal::ArenaStringPtr training_op_name_;
   ::google::protobuf::internal::ArenaStringPtr cross_entropy_loss_name_;
+  ::google::protobuf::internal::ArenaStringPtr learning_rate_placeholder_name_;
   ::tensorflow::GraphDef* graph_;
   float lr_;
   ::google::protobuf::int32 interval_;
@@ -2038,6 +2053,58 @@ inline void Tuple::set_allocated_cross_entropy_loss_name(::std::string* cross_en
   }
   cross_entropy_loss_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), cross_entropy_loss_name);
   // @@protoc_insertion_point(field_set_allocated:adaptive_system.Tuple.cross_entropy_loss_name)
+}
+
+// string learning_rate_placeholder_name = 16;
+inline void Tuple::clear_learning_rate_placeholder_name() {
+  learning_rate_placeholder_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& Tuple::learning_rate_placeholder_name() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.Tuple.learning_rate_placeholder_name)
+  return learning_rate_placeholder_name_.GetNoArena();
+}
+inline void Tuple::set_learning_rate_placeholder_name(const ::std::string& value) {
+  
+  learning_rate_placeholder_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:adaptive_system.Tuple.learning_rate_placeholder_name)
+}
+#if LANG_CXX11
+inline void Tuple::set_learning_rate_placeholder_name(::std::string&& value) {
+  
+  learning_rate_placeholder_name_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Tuple.learning_rate_placeholder_name)
+}
+#endif
+inline void Tuple::set_learning_rate_placeholder_name(const char* value) {
+  
+  learning_rate_placeholder_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:adaptive_system.Tuple.learning_rate_placeholder_name)
+}
+inline void Tuple::set_learning_rate_placeholder_name(const char* value, size_t size) {
+  
+  learning_rate_placeholder_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:adaptive_system.Tuple.learning_rate_placeholder_name)
+}
+inline ::std::string* Tuple::mutable_learning_rate_placeholder_name() {
+  
+  // @@protoc_insertion_point(field_mutable:adaptive_system.Tuple.learning_rate_placeholder_name)
+  return learning_rate_placeholder_name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* Tuple::release_learning_rate_placeholder_name() {
+  // @@protoc_insertion_point(field_release:adaptive_system.Tuple.learning_rate_placeholder_name)
+  
+  return learning_rate_placeholder_name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Tuple::set_allocated_learning_rate_placeholder_name(::std::string* learning_rate_placeholder_name) {
+  if (learning_rate_placeholder_name != NULL) {
+    
+  } else {
+    
+  }
+  learning_rate_placeholder_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), learning_rate_placeholder_name);
+  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Tuple.learning_rate_placeholder_name)
 }
 
 // -------------------------------------------------------------------

@@ -84,6 +84,7 @@ const ::google::protobuf::uint32 TableStruct::offsets[] = {
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tuple, batch_size_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tuple, order_to_level_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tuple, cross_entropy_loss_name_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tuple, learning_rate_placeholder_name_),
   ~0u,  // no _has_bits_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Gradient, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -133,12 +134,12 @@ static const ::google::protobuf::internal::MigrationSchema schemas[] = {
   { 4, -1, sizeof(Names)},
   { 12, -1, sizeof(QuantizationLevel)},
   { 17, -1, sizeof(Tuple)},
-  { 35, -1, sizeof(Gradient)},
-  { 44, -1, sizeof(GradientAccordingColumn)},
-  { 56, -1, sizeof(NamedGradients)},
-  { 61, -1, sizeof(NamedGradientsAccordingColumn)},
-  { 66, -1, sizeof(PartialState)},
-  { 72, -1, sizeof(Loss)},
+  { 36, -1, sizeof(Gradient)},
+  { 45, -1, sizeof(GradientAccordingColumn)},
+  { 57, -1, sizeof(NamedGradients)},
+  { 62, -1, sizeof(NamedGradientsAccordingColumn)},
+  { 67, -1, sizeof(PartialState)},
+  { 73, -1, sizeof(Loss)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -292,7 +293,7 @@ void AddDescriptorsImpl() {
       "(\t\022\025\n\rgradient_name\030\002 \001(\t\022\023\n\013assign_name"
       "\030\003 \001(\t\022\037\n\027placeholder_assign_name\030\005 \001(\t\""
       "(\n\021QuantizationLevel\022\023\n\013level_order\030\001 \001("
-      "\005\"\236\005\n\005Tuple\0227\n\tmap_names\030\001 \003(\0132$.adaptiv"
+      "\005\"\306\005\n\005Tuple\0227\n\tmap_names\030\001 \003(\0132$.adaptiv"
       "e_system.Tuple.MapNamesEntry\022A\n\016map_para"
       "meters\030\002 \003(\0132).adaptive_system.Tuple.Map"
       "ParametersEntry\022\n\n\002lr\030\003 \001(\002\022\020\n\010interval\030"
@@ -303,7 +304,8 @@ void AddDescriptorsImpl() {
       "name\030\n \001(\t\022\022\n\ntotal_iter\030\013 \001(\005\022\022\n\nbatch_"
       "size\030\014 \001(\005\022@\n\016order_to_level\030\016 \003(\0132(.ada"
       "ptive_system.Tuple.OrderToLevelEntry\022\037\n\027"
-      "cross_entropy_loss_name\030\017 \001(\t\032G\n\rMapName"
+      "cross_entropy_loss_name\030\017 \001(\t\022&\n\036learnin"
+      "g_rate_placeholder_name\030\020 \001(\t\032G\n\rMapName"
       "sEntry\022\013\n\003key\030\001 \001(\t\022%\n\005value\030\002 \001(\0132\026.ada"
       "ptive_system.Names:\0028\001\032M\n\022MapParametersE"
       "ntry\022\013\n\003key\030\001 \001(\t\022&\n\005value\030\002 \001(\0132\027.tenso"
@@ -341,7 +343,7 @@ void AddDescriptorsImpl() {
       "ntizationLevelb\006proto3"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 2182);
+      descriptor, 2222);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "rpc_service.proto", &protobuf_RegisterTypes);
   ::tensorflow::protobuf_tensorflow_2fcore_2fframework_2ftensor_2eproto::AddDescriptors();
@@ -1399,6 +1401,7 @@ const int Tuple::kTotalIterFieldNumber;
 const int Tuple::kBatchSizeFieldNumber;
 const int Tuple::kOrderToLevelFieldNumber;
 const int Tuple::kCrossEntropyLossNameFieldNumber;
+const int Tuple::kLearningRatePlaceholderNameFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 Tuple::Tuple()
@@ -1456,6 +1459,10 @@ Tuple::Tuple(const Tuple& from)
   if (from.cross_entropy_loss_name().size() > 0) {
     cross_entropy_loss_name_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.cross_entropy_loss_name_);
   }
+  learning_rate_placeholder_name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.learning_rate_placeholder_name().size() > 0) {
+    learning_rate_placeholder_name_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.learning_rate_placeholder_name_);
+  }
   if (from.has_graph()) {
     graph_ = new ::tensorflow::GraphDef(*from.graph_);
   } else {
@@ -1489,6 +1496,7 @@ void Tuple::SharedCtor() {
   label_placeholder_name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   training_op_name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   cross_entropy_loss_name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  learning_rate_placeholder_name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(&graph_, 0, reinterpret_cast<char*>(&batch_size_) -
     reinterpret_cast<char*>(&graph_) + sizeof(batch_size_));
   _cached_size_ = 0;
@@ -1506,6 +1514,7 @@ void Tuple::SharedDtor() {
   label_placeholder_name_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   training_op_name_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   cross_entropy_loss_name_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  learning_rate_placeholder_name_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (this != internal_default_instance()) {
     delete graph_;
   }
@@ -1545,6 +1554,7 @@ void Tuple::Clear() {
   label_placeholder_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   training_op_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   cross_entropy_loss_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  learning_rate_placeholder_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (GetArenaNoVirtual() == NULL && graph_ != NULL) {
     delete graph_;
   }
@@ -1559,7 +1569,7 @@ bool Tuple::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:adaptive_system.Tuple)
   for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(16383u);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
@@ -1789,6 +1799,22 @@ bool Tuple::MergePartialFromCodedStream(
             this->cross_entropy_loss_name().data(), this->cross_entropy_loss_name().length(),
             ::google::protobuf::internal::WireFormatLite::PARSE,
             "adaptive_system.Tuple.cross_entropy_loss_name"));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // string learning_rate_placeholder_name = 16;
+      case 16: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(130u)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_learning_rate_placeholder_name()));
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+            this->learning_rate_placeholder_name().data(), this->learning_rate_placeholder_name().length(),
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "adaptive_system.Tuple.learning_rate_placeholder_name"));
         } else {
           goto handle_unusual;
         }
@@ -2042,6 +2068,16 @@ void Tuple::SerializeWithCachedSizes(
       15, this->cross_entropy_loss_name(), output);
   }
 
+  // string learning_rate_placeholder_name = 16;
+  if (this->learning_rate_placeholder_name().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->learning_rate_placeholder_name().data(), this->learning_rate_placeholder_name().length(),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "adaptive_system.Tuple.learning_rate_placeholder_name");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      16, this->learning_rate_placeholder_name(), output);
+  }
+
   // @@protoc_insertion_point(serialize_end:adaptive_system.Tuple)
 }
 
@@ -2291,6 +2327,17 @@ void Tuple::SerializeWithCachedSizes(
         15, this->cross_entropy_loss_name(), target);
   }
 
+  // string learning_rate_placeholder_name = 16;
+  if (this->learning_rate_placeholder_name().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->learning_rate_placeholder_name().data(), this->learning_rate_placeholder_name().length(),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "adaptive_system.Tuple.learning_rate_placeholder_name");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        16, this->learning_rate_placeholder_name(), target);
+  }
+
   // @@protoc_insertion_point(serialize_to_array_end:adaptive_system.Tuple)
   return target;
 }
@@ -2383,6 +2430,13 @@ size_t Tuple::ByteSizeLong() const {
         this->cross_entropy_loss_name());
   }
 
+  // string learning_rate_placeholder_name = 16;
+  if (this->learning_rate_placeholder_name().size() > 0) {
+    total_size += 2 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->learning_rate_placeholder_name());
+  }
+
   // .tensorflow.GraphDef graph = 5;
   if (this->has_graph()) {
     total_size += 1 +
@@ -2469,6 +2523,10 @@ void Tuple::MergeFrom(const Tuple& from) {
 
     cross_entropy_loss_name_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.cross_entropy_loss_name_);
   }
+  if (from.learning_rate_placeholder_name().size() > 0) {
+
+    learning_rate_placeholder_name_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.learning_rate_placeholder_name_);
+  }
   if (from.has_graph()) {
     mutable_graph()->::tensorflow::GraphDef::MergeFrom(from.graph());
   }
@@ -2518,6 +2576,7 @@ void Tuple::InternalSwap(Tuple* other) {
   label_placeholder_name_.Swap(&other->label_placeholder_name_);
   training_op_name_.Swap(&other->training_op_name_);
   cross_entropy_loss_name_.Swap(&other->cross_entropy_loss_name_);
+  learning_rate_placeholder_name_.Swap(&other->learning_rate_placeholder_name_);
   std::swap(graph_, other->graph_);
   std::swap(lr_, other->lr_);
   std::swap(interval_, other->interval_);
@@ -2998,6 +3057,58 @@ void Tuple::set_allocated_cross_entropy_loss_name(::std::string* cross_entropy_l
   }
   cross_entropy_loss_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), cross_entropy_loss_name);
   // @@protoc_insertion_point(field_set_allocated:adaptive_system.Tuple.cross_entropy_loss_name)
+}
+
+// string learning_rate_placeholder_name = 16;
+void Tuple::clear_learning_rate_placeholder_name() {
+  learning_rate_placeholder_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+const ::std::string& Tuple::learning_rate_placeholder_name() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.Tuple.learning_rate_placeholder_name)
+  return learning_rate_placeholder_name_.GetNoArena();
+}
+void Tuple::set_learning_rate_placeholder_name(const ::std::string& value) {
+  
+  learning_rate_placeholder_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:adaptive_system.Tuple.learning_rate_placeholder_name)
+}
+#if LANG_CXX11
+void Tuple::set_learning_rate_placeholder_name(::std::string&& value) {
+  
+  learning_rate_placeholder_name_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Tuple.learning_rate_placeholder_name)
+}
+#endif
+void Tuple::set_learning_rate_placeholder_name(const char* value) {
+  
+  learning_rate_placeholder_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:adaptive_system.Tuple.learning_rate_placeholder_name)
+}
+void Tuple::set_learning_rate_placeholder_name(const char* value, size_t size) {
+  
+  learning_rate_placeholder_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:adaptive_system.Tuple.learning_rate_placeholder_name)
+}
+::std::string* Tuple::mutable_learning_rate_placeholder_name() {
+  
+  // @@protoc_insertion_point(field_mutable:adaptive_system.Tuple.learning_rate_placeholder_name)
+  return learning_rate_placeholder_name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+::std::string* Tuple::release_learning_rate_placeholder_name() {
+  // @@protoc_insertion_point(field_release:adaptive_system.Tuple.learning_rate_placeholder_name)
+  
+  return learning_rate_placeholder_name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+void Tuple::set_allocated_learning_rate_placeholder_name(::std::string* learning_rate_placeholder_name) {
+  if (learning_rate_placeholder_name != NULL) {
+    
+  } else {
+    
+  }
+  learning_rate_placeholder_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), learning_rate_placeholder_name);
+  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Tuple.learning_rate_placeholder_name)
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
