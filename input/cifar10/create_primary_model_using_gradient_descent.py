@@ -175,7 +175,7 @@ with tf.Session() as sess:
 
     # Calculate loss.
     losses = loss(logits, labels, tup)
-    lr = tf.placeholder(tf.float32, shape=[1])
+    lr = tf.placeholder(tf.float32)
     tup.learning_rate_placeholder_name = lr.name
 
     opt = tf.train.GradientDescentOptimizer(learning_rate=lr)
