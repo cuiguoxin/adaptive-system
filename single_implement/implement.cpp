@@ -260,7 +260,11 @@ std::ofstream file_loss_stream;
 void init_log(int const interval,
               int const total_worker_num,
               int const start_level,
-              int const end_level) {
+              int const end_level,
+              float const eps_greedy,
+              float const r,
+              float const init_lr,
+              int const iter_to_change_lr) {
     // init log
     auto now = std::chrono::system_clock::now();
     auto init_time_t = std::chrono::system_clock::to_time_t(now);
@@ -269,7 +273,10 @@ void init_log(int const interval,
         "loss_result/sarsa_adaptive" + label +
         "_interval:" + std::to_string(interval) +
         "_number_of_workers:" + std::to_string(total_worker_num) + "_level" +
-        std::to_string(start_level) + "-" + std::to_string(end_level);
+        std::to_string(start_level) + "-" + std::to_string(end_level) +
+        "_eps_greedy-" + std::to_string(eps_greedy) + "_r-" +
+        std::to_string(r) + "_initLearningRate-" + std::to_string(init_lr) +
+        "_changeLrIterNum-" + std::to_string(iter_to_change_lr);
     file_loss_stream.open(store_loss_file_path);
 }
 
@@ -336,7 +343,8 @@ void do_work(int const total_iter_num,
     float* ptr_last_state = sarsa::last_state.flat<float>().data();
     std::fill(ptr_last_state, ptr_last_state + interval, 16.0f);
     // init log
-    log::init_log(interval, total_worker_num, start_level, end_level);
+    log::init_log(interval, total_worker_num, start_level, end_level,
+                  eps_greedy, r, learning_rate_init_value, start_iter_num);
     load_primary_model_and_init();
     int level = init_level;
     float learning_rate_value = learning_rate_init_value;
