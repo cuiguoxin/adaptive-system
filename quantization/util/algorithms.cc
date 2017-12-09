@@ -16,57 +16,69 @@
 
 namespace adaptive_system {
 
-	void apply_quantized_gradient_to_model(NamedGradientsAccordingColumn& named_gradients,
-		tensorflow::Session* sess,
-		Tuple& tuple) {
-		google::protobuf::Map<std::string, GradientAccordingColumn>& map_gradient =
-			*named_gradients.mutable_name_to_gradient();
-		google::protobuf::Map<std::string, Names>& map_names =
-			*tuple.mutable_map_names();
-		std::vector<std::pair<std::string, tensorflow::Tensor>> feeds;
-		std::vector<std::string> actions_to_do;
-		actions_to_do.push_back(tuple.training_op_name());
-		std::for_each(
-			map_gradient.begin(), map_gradient.end(),
-			[&feeds, &map_names,
-			&tuple](google::protobuf::MapPair<std::string, GradientAccordingColumn>& pair) {
-			std::string const& variable_name = pair.first;
-			GradientAccordingColumn& grad = pair.second;
-			auto iter_map_names = map_names.find(variable_name);
-			if (iter_map_names == map_names.end()) {
-				std::cout << "this is impossible Line " << __LINE__ << std::endl;
-				std::terminate();
-			}
-			else {
-				Names& names = iter_map_names->second;
-				std::string grad_name = names.gradient_name();
-				tensorflow::Tensor feed_grad;  // nothing need to do to initialize feed
-										  // tensor, dequantize function will do all
-										  // stuff
-				bool is_quantized = grad.is_quantized();
-				if (is_quantized) {
-					dequantize_gradient_according_column(grad, feed_grad);
-				}
-				else {
-					feed_grad.FromProto(grad.tensor());
-				}
-				
-				feeds.push_back(
-					std::pair<std::string, tensorflow::Tensor>(grad_name, feed_grad));
-			}
-		});
-		tensorflow::Status status = sess->Run(feeds, {},  actions_to_do, nullptr);
-		if(!status.ok()){
-			PRINT_ERROR_MESSAGE(status.error_message());
-			std::terminate();
-		}
-		std::cout << "finished update!!!" << std::endl;
-	}
-	//suitable for state like statistics of gradient
-	void moving_average(size_t length, float const * previous, float* current, float const r) {
-		for (size_t i = 0; i < length; i++) {
-			current[i] = r * previous[i] + (1 - r) * current[i];
-		}
+void apply_quantized_gradient_to_model(
+    NamedGradientsAccordingColumn& named_gradients,
+    tensorflow::Session* sess,
+    Tuple& tuple,
+    float const learning_rate_value) {
+    google::protobuf::Map<std::string, GradientAccordingColumn>& map_gradient =
+        *named_gradients.mutable_name_to_gradient();
+    google::protobuf::Map<std::string, Names>& map_names =
+        *tuple.mutable_map_names();
+    std::vector<std::pair<std::string, tensorflow::Tensor>> feeds;
+    std::vector<std::string> actions_to_do;
+    actions_to_do.push_back(tuple.training_op_name());
+    std::for_each(
+        map_gradient.begin(), map_gradient.end(),
+        [&feeds, &map_names, &tuple](
+            google::protobuf::MapPair<std::string, GradientAccordingColumn>&
+                pair) {
+            std::string const& variable_name = pair.first;
+            GradientAccordingColumn& grad = pair.second;
+            auto iter_map_names = map_names.find(variable_name);
+            if (iter_map_names == map_names.end()) {
+                std::cout << "this is impossible Line " << __LINE__
+                          << std::endl;
+                std::terminate();
+            } else {
+                Names& names = iter_map_names->second;
+                std::string grad_name = names.gradient_name();
+                tensorflow::Tensor
+                    feed_grad;  // nothing need to do to initialize feed
+                                // tensor, dequantize function will do all
+                                // stuff
+                bool is_quantized = grad.is_quantized();
+                if (is_quantized) {
+                    dequantize_gradient_according_column(grad, feed_grad);
+                } else {
+                    feed_grad.FromProto(grad.tensor());
+                }
+
+                feeds.push_back(std::pair<std::string, tensorflow::Tensor>(
+                    grad_name, feed_grad));
+            }
+        });
+    tensorflow::Tensor learning_rate_tensor = tensorflow::Tensor(
+        tensorflow::DataType::DT_FLOAT, tensorflow::TensorShape({}));
+    float* learning_rate_tensor_ptr = learning_rate_tensor.flat<float>().data();
+    *learning_rate_tensor_ptr = learning_rate_value;
+    auto learning_rate_tensor_name = tuple.learning_rate_placeholder_name();
+    feeds.push_back({learning_rate_tensor_name, learning_rate_tensor});
+    tensorflow::Status status = sess->Run(feeds, {}, actions_to_do, nullptr);
+    if (!status.ok()) {
+        PRINT_ERROR_MESSAGE(status.error_message());
+        std::terminate();
+    }
+    std::cout << "finished update!!!" << std::endl;
+}
+// suitable for state like statistics of gradient
+void moving_average(size_t length,
+                    float const* previous,
+                    float* current,
+                    float const r) {
+    for (size_t i = 0; i < length; i++) {
+        current[i] = r * previous[i] + (1 - r) * current[i];
+    }
 	}
 	
 	float moving_average_v2(float const previous,

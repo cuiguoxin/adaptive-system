@@ -286,7 +286,6 @@ inline void log(float const time,
 
 void do_work(int const total_iter_num,
              int const total_worker_num,
-             int const init_level,
              int const pre_level,
              int const split_point,
              int const post_level,
@@ -295,14 +294,17 @@ void do_work(int const total_iter_num,
     log::init_log(total_worker_num, pre_level, split_point, post_level, init_lr,
                   start_iter_num);
     load_primary_model_and_init();
-    int level = init_level;
+    int level = 0;
+    float lr = init_lr;
     for (int i = 0; i < total_iter_num; i++) {
         if (i < start_iter_num) {
             level = 2;
         } else if (i < split_point) {
             level = pre_level;
+            lr = 0.2;
         } else {
             level = post_level;
+            lr = 0.2
         }
         std::vector<std::map<std::string, tensorflow::Tensor>> vec_grads;
         std::vector<std::thread> vec_threads;
@@ -329,7 +331,8 @@ void do_work(int const total_iter_num,
                                             &store_named_gradient, level,
                                             threshold_to_quantize);
         PRINT_INFO;
-        apply_quantized_gradient_to_model(store_named_gradient, session, tuple);
+        apply_quantized_gradient_to_model(store_named_gradient, session, tuple,
+                                          lr);
         // log
         std::vector<float> total_losses;
         std::vector<float> cross_entropy_losses;
@@ -359,14 +362,15 @@ void do_work(int const total_iter_num,
 int main(int argc, char** argv) {
     int const total_iter_num = atoi(argv[1]);
     int const total_worker_num = atoi(argv[2]);
-    int const init_level = atoi(argv[3]);
-    int const interval = atoi(argv[4]);
-    int const pre_level = atoi(argv[5]);
-    int const split_point = atoi(argv[6]);
-    int const post_level = atoi(argv[7]);
+    int const pre_level = atoi(argv[3]);
+    int const split_point = atoi(argv[4]);
+    int const post_level = atoi(argv[5]);
+    float const init_lr = atof(argv[6]);
+    int const start_iter_num = atoi(argv[7]);
+
     input::turn_raw_tensors_to_standard_version();
-    client::do_work(total_iter_num, total_worker_num, init_level, interval,
-                    pre_level, split_point, post_level);
+    client::do_work(total_iter_num, total_worker_num, pre_level, split_point,
+                    post_level, init_lr, start_iter_num);
 
     return 0;
 }
