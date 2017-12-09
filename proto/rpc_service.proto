@@ -37,6 +37,7 @@ message Tuple {
     int32 batch_size = 12;
     map<int32, int32> order_to_level = 14;
 	string cross_entropy_loss_name = 15;
+    string learning_rate_placeholder_name = 16;
 }
 
 
