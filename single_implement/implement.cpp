@@ -265,7 +265,7 @@ void init_log(int const total_worker_num,
         "_number_of_workers:" + std::to_string(total_worker_num) + "_" +
         std::to_string(pre_level) + "-" + std::to_string(split_point) + "-" +
         std::to_string(post_level) + "_initLr-" + std::to_string(init_lr) +
-        "_startIterNum-" + start_iter_num;
+        "_startIterNum-" + std::to_string(start_iter_num);
     file_loss_stream.open(store_loss_file_path);
 }
 
@@ -304,7 +304,7 @@ void do_work(int const total_iter_num,
             lr = 0.2;
         } else {
             level = post_level;
-            lr = 0.2
+            lr = 0.2;
         }
         std::vector<std::map<std::string, tensorflow::Tensor>> vec_grads;
         std::vector<std::thread> vec_threads;
@@ -351,9 +351,6 @@ void do_work(int const total_iter_num,
         std::cout << "iter num is : " << i << " loss is : " << total_average
                   << " cross entropy loss is " << cross_entropy_average
                   << std::endl;
-        // check if it's time to change level
-        if (i % interval == 0) {
-        }
     }
 }
 
