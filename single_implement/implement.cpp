@@ -302,7 +302,7 @@ float _last_loss = 16.0f;
 
 void adjust_rl_model(sarsa_model& sm, int& level) {
     std::vector<float> moving_average_losses;
-    const float r = 0.98;
+    const float r = 0.99;
     _last_loss = moving_average_from_last_loss(_last_loss, loss_history,
                                                moving_average_losses, r);
     tensorflow::Tensor new_state =
