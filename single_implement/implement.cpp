@@ -410,6 +410,7 @@ void do_work(int const total_iter_num,
             if (trick) {
                 level = 2;
                 trick = false;
+                sm.set_current_level(level);
             }
         }
     }

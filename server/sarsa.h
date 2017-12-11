@@ -36,43 +36,49 @@
 #include "quantization/util/helper.h"
 
 namespace adaptive_system {
-	class sarsa_model {
-	private:
-		tensorflow::Session* _session;
-		std::string _sarsa_model_path;
-		const int _start_level;
-		const int _end_level;
-		int _current_level;
-		float _r;
-		float _eps_greedy;
-		//std::vector<float> _probability;
-		std::discrete_distribution<int> _discrete;
-		
-		//std::vector<float> get_greedy_probability(size_t index_of_max);
-		int get_index_from_level(int level);
-		int get_level_from_index(int index);
-		int get_total_level_number();
-		tensorflow::Tensor get_feed_tensor_from_index(int index);
-		int get_current_level();
-		int get_current_index();
-		int index_of_max(float* array);
-		int sample();
+class sarsa_model {
+   private:
+    tensorflow::Session* _session;
+    std::string _sarsa_model_path;
+    const int _start_level;
+    const int _end_level;
+    int _current_level;
+    float _r;
+    float _eps_greedy;
+    // std::vector<float> _probability;
+    std::discrete_distribution<int> _discrete;
 
-	public:
-		sarsa_model(std::string const& path, int const input_size, float r, float eps_greedy, int start, int end, int init);
+    // std::vector<float> get_greedy_probability(size_t index_of_max);
+    int get_index_from_level(int level);
+    int get_level_from_index(int index);
+    int get_total_level_number();
+    tensorflow::Tensor get_feed_tensor_from_index(int index);
+    int get_current_level();
+    int get_current_index();
+    int index_of_max(float* array);
+    int sample();
 
-		float get_q_value(tensorflow::Tensor const& state, int action_order);
+   public:
+    sarsa_model(std::string const& path,
+                int const input_size,
+                float r,
+                float eps_greedy,
+                int start,
+                int end,
+                int init);
 
-		int sample_new_action(tensorflow::Tensor const& state);
+    float get_q_value(tensorflow::Tensor const& state, int action_order);
 
-		void adjust_model(float reward, tensorflow::Tensor const& old_state,
-			int const old_action_order,
-			tensorflow::Tensor const& new_state,
-			int const new_action_order);
+    int sample_new_action(tensorflow::Tensor const& state);
 
-	};
-}
+    void adjust_model(float reward,
+                      tensorflow::Tensor const& old_state,
+                      int const old_action_order,
+                      tensorflow::Tensor const& new_state,
+                      int const new_action_order);
 
+    void set_current_level(int const level) { _current_level = level; }
+};
+}  // namespace adaptive_system
 
-#endif // !SARSA_H
-
+#endif  // !SARSA_H
