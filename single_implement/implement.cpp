@@ -399,7 +399,7 @@ void do_work(int const total_iter_num,
         // check if it's time to change level
         int real_num = i - start_iter_num;
         if (real_num <= 0) {
-            sarsa::_last_loss = average;
+            sarsa::_last_loss = average + 0.1;
             continue;
         }
         // add average to loss_history
