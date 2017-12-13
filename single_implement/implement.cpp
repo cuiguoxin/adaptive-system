@@ -299,6 +299,8 @@ namespace sarsa {
 tensorflow::Tensor last_state;
 std::vector<float> loss_history;
 float _last_loss = 16.0f;
+float computing_time = 0.0f;
+float one_bit_communication_time = 0.0f;
 
 void adjust_rl_model(sarsa_model& sm, int& level) {
     std::vector<float> moving_average_losses;
@@ -313,7 +315,9 @@ void adjust_rl_model(sarsa_model& sm, int& level) {
     float slope = get_slope_according_loss(moving_average_losses);
     std::cout << "slope is " << slope << " new level is " << new_level
               << std::endl;
-    float reward = get_reward_v5(slope, old_level);  // -slope * 100 / level
+    float reward =
+        get_reward_v5(slope, old_level, computing_time,
+                      one_bit_communication_time);  // -slope * 100 / level
     sm.adjust_model(reward, last_state, old_level, new_state, new_level);
     level = new_level;
     last_state = new_state;
@@ -429,6 +433,8 @@ int main(int argc, char** argv) {
     float const r = atof(argv[8]);
     float const learning_rate_init_value = atof(argv[9]);
     int const start_iter_num = atoi(argv[10]);
+    sarsa::computing_time = atof(argv[11]);
+    sarsa::one_bit_communication_time = atof(argv[12]);
     PRINT_INFO;
     input::turn_raw_tensors_to_standard_version();
     client::do_work(total_iter_num, total_worker_num, init_level, interval,
