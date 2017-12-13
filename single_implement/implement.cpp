@@ -433,8 +433,8 @@ int main(int argc, char** argv) {
     float const r = atof(argv[8]);
     float const learning_rate_init_value = atof(argv[9]);
     int const start_iter_num = atoi(argv[10]);
-    sarsa::computing_time = atof(argv[11]);
-    sarsa::one_bit_communication_time = atof(argv[12]);
+    client::sarsa::computing_time = atof(argv[11]);
+    client::sarsa::one_bit_communication_time = atof(argv[12]);
     PRINT_INFO;
     input::turn_raw_tensors_to_standard_version();
     client::do_work(total_iter_num, total_worker_num, init_level, interval,
