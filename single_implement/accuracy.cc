@@ -74,7 +74,7 @@ void init_preprocess() {
         labels_batch(DataType::DT_INT32, labels_batch_shape);
     float* images_batch_ptr = images_batch.flat<float>().data();
     int* label_batch_ptr = labels_batch.flat<int>().data();
-    std::unique_lock<std::mutex> lk(mu);
+
     for (int i = 0; i < batch_size; i++) {
         Tensor& image_current = standard_images[i];
         float* image_current_ptr = image_current.flat<float>().data();
