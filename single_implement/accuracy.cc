@@ -168,7 +168,9 @@ void assign_predict_variables(tensorflow::Session* from,
     int i = 0;
     for (std::string const& variable_name : variable_names) {
         auto& names = map_names.find(variable_name)->second;
-        assign_names.push_back(names.assign_name());
+        auto& assign_name = names.assign_name();
+        int length = assign_name.size();
+        assign_names.push_back(assign_name.substr(0, length - 2));
         feeds.push_back(std::pair<std::string, tensorflow::Tensor>(
             names.placeholder_assign_name(), values[i]));
         i++;
