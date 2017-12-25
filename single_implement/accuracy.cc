@@ -92,6 +92,7 @@ void init_preprocess() {
     PRINT_INFO;
     labels = labels_batch;
     PRINT_INFO;
+    std::cout << "hehe not here" << std::endl;
 }
 
 tensorflow::Session* init_predict_session(std::string tuple_predict_path) {
