@@ -130,7 +130,14 @@ void init(std::string const log_file_name) {
         "tuple_predict_accuracy.pb";
     PRINT_INFO;
     session_to = init_predict_session(tuple_predict_path);
-
+    std::string init_name = predict_tuple.init_name();
+    std::cout << init_name << std::endl;
+    Status tf_status = session_to->Run({}, {}, {init_name}, nullptr);
+    if (!tf_status.ok()) {
+        std::cout << "running init has  failed in line " << __LINE__
+                  << " in file " << __FILE__ << std::endl;
+        std::terminate();
+    }
     PRINT_INFO;
     // init other string labels
     image_name = predict_tuple.batch_placeholder_name();
