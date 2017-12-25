@@ -78,11 +78,12 @@ void init_preprocess() {
     int* label_batch_ptr = labels_batch.flat<int>().data();
 
     PRINT_INFO;
+    int const standard_image_size = 28 * 28 * 3;
     for (int i = 0; i < batch_size; i++) {
         Tensor& image_current = standard_images[i];
         float* image_current_ptr = image_current.flat<float>().data();
-        std::copy(image_current_ptr, image_current_ptr + image_size,
-                  images_batch_ptr + i * image_size);
+        std::copy(image_current_ptr, image_current_ptr + standard_image_size,
+                  images_batch_ptr + i * standard_image_size);
         Tensor& label_current = standard_labels[i];
         int* label_current_ptr = label_current.flat<int>().data();
         label_batch_ptr[i] = *label_current_ptr;
