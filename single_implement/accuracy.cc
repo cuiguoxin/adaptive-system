@@ -31,6 +31,7 @@ void init_preprocess() {
         std::cout << status.ToString() << "\n";
         std::terminate();
     }
+    PRINT_INFO;
     // read raw tensor from file
     const int record_size = 3073;
     const int label_size = 1;
@@ -53,6 +54,7 @@ void init_preprocess() {
     }
     input_stream.close();
 
+    PRINT_INFO;
     // preprocess the images
     std::vector<tensorflow::Tensor> standard_images, standard_labels;
     for (int i = 0; i < batch_size; i++) {
@@ -75,6 +77,7 @@ void init_preprocess() {
     float* images_batch_ptr = images_batch.flat<float>().data();
     int* label_batch_ptr = labels_batch.flat<int>().data();
 
+    PRINT_INFO;
     for (int i = 0; i < batch_size; i++) {
         Tensor& image_current = standard_images[i];
         float* image_current_ptr = image_current.flat<float>().data();
@@ -84,6 +87,7 @@ void init_preprocess() {
         int* label_current_ptr = label_current.flat<int>().data();
         label_batch_ptr[i] = *label_current_ptr;
     }
+    PRINT_INFO;
     images = images_batch;
     labels = labels_batch;
 }
@@ -112,14 +116,17 @@ tensorflow::Session* init_predict_session(std::string tuple_predict_path) {
 void init(std::string const log_file_name) {
     // init image and label
     init_preprocess();
+    PRINT_INFO;
     // init log
     accuracy_stream.open("accuracy/" + log_file_name);
     // init session and tuple
     std::string const tuple_predict_path =
         "/home/cgx/git_project/adaptive-system/input/cifar10/"
         "tuple_predict_accuracy.pb";
+    PRINT_INFO;
     session_to = init_predict_session(tuple_predict_path);
 
+    PRINT_INFO;
     // init other string labels
     image_name = predict_tuple.batch_placeholder_name();
     label_name = predict_tuple.label_placeholder_name();
@@ -163,7 +170,9 @@ void assign_predict_variables(tensorflow::Session* from,
 void predict(tensorflow::Session* session_from,
              int const current_iter_num,
              std::vector<int> const& quantize_levels) {
+    PRINT_INFO;
     assign_predict_variables(session_from, session_to, predict_tuple);
+    PRINT_INFO;
     // then predict
     std::vector<tensorflow::Tensor> loss_vec;
     tensorflow::Status status = session_to->Run(
