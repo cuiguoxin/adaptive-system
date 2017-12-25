@@ -120,7 +120,9 @@ void init(std::string const log_file_name) {
     init_preprocess();
     PRINT_INFO;
     // init log
+    PRINT_INFO;
     accuracy_stream.open("accuracy/" + log_file_name);
+    PRINT_INFO;
     // init session and tuple
     std::string const tuple_predict_path =
         "/home/cgx/git_project/adaptive-system/input/cifar10/"
