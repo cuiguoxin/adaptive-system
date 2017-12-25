@@ -110,23 +110,26 @@ def inference(images, tup):
         padding='SAME',
         name='pool2')
 
-    # local3
+    factor = 3 * 2
+    a = 0.00175
+    # local3, 7*7*64*384*3 = 3.612672M 3.612672M*4 = 14.450688MB
     with tf.variable_scope('local3') as scope:
         # Move everything into depth so we can perform a single matrix multiply.
         reshape = tf.reshape(pool2, [batch_size, -1])
         dim = reshape.get_shape()[1].value
         weights = _variable_with_weight_decay(
-            'weights', shape=[dim, 384 * 3], stddev=0.04, wd=0.004, tup=tup)
-        biases = _variable_on_cpu('biases', [384 * 3],
+            'weights', shape=[dim, 384 * factor], stddev=0.03, wd=a, tup=tup)
+        biases = _variable_on_cpu('biases', [384 * factor],
                                   tf.constant_initializer(0.1), tup)
         local3 = tf.nn.relu(
             tf.matmul(reshape, weights) + biases, name=scope.name)
 
-    # local4
+    dim2 = 3840
+    # local4, 384*3*1920 = 2.211840M, 2.211840*4 = 8.847360MB
     with tf.variable_scope('local4') as scope:
         weights = _variable_with_weight_decay(
-            'weights', shape=[384 * 3, 1920], stddev=0.04, wd=0.004, tup=tup)
-        biases = _variable_on_cpu('biases', [1920],
+            'weights', shape=[384 * factor, dim2], stddev=0.04, wd=a, tup=tup)
+        biases = _variable_on_cpu('biases', [dim2],
                                   tf.constant_initializer(0.1), tup)
         local4 = tf.nn.relu(
             tf.matmul(local3, weights) + biases, name=scope.name)
@@ -134,10 +137,10 @@ def inference(images, tup):
     # linear layer(WX + b),
     # We don't apply softmax here because
     # tf.nn.sparse_softmax_cross_entropy_with_logits accepts the unscaled logits
-    # and performs the softmax internally for efficiency.
+    # and performs the softmax internally for efficiency. 1920*10=19.2k, 19.2k*4=76.8k
     with tf.variable_scope('softmax_linear') as scope:
         weights = _variable_with_weight_decay(
-            'weights', [1920, NUM_CLASSES], stddev=1 / 1920.0, wd=0.0, tup=tup)
+            'weights', [dim2, NUM_CLASSES], stddev=1.0 / dim2, wd=0.0, tup=tup)
         biases = _variable_on_cpu('biases', [NUM_CLASSES],
                                   tf.constant_initializer(0.0), tup)
         softmax_linear = tf.add(

@@ -1,10 +1,11 @@
 #include "single_implement/accuracy.h"
 
 using namespace tensorflow;
+using namespace adaptive_system;
 namespace cifar10 {}
 tensorflow::Tensor labels, images;
 std::ofstream accuracy_stream;
-tensorflow::Session *session_to;
+tensorflow::Session* session_to;
 adaptive_system::Tuple predict_tuple;
 std::string image_name, label_name, loss_name, accuracy_name,
     cross_entropy_loss_name;
@@ -77,74 +78,14 @@ void init_preprocess() {
     for (int i = 0; i < batch_size; i++) {
         Tensor& image_current = standard_images[i];
         float* image_current_ptr = image_current.flat<float>().data();
-        std::copy(image_current_ptr, image_current_ptr + standard_images_size,
-                  images_batch_ptr + i * standard_images_size);
+        std::copy(image_current_ptr, image_current_ptr + image_size,
+                  images_batch_ptr + i * image_size);
         Tensor& label_current = standard_labels[i];
         int* label_current_ptr = label_current.flat<int>().data();
         label_batch_ptr[i] = *label_current_ptr;
     }
     images = images_batch;
     labels = labels_batch;
-}
-
-void init(std::string const log_file_name) {
-    // init image and label
-    init_preprocess();
-    // init log
-    accuracy_stream.open("accuracy/" + log_file_name);
-    // init session and tuple
-    std::string const tuple_predict_path =
-        "/home/cgx/git_project/adaptive-system/input/cifar10/"
-        "tuple_predict_accuracy.pb";
-    session_to = init_predict_session(tuple_predict_path);
-    
-    // init other string labels
-    image_name = predict_tuple.batch_placeholder_name();
-    label_name = predict_tuple.label_placeholder_name();
-    loss_name = predict_tuple.loss_name();
-    accuracy_name = predict_tuple.accuracy_name();
-    cross_entropy_loss_name = predict_tuple.cross_entropy_loss_name();
-}
-
-void predict(tensorflow::Session* session_from,
-             int const current_iter_num,
-             std::vector<int> const& quantize_levels) {
-    assign_predict_variables(session_from, session_to, _tuple);
-    // then predict
-    std::vector<tensorflow::Tensor> loss_vec;
-    tensorflow::Status status = session_to->Run(
-        {{image_name, _images}, {label_name, _labels}},
-        {loss_name, accuracy_name, cross_entropy_loss_name}, {}, &loss_vec);
-    if (!status.ok()) {
-        PRINT_ERROR_MESSAGE(status.error_message());
-        std::terminate();
-    }
-    auto loss_tensor = loss_vec[0];
-    float* loss = loss_tensor.flat<float>().data();
-    auto predict_accuracy_tensor = loss_vec[1];
-    bool* predict_accuracy_ptr = predict_accuracy_tensor.flat<bool>().data();
-    auto cross_entropy_loss_tensor = loss_vec[2];
-    float* cross_entropy_loss_ptr =
-        cross_entropy_loss_tensor.flat<float>().data();
-    std::string str_quantize_levels;
-    for (auto level : quantize_levels) {
-        str_quantize_levels += std::to_string(level) + " ";
-    }
-    float right = 0;
-    for (int i = 0; i < 10000; i++) {
-        if (predict_accuracy_ptr[i]) {
-            right = right + 1;
-        }
-    }
-    float final_accuracy = right / 10000;
-    accuracy_stream << "iter num:: " << std::to_string(current_iter_number)
-                    << ":: total_loss :: " << std::to_string(*loss)
-                    << ":: entropy_loss :: "
-                    << std::to_string(*cross_entropy_loss_ptr)
-                    << ":: predict_accuracy ::"
-                    << std::to_string(final_accuracy)
-                    << ":: quantize_levels ::" << str_quantize_levels << "\n";
-    accuracy_stream.flush();
 }
 
 tensorflow::Session* init_predict_session(std::string tuple_predict_path) {
@@ -166,6 +107,25 @@ tensorflow::Session* init_predict_session(std::string tuple_predict_path) {
         std::terminate();
     }
     return session;
+}
+
+void init(std::string const log_file_name) {
+    // init image and label
+    init_preprocess();
+    // init log
+    accuracy_stream.open("accuracy/" + log_file_name);
+    // init session and tuple
+    std::string const tuple_predict_path =
+        "/home/cgx/git_project/adaptive-system/input/cifar10/"
+        "tuple_predict_accuracy.pb";
+    session_to = init_predict_session(tuple_predict_path);
+
+    // init other string labels
+    image_name = predict_tuple.batch_placeholder_name();
+    label_name = predict_tuple.label_placeholder_name();
+    loss_name = predict_tuple.loss_name();
+    accuracy_name = predict_tuple.accuracy_name();
+    cross_entropy_loss_name = predict_tuple.cross_entropy_loss_name();
 }
 
 void assign_predict_variables(tensorflow::Session* from,
@@ -200,3 +160,43 @@ void assign_predict_variables(tensorflow::Session* from,
     }
 }
 
+void predict(tensorflow::Session* session_from,
+             int const current_iter_num,
+             std::vector<int> const& quantize_levels) {
+    assign_predict_variables(session_from, session_to, predict_tuple);
+    // then predict
+    std::vector<tensorflow::Tensor> loss_vec;
+    tensorflow::Status status = session_to->Run(
+        {{image_name, images}, {label_name, labels}},
+        {loss_name, accuracy_name, cross_entropy_loss_name}, {}, &loss_vec);
+    if (!status.ok()) {
+        PRINT_ERROR_MESSAGE(status.error_message());
+        std::terminate();
+    }
+    auto loss_tensor = loss_vec[0];
+    float* loss = loss_tensor.flat<float>().data();
+    auto predict_accuracy_tensor = loss_vec[1];
+    bool* predict_accuracy_ptr = predict_accuracy_tensor.flat<bool>().data();
+    auto cross_entropy_loss_tensor = loss_vec[2];
+    float* cross_entropy_loss_ptr =
+        cross_entropy_loss_tensor.flat<float>().data();
+    std::string str_quantize_levels;
+    for (auto level : quantize_levels) {
+        str_quantize_levels += std::to_string(level) + " ";
+    }
+    float right = 0;
+    for (int i = 0; i < 10000; i++) {
+        if (predict_accuracy_ptr[i]) {
+            right = right + 1;
+        }
+    }
+    float final_accuracy = right / 10000;
+    accuracy_stream << "iter num:: " << std::to_string(current_iter_num)
+                    << ":: total_loss :: " << std::to_string(*loss)
+                    << ":: entropy_loss :: "
+                    << std::to_string(*cross_entropy_loss_ptr)
+                    << ":: predict_accuracy ::"
+                    << std::to_string(final_accuracy)
+                    << ":: quantize_levels ::" << str_quantize_levels << "\n";
+    accuracy_stream.flush();
+}
