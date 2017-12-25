@@ -89,7 +89,9 @@ void init_preprocess() {
     }
     PRINT_INFO;
     images = images_batch;
+    PRINT_INFO;
     labels = labels_batch;
+    PRINT_INFO;
 }
 
 tensorflow::Session* init_predict_session(std::string tuple_predict_path) {
