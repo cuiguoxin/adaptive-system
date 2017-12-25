@@ -180,7 +180,7 @@ with tf.Session() as sess:
     tup.label_placeholder_name = labels.name
     logits = inference(images, tup)
     top_k_op = tf.nn.in_top_k(logits, labels, 1)
-    tup.predict_name = top_k_op.name
+    tup.accuracy_name = top_k_op.name
     print top_k_op.name
 
     # Calculate loss.

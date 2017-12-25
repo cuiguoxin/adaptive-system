@@ -35,7 +35,6 @@
 #include "quantization/util/extract_feature.h"
 #include "quantization/util/helper.h"
 
-#include "server/multi_bandit.h"
 #include "server/reward.h"
 
 #include "input/cifar10/input.h"

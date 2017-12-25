@@ -1,9 +1,10 @@
 #include "single_implement/accuracy.h"
 
+using namespace tensorflow;
 namespace cifar10 {}
 tensorflow::Tensor labels, images;
 std::ofstream accuracy_stream;
-tensorflow::Session *session_to, session_from;
+tensorflow::Session *session_to;
 adaptive_system::Tuple predict_tuple;
 std::string image_name, label_name, loss_name, accuracy_name,
     cross_entropy_loss_name;
