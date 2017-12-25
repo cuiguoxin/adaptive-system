@@ -19,19 +19,19 @@
 #error regenerate this file with a newer version of protoc.
 #endif
 
-#include <google/protobuf/io/coded_stream.h>
 #include <google/protobuf/arena.h>
 #include <google/protobuf/arenastring.h>
-#include <google/protobuf/generated_message_util.h>
-#include <google/protobuf/metadata.h>
-#include <google/protobuf/message.h>
-#include <google/protobuf/repeated_field.h>  // IWYU pragma: export
 #include <google/protobuf/extension_set.h>  // IWYU pragma: export
+#include <google/protobuf/generated_message_util.h>
+#include <google/protobuf/io/coded_stream.h>
 #include <google/protobuf/map.h>
 #include <google/protobuf/map_field_inl.h>
+#include <google/protobuf/message.h>
+#include <google/protobuf/metadata.h>
+#include <google/protobuf/repeated_field.h>  // IWYU pragma: export
 #include <google/protobuf/unknown_field_set.h>
-#include "tensorflow/core/framework/tensor.pb.h"
 #include "tensorflow/core/framework/graph.pb.h"
+#include "tensorflow/core/framework/tensor.pb.h"
 #include "tensorflow/core/framework/tensor_shape.pb.h"
 // @@protoc_insertion_point(includes)
 namespace adaptive_system {
@@ -43,7 +43,8 @@ class GradientDefaultTypeInternal;
 extern GradientDefaultTypeInternal _Gradient_default_instance_;
 class GradientAccordingColumn;
 class GradientAccordingColumnDefaultTypeInternal;
-extern GradientAccordingColumnDefaultTypeInternal _GradientAccordingColumn_default_instance_;
+extern GradientAccordingColumnDefaultTypeInternal
+    _GradientAccordingColumn_default_instance_;
 class Loss;
 class LossDefaultTypeInternal;
 extern LossDefaultTypeInternal _Loss_default_instance_;
@@ -52,7 +53,8 @@ class NamedGradientsDefaultTypeInternal;
 extern NamedGradientsDefaultTypeInternal _NamedGradients_default_instance_;
 class NamedGradientsAccordingColumn;
 class NamedGradientsAccordingColumnDefaultTypeInternal;
-extern NamedGradientsAccordingColumnDefaultTypeInternal _NamedGradientsAccordingColumn_default_instance_;
+extern NamedGradientsAccordingColumnDefaultTypeInternal
+    _NamedGradientsAccordingColumn_default_instance_;
 class Names;
 class NamesDefaultTypeInternal;
 extern NamesDefaultTypeInternal _Names_default_instance_;
@@ -61,7 +63,8 @@ class PartialStateDefaultTypeInternal;
 extern PartialStateDefaultTypeInternal _PartialState_default_instance_;
 class QuantizationLevel;
 class QuantizationLevelDefaultTypeInternal;
-extern QuantizationLevelDefaultTypeInternal _QuantizationLevel_default_instance_;
+extern QuantizationLevelDefaultTypeInternal
+    _QuantizationLevel_default_instance_;
 class Tuple;
 class TupleDefaultTypeInternal;
 extern TupleDefaultTypeInternal _Tuple_default_instance_;
@@ -78,7 +81,8 @@ class TensorShapeProtoDefaultTypeInternal;
 extern TensorShapeProtoDefaultTypeInternal _TensorShapeProto_default_instance_;
 class TensorShapeProto_Dim;
 class TensorShapeProto_DimDefaultTypeInternal;
-extern TensorShapeProto_DimDefaultTypeInternal _TensorShapeProto_Dim_default_instance_;
+extern TensorShapeProto_DimDefaultTypeInternal
+    _TensorShapeProto_Dim_default_instance_;
 }  // namespace tensorflow
 
 namespace adaptive_system {
@@ -86,9 +90,9 @@ namespace adaptive_system {
 namespace protobuf_rpc_5fservice_2eproto {
 // Internal implementation detail -- do not call these.
 struct TableStruct {
-  static const ::google::protobuf::uint32 offsets[];
-  static void InitDefaultsImpl();
-  static void Shutdown();
+    static const ::google::protobuf::uint32 offsets[];
+    static void InitDefaultsImpl();
+    static void Shutdown();
 };
 void AddDescriptors();
 void InitDefaults();
@@ -96,1253 +100,1304 @@ void InitDefaults();
 
 // ===================================================================
 
-class Empty : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:adaptive_system.Empty) */ {
- public:
-  Empty();
-  virtual ~Empty();
+class Empty
+    : public ::google::protobuf::
+          Message /* @@protoc_insertion_point(class_definition:adaptive_system.Empty) */
+{
+   public:
+    Empty();
+    virtual ~Empty();
 
-  Empty(const Empty& from);
+    Empty(const Empty& from);
 
-  inline Empty& operator=(const Empty& from) {
-    CopyFrom(from);
-    return *this;
-  }
+    inline Empty& operator=(const Empty& from) {
+        CopyFrom(from);
+        return *this;
+    }
 
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const Empty& default_instance();
+    static const ::google::protobuf::Descriptor* descriptor();
+    static const Empty& default_instance();
 
-  static inline const Empty* internal_default_instance() {
-    return reinterpret_cast<const Empty*>(
-               &_Empty_default_instance_);
-  }
+    static inline const Empty* internal_default_instance() {
+        return reinterpret_cast<const Empty*>(&_Empty_default_instance_);
+    }
 
-  void Swap(Empty* other);
+    void Swap(Empty* other);
 
-  // implements Message ----------------------------------------------
+    // implements Message ----------------------------------------------
 
-  inline Empty* New() const PROTOBUF_FINAL { return New(NULL); }
+    inline Empty* New() const PROTOBUF_FINAL { return New(NULL); }
 
-  Empty* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
-  void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
-  void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
-  void CopyFrom(const Empty& from);
-  void MergeFrom(const Empty& from);
-  void Clear() PROTOBUF_FINAL;
-  bool IsInitialized() const PROTOBUF_FINAL;
+    Empty* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
+    void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+    void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+    void CopyFrom(const Empty& from);
+    void MergeFrom(const Empty& from);
+    void Clear() PROTOBUF_FINAL;
+    bool IsInitialized() const PROTOBUF_FINAL;
 
-  size_t ByteSizeLong() const PROTOBUF_FINAL;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
-  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
-      bool deterministic, ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output)
-      const PROTOBUF_FINAL {
-    return InternalSerializeWithCachedSizesToArray(
-        ::google::protobuf::io::CodedOutputStream::IsDefaultSerializationDeterministic(), output);
-  }
-  int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const PROTOBUF_FINAL;
-  void InternalSwap(Empty* other);
-  private:
-  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
-    return NULL;
-  }
-  inline void* MaybeArenaPtr() const {
-    return NULL;
-  }
-  public:
+    size_t ByteSizeLong() const PROTOBUF_FINAL;
+    bool MergePartialFromCodedStream(
+        ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
+    void SerializeWithCachedSizes(
+        ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
+    ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+        bool deterministic,
+        ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
+    ::google::protobuf::uint8* SerializeWithCachedSizesToArray(
+        ::google::protobuf::uint8* output) const PROTOBUF_FINAL {
+        return InternalSerializeWithCachedSizesToArray(
+            ::google::protobuf::io::CodedOutputStream::
+                IsDefaultSerializationDeterministic(),
+            output);
+    }
+    int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
 
-  ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
+   private:
+    void SharedCtor();
+    void SharedDtor();
+    void SetCachedSize(int size) const PROTOBUF_FINAL;
+    void InternalSwap(Empty* other);
 
-  // nested types ----------------------------------------------------
+   private:
+    inline ::google::protobuf::Arena* GetArenaNoVirtual() const { return NULL; }
+    inline void* MaybeArenaPtr() const { return NULL; }
 
-  // accessors -------------------------------------------------------
+   public:
+    ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
 
-  // @@protoc_insertion_point(class_scope:adaptive_system.Empty)
- private:
+    // nested types ----------------------------------------------------
 
-  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
-  mutable int _cached_size_;
-  friend struct protobuf_rpc_5fservice_2eproto::TableStruct;
+    // accessors -------------------------------------------------------
+
+    // @@protoc_insertion_point(class_scope:adaptive_system.Empty)
+   private:
+    ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+    mutable int _cached_size_;
+    friend struct protobuf_rpc_5fservice_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
 
-class Names : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:adaptive_system.Names) */ {
- public:
-  Names();
-  virtual ~Names();
+class Names
+    : public ::google::protobuf::
+          Message /* @@protoc_insertion_point(class_definition:adaptive_system.Names) */
+{
+   public:
+    Names();
+    virtual ~Names();
 
-  Names(const Names& from);
+    Names(const Names& from);
 
-  inline Names& operator=(const Names& from) {
-    CopyFrom(from);
-    return *this;
-  }
+    inline Names& operator=(const Names& from) {
+        CopyFrom(from);
+        return *this;
+    }
 
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const Names& default_instance();
+    static const ::google::protobuf::Descriptor* descriptor();
+    static const Names& default_instance();
 
-  static inline const Names* internal_default_instance() {
-    return reinterpret_cast<const Names*>(
-               &_Names_default_instance_);
-  }
+    static inline const Names* internal_default_instance() {
+        return reinterpret_cast<const Names*>(&_Names_default_instance_);
+    }
 
-  void Swap(Names* other);
+    void Swap(Names* other);
 
-  // implements Message ----------------------------------------------
+    // implements Message ----------------------------------------------
 
-  inline Names* New() const PROTOBUF_FINAL { return New(NULL); }
+    inline Names* New() const PROTOBUF_FINAL { return New(NULL); }
 
-  Names* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
-  void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
-  void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
-  void CopyFrom(const Names& from);
-  void MergeFrom(const Names& from);
-  void Clear() PROTOBUF_FINAL;
-  bool IsInitialized() const PROTOBUF_FINAL;
+    Names* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
+    void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+    void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+    void CopyFrom(const Names& from);
+    void MergeFrom(const Names& from);
+    void Clear() PROTOBUF_FINAL;
+    bool IsInitialized() const PROTOBUF_FINAL;
 
-  size_t ByteSizeLong() const PROTOBUF_FINAL;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
-  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
-      bool deterministic, ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output)
-      const PROTOBUF_FINAL {
-    return InternalSerializeWithCachedSizesToArray(
-        ::google::protobuf::io::CodedOutputStream::IsDefaultSerializationDeterministic(), output);
-  }
-  int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const PROTOBUF_FINAL;
-  void InternalSwap(Names* other);
-  private:
-  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
-    return NULL;
-  }
-  inline void* MaybeArenaPtr() const {
-    return NULL;
-  }
-  public:
+    size_t ByteSizeLong() const PROTOBUF_FINAL;
+    bool MergePartialFromCodedStream(
+        ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
+    void SerializeWithCachedSizes(
+        ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
+    ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+        bool deterministic,
+        ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
+    ::google::protobuf::uint8* SerializeWithCachedSizesToArray(
+        ::google::protobuf::uint8* output) const PROTOBUF_FINAL {
+        return InternalSerializeWithCachedSizesToArray(
+            ::google::protobuf::io::CodedOutputStream::
+                IsDefaultSerializationDeterministic(),
+            output);
+    }
+    int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
 
-  ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
+   private:
+    void SharedCtor();
+    void SharedDtor();
+    void SetCachedSize(int size) const PROTOBUF_FINAL;
+    void InternalSwap(Names* other);
 
-  // nested types ----------------------------------------------------
+   private:
+    inline ::google::protobuf::Arena* GetArenaNoVirtual() const { return NULL; }
+    inline void* MaybeArenaPtr() const { return NULL; }
 
-  // accessors -------------------------------------------------------
+   public:
+    ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
 
-  // string variable_name = 1;
-  void clear_variable_name();
-  static const int kVariableNameFieldNumber = 1;
-  const ::std::string& variable_name() const;
-  void set_variable_name(const ::std::string& value);
-  #if LANG_CXX11
-  void set_variable_name(::std::string&& value);
-  #endif
-  void set_variable_name(const char* value);
-  void set_variable_name(const char* value, size_t size);
-  ::std::string* mutable_variable_name();
-  ::std::string* release_variable_name();
-  void set_allocated_variable_name(::std::string* variable_name);
+    // nested types ----------------------------------------------------
 
-  // string gradient_name = 2;
-  void clear_gradient_name();
-  static const int kGradientNameFieldNumber = 2;
-  const ::std::string& gradient_name() const;
-  void set_gradient_name(const ::std::string& value);
-  #if LANG_CXX11
-  void set_gradient_name(::std::string&& value);
-  #endif
-  void set_gradient_name(const char* value);
-  void set_gradient_name(const char* value, size_t size);
-  ::std::string* mutable_gradient_name();
-  ::std::string* release_gradient_name();
-  void set_allocated_gradient_name(::std::string* gradient_name);
+    // accessors -------------------------------------------------------
 
-  // string assign_name = 3;
-  void clear_assign_name();
-  static const int kAssignNameFieldNumber = 3;
-  const ::std::string& assign_name() const;
-  void set_assign_name(const ::std::string& value);
-  #if LANG_CXX11
-  void set_assign_name(::std::string&& value);
-  #endif
-  void set_assign_name(const char* value);
-  void set_assign_name(const char* value, size_t size);
-  ::std::string* mutable_assign_name();
-  ::std::string* release_assign_name();
-  void set_allocated_assign_name(::std::string* assign_name);
+    // string variable_name = 1;
+    void clear_variable_name();
+    static const int kVariableNameFieldNumber = 1;
+    const ::std::string& variable_name() const;
+    void set_variable_name(const ::std::string& value);
+#if LANG_CXX11
+    void set_variable_name(::std::string&& value);
+#endif
+    void set_variable_name(const char* value);
+    void set_variable_name(const char* value, size_t size);
+    ::std::string* mutable_variable_name();
+    ::std::string* release_variable_name();
+    void set_allocated_variable_name(::std::string* variable_name);
 
-  // string placeholder_assign_name = 5;
-  void clear_placeholder_assign_name();
-  static const int kPlaceholderAssignNameFieldNumber = 5;
-  const ::std::string& placeholder_assign_name() const;
-  void set_placeholder_assign_name(const ::std::string& value);
-  #if LANG_CXX11
-  void set_placeholder_assign_name(::std::string&& value);
-  #endif
-  void set_placeholder_assign_name(const char* value);
-  void set_placeholder_assign_name(const char* value, size_t size);
-  ::std::string* mutable_placeholder_assign_name();
-  ::std::string* release_placeholder_assign_name();
-  void set_allocated_placeholder_assign_name(::std::string* placeholder_assign_name);
+    // string gradient_name = 2;
+    void clear_gradient_name();
+    static const int kGradientNameFieldNumber = 2;
+    const ::std::string& gradient_name() const;
+    void set_gradient_name(const ::std::string& value);
+#if LANG_CXX11
+    void set_gradient_name(::std::string&& value);
+#endif
+    void set_gradient_name(const char* value);
+    void set_gradient_name(const char* value, size_t size);
+    ::std::string* mutable_gradient_name();
+    ::std::string* release_gradient_name();
+    void set_allocated_gradient_name(::std::string* gradient_name);
 
-  // @@protoc_insertion_point(class_scope:adaptive_system.Names)
- private:
+    // string assign_name = 3;
+    void clear_assign_name();
+    static const int kAssignNameFieldNumber = 3;
+    const ::std::string& assign_name() const;
+    void set_assign_name(const ::std::string& value);
+#if LANG_CXX11
+    void set_assign_name(::std::string&& value);
+#endif
+    void set_assign_name(const char* value);
+    void set_assign_name(const char* value, size_t size);
+    ::std::string* mutable_assign_name();
+    ::std::string* release_assign_name();
+    void set_allocated_assign_name(::std::string* assign_name);
 
-  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
-  ::google::protobuf::internal::ArenaStringPtr variable_name_;
-  ::google::protobuf::internal::ArenaStringPtr gradient_name_;
-  ::google::protobuf::internal::ArenaStringPtr assign_name_;
-  ::google::protobuf::internal::ArenaStringPtr placeholder_assign_name_;
-  mutable int _cached_size_;
-  friend struct protobuf_rpc_5fservice_2eproto::TableStruct;
+    // string placeholder_assign_name = 5;
+    void clear_placeholder_assign_name();
+    static const int kPlaceholderAssignNameFieldNumber = 5;
+    const ::std::string& placeholder_assign_name() const;
+    void set_placeholder_assign_name(const ::std::string& value);
+#if LANG_CXX11
+    void set_placeholder_assign_name(::std::string&& value);
+#endif
+    void set_placeholder_assign_name(const char* value);
+    void set_placeholder_assign_name(const char* value, size_t size);
+    ::std::string* mutable_placeholder_assign_name();
+    ::std::string* release_placeholder_assign_name();
+    void set_allocated_placeholder_assign_name(
+        ::std::string* placeholder_assign_name);
+
+    // @@protoc_insertion_point(class_scope:adaptive_system.Names)
+   private:
+    ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+    ::google::protobuf::internal::ArenaStringPtr variable_name_;
+    ::google::protobuf::internal::ArenaStringPtr gradient_name_;
+    ::google::protobuf::internal::ArenaStringPtr assign_name_;
+    ::google::protobuf::internal::ArenaStringPtr placeholder_assign_name_;
+    mutable int _cached_size_;
+    friend struct protobuf_rpc_5fservice_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
 
-class QuantizationLevel : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:adaptive_system.QuantizationLevel) */ {
- public:
-  QuantizationLevel();
-  virtual ~QuantizationLevel();
+class QuantizationLevel
+    : public ::google::protobuf::
+          Message /* @@protoc_insertion_point(class_definition:adaptive_system.QuantizationLevel) */
+{
+   public:
+    QuantizationLevel();
+    virtual ~QuantizationLevel();
 
-  QuantizationLevel(const QuantizationLevel& from);
+    QuantizationLevel(const QuantizationLevel& from);
 
-  inline QuantizationLevel& operator=(const QuantizationLevel& from) {
-    CopyFrom(from);
-    return *this;
-  }
+    inline QuantizationLevel& operator=(const QuantizationLevel& from) {
+        CopyFrom(from);
+        return *this;
+    }
 
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const QuantizationLevel& default_instance();
+    static const ::google::protobuf::Descriptor* descriptor();
+    static const QuantizationLevel& default_instance();
 
-  static inline const QuantizationLevel* internal_default_instance() {
-    return reinterpret_cast<const QuantizationLevel*>(
-               &_QuantizationLevel_default_instance_);
-  }
+    static inline const QuantizationLevel* internal_default_instance() {
+        return reinterpret_cast<const QuantizationLevel*>(
+            &_QuantizationLevel_default_instance_);
+    }
 
-  void Swap(QuantizationLevel* other);
+    void Swap(QuantizationLevel* other);
 
-  // implements Message ----------------------------------------------
+    // implements Message ----------------------------------------------
 
-  inline QuantizationLevel* New() const PROTOBUF_FINAL { return New(NULL); }
+    inline QuantizationLevel* New() const PROTOBUF_FINAL { return New(NULL); }
 
-  QuantizationLevel* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
-  void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
-  void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
-  void CopyFrom(const QuantizationLevel& from);
-  void MergeFrom(const QuantizationLevel& from);
-  void Clear() PROTOBUF_FINAL;
-  bool IsInitialized() const PROTOBUF_FINAL;
+    QuantizationLevel* New(::google::protobuf::Arena* arena) const
+        PROTOBUF_FINAL;
+    void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+    void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+    void CopyFrom(const QuantizationLevel& from);
+    void MergeFrom(const QuantizationLevel& from);
+    void Clear() PROTOBUF_FINAL;
+    bool IsInitialized() const PROTOBUF_FINAL;
 
-  size_t ByteSizeLong() const PROTOBUF_FINAL;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
-  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
-      bool deterministic, ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output)
-      const PROTOBUF_FINAL {
-    return InternalSerializeWithCachedSizesToArray(
-        ::google::protobuf::io::CodedOutputStream::IsDefaultSerializationDeterministic(), output);
-  }
-  int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const PROTOBUF_FINAL;
-  void InternalSwap(QuantizationLevel* other);
-  private:
-  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
-    return NULL;
-  }
-  inline void* MaybeArenaPtr() const {
-    return NULL;
-  }
-  public:
+    size_t ByteSizeLong() const PROTOBUF_FINAL;
+    bool MergePartialFromCodedStream(
+        ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
+    void SerializeWithCachedSizes(
+        ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
+    ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+        bool deterministic,
+        ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
+    ::google::protobuf::uint8* SerializeWithCachedSizesToArray(
+        ::google::protobuf::uint8* output) const PROTOBUF_FINAL {
+        return InternalSerializeWithCachedSizesToArray(
+            ::google::protobuf::io::CodedOutputStream::
+                IsDefaultSerializationDeterministic(),
+            output);
+    }
+    int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
 
-  ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
+   private:
+    void SharedCtor();
+    void SharedDtor();
+    void SetCachedSize(int size) const PROTOBUF_FINAL;
+    void InternalSwap(QuantizationLevel* other);
 
-  // nested types ----------------------------------------------------
+   private:
+    inline ::google::protobuf::Arena* GetArenaNoVirtual() const { return NULL; }
+    inline void* MaybeArenaPtr() const { return NULL; }
 
-  // accessors -------------------------------------------------------
+   public:
+    ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
 
-  // int32 level_order = 1;
-  void clear_level_order();
-  static const int kLevelOrderFieldNumber = 1;
-  ::google::protobuf::int32 level_order() const;
-  void set_level_order(::google::protobuf::int32 value);
+    // nested types ----------------------------------------------------
 
-  // @@protoc_insertion_point(class_scope:adaptive_system.QuantizationLevel)
- private:
+    // accessors -------------------------------------------------------
 
-  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
-  ::google::protobuf::int32 level_order_;
-  mutable int _cached_size_;
-  friend struct protobuf_rpc_5fservice_2eproto::TableStruct;
+    // int32 level_order = 1;
+    void clear_level_order();
+    static const int kLevelOrderFieldNumber = 1;
+    ::google::protobuf::int32 level_order() const;
+    void set_level_order(::google::protobuf::int32 value);
+
+    // @@protoc_insertion_point(class_scope:adaptive_system.QuantizationLevel)
+   private:
+    ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+    ::google::protobuf::int32 level_order_;
+    mutable int _cached_size_;
+    friend struct protobuf_rpc_5fservice_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
 
+// -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
 
-
 // -------------------------------------------------------------------
 
+class Tuple
+    : public ::google::protobuf::
+          Message /* @@protoc_insertion_point(class_definition:adaptive_system.Tuple) */
+{
+   public:
+    Tuple();
+    virtual ~Tuple();
 
-// -------------------------------------------------------------------
+    Tuple(const Tuple& from);
 
-class Tuple : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:adaptive_system.Tuple) */ {
- public:
-  Tuple();
-  virtual ~Tuple();
+    inline Tuple& operator=(const Tuple& from) {
+        CopyFrom(from);
+        return *this;
+    }
 
-  Tuple(const Tuple& from);
+    static const ::google::protobuf::Descriptor* descriptor();
+    static const Tuple& default_instance();
 
-  inline Tuple& operator=(const Tuple& from) {
-    CopyFrom(from);
-    return *this;
-  }
+    static inline const Tuple* internal_default_instance() {
+        return reinterpret_cast<const Tuple*>(&_Tuple_default_instance_);
+    }
 
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const Tuple& default_instance();
+    void Swap(Tuple* other);
 
-  static inline const Tuple* internal_default_instance() {
-    return reinterpret_cast<const Tuple*>(
-               &_Tuple_default_instance_);
-  }
+    // implements Message ----------------------------------------------
 
-  void Swap(Tuple* other);
+    inline Tuple* New() const PROTOBUF_FINAL { return New(NULL); }
 
-  // implements Message ----------------------------------------------
+    Tuple* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
+    void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+    void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+    void CopyFrom(const Tuple& from);
+    void MergeFrom(const Tuple& from);
+    void Clear() PROTOBUF_FINAL;
+    bool IsInitialized() const PROTOBUF_FINAL;
 
-  inline Tuple* New() const PROTOBUF_FINAL { return New(NULL); }
+    size_t ByteSizeLong() const PROTOBUF_FINAL;
+    bool MergePartialFromCodedStream(
+        ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
+    void SerializeWithCachedSizes(
+        ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
+    ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+        bool deterministic,
+        ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
+    ::google::protobuf::uint8* SerializeWithCachedSizesToArray(
+        ::google::protobuf::uint8* output) const PROTOBUF_FINAL {
+        return InternalSerializeWithCachedSizesToArray(
+            ::google::protobuf::io::CodedOutputStream::
+                IsDefaultSerializationDeterministic(),
+            output);
+    }
+    int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
 
-  Tuple* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
-  void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
-  void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
-  void CopyFrom(const Tuple& from);
-  void MergeFrom(const Tuple& from);
-  void Clear() PROTOBUF_FINAL;
-  bool IsInitialized() const PROTOBUF_FINAL;
+   private:
+    void SharedCtor();
+    void SharedDtor();
+    void SetCachedSize(int size) const PROTOBUF_FINAL;
+    void InternalSwap(Tuple* other);
 
-  size_t ByteSizeLong() const PROTOBUF_FINAL;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
-  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
-      bool deterministic, ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output)
-      const PROTOBUF_FINAL {
-    return InternalSerializeWithCachedSizesToArray(
-        ::google::protobuf::io::CodedOutputStream::IsDefaultSerializationDeterministic(), output);
-  }
-  int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const PROTOBUF_FINAL;
-  void InternalSwap(Tuple* other);
-  private:
-  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
-    return NULL;
-  }
-  inline void* MaybeArenaPtr() const {
-    return NULL;
-  }
-  public:
+   private:
+    inline ::google::protobuf::Arena* GetArenaNoVirtual() const { return NULL; }
+    inline void* MaybeArenaPtr() const { return NULL; }
 
-  ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
+   public:
+    ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
 
-  // nested types ----------------------------------------------------
+    // nested types ----------------------------------------------------
 
+    // accessors -------------------------------------------------------
 
-  // accessors -------------------------------------------------------
+    // map<string, .adaptive_system.Names> map_names = 1;
+    int map_names_size() const;
+    void clear_map_names();
+    static const int kMapNamesFieldNumber = 1;
+    const ::google::protobuf::Map< ::std::string, ::adaptive_system::Names>&
+    map_names() const;
+    ::google::protobuf::Map< ::std::string, ::adaptive_system::Names>*
+    mutable_map_names();
 
-  // map<string, .adaptive_system.Names> map_names = 1;
-  int map_names_size() const;
-  void clear_map_names();
-  static const int kMapNamesFieldNumber = 1;
-  const ::google::protobuf::Map< ::std::string, ::adaptive_system::Names >&
-      map_names() const;
-  ::google::protobuf::Map< ::std::string, ::adaptive_system::Names >*
-      mutable_map_names();
+    // map<string, .tensorflow.TensorProto> map_parameters = 2;
+    int map_parameters_size() const;
+    void clear_map_parameters();
+    static const int kMapParametersFieldNumber = 2;
+    const ::google::protobuf::Map< ::std::string, ::tensorflow::TensorProto>&
+    map_parameters() const;
+    ::google::protobuf::Map< ::std::string, ::tensorflow::TensorProto>*
+    mutable_map_parameters();
 
-  // map<string, .tensorflow.TensorProto> map_parameters = 2;
-  int map_parameters_size() const;
-  void clear_map_parameters();
-  static const int kMapParametersFieldNumber = 2;
-  const ::google::protobuf::Map< ::std::string, ::tensorflow::TensorProto >&
-      map_parameters() const;
-  ::google::protobuf::Map< ::std::string, ::tensorflow::TensorProto >*
-      mutable_map_parameters();
+    // map<int32, int32> order_to_level = 14;
+    int order_to_level_size() const;
+    void clear_order_to_level();
+    static const int kOrderToLevelFieldNumber = 14;
+    const ::google::protobuf::Map< ::google::protobuf::int32,
+                                   ::google::protobuf::int32>&
+    order_to_level() const;
+    ::google::protobuf::Map< ::google::protobuf::int32,
+                             ::google::protobuf::int32>*
+    mutable_order_to_level();
 
-  // map<int32, int32> order_to_level = 14;
-  int order_to_level_size() const;
-  void clear_order_to_level();
-  static const int kOrderToLevelFieldNumber = 14;
-  const ::google::protobuf::Map< ::google::protobuf::int32, ::google::protobuf::int32 >&
-      order_to_level() const;
-  ::google::protobuf::Map< ::google::protobuf::int32, ::google::protobuf::int32 >*
-      mutable_order_to_level();
+    // string loss_name = 6;
+    void clear_loss_name();
+    static const int kLossNameFieldNumber = 6;
+    const ::std::string& loss_name() const;
+    void set_loss_name(const ::std::string& value);
+#if LANG_CXX11
+    void set_loss_name(::std::string&& value);
+#endif
+    void set_loss_name(const char* value);
+    void set_loss_name(const char* value, size_t size);
+    ::std::string* mutable_loss_name();
+    ::std::string* release_loss_name();
+    void set_allocated_loss_name(::std::string* loss_name);
 
-  // string loss_name = 6;
-  void clear_loss_name();
-  static const int kLossNameFieldNumber = 6;
-  const ::std::string& loss_name() const;
-  void set_loss_name(const ::std::string& value);
-  #if LANG_CXX11
-  void set_loss_name(::std::string&& value);
-  #endif
-  void set_loss_name(const char* value);
-  void set_loss_name(const char* value, size_t size);
-  ::std::string* mutable_loss_name();
-  ::std::string* release_loss_name();
-  void set_allocated_loss_name(::std::string* loss_name);
+    // string init_name = 7;
+    void clear_init_name();
+    static const int kInitNameFieldNumber = 7;
+    const ::std::string& init_name() const;
+    void set_init_name(const ::std::string& value);
+#if LANG_CXX11
+    void set_init_name(::std::string&& value);
+#endif
+    void set_init_name(const char* value);
+    void set_init_name(const char* value, size_t size);
+    ::std::string* mutable_init_name();
+    ::std::string* release_init_name();
+    void set_allocated_init_name(::std::string* init_name);
 
-  // string init_name = 7;
-  void clear_init_name();
-  static const int kInitNameFieldNumber = 7;
-  const ::std::string& init_name() const;
-  void set_init_name(const ::std::string& value);
-  #if LANG_CXX11
-  void set_init_name(::std::string&& value);
-  #endif
-  void set_init_name(const char* value);
-  void set_init_name(const char* value, size_t size);
-  ::std::string* mutable_init_name();
-  ::std::string* release_init_name();
-  void set_allocated_init_name(::std::string* init_name);
+    // string batch_placeholder_name = 8;
+    void clear_batch_placeholder_name();
+    static const int kBatchPlaceholderNameFieldNumber = 8;
+    const ::std::string& batch_placeholder_name() const;
+    void set_batch_placeholder_name(const ::std::string& value);
+#if LANG_CXX11
+    void set_batch_placeholder_name(::std::string&& value);
+#endif
+    void set_batch_placeholder_name(const char* value);
+    void set_batch_placeholder_name(const char* value, size_t size);
+    ::std::string* mutable_batch_placeholder_name();
+    ::std::string* release_batch_placeholder_name();
+    void set_allocated_batch_placeholder_name(
+        ::std::string* batch_placeholder_name);
 
-  // string batch_placeholder_name = 8;
-  void clear_batch_placeholder_name();
-  static const int kBatchPlaceholderNameFieldNumber = 8;
-  const ::std::string& batch_placeholder_name() const;
-  void set_batch_placeholder_name(const ::std::string& value);
-  #if LANG_CXX11
-  void set_batch_placeholder_name(::std::string&& value);
-  #endif
-  void set_batch_placeholder_name(const char* value);
-  void set_batch_placeholder_name(const char* value, size_t size);
-  ::std::string* mutable_batch_placeholder_name();
-  ::std::string* release_batch_placeholder_name();
-  void set_allocated_batch_placeholder_name(::std::string* batch_placeholder_name);
+    // string label_placeholder_name = 9;
+    void clear_label_placeholder_name();
+    static const int kLabelPlaceholderNameFieldNumber = 9;
+    const ::std::string& label_placeholder_name() const;
+    void set_label_placeholder_name(const ::std::string& value);
+#if LANG_CXX11
+    void set_label_placeholder_name(::std::string&& value);
+#endif
+    void set_label_placeholder_name(const char* value);
+    void set_label_placeholder_name(const char* value, size_t size);
+    ::std::string* mutable_label_placeholder_name();
+    ::std::string* release_label_placeholder_name();
+    void set_allocated_label_placeholder_name(
+        ::std::string* label_placeholder_name);
 
-  // string label_placeholder_name = 9;
-  void clear_label_placeholder_name();
-  static const int kLabelPlaceholderNameFieldNumber = 9;
-  const ::std::string& label_placeholder_name() const;
-  void set_label_placeholder_name(const ::std::string& value);
-  #if LANG_CXX11
-  void set_label_placeholder_name(::std::string&& value);
-  #endif
-  void set_label_placeholder_name(const char* value);
-  void set_label_placeholder_name(const char* value, size_t size);
-  ::std::string* mutable_label_placeholder_name();
-  ::std::string* release_label_placeholder_name();
-  void set_allocated_label_placeholder_name(::std::string* label_placeholder_name);
+    // string training_op_name = 10;
+    void clear_training_op_name();
+    static const int kTrainingOpNameFieldNumber = 10;
+    const ::std::string& training_op_name() const;
+    void set_training_op_name(const ::std::string& value);
+#if LANG_CXX11
+    void set_training_op_name(::std::string&& value);
+#endif
+    void set_training_op_name(const char* value);
+    void set_training_op_name(const char* value, size_t size);
+    ::std::string* mutable_training_op_name();
+    ::std::string* release_training_op_name();
+    void set_allocated_training_op_name(::std::string* training_op_name);
 
-  // string training_op_name = 10;
-  void clear_training_op_name();
-  static const int kTrainingOpNameFieldNumber = 10;
-  const ::std::string& training_op_name() const;
-  void set_training_op_name(const ::std::string& value);
-  #if LANG_CXX11
-  void set_training_op_name(::std::string&& value);
-  #endif
-  void set_training_op_name(const char* value);
-  void set_training_op_name(const char* value, size_t size);
-  ::std::string* mutable_training_op_name();
-  ::std::string* release_training_op_name();
-  void set_allocated_training_op_name(::std::string* training_op_name);
+    // string cross_entropy_loss_name = 15;
+    void clear_cross_entropy_loss_name();
+    static const int kCrossEntropyLossNameFieldNumber = 15;
+    const ::std::string& cross_entropy_loss_name() const;
+    void set_cross_entropy_loss_name(const ::std::string& value);
+#if LANG_CXX11
+    void set_cross_entropy_loss_name(::std::string&& value);
+#endif
+    void set_cross_entropy_loss_name(const char* value);
+    void set_cross_entropy_loss_name(const char* value, size_t size);
+    ::std::string* mutable_cross_entropy_loss_name();
+    ::std::string* release_cross_entropy_loss_name();
+    void set_allocated_cross_entropy_loss_name(
+        ::std::string* cross_entropy_loss_name);
 
-  // string cross_entropy_loss_name = 15;
-  void clear_cross_entropy_loss_name();
-  static const int kCrossEntropyLossNameFieldNumber = 15;
-  const ::std::string& cross_entropy_loss_name() const;
-  void set_cross_entropy_loss_name(const ::std::string& value);
-  #if LANG_CXX11
-  void set_cross_entropy_loss_name(::std::string&& value);
-  #endif
-  void set_cross_entropy_loss_name(const char* value);
-  void set_cross_entropy_loss_name(const char* value, size_t size);
-  ::std::string* mutable_cross_entropy_loss_name();
-  ::std::string* release_cross_entropy_loss_name();
-  void set_allocated_cross_entropy_loss_name(::std::string* cross_entropy_loss_name);
+    // string learning_rate_placeholder_name = 16;
+    void clear_learning_rate_placeholder_name();
+    static const int kLearningRatePlaceholderNameFieldNumber = 16;
+    const ::std::string& learning_rate_placeholder_name() const;
+    void set_learning_rate_placeholder_name(const ::std::string& value);
+#if LANG_CXX11
+    void set_learning_rate_placeholder_name(::std::string&& value);
+#endif
+    void set_learning_rate_placeholder_name(const char* value);
+    void set_learning_rate_placeholder_name(const char* value, size_t size);
+    ::std::string* mutable_learning_rate_placeholder_name();
+    ::std::string* release_learning_rate_placeholder_name();
+    void set_allocated_learning_rate_placeholder_name(
+        ::std::string* learning_rate_placeholder_name);
 
-  // string learning_rate_placeholder_name = 16;
-  void clear_learning_rate_placeholder_name();
-  static const int kLearningRatePlaceholderNameFieldNumber = 16;
-  const ::std::string& learning_rate_placeholder_name() const;
-  void set_learning_rate_placeholder_name(const ::std::string& value);
-  #if LANG_CXX11
-  void set_learning_rate_placeholder_name(::std::string&& value);
-  #endif
-  void set_learning_rate_placeholder_name(const char* value);
-  void set_learning_rate_placeholder_name(const char* value, size_t size);
-  ::std::string* mutable_learning_rate_placeholder_name();
-  ::std::string* release_learning_rate_placeholder_name();
-  void set_allocated_learning_rate_placeholder_name(::std::string* learning_rate_placeholder_name);
+    // .tensorflow.GraphDef graph = 5;
+    bool has_graph() const;
+    void clear_graph();
+    static const int kGraphFieldNumber = 5;
+    const ::tensorflow::GraphDef& graph() const;
+    ::tensorflow::GraphDef* mutable_graph();
+    ::tensorflow::GraphDef* release_graph();
+    void set_allocated_graph(::tensorflow::GraphDef* graph);
 
-  // .tensorflow.GraphDef graph = 5;
-  bool has_graph() const;
-  void clear_graph();
-  static const int kGraphFieldNumber = 5;
-  const ::tensorflow::GraphDef& graph() const;
-  ::tensorflow::GraphDef* mutable_graph();
-  ::tensorflow::GraphDef* release_graph();
-  void set_allocated_graph(::tensorflow::GraphDef* graph);
+    // float lr = 3;
+    void clear_lr();
+    static const int kLrFieldNumber = 3;
+    float lr() const;
+    void set_lr(float value);
 
-  // float lr = 3;
-  void clear_lr();
-  static const int kLrFieldNumber = 3;
-  float lr() const;
-  void set_lr(float value);
+    // int32 interval = 4;
+    void clear_interval();
+    static const int kIntervalFieldNumber = 4;
+    ::google::protobuf::int32 interval() const;
+    void set_interval(::google::protobuf::int32 value);
 
-  // int32 interval = 4;
-  void clear_interval();
-  static const int kIntervalFieldNumber = 4;
-  ::google::protobuf::int32 interval() const;
-  void set_interval(::google::protobuf::int32 value);
+    // int32 total_iter = 11;
+    void clear_total_iter();
+    static const int kTotalIterFieldNumber = 11;
+    ::google::protobuf::int32 total_iter() const;
+    void set_total_iter(::google::protobuf::int32 value);
 
-  // int32 total_iter = 11;
-  void clear_total_iter();
-  static const int kTotalIterFieldNumber = 11;
-  ::google::protobuf::int32 total_iter() const;
-  void set_total_iter(::google::protobuf::int32 value);
+    // int32 batch_size = 12;
+    void clear_batch_size();
+    static const int kBatchSizeFieldNumber = 12;
+    ::google::protobuf::int32 batch_size() const;
+    void set_batch_size(::google::protobuf::int32 value);
 
-  // int32 batch_size = 12;
-  void clear_batch_size();
-  static const int kBatchSizeFieldNumber = 12;
-  ::google::protobuf::int32 batch_size() const;
-  void set_batch_size(::google::protobuf::int32 value);
-
-  // @@protoc_insertion_point(class_scope:adaptive_system.Tuple)
- private:
-
-  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
-  typedef ::google::protobuf::internal::MapEntryLite<
-      ::std::string, ::adaptive_system::Names,
-      ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
-      ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE,
-      0 >
-      Tuple_MapNamesEntry;
-  ::google::protobuf::internal::MapField<
-      ::std::string, ::adaptive_system::Names,
-      ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
-      ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE,
-      0 > map_names_;
-  typedef ::google::protobuf::internal::MapEntryLite<
-      ::std::string, ::tensorflow::TensorProto,
-      ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
-      ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE,
-      0 >
-      Tuple_MapParametersEntry;
-  ::google::protobuf::internal::MapField<
-      ::std::string, ::tensorflow::TensorProto,
-      ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
-      ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE,
-      0 > map_parameters_;
-  typedef ::google::protobuf::internal::MapEntryLite<
-      ::google::protobuf::int32, ::google::protobuf::int32,
-      ::google::protobuf::internal::WireFormatLite::TYPE_INT32,
-      ::google::protobuf::internal::WireFormatLite::TYPE_INT32,
-      0 >
-      Tuple_OrderToLevelEntry;
-  ::google::protobuf::internal::MapField<
-      ::google::protobuf::int32, ::google::protobuf::int32,
-      ::google::protobuf::internal::WireFormatLite::TYPE_INT32,
-      ::google::protobuf::internal::WireFormatLite::TYPE_INT32,
-      0 > order_to_level_;
-  ::google::protobuf::internal::ArenaStringPtr loss_name_;
-  ::google::protobuf::internal::ArenaStringPtr init_name_;
-  ::google::protobuf::internal::ArenaStringPtr batch_placeholder_name_;
-  ::google::protobuf::internal::ArenaStringPtr label_placeholder_name_;
-  ::google::protobuf::internal::ArenaStringPtr training_op_name_;
-  ::google::protobuf::internal::ArenaStringPtr cross_entropy_loss_name_;
-  ::google::protobuf::internal::ArenaStringPtr learning_rate_placeholder_name_;
-  ::tensorflow::GraphDef* graph_;
-  float lr_;
-  ::google::protobuf::int32 interval_;
-  ::google::protobuf::int32 total_iter_;
-  ::google::protobuf::int32 batch_size_;
-  mutable int _cached_size_;
-  friend struct protobuf_rpc_5fservice_2eproto::TableStruct;
+    // @@protoc_insertion_point(class_scope:adaptive_system.Tuple)
+   private:
+    ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+    typedef ::google::protobuf::internal::MapEntryLite<
+        ::std::string,
+        ::adaptive_system::Names,
+        ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+        ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE,
+        0>
+        Tuple_MapNamesEntry;
+    ::google::protobuf::internal::MapField<
+        ::std::string,
+        ::adaptive_system::Names,
+        ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+        ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE,
+        0>
+        map_names_;
+    typedef ::google::protobuf::internal::MapEntryLite<
+        ::std::string,
+        ::tensorflow::TensorProto,
+        ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+        ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE,
+        0>
+        Tuple_MapParametersEntry;
+    ::google::protobuf::internal::MapField<
+        ::std::string,
+        ::tensorflow::TensorProto,
+        ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+        ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE,
+        0>
+        map_parameters_;
+    typedef ::google::protobuf::internal::MapEntryLite<
+        ::google::protobuf::int32,
+        ::google::protobuf::int32,
+        ::google::protobuf::internal::WireFormatLite::TYPE_INT32,
+        ::google::protobuf::internal::WireFormatLite::TYPE_INT32,
+        0>
+        Tuple_OrderToLevelEntry;
+    ::google::protobuf::internal::MapField<
+        ::google::protobuf::int32,
+        ::google::protobuf::int32,
+        ::google::protobuf::internal::WireFormatLite::TYPE_INT32,
+        ::google::protobuf::internal::WireFormatLite::TYPE_INT32,
+        0>
+        order_to_level_;
+    ::google::protobuf::internal::ArenaStringPtr loss_name_;
+    ::google::protobuf::internal::ArenaStringPtr init_name_;
+    ::google::protobuf::internal::ArenaStringPtr batch_placeholder_name_;
+    ::google::protobuf::internal::ArenaStringPtr label_placeholder_name_;
+    ::google::protobuf::internal::ArenaStringPtr training_op_name_;
+    ::google::protobuf::internal::ArenaStringPtr cross_entropy_loss_name_;
+    ::google::protobuf::internal::ArenaStringPtr
+        learning_rate_placeholder_name_;
+    ::tensorflow::GraphDef* graph_;
+    float lr_;
+    ::google::protobuf::int32 interval_;
+    ::google::protobuf::int32 total_iter_;
+    ::google::protobuf::int32 batch_size_;
+    mutable int _cached_size_;
+    friend struct protobuf_rpc_5fservice_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
 
-class Gradient : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:adaptive_system.Gradient) */ {
- public:
-  Gradient();
-  virtual ~Gradient();
+class Gradient
+    : public ::google::protobuf::
+          Message /* @@protoc_insertion_point(class_definition:adaptive_system.Gradient) */
+{
+   public:
+    Gradient();
+    virtual ~Gradient();
 
-  Gradient(const Gradient& from);
+    Gradient(const Gradient& from);
 
-  inline Gradient& operator=(const Gradient& from) {
-    CopyFrom(from);
-    return *this;
-  }
+    inline Gradient& operator=(const Gradient& from) {
+        CopyFrom(from);
+        return *this;
+    }
 
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const Gradient& default_instance();
+    static const ::google::protobuf::Descriptor* descriptor();
+    static const Gradient& default_instance();
 
-  static inline const Gradient* internal_default_instance() {
-    return reinterpret_cast<const Gradient*>(
-               &_Gradient_default_instance_);
-  }
+    static inline const Gradient* internal_default_instance() {
+        return reinterpret_cast<const Gradient*>(&_Gradient_default_instance_);
+    }
 
-  void Swap(Gradient* other);
+    void Swap(Gradient* other);
 
-  // implements Message ----------------------------------------------
+    // implements Message ----------------------------------------------
 
-  inline Gradient* New() const PROTOBUF_FINAL { return New(NULL); }
+    inline Gradient* New() const PROTOBUF_FINAL { return New(NULL); }
 
-  Gradient* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
-  void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
-  void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
-  void CopyFrom(const Gradient& from);
-  void MergeFrom(const Gradient& from);
-  void Clear() PROTOBUF_FINAL;
-  bool IsInitialized() const PROTOBUF_FINAL;
+    Gradient* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
+    void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+    void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+    void CopyFrom(const Gradient& from);
+    void MergeFrom(const Gradient& from);
+    void Clear() PROTOBUF_FINAL;
+    bool IsInitialized() const PROTOBUF_FINAL;
 
-  size_t ByteSizeLong() const PROTOBUF_FINAL;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
-  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
-      bool deterministic, ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output)
-      const PROTOBUF_FINAL {
-    return InternalSerializeWithCachedSizesToArray(
-        ::google::protobuf::io::CodedOutputStream::IsDefaultSerializationDeterministic(), output);
-  }
-  int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const PROTOBUF_FINAL;
-  void InternalSwap(Gradient* other);
-  private:
-  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
-    return NULL;
-  }
-  inline void* MaybeArenaPtr() const {
-    return NULL;
-  }
-  public:
+    size_t ByteSizeLong() const PROTOBUF_FINAL;
+    bool MergePartialFromCodedStream(
+        ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
+    void SerializeWithCachedSizes(
+        ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
+    ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+        bool deterministic,
+        ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
+    ::google::protobuf::uint8* SerializeWithCachedSizesToArray(
+        ::google::protobuf::uint8* output) const PROTOBUF_FINAL {
+        return InternalSerializeWithCachedSizesToArray(
+            ::google::protobuf::io::CodedOutputStream::
+                IsDefaultSerializationDeterministic(),
+            output);
+    }
+    int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
 
-  ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
+   private:
+    void SharedCtor();
+    void SharedDtor();
+    void SetCachedSize(int size) const PROTOBUF_FINAL;
+    void InternalSwap(Gradient* other);
 
-  // nested types ----------------------------------------------------
+   private:
+    inline ::google::protobuf::Arena* GetArenaNoVirtual() const { return NULL; }
+    inline void* MaybeArenaPtr() const { return NULL; }
 
-  // accessors -------------------------------------------------------
+   public:
+    ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
 
-  // bytes quantized_tensor = 3;
-  void clear_quantized_tensor();
-  static const int kQuantizedTensorFieldNumber = 3;
-  const ::std::string& quantized_tensor() const;
-  void set_quantized_tensor(const ::std::string& value);
-  #if LANG_CXX11
-  void set_quantized_tensor(::std::string&& value);
-  #endif
-  void set_quantized_tensor(const char* value);
-  void set_quantized_tensor(const void* value, size_t size);
-  ::std::string* mutable_quantized_tensor();
-  ::std::string* release_quantized_tensor();
-  void set_allocated_quantized_tensor(::std::string* quantized_tensor);
+    // nested types ----------------------------------------------------
 
-  // .tensorflow.TensorShapeProto tensor_shape = 6;
-  bool has_tensor_shape() const;
-  void clear_tensor_shape();
-  static const int kTensorShapeFieldNumber = 6;
-  const ::tensorflow::TensorShapeProto& tensor_shape() const;
-  ::tensorflow::TensorShapeProto* mutable_tensor_shape();
-  ::tensorflow::TensorShapeProto* release_tensor_shape();
-  void set_allocated_tensor_shape(::tensorflow::TensorShapeProto* tensor_shape);
+    // accessors -------------------------------------------------------
 
-  // int32 quantization_level = 1;
-  void clear_quantization_level();
-  static const int kQuantizationLevelFieldNumber = 1;
-  ::google::protobuf::int32 quantization_level() const;
-  void set_quantization_level(::google::protobuf::int32 value);
+    // bytes quantized_tensor = 3;
+    void clear_quantized_tensor();
+    static const int kQuantizedTensorFieldNumber = 3;
+    const ::std::string& quantized_tensor() const;
+    void set_quantized_tensor(const ::std::string& value);
+#if LANG_CXX11
+    void set_quantized_tensor(::std::string&& value);
+#endif
+    void set_quantized_tensor(const char* value);
+    void set_quantized_tensor(const void* value, size_t size);
+    ::std::string* mutable_quantized_tensor();
+    ::std::string* release_quantized_tensor();
+    void set_allocated_quantized_tensor(::std::string* quantized_tensor);
 
-  // float max = 4;
-  void clear_max();
-  static const int kMaxFieldNumber = 4;
-  float max() const;
-  void set_max(float value);
+    // .tensorflow.TensorShapeProto tensor_shape = 6;
+    bool has_tensor_shape() const;
+    void clear_tensor_shape();
+    static const int kTensorShapeFieldNumber = 6;
+    const ::tensorflow::TensorShapeProto& tensor_shape() const;
+    ::tensorflow::TensorShapeProto* mutable_tensor_shape();
+    ::tensorflow::TensorShapeProto* release_tensor_shape();
+    void set_allocated_tensor_shape(
+        ::tensorflow::TensorShapeProto* tensor_shape);
 
-  // float min = 5;
-  void clear_min();
-  static const int kMinFieldNumber = 5;
-  float min() const;
-  void set_min(float value);
+    // int32 quantization_level = 1;
+    void clear_quantization_level();
+    static const int kQuantizationLevelFieldNumber = 1;
+    ::google::protobuf::int32 quantization_level() const;
+    void set_quantization_level(::google::protobuf::int32 value);
 
-  // @@protoc_insertion_point(class_scope:adaptive_system.Gradient)
- private:
+    // float max = 4;
+    void clear_max();
+    static const int kMaxFieldNumber = 4;
+    float max() const;
+    void set_max(float value);
 
-  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
-  ::google::protobuf::internal::ArenaStringPtr quantized_tensor_;
-  ::tensorflow::TensorShapeProto* tensor_shape_;
-  ::google::protobuf::int32 quantization_level_;
-  float max_;
-  float min_;
-  mutable int _cached_size_;
-  friend struct protobuf_rpc_5fservice_2eproto::TableStruct;
+    // float min = 5;
+    void clear_min();
+    static const int kMinFieldNumber = 5;
+    float min() const;
+    void set_min(float value);
+
+    // @@protoc_insertion_point(class_scope:adaptive_system.Gradient)
+   private:
+    ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+    ::google::protobuf::internal::ArenaStringPtr quantized_tensor_;
+    ::tensorflow::TensorShapeProto* tensor_shape_;
+    ::google::protobuf::int32 quantization_level_;
+    float max_;
+    float min_;
+    mutable int _cached_size_;
+    friend struct protobuf_rpc_5fservice_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
 
-class GradientAccordingColumn : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:adaptive_system.GradientAccordingColumn) */ {
- public:
-  GradientAccordingColumn();
-  virtual ~GradientAccordingColumn();
+class GradientAccordingColumn
+    : public ::google::protobuf::
+          Message /* @@protoc_insertion_point(class_definition:adaptive_system.GradientAccordingColumn) */
+{
+   public:
+    GradientAccordingColumn();
+    virtual ~GradientAccordingColumn();
 
-  GradientAccordingColumn(const GradientAccordingColumn& from);
+    GradientAccordingColumn(const GradientAccordingColumn& from);
 
-  inline GradientAccordingColumn& operator=(const GradientAccordingColumn& from) {
-    CopyFrom(from);
-    return *this;
-  }
+    inline GradientAccordingColumn& operator=(
+        const GradientAccordingColumn& from) {
+        CopyFrom(from);
+        return *this;
+    }
 
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const GradientAccordingColumn& default_instance();
+    static const ::google::protobuf::Descriptor* descriptor();
+    static const GradientAccordingColumn& default_instance();
 
-  static inline const GradientAccordingColumn* internal_default_instance() {
-    return reinterpret_cast<const GradientAccordingColumn*>(
-               &_GradientAccordingColumn_default_instance_);
-  }
+    static inline const GradientAccordingColumn* internal_default_instance() {
+        return reinterpret_cast<const GradientAccordingColumn*>(
+            &_GradientAccordingColumn_default_instance_);
+    }
 
-  void Swap(GradientAccordingColumn* other);
+    void Swap(GradientAccordingColumn* other);
 
-  // implements Message ----------------------------------------------
+    // implements Message ----------------------------------------------
 
-  inline GradientAccordingColumn* New() const PROTOBUF_FINAL { return New(NULL); }
+    inline GradientAccordingColumn* New() const PROTOBUF_FINAL {
+        return New(NULL);
+    }
 
-  GradientAccordingColumn* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
-  void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
-  void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
-  void CopyFrom(const GradientAccordingColumn& from);
-  void MergeFrom(const GradientAccordingColumn& from);
-  void Clear() PROTOBUF_FINAL;
-  bool IsInitialized() const PROTOBUF_FINAL;
+    GradientAccordingColumn* New(::google::protobuf::Arena* arena) const
+        PROTOBUF_FINAL;
+    void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+    void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+    void CopyFrom(const GradientAccordingColumn& from);
+    void MergeFrom(const GradientAccordingColumn& from);
+    void Clear() PROTOBUF_FINAL;
+    bool IsInitialized() const PROTOBUF_FINAL;
 
-  size_t ByteSizeLong() const PROTOBUF_FINAL;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
-  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
-      bool deterministic, ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output)
-      const PROTOBUF_FINAL {
-    return InternalSerializeWithCachedSizesToArray(
-        ::google::protobuf::io::CodedOutputStream::IsDefaultSerializationDeterministic(), output);
-  }
-  int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const PROTOBUF_FINAL;
-  void InternalSwap(GradientAccordingColumn* other);
-  private:
-  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
-    return NULL;
-  }
-  inline void* MaybeArenaPtr() const {
-    return NULL;
-  }
-  public:
+    size_t ByteSizeLong() const PROTOBUF_FINAL;
+    bool MergePartialFromCodedStream(
+        ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
+    void SerializeWithCachedSizes(
+        ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
+    ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+        bool deterministic,
+        ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
+    ::google::protobuf::uint8* SerializeWithCachedSizesToArray(
+        ::google::protobuf::uint8* output) const PROTOBUF_FINAL {
+        return InternalSerializeWithCachedSizesToArray(
+            ::google::protobuf::io::CodedOutputStream::
+                IsDefaultSerializationDeterministic(),
+            output);
+    }
+    int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
 
-  ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
+   private:
+    void SharedCtor();
+    void SharedDtor();
+    void SetCachedSize(int size) const PROTOBUF_FINAL;
+    void InternalSwap(GradientAccordingColumn* other);
 
-  // nested types ----------------------------------------------------
+   private:
+    inline ::google::protobuf::Arena* GetArenaNoVirtual() const { return NULL; }
+    inline void* MaybeArenaPtr() const { return NULL; }
 
-  // accessors -------------------------------------------------------
+   public:
+    ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
 
-  // repeated bytes quantized_columns = 2;
-  int quantized_columns_size() const;
-  void clear_quantized_columns();
-  static const int kQuantizedColumnsFieldNumber = 2;
-  const ::std::string& quantized_columns(int index) const;
-  ::std::string* mutable_quantized_columns(int index);
-  void set_quantized_columns(int index, const ::std::string& value);
-  #if LANG_CXX11
-  void set_quantized_columns(int index, ::std::string&& value);
-  #endif
-  void set_quantized_columns(int index, const char* value);
-  void set_quantized_columns(int index, const void* value, size_t size);
-  ::std::string* add_quantized_columns();
-  void add_quantized_columns(const ::std::string& value);
-  #if LANG_CXX11
-  void add_quantized_columns(::std::string&& value);
-  #endif
-  void add_quantized_columns(const char* value);
-  void add_quantized_columns(const void* value, size_t size);
-  const ::google::protobuf::RepeatedPtrField< ::std::string>& quantized_columns() const;
-  ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_quantized_columns();
+    // nested types ----------------------------------------------------
 
-  // repeated float maxes = 3;
-  int maxes_size() const;
-  void clear_maxes();
-  static const int kMaxesFieldNumber = 3;
-  float maxes(int index) const;
-  void set_maxes(int index, float value);
-  void add_maxes(float value);
-  const ::google::protobuf::RepeatedField< float >&
-      maxes() const;
-  ::google::protobuf::RepeatedField< float >*
-      mutable_maxes();
+    // accessors -------------------------------------------------------
 
-  // repeated float mins = 4;
-  int mins_size() const;
-  void clear_mins();
-  static const int kMinsFieldNumber = 4;
-  float mins(int index) const;
-  void set_mins(int index, float value);
-  void add_mins(float value);
-  const ::google::protobuf::RepeatedField< float >&
-      mins() const;
-  ::google::protobuf::RepeatedField< float >*
-      mutable_mins();
+    // repeated bytes quantized_columns = 2;
+    int quantized_columns_size() const;
+    void clear_quantized_columns();
+    static const int kQuantizedColumnsFieldNumber = 2;
+    const ::std::string& quantized_columns(int index) const;
+    ::std::string* mutable_quantized_columns(int index);
+    void set_quantized_columns(int index, const ::std::string& value);
+#if LANG_CXX11
+    void set_quantized_columns(int index, ::std::string&& value);
+#endif
+    void set_quantized_columns(int index, const char* value);
+    void set_quantized_columns(int index, const void* value, size_t size);
+    ::std::string* add_quantized_columns();
+    void add_quantized_columns(const ::std::string& value);
+#if LANG_CXX11
+    void add_quantized_columns(::std::string&& value);
+#endif
+    void add_quantized_columns(const char* value);
+    void add_quantized_columns(const void* value, size_t size);
+    const ::google::protobuf::RepeatedPtrField< ::std::string>&
+    quantized_columns() const;
+    ::google::protobuf::RepeatedPtrField< ::std::string>*
+    mutable_quantized_columns();
 
-  // .tensorflow.TensorProto tensor = 7;
-  bool has_tensor() const;
-  void clear_tensor();
-  static const int kTensorFieldNumber = 7;
-  const ::tensorflow::TensorProto& tensor() const;
-  ::tensorflow::TensorProto* mutable_tensor();
-  ::tensorflow::TensorProto* release_tensor();
-  void set_allocated_tensor(::tensorflow::TensorProto* tensor);
+    // repeated float maxes = 3;
+    int maxes_size() const;
+    void clear_maxes();
+    static const int kMaxesFieldNumber = 3;
+    float maxes(int index) const;
+    void set_maxes(int index, float value);
+    void add_maxes(float value);
+    const ::google::protobuf::RepeatedField<float>& maxes() const;
+    ::google::protobuf::RepeatedField<float>* mutable_maxes();
 
-  // int32 quantization_level = 1;
-  void clear_quantization_level();
-  static const int kQuantizationLevelFieldNumber = 1;
-  ::google::protobuf::int32 quantization_level() const;
-  void set_quantization_level(::google::protobuf::int32 value);
+    // repeated float mins = 4;
+    int mins_size() const;
+    void clear_mins();
+    static const int kMinsFieldNumber = 4;
+    float mins(int index) const;
+    void set_mins(int index, float value);
+    void add_mins(float value);
+    const ::google::protobuf::RepeatedField<float>& mins() const;
+    ::google::protobuf::RepeatedField<float>* mutable_mins();
 
-  // int32 dim1 = 5;
-  void clear_dim1();
-  static const int kDim1FieldNumber = 5;
-  ::google::protobuf::int32 dim1() const;
-  void set_dim1(::google::protobuf::int32 value);
+    // .tensorflow.TensorProto tensor = 7;
+    bool has_tensor() const;
+    void clear_tensor();
+    static const int kTensorFieldNumber = 7;
+    const ::tensorflow::TensorProto& tensor() const;
+    ::tensorflow::TensorProto* mutable_tensor();
+    ::tensorflow::TensorProto* release_tensor();
+    void set_allocated_tensor(::tensorflow::TensorProto* tensor);
 
-  // int32 dim2 = 6;
-  void clear_dim2();
-  static const int kDim2FieldNumber = 6;
-  ::google::protobuf::int32 dim2() const;
-  void set_dim2(::google::protobuf::int32 value);
+    // int32 quantization_level = 1;
+    void clear_quantization_level();
+    static const int kQuantizationLevelFieldNumber = 1;
+    ::google::protobuf::int32 quantization_level() const;
+    void set_quantization_level(::google::protobuf::int32 value);
 
-  // bool is_quantized = 8;
-  void clear_is_quantized();
-  static const int kIsQuantizedFieldNumber = 8;
-  bool is_quantized() const;
-  void set_is_quantized(bool value);
+    // int32 dim1 = 5;
+    void clear_dim1();
+    static const int kDim1FieldNumber = 5;
+    ::google::protobuf::int32 dim1() const;
+    void set_dim1(::google::protobuf::int32 value);
 
-  // @@protoc_insertion_point(class_scope:adaptive_system.GradientAccordingColumn)
- private:
+    // int32 dim2 = 6;
+    void clear_dim2();
+    static const int kDim2FieldNumber = 6;
+    ::google::protobuf::int32 dim2() const;
+    void set_dim2(::google::protobuf::int32 value);
 
-  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
-  ::google::protobuf::RepeatedPtrField< ::std::string> quantized_columns_;
-  ::google::protobuf::RepeatedField< float > maxes_;
-  mutable int _maxes_cached_byte_size_;
-  ::google::protobuf::RepeatedField< float > mins_;
-  mutable int _mins_cached_byte_size_;
-  ::tensorflow::TensorProto* tensor_;
-  ::google::protobuf::int32 quantization_level_;
-  ::google::protobuf::int32 dim1_;
-  ::google::protobuf::int32 dim2_;
-  bool is_quantized_;
-  mutable int _cached_size_;
-  friend struct protobuf_rpc_5fservice_2eproto::TableStruct;
+    // bool is_quantized = 8;
+    void clear_is_quantized();
+    static const int kIsQuantizedFieldNumber = 8;
+    bool is_quantized() const;
+    void set_is_quantized(bool value);
+
+    // @@protoc_insertion_point(class_scope:adaptive_system.GradientAccordingColumn)
+   private:
+    ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+    ::google::protobuf::RepeatedPtrField< ::std::string> quantized_columns_;
+    ::google::protobuf::RepeatedField<float> maxes_;
+    mutable int _maxes_cached_byte_size_;
+    ::google::protobuf::RepeatedField<float> mins_;
+    mutable int _mins_cached_byte_size_;
+    ::tensorflow::TensorProto* tensor_;
+    ::google::protobuf::int32 quantization_level_;
+    ::google::protobuf::int32 dim1_;
+    ::google::protobuf::int32 dim2_;
+    bool is_quantized_;
+    mutable int _cached_size_;
+    friend struct protobuf_rpc_5fservice_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
 
-
 // -------------------------------------------------------------------
 
-class NamedGradients : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:adaptive_system.NamedGradients) */ {
- public:
-  NamedGradients();
-  virtual ~NamedGradients();
+class NamedGradients
+    : public ::google::protobuf::
+          Message /* @@protoc_insertion_point(class_definition:adaptive_system.NamedGradients) */
+{
+   public:
+    NamedGradients();
+    virtual ~NamedGradients();
 
-  NamedGradients(const NamedGradients& from);
+    NamedGradients(const NamedGradients& from);
 
-  inline NamedGradients& operator=(const NamedGradients& from) {
-    CopyFrom(from);
-    return *this;
-  }
+    inline NamedGradients& operator=(const NamedGradients& from) {
+        CopyFrom(from);
+        return *this;
+    }
 
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const NamedGradients& default_instance();
+    static const ::google::protobuf::Descriptor* descriptor();
+    static const NamedGradients& default_instance();
 
-  static inline const NamedGradients* internal_default_instance() {
-    return reinterpret_cast<const NamedGradients*>(
-               &_NamedGradients_default_instance_);
-  }
+    static inline const NamedGradients* internal_default_instance() {
+        return reinterpret_cast<const NamedGradients*>(
+            &_NamedGradients_default_instance_);
+    }
 
-  void Swap(NamedGradients* other);
+    void Swap(NamedGradients* other);
 
-  // implements Message ----------------------------------------------
+    // implements Message ----------------------------------------------
 
-  inline NamedGradients* New() const PROTOBUF_FINAL { return New(NULL); }
+    inline NamedGradients* New() const PROTOBUF_FINAL { return New(NULL); }
 
-  NamedGradients* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
-  void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
-  void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
-  void CopyFrom(const NamedGradients& from);
-  void MergeFrom(const NamedGradients& from);
-  void Clear() PROTOBUF_FINAL;
-  bool IsInitialized() const PROTOBUF_FINAL;
+    NamedGradients* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
+    void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+    void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+    void CopyFrom(const NamedGradients& from);
+    void MergeFrom(const NamedGradients& from);
+    void Clear() PROTOBUF_FINAL;
+    bool IsInitialized() const PROTOBUF_FINAL;
 
-  size_t ByteSizeLong() const PROTOBUF_FINAL;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
-  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
-      bool deterministic, ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output)
-      const PROTOBUF_FINAL {
-    return InternalSerializeWithCachedSizesToArray(
-        ::google::protobuf::io::CodedOutputStream::IsDefaultSerializationDeterministic(), output);
-  }
-  int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const PROTOBUF_FINAL;
-  void InternalSwap(NamedGradients* other);
-  private:
-  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
-    return NULL;
-  }
-  inline void* MaybeArenaPtr() const {
-    return NULL;
-  }
-  public:
+    size_t ByteSizeLong() const PROTOBUF_FINAL;
+    bool MergePartialFromCodedStream(
+        ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
+    void SerializeWithCachedSizes(
+        ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
+    ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+        bool deterministic,
+        ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
+    ::google::protobuf::uint8* SerializeWithCachedSizesToArray(
+        ::google::protobuf::uint8* output) const PROTOBUF_FINAL {
+        return InternalSerializeWithCachedSizesToArray(
+            ::google::protobuf::io::CodedOutputStream::
+                IsDefaultSerializationDeterministic(),
+            output);
+    }
+    int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
 
-  ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
+   private:
+    void SharedCtor();
+    void SharedDtor();
+    void SetCachedSize(int size) const PROTOBUF_FINAL;
+    void InternalSwap(NamedGradients* other);
 
-  // nested types ----------------------------------------------------
+   private:
+    inline ::google::protobuf::Arena* GetArenaNoVirtual() const { return NULL; }
+    inline void* MaybeArenaPtr() const { return NULL; }
 
+   public:
+    ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
 
-  // accessors -------------------------------------------------------
+    // nested types ----------------------------------------------------
 
-  // map<string, .adaptive_system.Gradient> name_to_gradient = 1;
-  int name_to_gradient_size() const;
-  void clear_name_to_gradient();
-  static const int kNameToGradientFieldNumber = 1;
-  const ::google::protobuf::Map< ::std::string, ::adaptive_system::Gradient >&
-      name_to_gradient() const;
-  ::google::protobuf::Map< ::std::string, ::adaptive_system::Gradient >*
-      mutable_name_to_gradient();
+    // accessors -------------------------------------------------------
 
-  // @@protoc_insertion_point(class_scope:adaptive_system.NamedGradients)
- private:
+    // map<string, .adaptive_system.Gradient> name_to_gradient = 1;
+    int name_to_gradient_size() const;
+    void clear_name_to_gradient();
+    static const int kNameToGradientFieldNumber = 1;
+    const ::google::protobuf::Map< ::std::string, ::adaptive_system::Gradient>&
+    name_to_gradient() const;
+    ::google::protobuf::Map< ::std::string, ::adaptive_system::Gradient>*
+    mutable_name_to_gradient();
 
-  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
-  typedef ::google::protobuf::internal::MapEntryLite<
-      ::std::string, ::adaptive_system::Gradient,
-      ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
-      ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE,
-      0 >
-      NamedGradients_NameToGradientEntry;
-  ::google::protobuf::internal::MapField<
-      ::std::string, ::adaptive_system::Gradient,
-      ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
-      ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE,
-      0 > name_to_gradient_;
-  mutable int _cached_size_;
-  friend struct protobuf_rpc_5fservice_2eproto::TableStruct;
+    // @@protoc_insertion_point(class_scope:adaptive_system.NamedGradients)
+   private:
+    ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+    typedef ::google::protobuf::internal::MapEntryLite<
+        ::std::string,
+        ::adaptive_system::Gradient,
+        ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+        ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE,
+        0>
+        NamedGradients_NameToGradientEntry;
+    ::google::protobuf::internal::MapField<
+        ::std::string,
+        ::adaptive_system::Gradient,
+        ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+        ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE,
+        0>
+        name_to_gradient_;
+    mutable int _cached_size_;
+    friend struct protobuf_rpc_5fservice_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
 
-
 // -------------------------------------------------------------------
 
-class NamedGradientsAccordingColumn : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:adaptive_system.NamedGradientsAccordingColumn) */ {
- public:
-  NamedGradientsAccordingColumn();
-  virtual ~NamedGradientsAccordingColumn();
+class NamedGradientsAccordingColumn
+    : public ::google::protobuf::
+          Message /* @@protoc_insertion_point(class_definition:adaptive_system.NamedGradientsAccordingColumn) */
+{
+   public:
+    NamedGradientsAccordingColumn();
+    virtual ~NamedGradientsAccordingColumn();
 
-  NamedGradientsAccordingColumn(const NamedGradientsAccordingColumn& from);
+    NamedGradientsAccordingColumn(const NamedGradientsAccordingColumn& from);
 
-  inline NamedGradientsAccordingColumn& operator=(const NamedGradientsAccordingColumn& from) {
-    CopyFrom(from);
-    return *this;
-  }
+    inline NamedGradientsAccordingColumn& operator=(
+        const NamedGradientsAccordingColumn& from) {
+        CopyFrom(from);
+        return *this;
+    }
 
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const NamedGradientsAccordingColumn& default_instance();
+    static const ::google::protobuf::Descriptor* descriptor();
+    static const NamedGradientsAccordingColumn& default_instance();
 
-  static inline const NamedGradientsAccordingColumn* internal_default_instance() {
-    return reinterpret_cast<const NamedGradientsAccordingColumn*>(
-               &_NamedGradientsAccordingColumn_default_instance_);
-  }
+    static inline const NamedGradientsAccordingColumn*
+    internal_default_instance() {
+        return reinterpret_cast<const NamedGradientsAccordingColumn*>(
+            &_NamedGradientsAccordingColumn_default_instance_);
+    }
 
-  void Swap(NamedGradientsAccordingColumn* other);
+    void Swap(NamedGradientsAccordingColumn* other);
 
-  // implements Message ----------------------------------------------
+    // implements Message ----------------------------------------------
 
-  inline NamedGradientsAccordingColumn* New() const PROTOBUF_FINAL { return New(NULL); }
+    inline NamedGradientsAccordingColumn* New() const PROTOBUF_FINAL {
+        return New(NULL);
+    }
 
-  NamedGradientsAccordingColumn* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
-  void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
-  void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
-  void CopyFrom(const NamedGradientsAccordingColumn& from);
-  void MergeFrom(const NamedGradientsAccordingColumn& from);
-  void Clear() PROTOBUF_FINAL;
-  bool IsInitialized() const PROTOBUF_FINAL;
+    NamedGradientsAccordingColumn* New(::google::protobuf::Arena* arena) const
+        PROTOBUF_FINAL;
+    void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+    void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+    void CopyFrom(const NamedGradientsAccordingColumn& from);
+    void MergeFrom(const NamedGradientsAccordingColumn& from);
+    void Clear() PROTOBUF_FINAL;
+    bool IsInitialized() const PROTOBUF_FINAL;
 
-  size_t ByteSizeLong() const PROTOBUF_FINAL;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
-  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
-      bool deterministic, ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output)
-      const PROTOBUF_FINAL {
-    return InternalSerializeWithCachedSizesToArray(
-        ::google::protobuf::io::CodedOutputStream::IsDefaultSerializationDeterministic(), output);
-  }
-  int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const PROTOBUF_FINAL;
-  void InternalSwap(NamedGradientsAccordingColumn* other);
-  private:
-  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
-    return NULL;
-  }
-  inline void* MaybeArenaPtr() const {
-    return NULL;
-  }
-  public:
+    size_t ByteSizeLong() const PROTOBUF_FINAL;
+    bool MergePartialFromCodedStream(
+        ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
+    void SerializeWithCachedSizes(
+        ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
+    ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+        bool deterministic,
+        ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
+    ::google::protobuf::uint8* SerializeWithCachedSizesToArray(
+        ::google::protobuf::uint8* output) const PROTOBUF_FINAL {
+        return InternalSerializeWithCachedSizesToArray(
+            ::google::protobuf::io::CodedOutputStream::
+                IsDefaultSerializationDeterministic(),
+            output);
+    }
+    int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
 
-  ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
+   private:
+    void SharedCtor();
+    void SharedDtor();
+    void SetCachedSize(int size) const PROTOBUF_FINAL;
+    void InternalSwap(NamedGradientsAccordingColumn* other);
 
-  // nested types ----------------------------------------------------
+   private:
+    inline ::google::protobuf::Arena* GetArenaNoVirtual() const { return NULL; }
+    inline void* MaybeArenaPtr() const { return NULL; }
 
+   public:
+    ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
 
-  // accessors -------------------------------------------------------
+    // nested types ----------------------------------------------------
 
-  // map<string, .adaptive_system.GradientAccordingColumn> name_to_gradient = 1;
-  int name_to_gradient_size() const;
-  void clear_name_to_gradient();
-  static const int kNameToGradientFieldNumber = 1;
-  const ::google::protobuf::Map< ::std::string, ::adaptive_system::GradientAccordingColumn >&
-      name_to_gradient() const;
-  ::google::protobuf::Map< ::std::string, ::adaptive_system::GradientAccordingColumn >*
-      mutable_name_to_gradient();
+    // accessors -------------------------------------------------------
 
-  // @@protoc_insertion_point(class_scope:adaptive_system.NamedGradientsAccordingColumn)
- private:
+    // map<string, .adaptive_system.GradientAccordingColumn> name_to_gradient =
+    // 1;
+    int name_to_gradient_size() const;
+    void clear_name_to_gradient();
+    static const int kNameToGradientFieldNumber = 1;
+    const ::google::protobuf::Map< ::std::string,
+                                   ::adaptive_system::GradientAccordingColumn>&
+    name_to_gradient() const;
+    ::google::protobuf::Map< ::std::string,
+                             ::adaptive_system::GradientAccordingColumn>*
+    mutable_name_to_gradient();
 
-  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
-  typedef ::google::protobuf::internal::MapEntryLite<
-      ::std::string, ::adaptive_system::GradientAccordingColumn,
-      ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
-      ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE,
-      0 >
-      NamedGradientsAccordingColumn_NameToGradientEntry;
-  ::google::protobuf::internal::MapField<
-      ::std::string, ::adaptive_system::GradientAccordingColumn,
-      ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
-      ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE,
-      0 > name_to_gradient_;
-  mutable int _cached_size_;
-  friend struct protobuf_rpc_5fservice_2eproto::TableStruct;
+    // @@protoc_insertion_point(class_scope:adaptive_system.NamedGradientsAccordingColumn)
+   private:
+    ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+    typedef ::google::protobuf::internal::MapEntryLite<
+        ::std::string,
+        ::adaptive_system::GradientAccordingColumn,
+        ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+        ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE,
+        0>
+        NamedGradientsAccordingColumn_NameToGradientEntry;
+    ::google::protobuf::internal::MapField<
+        ::std::string,
+        ::adaptive_system::GradientAccordingColumn,
+        ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+        ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE,
+        0>
+        name_to_gradient_;
+    mutable int _cached_size_;
+    friend struct protobuf_rpc_5fservice_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
 
-class PartialState : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:adaptive_system.PartialState) */ {
- public:
-  PartialState();
-  virtual ~PartialState();
+class PartialState
+    : public ::google::protobuf::
+          Message /* @@protoc_insertion_point(class_definition:adaptive_system.PartialState) */
+{
+   public:
+    PartialState();
+    virtual ~PartialState();
 
-  PartialState(const PartialState& from);
+    PartialState(const PartialState& from);
 
-  inline PartialState& operator=(const PartialState& from) {
-    CopyFrom(from);
-    return *this;
-  }
+    inline PartialState& operator=(const PartialState& from) {
+        CopyFrom(from);
+        return *this;
+    }
 
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const PartialState& default_instance();
+    static const ::google::protobuf::Descriptor* descriptor();
+    static const PartialState& default_instance();
 
-  static inline const PartialState* internal_default_instance() {
-    return reinterpret_cast<const PartialState*>(
-               &_PartialState_default_instance_);
-  }
+    static inline const PartialState* internal_default_instance() {
+        return reinterpret_cast<const PartialState*>(
+            &_PartialState_default_instance_);
+    }
 
-  void Swap(PartialState* other);
+    void Swap(PartialState* other);
 
-  // implements Message ----------------------------------------------
+    // implements Message ----------------------------------------------
 
-  inline PartialState* New() const PROTOBUF_FINAL { return New(NULL); }
+    inline PartialState* New() const PROTOBUF_FINAL { return New(NULL); }
 
-  PartialState* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
-  void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
-  void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
-  void CopyFrom(const PartialState& from);
-  void MergeFrom(const PartialState& from);
-  void Clear() PROTOBUF_FINAL;
-  bool IsInitialized() const PROTOBUF_FINAL;
+    PartialState* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
+    void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+    void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+    void CopyFrom(const PartialState& from);
+    void MergeFrom(const PartialState& from);
+    void Clear() PROTOBUF_FINAL;
+    bool IsInitialized() const PROTOBUF_FINAL;
 
-  size_t ByteSizeLong() const PROTOBUF_FINAL;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
-  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
-      bool deterministic, ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output)
-      const PROTOBUF_FINAL {
-    return InternalSerializeWithCachedSizesToArray(
-        ::google::protobuf::io::CodedOutputStream::IsDefaultSerializationDeterministic(), output);
-  }
-  int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const PROTOBUF_FINAL;
-  void InternalSwap(PartialState* other);
-  private:
-  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
-    return NULL;
-  }
-  inline void* MaybeArenaPtr() const {
-    return NULL;
-  }
-  public:
+    size_t ByteSizeLong() const PROTOBUF_FINAL;
+    bool MergePartialFromCodedStream(
+        ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
+    void SerializeWithCachedSizes(
+        ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
+    ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+        bool deterministic,
+        ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
+    ::google::protobuf::uint8* SerializeWithCachedSizesToArray(
+        ::google::protobuf::uint8* output) const PROTOBUF_FINAL {
+        return InternalSerializeWithCachedSizesToArray(
+            ::google::protobuf::io::CodedOutputStream::
+                IsDefaultSerializationDeterministic(),
+            output);
+    }
+    int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
 
-  ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
+   private:
+    void SharedCtor();
+    void SharedDtor();
+    void SetCachedSize(int size) const PROTOBUF_FINAL;
+    void InternalSwap(PartialState* other);
 
-  // nested types ----------------------------------------------------
+   private:
+    inline ::google::protobuf::Arena* GetArenaNoVirtual() const { return NULL; }
+    inline void* MaybeArenaPtr() const { return NULL; }
 
-  // accessors -------------------------------------------------------
+   public:
+    ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
 
-  // .tensorflow.TensorProto tensor = 1;
-  bool has_tensor() const;
-  void clear_tensor();
-  static const int kTensorFieldNumber = 1;
-  const ::tensorflow::TensorProto& tensor() const;
-  ::tensorflow::TensorProto* mutable_tensor();
-  ::tensorflow::TensorProto* release_tensor();
-  void set_allocated_tensor(::tensorflow::TensorProto* tensor);
+    // nested types ----------------------------------------------------
 
-  // float loss = 2;
-  void clear_loss();
-  static const int kLossFieldNumber = 2;
-  float loss() const;
-  void set_loss(float value);
+    // accessors -------------------------------------------------------
 
-  // @@protoc_insertion_point(class_scope:adaptive_system.PartialState)
- private:
+    // .tensorflow.TensorProto tensor = 1;
+    bool has_tensor() const;
+    void clear_tensor();
+    static const int kTensorFieldNumber = 1;
+    const ::tensorflow::TensorProto& tensor() const;
+    ::tensorflow::TensorProto* mutable_tensor();
+    ::tensorflow::TensorProto* release_tensor();
+    void set_allocated_tensor(::tensorflow::TensorProto* tensor);
 
-  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
-  ::tensorflow::TensorProto* tensor_;
-  float loss_;
-  mutable int _cached_size_;
-  friend struct protobuf_rpc_5fservice_2eproto::TableStruct;
+    // float loss = 2;
+    void clear_loss();
+    static const int kLossFieldNumber = 2;
+    float loss() const;
+    void set_loss(float value);
+
+    // @@protoc_insertion_point(class_scope:adaptive_system.PartialState)
+   private:
+    ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+    ::tensorflow::TensorProto* tensor_;
+    float loss_;
+    mutable int _cached_size_;
+    friend struct protobuf_rpc_5fservice_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
 
-class Loss : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:adaptive_system.Loss) */ {
- public:
-  Loss();
-  virtual ~Loss();
+class Loss
+    : public ::google::protobuf::
+          Message /* @@protoc_insertion_point(class_definition:adaptive_system.Loss) */
+{
+   public:
+    Loss();
+    virtual ~Loss();
 
-  Loss(const Loss& from);
+    Loss(const Loss& from);
 
-  inline Loss& operator=(const Loss& from) {
-    CopyFrom(from);
-    return *this;
-  }
+    inline Loss& operator=(const Loss& from) {
+        CopyFrom(from);
+        return *this;
+    }
 
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const Loss& default_instance();
+    static const ::google::protobuf::Descriptor* descriptor();
+    static const Loss& default_instance();
 
-  static inline const Loss* internal_default_instance() {
-    return reinterpret_cast<const Loss*>(
-               &_Loss_default_instance_);
-  }
+    static inline const Loss* internal_default_instance() {
+        return reinterpret_cast<const Loss*>(&_Loss_default_instance_);
+    }
 
-  void Swap(Loss* other);
+    void Swap(Loss* other);
 
-  // implements Message ----------------------------------------------
+    // implements Message ----------------------------------------------
 
-  inline Loss* New() const PROTOBUF_FINAL { return New(NULL); }
+    inline Loss* New() const PROTOBUF_FINAL { return New(NULL); }
 
-  Loss* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
-  void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
-  void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
-  void CopyFrom(const Loss& from);
-  void MergeFrom(const Loss& from);
-  void Clear() PROTOBUF_FINAL;
-  bool IsInitialized() const PROTOBUF_FINAL;
+    Loss* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
+    void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+    void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+    void CopyFrom(const Loss& from);
+    void MergeFrom(const Loss& from);
+    void Clear() PROTOBUF_FINAL;
+    bool IsInitialized() const PROTOBUF_FINAL;
 
-  size_t ByteSizeLong() const PROTOBUF_FINAL;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
-  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
-      bool deterministic, ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output)
-      const PROTOBUF_FINAL {
-    return InternalSerializeWithCachedSizesToArray(
-        ::google::protobuf::io::CodedOutputStream::IsDefaultSerializationDeterministic(), output);
-  }
-  int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const PROTOBUF_FINAL;
-  void InternalSwap(Loss* other);
-  private:
-  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
-    return NULL;
-  }
-  inline void* MaybeArenaPtr() const {
-    return NULL;
-  }
-  public:
+    size_t ByteSizeLong() const PROTOBUF_FINAL;
+    bool MergePartialFromCodedStream(
+        ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
+    void SerializeWithCachedSizes(
+        ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
+    ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+        bool deterministic,
+        ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
+    ::google::protobuf::uint8* SerializeWithCachedSizesToArray(
+        ::google::protobuf::uint8* output) const PROTOBUF_FINAL {
+        return InternalSerializeWithCachedSizesToArray(
+            ::google::protobuf::io::CodedOutputStream::
+                IsDefaultSerializationDeterministic(),
+            output);
+    }
+    int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
 
-  ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
+   private:
+    void SharedCtor();
+    void SharedDtor();
+    void SetCachedSize(int size) const PROTOBUF_FINAL;
+    void InternalSwap(Loss* other);
 
-  // nested types ----------------------------------------------------
+   private:
+    inline ::google::protobuf::Arena* GetArenaNoVirtual() const { return NULL; }
+    inline void* MaybeArenaPtr() const { return NULL; }
 
-  // accessors -------------------------------------------------------
+   public:
+    ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
 
-  // float loss = 1;
-  void clear_loss();
-  static const int kLossFieldNumber = 1;
-  float loss() const;
-  void set_loss(float value);
+    // nested types ----------------------------------------------------
 
-  // @@protoc_insertion_point(class_scope:adaptive_system.Loss)
- private:
+    // accessors -------------------------------------------------------
 
-  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
-  float loss_;
-  mutable int _cached_size_;
-  friend struct protobuf_rpc_5fservice_2eproto::TableStruct;
+    // float loss = 1;
+    void clear_loss();
+    static const int kLossFieldNumber = 1;
+    float loss() const;
+    void set_loss(float value);
+
+    // @@protoc_insertion_point(class_scope:adaptive_system.Loss)
+   private:
+    ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+    float loss_;
+    mutable int _cached_size_;
+    friend struct protobuf_rpc_5fservice_2eproto::TableStruct;
 };
 // ===================================================================
-
 
 // ===================================================================
 
@@ -1355,210 +1410,223 @@ class Loss : public ::google::protobuf::Message /* @@protoc_insertion_point(clas
 
 // string variable_name = 1;
 inline void Names::clear_variable_name() {
-  variable_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    variable_name_.ClearToEmptyNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline const ::std::string& Names::variable_name() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.Names.variable_name)
-  return variable_name_.GetNoArena();
+    // @@protoc_insertion_point(field_get:adaptive_system.Names.variable_name)
+    return variable_name_.GetNoArena();
 }
 inline void Names::set_variable_name(const ::std::string& value) {
-  
-  variable_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:adaptive_system.Names.variable_name)
+    variable_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+    // @@protoc_insertion_point(field_set:adaptive_system.Names.variable_name)
 }
 #if LANG_CXX11
 inline void Names::set_variable_name(::std::string&& value) {
-  
-  variable_name_.SetNoArena(
-    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Names.variable_name)
+    variable_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        ::std::move(value));
+    // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Names.variable_name)
 }
 #endif
 inline void Names::set_variable_name(const char* value) {
-  
-  variable_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:adaptive_system.Names.variable_name)
+    variable_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        ::std::string(value));
+    // @@protoc_insertion_point(field_set_char:adaptive_system.Names.variable_name)
 }
 inline void Names::set_variable_name(const char* value, size_t size) {
-  
-  variable_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:adaptive_system.Names.variable_name)
+    variable_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        ::std::string(reinterpret_cast<const char*>(value), size));
+    // @@protoc_insertion_point(field_set_pointer:adaptive_system.Names.variable_name)
 }
 inline ::std::string* Names::mutable_variable_name() {
-  
-  // @@protoc_insertion_point(field_mutable:adaptive_system.Names.variable_name)
-  return variable_name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    // @@protoc_insertion_point(field_mutable:adaptive_system.Names.variable_name)
+    return variable_name_.MutableNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* Names::release_variable_name() {
-  // @@protoc_insertion_point(field_release:adaptive_system.Names.variable_name)
-  
-  return variable_name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    // @@protoc_insertion_point(field_release:adaptive_system.Names.variable_name)
+
+    return variable_name_.ReleaseNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline void Names::set_allocated_variable_name(::std::string* variable_name) {
-  if (variable_name != NULL) {
-    
-  } else {
-    
-  }
-  variable_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), variable_name);
-  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Names.variable_name)
+    if (variable_name != NULL) {
+    } else {
+    }
+    variable_name_.SetAllocatedNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        variable_name);
+    // @@protoc_insertion_point(field_set_allocated:adaptive_system.Names.variable_name)
 }
 
 // string gradient_name = 2;
 inline void Names::clear_gradient_name() {
-  gradient_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    gradient_name_.ClearToEmptyNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline const ::std::string& Names::gradient_name() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.Names.gradient_name)
-  return gradient_name_.GetNoArena();
+    // @@protoc_insertion_point(field_get:adaptive_system.Names.gradient_name)
+    return gradient_name_.GetNoArena();
 }
 inline void Names::set_gradient_name(const ::std::string& value) {
-  
-  gradient_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:adaptive_system.Names.gradient_name)
+    gradient_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+    // @@protoc_insertion_point(field_set:adaptive_system.Names.gradient_name)
 }
 #if LANG_CXX11
 inline void Names::set_gradient_name(::std::string&& value) {
-  
-  gradient_name_.SetNoArena(
-    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Names.gradient_name)
+    gradient_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        ::std::move(value));
+    // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Names.gradient_name)
 }
 #endif
 inline void Names::set_gradient_name(const char* value) {
-  
-  gradient_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:adaptive_system.Names.gradient_name)
+    gradient_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        ::std::string(value));
+    // @@protoc_insertion_point(field_set_char:adaptive_system.Names.gradient_name)
 }
 inline void Names::set_gradient_name(const char* value, size_t size) {
-  
-  gradient_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:adaptive_system.Names.gradient_name)
+    gradient_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        ::std::string(reinterpret_cast<const char*>(value), size));
+    // @@protoc_insertion_point(field_set_pointer:adaptive_system.Names.gradient_name)
 }
 inline ::std::string* Names::mutable_gradient_name() {
-  
-  // @@protoc_insertion_point(field_mutable:adaptive_system.Names.gradient_name)
-  return gradient_name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    // @@protoc_insertion_point(field_mutable:adaptive_system.Names.gradient_name)
+    return gradient_name_.MutableNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* Names::release_gradient_name() {
-  // @@protoc_insertion_point(field_release:adaptive_system.Names.gradient_name)
-  
-  return gradient_name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    // @@protoc_insertion_point(field_release:adaptive_system.Names.gradient_name)
+
+    return gradient_name_.ReleaseNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline void Names::set_allocated_gradient_name(::std::string* gradient_name) {
-  if (gradient_name != NULL) {
-    
-  } else {
-    
-  }
-  gradient_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), gradient_name);
-  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Names.gradient_name)
+    if (gradient_name != NULL) {
+    } else {
+    }
+    gradient_name_.SetAllocatedNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        gradient_name);
+    // @@protoc_insertion_point(field_set_allocated:adaptive_system.Names.gradient_name)
 }
 
 // string assign_name = 3;
 inline void Names::clear_assign_name() {
-  assign_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    assign_name_.ClearToEmptyNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline const ::std::string& Names::assign_name() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.Names.assign_name)
-  return assign_name_.GetNoArena();
+    // @@protoc_insertion_point(field_get:adaptive_system.Names.assign_name)
+    return assign_name_.GetNoArena();
 }
 inline void Names::set_assign_name(const ::std::string& value) {
-  
-  assign_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:adaptive_system.Names.assign_name)
+    assign_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+    // @@protoc_insertion_point(field_set:adaptive_system.Names.assign_name)
 }
 #if LANG_CXX11
 inline void Names::set_assign_name(::std::string&& value) {
-  
-  assign_name_.SetNoArena(
-    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Names.assign_name)
+    assign_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        ::std::move(value));
+    // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Names.assign_name)
 }
 #endif
 inline void Names::set_assign_name(const char* value) {
-  
-  assign_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:adaptive_system.Names.assign_name)
+    assign_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        ::std::string(value));
+    // @@protoc_insertion_point(field_set_char:adaptive_system.Names.assign_name)
 }
 inline void Names::set_assign_name(const char* value, size_t size) {
-  
-  assign_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:adaptive_system.Names.assign_name)
+    assign_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        ::std::string(reinterpret_cast<const char*>(value), size));
+    // @@protoc_insertion_point(field_set_pointer:adaptive_system.Names.assign_name)
 }
 inline ::std::string* Names::mutable_assign_name() {
-  
-  // @@protoc_insertion_point(field_mutable:adaptive_system.Names.assign_name)
-  return assign_name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    // @@protoc_insertion_point(field_mutable:adaptive_system.Names.assign_name)
+    return assign_name_.MutableNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* Names::release_assign_name() {
-  // @@protoc_insertion_point(field_release:adaptive_system.Names.assign_name)
-  
-  return assign_name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    // @@protoc_insertion_point(field_release:adaptive_system.Names.assign_name)
+
+    return assign_name_.ReleaseNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline void Names::set_allocated_assign_name(::std::string* assign_name) {
-  if (assign_name != NULL) {
-    
-  } else {
-    
-  }
-  assign_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), assign_name);
-  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Names.assign_name)
+    if (assign_name != NULL) {
+    } else {
+    }
+    assign_name_.SetAllocatedNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        assign_name);
+    // @@protoc_insertion_point(field_set_allocated:adaptive_system.Names.assign_name)
 }
 
 // string placeholder_assign_name = 5;
 inline void Names::clear_placeholder_assign_name() {
-  placeholder_assign_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    placeholder_assign_name_.ClearToEmptyNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline const ::std::string& Names::placeholder_assign_name() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.Names.placeholder_assign_name)
-  return placeholder_assign_name_.GetNoArena();
+    // @@protoc_insertion_point(field_get:adaptive_system.Names.placeholder_assign_name)
+    return placeholder_assign_name_.GetNoArena();
 }
 inline void Names::set_placeholder_assign_name(const ::std::string& value) {
-  
-  placeholder_assign_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:adaptive_system.Names.placeholder_assign_name)
+    placeholder_assign_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+    // @@protoc_insertion_point(field_set:adaptive_system.Names.placeholder_assign_name)
 }
 #if LANG_CXX11
 inline void Names::set_placeholder_assign_name(::std::string&& value) {
-  
-  placeholder_assign_name_.SetNoArena(
-    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Names.placeholder_assign_name)
+    placeholder_assign_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        ::std::move(value));
+    // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Names.placeholder_assign_name)
 }
 #endif
 inline void Names::set_placeholder_assign_name(const char* value) {
-  
-  placeholder_assign_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:adaptive_system.Names.placeholder_assign_name)
+    placeholder_assign_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        ::std::string(value));
+    // @@protoc_insertion_point(field_set_char:adaptive_system.Names.placeholder_assign_name)
 }
 inline void Names::set_placeholder_assign_name(const char* value, size_t size) {
-  
-  placeholder_assign_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:adaptive_system.Names.placeholder_assign_name)
+    placeholder_assign_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        ::std::string(reinterpret_cast<const char*>(value), size));
+    // @@protoc_insertion_point(field_set_pointer:adaptive_system.Names.placeholder_assign_name)
 }
 inline ::std::string* Names::mutable_placeholder_assign_name() {
-  
-  // @@protoc_insertion_point(field_mutable:adaptive_system.Names.placeholder_assign_name)
-  return placeholder_assign_name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    // @@protoc_insertion_point(field_mutable:adaptive_system.Names.placeholder_assign_name)
+    return placeholder_assign_name_.MutableNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* Names::release_placeholder_assign_name() {
-  // @@protoc_insertion_point(field_release:adaptive_system.Names.placeholder_assign_name)
-  
-  return placeholder_assign_name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    // @@protoc_insertion_point(field_release:adaptive_system.Names.placeholder_assign_name)
+
+    return placeholder_assign_name_.ReleaseNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline void Names::set_allocated_placeholder_assign_name(::std::string* placeholder_assign_name) {
-  if (placeholder_assign_name != NULL) {
-    
-  } else {
-    
-  }
-  placeholder_assign_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), placeholder_assign_name);
-  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Names.placeholder_assign_name)
+inline void Names::set_allocated_placeholder_assign_name(
+    ::std::string* placeholder_assign_name) {
+    if (placeholder_assign_name != NULL) {
+    } else {
+    }
+    placeholder_assign_name_.SetAllocatedNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        placeholder_assign_name);
+    // @@protoc_insertion_point(field_set_allocated:adaptive_system.Names.placeholder_assign_name)
 }
 
 // -------------------------------------------------------------------
@@ -1567,16 +1635,16 @@ inline void Names::set_allocated_placeholder_assign_name(::std::string* placehol
 
 // int32 level_order = 1;
 inline void QuantizationLevel::clear_level_order() {
-  level_order_ = 0;
+    level_order_ = 0;
 }
 inline ::google::protobuf::int32 QuantizationLevel::level_order() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.QuantizationLevel.level_order)
-  return level_order_;
+    // @@protoc_insertion_point(field_get:adaptive_system.QuantizationLevel.level_order)
+    return level_order_;
 }
-inline void QuantizationLevel::set_level_order(::google::protobuf::int32 value) {
-  
-  level_order_ = value;
-  // @@protoc_insertion_point(field_set:adaptive_system.QuantizationLevel.level_order)
+inline void QuantizationLevel::set_level_order(
+    ::google::protobuf::int32 value) {
+    level_order_ = value;
+    // @@protoc_insertion_point(field_set:adaptive_system.QuantizationLevel.level_order)
 }
 
 // -------------------------------------------------------------------
@@ -1591,520 +1659,545 @@ inline void QuantizationLevel::set_level_order(::google::protobuf::int32 value) 
 
 // map<string, .adaptive_system.Names> map_names = 1;
 inline int Tuple::map_names_size() const {
-  return map_names_.size();
+    return map_names_.size();
 }
 inline void Tuple::clear_map_names() {
-  map_names_.Clear();
+    map_names_.Clear();
 }
-inline const ::google::protobuf::Map< ::std::string, ::adaptive_system::Names >&
+inline const ::google::protobuf::Map< ::std::string, ::adaptive_system::Names>&
 Tuple::map_names() const {
-  // @@protoc_insertion_point(field_map:adaptive_system.Tuple.map_names)
-  return map_names_.GetMap();
+    // @@protoc_insertion_point(field_map:adaptive_system.Tuple.map_names)
+    return map_names_.GetMap();
 }
-inline ::google::protobuf::Map< ::std::string, ::adaptive_system::Names >*
+inline ::google::protobuf::Map< ::std::string, ::adaptive_system::Names>*
 Tuple::mutable_map_names() {
-  // @@protoc_insertion_point(field_mutable_map:adaptive_system.Tuple.map_names)
-  return map_names_.MutableMap();
+    // @@protoc_insertion_point(field_mutable_map:adaptive_system.Tuple.map_names)
+    return map_names_.MutableMap();
 }
 
 // map<string, .tensorflow.TensorProto> map_parameters = 2;
 inline int Tuple::map_parameters_size() const {
-  return map_parameters_.size();
+    return map_parameters_.size();
 }
 inline void Tuple::clear_map_parameters() {
-  map_parameters_.Clear();
+    map_parameters_.Clear();
 }
-inline const ::google::protobuf::Map< ::std::string, ::tensorflow::TensorProto >&
+inline const ::google::protobuf::Map< ::std::string, ::tensorflow::TensorProto>&
 Tuple::map_parameters() const {
-  // @@protoc_insertion_point(field_map:adaptive_system.Tuple.map_parameters)
-  return map_parameters_.GetMap();
+    // @@protoc_insertion_point(field_map:adaptive_system.Tuple.map_parameters)
+    return map_parameters_.GetMap();
 }
-inline ::google::protobuf::Map< ::std::string, ::tensorflow::TensorProto >*
+inline ::google::protobuf::Map< ::std::string, ::tensorflow::TensorProto>*
 Tuple::mutable_map_parameters() {
-  // @@protoc_insertion_point(field_mutable_map:adaptive_system.Tuple.map_parameters)
-  return map_parameters_.MutableMap();
+    // @@protoc_insertion_point(field_mutable_map:adaptive_system.Tuple.map_parameters)
+    return map_parameters_.MutableMap();
 }
 
 // float lr = 3;
 inline void Tuple::clear_lr() {
-  lr_ = 0;
+    lr_ = 0;
 }
 inline float Tuple::lr() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.Tuple.lr)
-  return lr_;
+    // @@protoc_insertion_point(field_get:adaptive_system.Tuple.lr)
+    return lr_;
 }
 inline void Tuple::set_lr(float value) {
-  
-  lr_ = value;
-  // @@protoc_insertion_point(field_set:adaptive_system.Tuple.lr)
+    lr_ = value;
+    // @@protoc_insertion_point(field_set:adaptive_system.Tuple.lr)
 }
 
 // int32 interval = 4;
 inline void Tuple::clear_interval() {
-  interval_ = 0;
+    interval_ = 0;
 }
 inline ::google::protobuf::int32 Tuple::interval() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.Tuple.interval)
-  return interval_;
+    // @@protoc_insertion_point(field_get:adaptive_system.Tuple.interval)
+    return interval_;
 }
 inline void Tuple::set_interval(::google::protobuf::int32 value) {
-  
-  interval_ = value;
-  // @@protoc_insertion_point(field_set:adaptive_system.Tuple.interval)
+    interval_ = value;
+    // @@protoc_insertion_point(field_set:adaptive_system.Tuple.interval)
 }
 
 // .tensorflow.GraphDef graph = 5;
 inline bool Tuple::has_graph() const {
-  return this != internal_default_instance() && graph_ != NULL;
+    return this != internal_default_instance() && graph_ != NULL;
 }
 inline void Tuple::clear_graph() {
-  if (GetArenaNoVirtual() == NULL && graph_ != NULL) delete graph_;
-  graph_ = NULL;
+    if (GetArenaNoVirtual() == NULL && graph_ != NULL)
+        delete graph_;
+    graph_ = NULL;
 }
 inline const ::tensorflow::GraphDef& Tuple::graph() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.Tuple.graph)
-  return graph_ != NULL ? *graph_
-                         : *::tensorflow::GraphDef::internal_default_instance();
+    // @@protoc_insertion_point(field_get:adaptive_system.Tuple.graph)
+    return graph_ != NULL
+               ? *graph_
+               : *::tensorflow::GraphDef::internal_default_instance();
 }
 inline ::tensorflow::GraphDef* Tuple::mutable_graph() {
-  
-  if (graph_ == NULL) {
-    graph_ = new ::tensorflow::GraphDef;
-  }
-  // @@protoc_insertion_point(field_mutable:adaptive_system.Tuple.graph)
-  return graph_;
+    if (graph_ == NULL) {
+        graph_ = new ::tensorflow::GraphDef;
+    }
+    // @@protoc_insertion_point(field_mutable:adaptive_system.Tuple.graph)
+    return graph_;
 }
 inline ::tensorflow::GraphDef* Tuple::release_graph() {
-  // @@protoc_insertion_point(field_release:adaptive_system.Tuple.graph)
-  
-  ::tensorflow::GraphDef* temp = graph_;
-  graph_ = NULL;
-  return temp;
+    // @@protoc_insertion_point(field_release:adaptive_system.Tuple.graph)
+
+    ::tensorflow::GraphDef* temp = graph_;
+    graph_ = NULL;
+    return temp;
 }
 inline void Tuple::set_allocated_graph(::tensorflow::GraphDef* graph) {
-  delete graph_;
-  if (graph != NULL && graph->GetArena() != NULL) {
-    ::tensorflow::GraphDef* new_graph = new ::tensorflow::GraphDef;
-    new_graph->CopyFrom(*graph);
-    graph = new_graph;
-  }
-  graph_ = graph;
-  if (graph) {
-    
-  } else {
-    
-  }
-  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Tuple.graph)
+    delete graph_;
+    if (graph != NULL && graph->GetArena() != NULL) {
+        ::tensorflow::GraphDef* new_graph = new ::tensorflow::GraphDef;
+        new_graph->CopyFrom(*graph);
+        graph = new_graph;
+    }
+    graph_ = graph;
+    if (graph) {
+    } else {
+    }
+    // @@protoc_insertion_point(field_set_allocated:adaptive_system.Tuple.graph)
 }
 
 // string loss_name = 6;
 inline void Tuple::clear_loss_name() {
-  loss_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    loss_name_.ClearToEmptyNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline const ::std::string& Tuple::loss_name() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.Tuple.loss_name)
-  return loss_name_.GetNoArena();
+    // @@protoc_insertion_point(field_get:adaptive_system.Tuple.loss_name)
+    return loss_name_.GetNoArena();
 }
 inline void Tuple::set_loss_name(const ::std::string& value) {
-  
-  loss_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:adaptive_system.Tuple.loss_name)
+    loss_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+    // @@protoc_insertion_point(field_set:adaptive_system.Tuple.loss_name)
 }
 #if LANG_CXX11
 inline void Tuple::set_loss_name(::std::string&& value) {
-  
-  loss_name_.SetNoArena(
-    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Tuple.loss_name)
+    loss_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        ::std::move(value));
+    // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Tuple.loss_name)
 }
 #endif
 inline void Tuple::set_loss_name(const char* value) {
-  
-  loss_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:adaptive_system.Tuple.loss_name)
+    loss_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        ::std::string(value));
+    // @@protoc_insertion_point(field_set_char:adaptive_system.Tuple.loss_name)
 }
 inline void Tuple::set_loss_name(const char* value, size_t size) {
-  
-  loss_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:adaptive_system.Tuple.loss_name)
+    loss_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        ::std::string(reinterpret_cast<const char*>(value), size));
+    // @@protoc_insertion_point(field_set_pointer:adaptive_system.Tuple.loss_name)
 }
 inline ::std::string* Tuple::mutable_loss_name() {
-  
-  // @@protoc_insertion_point(field_mutable:adaptive_system.Tuple.loss_name)
-  return loss_name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    // @@protoc_insertion_point(field_mutable:adaptive_system.Tuple.loss_name)
+    return loss_name_.MutableNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* Tuple::release_loss_name() {
-  // @@protoc_insertion_point(field_release:adaptive_system.Tuple.loss_name)
-  
-  return loss_name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    // @@protoc_insertion_point(field_release:adaptive_system.Tuple.loss_name)
+
+    return loss_name_.ReleaseNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline void Tuple::set_allocated_loss_name(::std::string* loss_name) {
-  if (loss_name != NULL) {
-    
-  } else {
-    
-  }
-  loss_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), loss_name);
-  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Tuple.loss_name)
+    if (loss_name != NULL) {
+    } else {
+    }
+    loss_name_.SetAllocatedNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        loss_name);
+    // @@protoc_insertion_point(field_set_allocated:adaptive_system.Tuple.loss_name)
 }
 
 // string init_name = 7;
 inline void Tuple::clear_init_name() {
-  init_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    init_name_.ClearToEmptyNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline const ::std::string& Tuple::init_name() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.Tuple.init_name)
-  return init_name_.GetNoArena();
+    // @@protoc_insertion_point(field_get:adaptive_system.Tuple.init_name)
+    return init_name_.GetNoArena();
 }
 inline void Tuple::set_init_name(const ::std::string& value) {
-  
-  init_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:adaptive_system.Tuple.init_name)
+    init_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+    // @@protoc_insertion_point(field_set:adaptive_system.Tuple.init_name)
 }
 #if LANG_CXX11
 inline void Tuple::set_init_name(::std::string&& value) {
-  
-  init_name_.SetNoArena(
-    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Tuple.init_name)
+    init_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        ::std::move(value));
+    // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Tuple.init_name)
 }
 #endif
 inline void Tuple::set_init_name(const char* value) {
-  
-  init_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:adaptive_system.Tuple.init_name)
+    init_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        ::std::string(value));
+    // @@protoc_insertion_point(field_set_char:adaptive_system.Tuple.init_name)
 }
 inline void Tuple::set_init_name(const char* value, size_t size) {
-  
-  init_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:adaptive_system.Tuple.init_name)
+    init_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        ::std::string(reinterpret_cast<const char*>(value), size));
+    // @@protoc_insertion_point(field_set_pointer:adaptive_system.Tuple.init_name)
 }
 inline ::std::string* Tuple::mutable_init_name() {
-  
-  // @@protoc_insertion_point(field_mutable:adaptive_system.Tuple.init_name)
-  return init_name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    // @@protoc_insertion_point(field_mutable:adaptive_system.Tuple.init_name)
+    return init_name_.MutableNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* Tuple::release_init_name() {
-  // @@protoc_insertion_point(field_release:adaptive_system.Tuple.init_name)
-  
-  return init_name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    // @@protoc_insertion_point(field_release:adaptive_system.Tuple.init_name)
+
+    return init_name_.ReleaseNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline void Tuple::set_allocated_init_name(::std::string* init_name) {
-  if (init_name != NULL) {
-    
-  } else {
-    
-  }
-  init_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), init_name);
-  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Tuple.init_name)
+    if (init_name != NULL) {
+    } else {
+    }
+    init_name_.SetAllocatedNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        init_name);
+    // @@protoc_insertion_point(field_set_allocated:adaptive_system.Tuple.init_name)
 }
 
 // string batch_placeholder_name = 8;
 inline void Tuple::clear_batch_placeholder_name() {
-  batch_placeholder_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    batch_placeholder_name_.ClearToEmptyNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline const ::std::string& Tuple::batch_placeholder_name() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.Tuple.batch_placeholder_name)
-  return batch_placeholder_name_.GetNoArena();
+    // @@protoc_insertion_point(field_get:adaptive_system.Tuple.batch_placeholder_name)
+    return batch_placeholder_name_.GetNoArena();
 }
 inline void Tuple::set_batch_placeholder_name(const ::std::string& value) {
-  
-  batch_placeholder_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:adaptive_system.Tuple.batch_placeholder_name)
+    batch_placeholder_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+    // @@protoc_insertion_point(field_set:adaptive_system.Tuple.batch_placeholder_name)
 }
 #if LANG_CXX11
 inline void Tuple::set_batch_placeholder_name(::std::string&& value) {
-  
-  batch_placeholder_name_.SetNoArena(
-    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Tuple.batch_placeholder_name)
+    batch_placeholder_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        ::std::move(value));
+    // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Tuple.batch_placeholder_name)
 }
 #endif
 inline void Tuple::set_batch_placeholder_name(const char* value) {
-  
-  batch_placeholder_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:adaptive_system.Tuple.batch_placeholder_name)
+    batch_placeholder_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        ::std::string(value));
+    // @@protoc_insertion_point(field_set_char:adaptive_system.Tuple.batch_placeholder_name)
 }
 inline void Tuple::set_batch_placeholder_name(const char* value, size_t size) {
-  
-  batch_placeholder_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:adaptive_system.Tuple.batch_placeholder_name)
+    batch_placeholder_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        ::std::string(reinterpret_cast<const char*>(value), size));
+    // @@protoc_insertion_point(field_set_pointer:adaptive_system.Tuple.batch_placeholder_name)
 }
 inline ::std::string* Tuple::mutable_batch_placeholder_name() {
-  
-  // @@protoc_insertion_point(field_mutable:adaptive_system.Tuple.batch_placeholder_name)
-  return batch_placeholder_name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    // @@protoc_insertion_point(field_mutable:adaptive_system.Tuple.batch_placeholder_name)
+    return batch_placeholder_name_.MutableNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* Tuple::release_batch_placeholder_name() {
-  // @@protoc_insertion_point(field_release:adaptive_system.Tuple.batch_placeholder_name)
-  
-  return batch_placeholder_name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    // @@protoc_insertion_point(field_release:adaptive_system.Tuple.batch_placeholder_name)
+
+    return batch_placeholder_name_.ReleaseNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline void Tuple::set_allocated_batch_placeholder_name(::std::string* batch_placeholder_name) {
-  if (batch_placeholder_name != NULL) {
-    
-  } else {
-    
-  }
-  batch_placeholder_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), batch_placeholder_name);
-  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Tuple.batch_placeholder_name)
+inline void Tuple::set_allocated_batch_placeholder_name(
+    ::std::string* batch_placeholder_name) {
+    if (batch_placeholder_name != NULL) {
+    } else {
+    }
+    batch_placeholder_name_.SetAllocatedNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        batch_placeholder_name);
+    // @@protoc_insertion_point(field_set_allocated:adaptive_system.Tuple.batch_placeholder_name)
 }
 
 // string label_placeholder_name = 9;
 inline void Tuple::clear_label_placeholder_name() {
-  label_placeholder_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    label_placeholder_name_.ClearToEmptyNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline const ::std::string& Tuple::label_placeholder_name() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.Tuple.label_placeholder_name)
-  return label_placeholder_name_.GetNoArena();
+    // @@protoc_insertion_point(field_get:adaptive_system.Tuple.label_placeholder_name)
+    return label_placeholder_name_.GetNoArena();
 }
 inline void Tuple::set_label_placeholder_name(const ::std::string& value) {
-  
-  label_placeholder_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:adaptive_system.Tuple.label_placeholder_name)
+    label_placeholder_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+    // @@protoc_insertion_point(field_set:adaptive_system.Tuple.label_placeholder_name)
 }
 #if LANG_CXX11
 inline void Tuple::set_label_placeholder_name(::std::string&& value) {
-  
-  label_placeholder_name_.SetNoArena(
-    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Tuple.label_placeholder_name)
+    label_placeholder_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        ::std::move(value));
+    // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Tuple.label_placeholder_name)
 }
 #endif
 inline void Tuple::set_label_placeholder_name(const char* value) {
-  
-  label_placeholder_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:adaptive_system.Tuple.label_placeholder_name)
+    label_placeholder_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        ::std::string(value));
+    // @@protoc_insertion_point(field_set_char:adaptive_system.Tuple.label_placeholder_name)
 }
 inline void Tuple::set_label_placeholder_name(const char* value, size_t size) {
-  
-  label_placeholder_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:adaptive_system.Tuple.label_placeholder_name)
+    label_placeholder_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        ::std::string(reinterpret_cast<const char*>(value), size));
+    // @@protoc_insertion_point(field_set_pointer:adaptive_system.Tuple.label_placeholder_name)
 }
 inline ::std::string* Tuple::mutable_label_placeholder_name() {
-  
-  // @@protoc_insertion_point(field_mutable:adaptive_system.Tuple.label_placeholder_name)
-  return label_placeholder_name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    // @@protoc_insertion_point(field_mutable:adaptive_system.Tuple.label_placeholder_name)
+    return label_placeholder_name_.MutableNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* Tuple::release_label_placeholder_name() {
-  // @@protoc_insertion_point(field_release:adaptive_system.Tuple.label_placeholder_name)
-  
-  return label_placeholder_name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    // @@protoc_insertion_point(field_release:adaptive_system.Tuple.label_placeholder_name)
+
+    return label_placeholder_name_.ReleaseNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline void Tuple::set_allocated_label_placeholder_name(::std::string* label_placeholder_name) {
-  if (label_placeholder_name != NULL) {
-    
-  } else {
-    
-  }
-  label_placeholder_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), label_placeholder_name);
-  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Tuple.label_placeholder_name)
+inline void Tuple::set_allocated_label_placeholder_name(
+    ::std::string* label_placeholder_name) {
+    if (label_placeholder_name != NULL) {
+    } else {
+    }
+    label_placeholder_name_.SetAllocatedNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        label_placeholder_name);
+    // @@protoc_insertion_point(field_set_allocated:adaptive_system.Tuple.label_placeholder_name)
 }
 
 // string training_op_name = 10;
 inline void Tuple::clear_training_op_name() {
-  training_op_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    training_op_name_.ClearToEmptyNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline const ::std::string& Tuple::training_op_name() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.Tuple.training_op_name)
-  return training_op_name_.GetNoArena();
+    // @@protoc_insertion_point(field_get:adaptive_system.Tuple.training_op_name)
+    return training_op_name_.GetNoArena();
 }
 inline void Tuple::set_training_op_name(const ::std::string& value) {
-  
-  training_op_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:adaptive_system.Tuple.training_op_name)
+    training_op_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+    // @@protoc_insertion_point(field_set:adaptive_system.Tuple.training_op_name)
 }
 #if LANG_CXX11
 inline void Tuple::set_training_op_name(::std::string&& value) {
-  
-  training_op_name_.SetNoArena(
-    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Tuple.training_op_name)
+    training_op_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        ::std::move(value));
+    // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Tuple.training_op_name)
 }
 #endif
 inline void Tuple::set_training_op_name(const char* value) {
-  
-  training_op_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:adaptive_system.Tuple.training_op_name)
+    training_op_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        ::std::string(value));
+    // @@protoc_insertion_point(field_set_char:adaptive_system.Tuple.training_op_name)
 }
 inline void Tuple::set_training_op_name(const char* value, size_t size) {
-  
-  training_op_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:adaptive_system.Tuple.training_op_name)
+    training_op_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        ::std::string(reinterpret_cast<const char*>(value), size));
+    // @@protoc_insertion_point(field_set_pointer:adaptive_system.Tuple.training_op_name)
 }
 inline ::std::string* Tuple::mutable_training_op_name() {
-  
-  // @@protoc_insertion_point(field_mutable:adaptive_system.Tuple.training_op_name)
-  return training_op_name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    // @@protoc_insertion_point(field_mutable:adaptive_system.Tuple.training_op_name)
+    return training_op_name_.MutableNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* Tuple::release_training_op_name() {
-  // @@protoc_insertion_point(field_release:adaptive_system.Tuple.training_op_name)
-  
-  return training_op_name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    // @@protoc_insertion_point(field_release:adaptive_system.Tuple.training_op_name)
+
+    return training_op_name_.ReleaseNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline void Tuple::set_allocated_training_op_name(::std::string* training_op_name) {
-  if (training_op_name != NULL) {
-    
-  } else {
-    
-  }
-  training_op_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), training_op_name);
-  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Tuple.training_op_name)
+inline void Tuple::set_allocated_training_op_name(
+    ::std::string* training_op_name) {
+    if (training_op_name != NULL) {
+    } else {
+    }
+    training_op_name_.SetAllocatedNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        training_op_name);
+    // @@protoc_insertion_point(field_set_allocated:adaptive_system.Tuple.training_op_name)
 }
 
 // int32 total_iter = 11;
 inline void Tuple::clear_total_iter() {
-  total_iter_ = 0;
+    total_iter_ = 0;
 }
 inline ::google::protobuf::int32 Tuple::total_iter() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.Tuple.total_iter)
-  return total_iter_;
+    // @@protoc_insertion_point(field_get:adaptive_system.Tuple.total_iter)
+    return total_iter_;
 }
 inline void Tuple::set_total_iter(::google::protobuf::int32 value) {
-  
-  total_iter_ = value;
-  // @@protoc_insertion_point(field_set:adaptive_system.Tuple.total_iter)
+    total_iter_ = value;
+    // @@protoc_insertion_point(field_set:adaptive_system.Tuple.total_iter)
 }
 
 // int32 batch_size = 12;
 inline void Tuple::clear_batch_size() {
-  batch_size_ = 0;
+    batch_size_ = 0;
 }
 inline ::google::protobuf::int32 Tuple::batch_size() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.Tuple.batch_size)
-  return batch_size_;
+    // @@protoc_insertion_point(field_get:adaptive_system.Tuple.batch_size)
+    return batch_size_;
 }
 inline void Tuple::set_batch_size(::google::protobuf::int32 value) {
-  
-  batch_size_ = value;
-  // @@protoc_insertion_point(field_set:adaptive_system.Tuple.batch_size)
+    batch_size_ = value;
+    // @@protoc_insertion_point(field_set:adaptive_system.Tuple.batch_size)
 }
 
 // map<int32, int32> order_to_level = 14;
 inline int Tuple::order_to_level_size() const {
-  return order_to_level_.size();
+    return order_to_level_.size();
 }
 inline void Tuple::clear_order_to_level() {
-  order_to_level_.Clear();
+    order_to_level_.Clear();
 }
-inline const ::google::protobuf::Map< ::google::protobuf::int32, ::google::protobuf::int32 >&
+inline const ::google::protobuf::Map< ::google::protobuf::int32,
+                                      ::google::protobuf::int32>&
 Tuple::order_to_level() const {
-  // @@protoc_insertion_point(field_map:adaptive_system.Tuple.order_to_level)
-  return order_to_level_.GetMap();
+    // @@protoc_insertion_point(field_map:adaptive_system.Tuple.order_to_level)
+    return order_to_level_.GetMap();
 }
-inline ::google::protobuf::Map< ::google::protobuf::int32, ::google::protobuf::int32 >*
+inline ::google::protobuf::Map< ::google::protobuf::int32,
+                                ::google::protobuf::int32>*
 Tuple::mutable_order_to_level() {
-  // @@protoc_insertion_point(field_mutable_map:adaptive_system.Tuple.order_to_level)
-  return order_to_level_.MutableMap();
+    // @@protoc_insertion_point(field_mutable_map:adaptive_system.Tuple.order_to_level)
+    return order_to_level_.MutableMap();
 }
 
 // string cross_entropy_loss_name = 15;
 inline void Tuple::clear_cross_entropy_loss_name() {
-  cross_entropy_loss_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    cross_entropy_loss_name_.ClearToEmptyNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline const ::std::string& Tuple::cross_entropy_loss_name() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.Tuple.cross_entropy_loss_name)
-  return cross_entropy_loss_name_.GetNoArena();
+    // @@protoc_insertion_point(field_get:adaptive_system.Tuple.cross_entropy_loss_name)
+    return cross_entropy_loss_name_.GetNoArena();
 }
 inline void Tuple::set_cross_entropy_loss_name(const ::std::string& value) {
-  
-  cross_entropy_loss_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:adaptive_system.Tuple.cross_entropy_loss_name)
+    cross_entropy_loss_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+    // @@protoc_insertion_point(field_set:adaptive_system.Tuple.cross_entropy_loss_name)
 }
 #if LANG_CXX11
 inline void Tuple::set_cross_entropy_loss_name(::std::string&& value) {
-  
-  cross_entropy_loss_name_.SetNoArena(
-    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Tuple.cross_entropy_loss_name)
+    cross_entropy_loss_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        ::std::move(value));
+    // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Tuple.cross_entropy_loss_name)
 }
 #endif
 inline void Tuple::set_cross_entropy_loss_name(const char* value) {
-  
-  cross_entropy_loss_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:adaptive_system.Tuple.cross_entropy_loss_name)
+    cross_entropy_loss_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        ::std::string(value));
+    // @@protoc_insertion_point(field_set_char:adaptive_system.Tuple.cross_entropy_loss_name)
 }
 inline void Tuple::set_cross_entropy_loss_name(const char* value, size_t size) {
-  
-  cross_entropy_loss_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:adaptive_system.Tuple.cross_entropy_loss_name)
+    cross_entropy_loss_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        ::std::string(reinterpret_cast<const char*>(value), size));
+    // @@protoc_insertion_point(field_set_pointer:adaptive_system.Tuple.cross_entropy_loss_name)
 }
 inline ::std::string* Tuple::mutable_cross_entropy_loss_name() {
-  
-  // @@protoc_insertion_point(field_mutable:adaptive_system.Tuple.cross_entropy_loss_name)
-  return cross_entropy_loss_name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    // @@protoc_insertion_point(field_mutable:adaptive_system.Tuple.cross_entropy_loss_name)
+    return cross_entropy_loss_name_.MutableNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* Tuple::release_cross_entropy_loss_name() {
-  // @@protoc_insertion_point(field_release:adaptive_system.Tuple.cross_entropy_loss_name)
-  
-  return cross_entropy_loss_name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    // @@protoc_insertion_point(field_release:adaptive_system.Tuple.cross_entropy_loss_name)
+
+    return cross_entropy_loss_name_.ReleaseNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline void Tuple::set_allocated_cross_entropy_loss_name(::std::string* cross_entropy_loss_name) {
-  if (cross_entropy_loss_name != NULL) {
-    
-  } else {
-    
-  }
-  cross_entropy_loss_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), cross_entropy_loss_name);
-  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Tuple.cross_entropy_loss_name)
+inline void Tuple::set_allocated_cross_entropy_loss_name(
+    ::std::string* cross_entropy_loss_name) {
+    if (cross_entropy_loss_name != NULL) {
+    } else {
+    }
+    cross_entropy_loss_name_.SetAllocatedNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        cross_entropy_loss_name);
+    // @@protoc_insertion_point(field_set_allocated:adaptive_system.Tuple.cross_entropy_loss_name)
 }
 
 // string learning_rate_placeholder_name = 16;
 inline void Tuple::clear_learning_rate_placeholder_name() {
-  learning_rate_placeholder_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    learning_rate_placeholder_name_.ClearToEmptyNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline const ::std::string& Tuple::learning_rate_placeholder_name() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.Tuple.learning_rate_placeholder_name)
-  return learning_rate_placeholder_name_.GetNoArena();
+    // @@protoc_insertion_point(field_get:adaptive_system.Tuple.learning_rate_placeholder_name)
+    return learning_rate_placeholder_name_.GetNoArena();
 }
-inline void Tuple::set_learning_rate_placeholder_name(const ::std::string& value) {
-  
-  learning_rate_placeholder_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:adaptive_system.Tuple.learning_rate_placeholder_name)
+inline void Tuple::set_learning_rate_placeholder_name(
+    const ::std::string& value) {
+    learning_rate_placeholder_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+    // @@protoc_insertion_point(field_set:adaptive_system.Tuple.learning_rate_placeholder_name)
 }
 #if LANG_CXX11
 inline void Tuple::set_learning_rate_placeholder_name(::std::string&& value) {
-  
-  learning_rate_placeholder_name_.SetNoArena(
-    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Tuple.learning_rate_placeholder_name)
+    learning_rate_placeholder_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        ::std::move(value));
+    // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Tuple.learning_rate_placeholder_name)
 }
 #endif
 inline void Tuple::set_learning_rate_placeholder_name(const char* value) {
-  
-  learning_rate_placeholder_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:adaptive_system.Tuple.learning_rate_placeholder_name)
+    learning_rate_placeholder_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        ::std::string(value));
+    // @@protoc_insertion_point(field_set_char:adaptive_system.Tuple.learning_rate_placeholder_name)
 }
-inline void Tuple::set_learning_rate_placeholder_name(const char* value, size_t size) {
-  
-  learning_rate_placeholder_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:adaptive_system.Tuple.learning_rate_placeholder_name)
+inline void Tuple::set_learning_rate_placeholder_name(const char* value,
+                                                      size_t size) {
+    learning_rate_placeholder_name_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        ::std::string(reinterpret_cast<const char*>(value), size));
+    // @@protoc_insertion_point(field_set_pointer:adaptive_system.Tuple.learning_rate_placeholder_name)
 }
 inline ::std::string* Tuple::mutable_learning_rate_placeholder_name() {
-  
-  // @@protoc_insertion_point(field_mutable:adaptive_system.Tuple.learning_rate_placeholder_name)
-  return learning_rate_placeholder_name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    // @@protoc_insertion_point(field_mutable:adaptive_system.Tuple.learning_rate_placeholder_name)
+    return learning_rate_placeholder_name_.MutableNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* Tuple::release_learning_rate_placeholder_name() {
-  // @@protoc_insertion_point(field_release:adaptive_system.Tuple.learning_rate_placeholder_name)
-  
-  return learning_rate_placeholder_name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    // @@protoc_insertion_point(field_release:adaptive_system.Tuple.learning_rate_placeholder_name)
+
+    return learning_rate_placeholder_name_.ReleaseNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline void Tuple::set_allocated_learning_rate_placeholder_name(::std::string* learning_rate_placeholder_name) {
-  if (learning_rate_placeholder_name != NULL) {
-    
-  } else {
-    
-  }
-  learning_rate_placeholder_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), learning_rate_placeholder_name);
-  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Tuple.learning_rate_placeholder_name)
+inline void Tuple::set_allocated_learning_rate_placeholder_name(
+    ::std::string* learning_rate_placeholder_name) {
+    if (learning_rate_placeholder_name != NULL) {
+    } else {
+    }
+    learning_rate_placeholder_name_.SetAllocatedNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        learning_rate_placeholder_name);
+    // @@protoc_insertion_point(field_set_allocated:adaptive_system.Tuple.learning_rate_placeholder_name)
 }
 
 // -------------------------------------------------------------------
@@ -2113,140 +2206,142 @@ inline void Tuple::set_allocated_learning_rate_placeholder_name(::std::string* l
 
 // int32 quantization_level = 1;
 inline void Gradient::clear_quantization_level() {
-  quantization_level_ = 0;
+    quantization_level_ = 0;
 }
 inline ::google::protobuf::int32 Gradient::quantization_level() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.Gradient.quantization_level)
-  return quantization_level_;
+    // @@protoc_insertion_point(field_get:adaptive_system.Gradient.quantization_level)
+    return quantization_level_;
 }
 inline void Gradient::set_quantization_level(::google::protobuf::int32 value) {
-  
-  quantization_level_ = value;
-  // @@protoc_insertion_point(field_set:adaptive_system.Gradient.quantization_level)
+    quantization_level_ = value;
+    // @@protoc_insertion_point(field_set:adaptive_system.Gradient.quantization_level)
 }
 
 // bytes quantized_tensor = 3;
 inline void Gradient::clear_quantized_tensor() {
-  quantized_tensor_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    quantized_tensor_.ClearToEmptyNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline const ::std::string& Gradient::quantized_tensor() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.Gradient.quantized_tensor)
-  return quantized_tensor_.GetNoArena();
+    // @@protoc_insertion_point(field_get:adaptive_system.Gradient.quantized_tensor)
+    return quantized_tensor_.GetNoArena();
 }
 inline void Gradient::set_quantized_tensor(const ::std::string& value) {
-  
-  quantized_tensor_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:adaptive_system.Gradient.quantized_tensor)
+    quantized_tensor_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+    // @@protoc_insertion_point(field_set:adaptive_system.Gradient.quantized_tensor)
 }
 #if LANG_CXX11
 inline void Gradient::set_quantized_tensor(::std::string&& value) {
-  
-  quantized_tensor_.SetNoArena(
-    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Gradient.quantized_tensor)
+    quantized_tensor_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        ::std::move(value));
+    // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Gradient.quantized_tensor)
 }
 #endif
 inline void Gradient::set_quantized_tensor(const char* value) {
-  
-  quantized_tensor_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:adaptive_system.Gradient.quantized_tensor)
+    quantized_tensor_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        ::std::string(value));
+    // @@protoc_insertion_point(field_set_char:adaptive_system.Gradient.quantized_tensor)
 }
 inline void Gradient::set_quantized_tensor(const void* value, size_t size) {
-  
-  quantized_tensor_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:adaptive_system.Gradient.quantized_tensor)
+    quantized_tensor_.SetNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        ::std::string(reinterpret_cast<const char*>(value), size));
+    // @@protoc_insertion_point(field_set_pointer:adaptive_system.Gradient.quantized_tensor)
 }
 inline ::std::string* Gradient::mutable_quantized_tensor() {
-  
-  // @@protoc_insertion_point(field_mutable:adaptive_system.Gradient.quantized_tensor)
-  return quantized_tensor_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    // @@protoc_insertion_point(field_mutable:adaptive_system.Gradient.quantized_tensor)
+    return quantized_tensor_.MutableNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* Gradient::release_quantized_tensor() {
-  // @@protoc_insertion_point(field_release:adaptive_system.Gradient.quantized_tensor)
-  
-  return quantized_tensor_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    // @@protoc_insertion_point(field_release:adaptive_system.Gradient.quantized_tensor)
+
+    return quantized_tensor_.ReleaseNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline void Gradient::set_allocated_quantized_tensor(::std::string* quantized_tensor) {
-  if (quantized_tensor != NULL) {
-    
-  } else {
-    
-  }
-  quantized_tensor_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), quantized_tensor);
-  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Gradient.quantized_tensor)
+inline void Gradient::set_allocated_quantized_tensor(
+    ::std::string* quantized_tensor) {
+    if (quantized_tensor != NULL) {
+    } else {
+    }
+    quantized_tensor_.SetAllocatedNoArena(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        quantized_tensor);
+    // @@protoc_insertion_point(field_set_allocated:adaptive_system.Gradient.quantized_tensor)
 }
 
 // float max = 4;
 inline void Gradient::clear_max() {
-  max_ = 0;
+    max_ = 0;
 }
 inline float Gradient::max() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.Gradient.max)
-  return max_;
+    // @@protoc_insertion_point(field_get:adaptive_system.Gradient.max)
+    return max_;
 }
 inline void Gradient::set_max(float value) {
-  
-  max_ = value;
-  // @@protoc_insertion_point(field_set:adaptive_system.Gradient.max)
+    max_ = value;
+    // @@protoc_insertion_point(field_set:adaptive_system.Gradient.max)
 }
 
 // float min = 5;
 inline void Gradient::clear_min() {
-  min_ = 0;
+    min_ = 0;
 }
 inline float Gradient::min() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.Gradient.min)
-  return min_;
+    // @@protoc_insertion_point(field_get:adaptive_system.Gradient.min)
+    return min_;
 }
 inline void Gradient::set_min(float value) {
-  
-  min_ = value;
-  // @@protoc_insertion_point(field_set:adaptive_system.Gradient.min)
+    min_ = value;
+    // @@protoc_insertion_point(field_set:adaptive_system.Gradient.min)
 }
 
 // .tensorflow.TensorShapeProto tensor_shape = 6;
 inline bool Gradient::has_tensor_shape() const {
-  return this != internal_default_instance() && tensor_shape_ != NULL;
+    return this != internal_default_instance() && tensor_shape_ != NULL;
 }
 inline void Gradient::clear_tensor_shape() {
-  if (GetArenaNoVirtual() == NULL && tensor_shape_ != NULL) delete tensor_shape_;
-  tensor_shape_ = NULL;
+    if (GetArenaNoVirtual() == NULL && tensor_shape_ != NULL)
+        delete tensor_shape_;
+    tensor_shape_ = NULL;
 }
 inline const ::tensorflow::TensorShapeProto& Gradient::tensor_shape() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.Gradient.tensor_shape)
-  return tensor_shape_ != NULL ? *tensor_shape_
-                         : *::tensorflow::TensorShapeProto::internal_default_instance();
+    // @@protoc_insertion_point(field_get:adaptive_system.Gradient.tensor_shape)
+    return tensor_shape_ != NULL
+               ? *tensor_shape_
+               : *::tensorflow::TensorShapeProto::internal_default_instance();
 }
 inline ::tensorflow::TensorShapeProto* Gradient::mutable_tensor_shape() {
-  
-  if (tensor_shape_ == NULL) {
-    tensor_shape_ = new ::tensorflow::TensorShapeProto;
-  }
-  // @@protoc_insertion_point(field_mutable:adaptive_system.Gradient.tensor_shape)
-  return tensor_shape_;
+    if (tensor_shape_ == NULL) {
+        tensor_shape_ = new ::tensorflow::TensorShapeProto;
+    }
+    // @@protoc_insertion_point(field_mutable:adaptive_system.Gradient.tensor_shape)
+    return tensor_shape_;
 }
 inline ::tensorflow::TensorShapeProto* Gradient::release_tensor_shape() {
-  // @@protoc_insertion_point(field_release:adaptive_system.Gradient.tensor_shape)
-  
-  ::tensorflow::TensorShapeProto* temp = tensor_shape_;
-  tensor_shape_ = NULL;
-  return temp;
+    // @@protoc_insertion_point(field_release:adaptive_system.Gradient.tensor_shape)
+
+    ::tensorflow::TensorShapeProto* temp = tensor_shape_;
+    tensor_shape_ = NULL;
+    return temp;
 }
-inline void Gradient::set_allocated_tensor_shape(::tensorflow::TensorShapeProto* tensor_shape) {
-  delete tensor_shape_;
-  if (tensor_shape != NULL && tensor_shape->GetArena() != NULL) {
-    ::tensorflow::TensorShapeProto* new_tensor_shape = new ::tensorflow::TensorShapeProto;
-    new_tensor_shape->CopyFrom(*tensor_shape);
-    tensor_shape = new_tensor_shape;
-  }
-  tensor_shape_ = tensor_shape;
-  if (tensor_shape) {
-    
-  } else {
-    
-  }
-  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Gradient.tensor_shape)
+inline void Gradient::set_allocated_tensor_shape(
+    ::tensorflow::TensorShapeProto* tensor_shape) {
+    delete tensor_shape_;
+    if (tensor_shape != NULL && tensor_shape->GetArena() != NULL) {
+        ::tensorflow::TensorShapeProto* new_tensor_shape =
+            new ::tensorflow::TensorShapeProto;
+        new_tensor_shape->CopyFrom(*tensor_shape);
+        tensor_shape = new_tensor_shape;
+    }
+    tensor_shape_ = tensor_shape;
+    if (tensor_shape) {
+    } else {
+    }
+    // @@protoc_insertion_point(field_set_allocated:adaptive_system.Gradient.tensor_shape)
 }
 
 // -------------------------------------------------------------------
@@ -2255,229 +2350,241 @@ inline void Gradient::set_allocated_tensor_shape(::tensorflow::TensorShapeProto*
 
 // int32 quantization_level = 1;
 inline void GradientAccordingColumn::clear_quantization_level() {
-  quantization_level_ = 0;
+    quantization_level_ = 0;
 }
-inline ::google::protobuf::int32 GradientAccordingColumn::quantization_level() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.GradientAccordingColumn.quantization_level)
-  return quantization_level_;
+inline ::google::protobuf::int32 GradientAccordingColumn::quantization_level()
+    const {
+    // @@protoc_insertion_point(field_get:adaptive_system.GradientAccordingColumn.quantization_level)
+    return quantization_level_;
 }
-inline void GradientAccordingColumn::set_quantization_level(::google::protobuf::int32 value) {
-  
-  quantization_level_ = value;
-  // @@protoc_insertion_point(field_set:adaptive_system.GradientAccordingColumn.quantization_level)
+inline void GradientAccordingColumn::set_quantization_level(
+    ::google::protobuf::int32 value) {
+    quantization_level_ = value;
+    // @@protoc_insertion_point(field_set:adaptive_system.GradientAccordingColumn.quantization_level)
 }
 
 // repeated bytes quantized_columns = 2;
 inline int GradientAccordingColumn::quantized_columns_size() const {
-  return quantized_columns_.size();
+    return quantized_columns_.size();
 }
 inline void GradientAccordingColumn::clear_quantized_columns() {
-  quantized_columns_.Clear();
+    quantized_columns_.Clear();
 }
-inline const ::std::string& GradientAccordingColumn::quantized_columns(int index) const {
-  // @@protoc_insertion_point(field_get:adaptive_system.GradientAccordingColumn.quantized_columns)
-  return quantized_columns_.Get(index);
+inline const ::std::string& GradientAccordingColumn::quantized_columns(
+    int index) const {
+    // @@protoc_insertion_point(field_get:adaptive_system.GradientAccordingColumn.quantized_columns)
+    return quantized_columns_.Get(index);
 }
-inline ::std::string* GradientAccordingColumn::mutable_quantized_columns(int index) {
-  // @@protoc_insertion_point(field_mutable:adaptive_system.GradientAccordingColumn.quantized_columns)
-  return quantized_columns_.Mutable(index);
+inline ::std::string* GradientAccordingColumn::mutable_quantized_columns(
+    int index) {
+    // @@protoc_insertion_point(field_mutable:adaptive_system.GradientAccordingColumn.quantized_columns)
+    return quantized_columns_.Mutable(index);
 }
-inline void GradientAccordingColumn::set_quantized_columns(int index, const ::std::string& value) {
-  // @@protoc_insertion_point(field_set:adaptive_system.GradientAccordingColumn.quantized_columns)
-  quantized_columns_.Mutable(index)->assign(value);
+inline void GradientAccordingColumn::set_quantized_columns(
+    int index,
+    const ::std::string& value) {
+    // @@protoc_insertion_point(field_set:adaptive_system.GradientAccordingColumn.quantized_columns)
+    quantized_columns_.Mutable(index)->assign(value);
 }
 #if LANG_CXX11
-inline void GradientAccordingColumn::set_quantized_columns(int index, ::std::string&& value) {
-  // @@protoc_insertion_point(field_set:adaptive_system.GradientAccordingColumn.quantized_columns)
-  quantized_columns_.Mutable(index)->assign(std::move(value));
+inline void GradientAccordingColumn::set_quantized_columns(
+    int index,
+    ::std::string&& value) {
+    // @@protoc_insertion_point(field_set:adaptive_system.GradientAccordingColumn.quantized_columns)
+    quantized_columns_.Mutable(index)->assign(std::move(value));
 }
 #endif
-inline void GradientAccordingColumn::set_quantized_columns(int index, const char* value) {
-  quantized_columns_.Mutable(index)->assign(value);
-  // @@protoc_insertion_point(field_set_char:adaptive_system.GradientAccordingColumn.quantized_columns)
+inline void GradientAccordingColumn::set_quantized_columns(int index,
+                                                           const char* value) {
+    quantized_columns_.Mutable(index)->assign(value);
+    // @@protoc_insertion_point(field_set_char:adaptive_system.GradientAccordingColumn.quantized_columns)
 }
-inline void GradientAccordingColumn::set_quantized_columns(int index, const void* value, size_t size) {
-  quantized_columns_.Mutable(index)->assign(
-    reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_set_pointer:adaptive_system.GradientAccordingColumn.quantized_columns)
+inline void GradientAccordingColumn::set_quantized_columns(int index,
+                                                           const void* value,
+                                                           size_t size) {
+    quantized_columns_.Mutable(index)->assign(
+        reinterpret_cast<const char*>(value), size);
+    // @@protoc_insertion_point(field_set_pointer:adaptive_system.GradientAccordingColumn.quantized_columns)
 }
 inline ::std::string* GradientAccordingColumn::add_quantized_columns() {
-  // @@protoc_insertion_point(field_add_mutable:adaptive_system.GradientAccordingColumn.quantized_columns)
-  return quantized_columns_.Add();
+    // @@protoc_insertion_point(field_add_mutable:adaptive_system.GradientAccordingColumn.quantized_columns)
+    return quantized_columns_.Add();
 }
-inline void GradientAccordingColumn::add_quantized_columns(const ::std::string& value) {
-  quantized_columns_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add:adaptive_system.GradientAccordingColumn.quantized_columns)
+inline void GradientAccordingColumn::add_quantized_columns(
+    const ::std::string& value) {
+    quantized_columns_.Add()->assign(value);
+    // @@protoc_insertion_point(field_add:adaptive_system.GradientAccordingColumn.quantized_columns)
 }
 #if LANG_CXX11
-inline void GradientAccordingColumn::add_quantized_columns(::std::string&& value) {
-  quantized_columns_.Add()->assign(std::move(value));
-  // @@protoc_insertion_point(field_add:adaptive_system.GradientAccordingColumn.quantized_columns)
+inline void GradientAccordingColumn::add_quantized_columns(
+    ::std::string&& value) {
+    quantized_columns_.Add()->assign(std::move(value));
+    // @@protoc_insertion_point(field_add:adaptive_system.GradientAccordingColumn.quantized_columns)
 }
 #endif
 inline void GradientAccordingColumn::add_quantized_columns(const char* value) {
-  quantized_columns_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add_char:adaptive_system.GradientAccordingColumn.quantized_columns)
+    quantized_columns_.Add()->assign(value);
+    // @@protoc_insertion_point(field_add_char:adaptive_system.GradientAccordingColumn.quantized_columns)
 }
-inline void GradientAccordingColumn::add_quantized_columns(const void* value, size_t size) {
-  quantized_columns_.Add()->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_add_pointer:adaptive_system.GradientAccordingColumn.quantized_columns)
+inline void GradientAccordingColumn::add_quantized_columns(const void* value,
+                                                           size_t size) {
+    quantized_columns_.Add()->assign(reinterpret_cast<const char*>(value),
+                                     size);
+    // @@protoc_insertion_point(field_add_pointer:adaptive_system.GradientAccordingColumn.quantized_columns)
 }
 inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
 GradientAccordingColumn::quantized_columns() const {
-  // @@protoc_insertion_point(field_list:adaptive_system.GradientAccordingColumn.quantized_columns)
-  return quantized_columns_;
+    // @@protoc_insertion_point(field_list:adaptive_system.GradientAccordingColumn.quantized_columns)
+    return quantized_columns_;
 }
 inline ::google::protobuf::RepeatedPtrField< ::std::string>*
 GradientAccordingColumn::mutable_quantized_columns() {
-  // @@protoc_insertion_point(field_mutable_list:adaptive_system.GradientAccordingColumn.quantized_columns)
-  return &quantized_columns_;
+    // @@protoc_insertion_point(field_mutable_list:adaptive_system.GradientAccordingColumn.quantized_columns)
+    return &quantized_columns_;
 }
 
 // repeated float maxes = 3;
 inline int GradientAccordingColumn::maxes_size() const {
-  return maxes_.size();
+    return maxes_.size();
 }
 inline void GradientAccordingColumn::clear_maxes() {
-  maxes_.Clear();
+    maxes_.Clear();
 }
 inline float GradientAccordingColumn::maxes(int index) const {
-  // @@protoc_insertion_point(field_get:adaptive_system.GradientAccordingColumn.maxes)
-  return maxes_.Get(index);
+    // @@protoc_insertion_point(field_get:adaptive_system.GradientAccordingColumn.maxes)
+    return maxes_.Get(index);
 }
 inline void GradientAccordingColumn::set_maxes(int index, float value) {
-  maxes_.Set(index, value);
-  // @@protoc_insertion_point(field_set:adaptive_system.GradientAccordingColumn.maxes)
+    maxes_.Set(index, value);
+    // @@protoc_insertion_point(field_set:adaptive_system.GradientAccordingColumn.maxes)
 }
 inline void GradientAccordingColumn::add_maxes(float value) {
-  maxes_.Add(value);
-  // @@protoc_insertion_point(field_add:adaptive_system.GradientAccordingColumn.maxes)
+    maxes_.Add(value);
+    // @@protoc_insertion_point(field_add:adaptive_system.GradientAccordingColumn.maxes)
 }
-inline const ::google::protobuf::RepeatedField< float >&
+inline const ::google::protobuf::RepeatedField<float>&
 GradientAccordingColumn::maxes() const {
-  // @@protoc_insertion_point(field_list:adaptive_system.GradientAccordingColumn.maxes)
-  return maxes_;
+    // @@protoc_insertion_point(field_list:adaptive_system.GradientAccordingColumn.maxes)
+    return maxes_;
 }
-inline ::google::protobuf::RepeatedField< float >*
+inline ::google::protobuf::RepeatedField<float>*
 GradientAccordingColumn::mutable_maxes() {
-  // @@protoc_insertion_point(field_mutable_list:adaptive_system.GradientAccordingColumn.maxes)
-  return &maxes_;
+    // @@protoc_insertion_point(field_mutable_list:adaptive_system.GradientAccordingColumn.maxes)
+    return &maxes_;
 }
 
 // repeated float mins = 4;
 inline int GradientAccordingColumn::mins_size() const {
-  return mins_.size();
+    return mins_.size();
 }
 inline void GradientAccordingColumn::clear_mins() {
-  mins_.Clear();
+    mins_.Clear();
 }
 inline float GradientAccordingColumn::mins(int index) const {
-  // @@protoc_insertion_point(field_get:adaptive_system.GradientAccordingColumn.mins)
-  return mins_.Get(index);
+    // @@protoc_insertion_point(field_get:adaptive_system.GradientAccordingColumn.mins)
+    return mins_.Get(index);
 }
 inline void GradientAccordingColumn::set_mins(int index, float value) {
-  mins_.Set(index, value);
-  // @@protoc_insertion_point(field_set:adaptive_system.GradientAccordingColumn.mins)
+    mins_.Set(index, value);
+    // @@protoc_insertion_point(field_set:adaptive_system.GradientAccordingColumn.mins)
 }
 inline void GradientAccordingColumn::add_mins(float value) {
-  mins_.Add(value);
-  // @@protoc_insertion_point(field_add:adaptive_system.GradientAccordingColumn.mins)
+    mins_.Add(value);
+    // @@protoc_insertion_point(field_add:adaptive_system.GradientAccordingColumn.mins)
 }
-inline const ::google::protobuf::RepeatedField< float >&
+inline const ::google::protobuf::RepeatedField<float>&
 GradientAccordingColumn::mins() const {
-  // @@protoc_insertion_point(field_list:adaptive_system.GradientAccordingColumn.mins)
-  return mins_;
+    // @@protoc_insertion_point(field_list:adaptive_system.GradientAccordingColumn.mins)
+    return mins_;
 }
-inline ::google::protobuf::RepeatedField< float >*
+inline ::google::protobuf::RepeatedField<float>*
 GradientAccordingColumn::mutable_mins() {
-  // @@protoc_insertion_point(field_mutable_list:adaptive_system.GradientAccordingColumn.mins)
-  return &mins_;
+    // @@protoc_insertion_point(field_mutable_list:adaptive_system.GradientAccordingColumn.mins)
+    return &mins_;
 }
 
 // int32 dim1 = 5;
 inline void GradientAccordingColumn::clear_dim1() {
-  dim1_ = 0;
+    dim1_ = 0;
 }
 inline ::google::protobuf::int32 GradientAccordingColumn::dim1() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.GradientAccordingColumn.dim1)
-  return dim1_;
+    // @@protoc_insertion_point(field_get:adaptive_system.GradientAccordingColumn.dim1)
+    return dim1_;
 }
 inline void GradientAccordingColumn::set_dim1(::google::protobuf::int32 value) {
-  
-  dim1_ = value;
-  // @@protoc_insertion_point(field_set:adaptive_system.GradientAccordingColumn.dim1)
+    dim1_ = value;
+    // @@protoc_insertion_point(field_set:adaptive_system.GradientAccordingColumn.dim1)
 }
 
 // int32 dim2 = 6;
 inline void GradientAccordingColumn::clear_dim2() {
-  dim2_ = 0;
+    dim2_ = 0;
 }
 inline ::google::protobuf::int32 GradientAccordingColumn::dim2() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.GradientAccordingColumn.dim2)
-  return dim2_;
+    // @@protoc_insertion_point(field_get:adaptive_system.GradientAccordingColumn.dim2)
+    return dim2_;
 }
 inline void GradientAccordingColumn::set_dim2(::google::protobuf::int32 value) {
-  
-  dim2_ = value;
-  // @@protoc_insertion_point(field_set:adaptive_system.GradientAccordingColumn.dim2)
+    dim2_ = value;
+    // @@protoc_insertion_point(field_set:adaptive_system.GradientAccordingColumn.dim2)
 }
 
 // .tensorflow.TensorProto tensor = 7;
 inline bool GradientAccordingColumn::has_tensor() const {
-  return this != internal_default_instance() && tensor_ != NULL;
+    return this != internal_default_instance() && tensor_ != NULL;
 }
 inline void GradientAccordingColumn::clear_tensor() {
-  if (GetArenaNoVirtual() == NULL && tensor_ != NULL) delete tensor_;
-  tensor_ = NULL;
+    if (GetArenaNoVirtual() == NULL && tensor_ != NULL)
+        delete tensor_;
+    tensor_ = NULL;
 }
-inline const ::tensorflow::TensorProto& GradientAccordingColumn::tensor() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.GradientAccordingColumn.tensor)
-  return tensor_ != NULL ? *tensor_
-                         : *::tensorflow::TensorProto::internal_default_instance();
+inline const ::tensorflow::TensorProto& GradientAccordingColumn::tensor()
+    const {
+    // @@protoc_insertion_point(field_get:adaptive_system.GradientAccordingColumn.tensor)
+    return tensor_ != NULL
+               ? *tensor_
+               : *::tensorflow::TensorProto::internal_default_instance();
 }
 inline ::tensorflow::TensorProto* GradientAccordingColumn::mutable_tensor() {
-  
-  if (tensor_ == NULL) {
-    tensor_ = new ::tensorflow::TensorProto;
-  }
-  // @@protoc_insertion_point(field_mutable:adaptive_system.GradientAccordingColumn.tensor)
-  return tensor_;
+    if (tensor_ == NULL) {
+        tensor_ = new ::tensorflow::TensorProto;
+    }
+    // @@protoc_insertion_point(field_mutable:adaptive_system.GradientAccordingColumn.tensor)
+    return tensor_;
 }
 inline ::tensorflow::TensorProto* GradientAccordingColumn::release_tensor() {
-  // @@protoc_insertion_point(field_release:adaptive_system.GradientAccordingColumn.tensor)
-  
-  ::tensorflow::TensorProto* temp = tensor_;
-  tensor_ = NULL;
-  return temp;
+    // @@protoc_insertion_point(field_release:adaptive_system.GradientAccordingColumn.tensor)
+
+    ::tensorflow::TensorProto* temp = tensor_;
+    tensor_ = NULL;
+    return temp;
 }
-inline void GradientAccordingColumn::set_allocated_tensor(::tensorflow::TensorProto* tensor) {
-  delete tensor_;
-  if (tensor != NULL && tensor->GetArena() != NULL) {
-    ::tensorflow::TensorProto* new_tensor = new ::tensorflow::TensorProto;
-    new_tensor->CopyFrom(*tensor);
-    tensor = new_tensor;
-  }
-  tensor_ = tensor;
-  if (tensor) {
-    
-  } else {
-    
-  }
-  // @@protoc_insertion_point(field_set_allocated:adaptive_system.GradientAccordingColumn.tensor)
+inline void GradientAccordingColumn::set_allocated_tensor(
+    ::tensorflow::TensorProto* tensor) {
+    delete tensor_;
+    if (tensor != NULL && tensor->GetArena() != NULL) {
+        ::tensorflow::TensorProto* new_tensor = new ::tensorflow::TensorProto;
+        new_tensor->CopyFrom(*tensor);
+        tensor = new_tensor;
+    }
+    tensor_ = tensor;
+    if (tensor) {
+    } else {
+    }
+    // @@protoc_insertion_point(field_set_allocated:adaptive_system.GradientAccordingColumn.tensor)
 }
 
 // bool is_quantized = 8;
 inline void GradientAccordingColumn::clear_is_quantized() {
-  is_quantized_ = false;
+    is_quantized_ = false;
 }
 inline bool GradientAccordingColumn::is_quantized() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.GradientAccordingColumn.is_quantized)
-  return is_quantized_;
+    // @@protoc_insertion_point(field_get:adaptive_system.GradientAccordingColumn.is_quantized)
+    return is_quantized_;
 }
 inline void GradientAccordingColumn::set_is_quantized(bool value) {
-  
-  is_quantized_ = value;
-  // @@protoc_insertion_point(field_set:adaptive_system.GradientAccordingColumn.is_quantized)
+    is_quantized_ = value;
+    // @@protoc_insertion_point(field_set:adaptive_system.GradientAccordingColumn.is_quantized)
 }
 
 // -------------------------------------------------------------------
@@ -2488,20 +2595,21 @@ inline void GradientAccordingColumn::set_is_quantized(bool value) {
 
 // map<string, .adaptive_system.Gradient> name_to_gradient = 1;
 inline int NamedGradients::name_to_gradient_size() const {
-  return name_to_gradient_.size();
+    return name_to_gradient_.size();
 }
 inline void NamedGradients::clear_name_to_gradient() {
-  name_to_gradient_.Clear();
+    name_to_gradient_.Clear();
 }
-inline const ::google::protobuf::Map< ::std::string, ::adaptive_system::Gradient >&
+inline const ::google::protobuf::Map< ::std::string,
+                                      ::adaptive_system::Gradient>&
 NamedGradients::name_to_gradient() const {
-  // @@protoc_insertion_point(field_map:adaptive_system.NamedGradients.name_to_gradient)
-  return name_to_gradient_.GetMap();
+    // @@protoc_insertion_point(field_map:adaptive_system.NamedGradients.name_to_gradient)
+    return name_to_gradient_.GetMap();
 }
-inline ::google::protobuf::Map< ::std::string, ::adaptive_system::Gradient >*
+inline ::google::protobuf::Map< ::std::string, ::adaptive_system::Gradient>*
 NamedGradients::mutable_name_to_gradient() {
-  // @@protoc_insertion_point(field_mutable_map:adaptive_system.NamedGradients.name_to_gradient)
-  return name_to_gradient_.MutableMap();
+    // @@protoc_insertion_point(field_mutable_map:adaptive_system.NamedGradients.name_to_gradient)
+    return name_to_gradient_.MutableMap();
 }
 
 // -------------------------------------------------------------------
@@ -2512,20 +2620,22 @@ NamedGradients::mutable_name_to_gradient() {
 
 // map<string, .adaptive_system.GradientAccordingColumn> name_to_gradient = 1;
 inline int NamedGradientsAccordingColumn::name_to_gradient_size() const {
-  return name_to_gradient_.size();
+    return name_to_gradient_.size();
 }
 inline void NamedGradientsAccordingColumn::clear_name_to_gradient() {
-  name_to_gradient_.Clear();
+    name_to_gradient_.Clear();
 }
-inline const ::google::protobuf::Map< ::std::string, ::adaptive_system::GradientAccordingColumn >&
-NamedGradientsAccordingColumn::name_to_gradient() const {
-  // @@protoc_insertion_point(field_map:adaptive_system.NamedGradientsAccordingColumn.name_to_gradient)
-  return name_to_gradient_.GetMap();
+inline const ::google::protobuf::
+    Map< ::std::string, ::adaptive_system::GradientAccordingColumn>&
+    NamedGradientsAccordingColumn::name_to_gradient() const {
+    // @@protoc_insertion_point(field_map:adaptive_system.NamedGradientsAccordingColumn.name_to_gradient)
+    return name_to_gradient_.GetMap();
 }
-inline ::google::protobuf::Map< ::std::string, ::adaptive_system::GradientAccordingColumn >*
+inline ::google::protobuf::Map< ::std::string,
+                                ::adaptive_system::GradientAccordingColumn>*
 NamedGradientsAccordingColumn::mutable_name_to_gradient() {
-  // @@protoc_insertion_point(field_mutable_map:adaptive_system.NamedGradientsAccordingColumn.name_to_gradient)
-  return name_to_gradient_.MutableMap();
+    // @@protoc_insertion_point(field_mutable_map:adaptive_system.NamedGradientsAccordingColumn.name_to_gradient)
+    return name_to_gradient_.MutableMap();
 }
 
 // -------------------------------------------------------------------
@@ -2534,60 +2644,59 @@ NamedGradientsAccordingColumn::mutable_name_to_gradient() {
 
 // .tensorflow.TensorProto tensor = 1;
 inline bool PartialState::has_tensor() const {
-  return this != internal_default_instance() && tensor_ != NULL;
+    return this != internal_default_instance() && tensor_ != NULL;
 }
 inline void PartialState::clear_tensor() {
-  if (GetArenaNoVirtual() == NULL && tensor_ != NULL) delete tensor_;
-  tensor_ = NULL;
+    if (GetArenaNoVirtual() == NULL && tensor_ != NULL)
+        delete tensor_;
+    tensor_ = NULL;
 }
 inline const ::tensorflow::TensorProto& PartialState::tensor() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.PartialState.tensor)
-  return tensor_ != NULL ? *tensor_
-                         : *::tensorflow::TensorProto::internal_default_instance();
+    // @@protoc_insertion_point(field_get:adaptive_system.PartialState.tensor)
+    return tensor_ != NULL
+               ? *tensor_
+               : *::tensorflow::TensorProto::internal_default_instance();
 }
 inline ::tensorflow::TensorProto* PartialState::mutable_tensor() {
-  
-  if (tensor_ == NULL) {
-    tensor_ = new ::tensorflow::TensorProto;
-  }
-  // @@protoc_insertion_point(field_mutable:adaptive_system.PartialState.tensor)
-  return tensor_;
+    if (tensor_ == NULL) {
+        tensor_ = new ::tensorflow::TensorProto;
+    }
+    // @@protoc_insertion_point(field_mutable:adaptive_system.PartialState.tensor)
+    return tensor_;
 }
 inline ::tensorflow::TensorProto* PartialState::release_tensor() {
-  // @@protoc_insertion_point(field_release:adaptive_system.PartialState.tensor)
-  
-  ::tensorflow::TensorProto* temp = tensor_;
-  tensor_ = NULL;
-  return temp;
+    // @@protoc_insertion_point(field_release:adaptive_system.PartialState.tensor)
+
+    ::tensorflow::TensorProto* temp = tensor_;
+    tensor_ = NULL;
+    return temp;
 }
-inline void PartialState::set_allocated_tensor(::tensorflow::TensorProto* tensor) {
-  delete tensor_;
-  if (tensor != NULL && tensor->GetArena() != NULL) {
-    ::tensorflow::TensorProto* new_tensor = new ::tensorflow::TensorProto;
-    new_tensor->CopyFrom(*tensor);
-    tensor = new_tensor;
-  }
-  tensor_ = tensor;
-  if (tensor) {
-    
-  } else {
-    
-  }
-  // @@protoc_insertion_point(field_set_allocated:adaptive_system.PartialState.tensor)
+inline void PartialState::set_allocated_tensor(
+    ::tensorflow::TensorProto* tensor) {
+    delete tensor_;
+    if (tensor != NULL && tensor->GetArena() != NULL) {
+        ::tensorflow::TensorProto* new_tensor = new ::tensorflow::TensorProto;
+        new_tensor->CopyFrom(*tensor);
+        tensor = new_tensor;
+    }
+    tensor_ = tensor;
+    if (tensor) {
+    } else {
+    }
+    // @@protoc_insertion_point(field_set_allocated:adaptive_system.PartialState.tensor)
 }
 
 // float loss = 2;
 inline void PartialState::clear_loss() {
-  loss_ = 0;
+    loss_ = 0;
 }
 inline float PartialState::loss() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.PartialState.loss)
-  return loss_;
+    // @@protoc_insertion_point(field_get:adaptive_system.PartialState.loss)
+    return loss_;
 }
 inline void PartialState::set_loss(float value) {
-  
-  loss_ = value;
-  // @@protoc_insertion_point(field_set:adaptive_system.PartialState.loss)
+    loss_ = value;
+    // @@protoc_insertion_point(field_set:adaptive_system.PartialState.loss)
 }
 
 // -------------------------------------------------------------------
@@ -2596,16 +2705,15 @@ inline void PartialState::set_loss(float value) {
 
 // float loss = 1;
 inline void Loss::clear_loss() {
-  loss_ = 0;
+    loss_ = 0;
 }
 inline float Loss::loss() const {
-  // @@protoc_insertion_point(field_get:adaptive_system.Loss.loss)
-  return loss_;
+    // @@protoc_insertion_point(field_get:adaptive_system.Loss.loss)
+    return loss_;
 }
 inline void Loss::set_loss(float value) {
-  
-  loss_ = value;
-  // @@protoc_insertion_point(field_set:adaptive_system.Loss.loss)
+    loss_ = value;
+    // @@protoc_insertion_point(field_set:adaptive_system.Loss.loss)
 }
 
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS
@@ -2637,9 +2745,7 @@ inline void Loss::set_loss(float value) {
 
 // -------------------------------------------------------------------
 
-
 // @@protoc_insertion_point(namespace_scope)
-
 
 }  // namespace adaptive_system
 

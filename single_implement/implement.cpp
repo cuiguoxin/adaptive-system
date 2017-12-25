@@ -26,6 +26,7 @@
 #include "quantization/util/helper.h"
 #include "server/reward.h"
 #include "server/sarsa.h"
+#include "single_implement/accuracy.h"
 
 namespace input {
 using namespace tensorflow;
@@ -270,14 +271,15 @@ void init_log(int const interval,
     auto init_time_t = std::chrono::system_clock::to_time_t(now);
     std::string label = std::to_string(init_time_t);
     std::string store_loss_file_path =
-        "loss_result/sarsa_adaptive" + label +
-        "_interval:" + std::to_string(interval) +
+        "sarsa_adaptive" + label + "_interval:" + std::to_string(interval) +
         "_number_of_workers:" + std::to_string(total_worker_num) + "_level" +
         std::to_string(start_level) + "-" + std::to_string(end_level) +
         "_eps_greedy-" + std::to_string(eps_greedy) + "_r-" +
         std::to_string(r) + "_initLearningRate-" + std::to_string(init_lr) +
         "_changeLrIterNum-" + std::to_string(iter_to_change_lr);
-    file_loss_stream.open(store_loss_file_path);
+    file_loss_stream.open("loss_result/" + store_loss_file_path);
+    //init predict
+    init(store_loss_file_path);
 }
 
 inline void log(float const time,
@@ -334,7 +336,8 @@ void do_work(int const total_iter_num,
              float const eps_greedy,
              float r,
              float const learning_rate_init_value,
-             int const start_iter_num) {
+             int const start_iter_num, 
+             int const predict_interval) {
     // init sarsa
     PRINT_INFO;
     sarsa_model sm(
@@ -353,6 +356,7 @@ void do_work(int const total_iter_num,
     int level = init_level;
     float learning_rate_value = learning_rate_init_value;
     bool trick = true;
+    std::vector<int> quantize_levels;
     for (int i = 0; i < total_iter_num; i++) {
         std::vector<std::map<std::string, tensorflow::Tensor>> vec_grads;
         std::vector<std::thread> vec_threads;
@@ -417,6 +421,11 @@ void do_work(int const total_iter_num,
                 sm.set_current_level(level);
             }
         }
+        quantize_levels.push_back(level);
+        if(real_num % predict_interval == 0){
+            predict(client::session, real_num, quantize_levels);
+            quantize_levels.clear();
+        }
     }
 }
 
@@ -435,11 +444,12 @@ int main(int argc, char** argv) {
     int const start_iter_num = atoi(argv[10]);
     client::sarsa::computing_time = atof(argv[11]);
     client::sarsa::one_bit_communication_time = atof(argv[12]);
+    int const predict_interval = atoi(argv[13]);
     PRINT_INFO;
     input::turn_raw_tensors_to_standard_version();
     client::do_work(total_iter_num, total_worker_num, init_level, interval,
                     start_level, end_level, eps_greedy, r,
-                    learning_rate_init_value, start_iter_num);
+                    learning_rate_init_value, start_iter_num, predict_interval);
 
     return 0;
 }

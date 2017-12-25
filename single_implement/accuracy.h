@@ -39,3 +39,9 @@
 #include "server/reward.h"
 
 #include "input/cifar10/input.h"
+
+void init(std::string const log_file_name);
+
+void predict(tensorflow::Session* session_from,
+             int const current_iter_num,
+             std::vector<int> const & quantize_levels);
