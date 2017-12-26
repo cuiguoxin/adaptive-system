@@ -25,6 +25,8 @@
 #include "quantization/util/any_level.h"
 #include "quantization/util/helper.h"
 
+#include "single_implement/accuracy.h"
+
 namespace input {
 using namespace tensorflow;
 
@@ -261,12 +263,13 @@ void init_log(int const total_worker_num,
     auto init_time_t = std::chrono::system_clock::to_time_t(now);
     std::string label = std::to_string(init_time_t);
     std::string store_loss_file_path =
-        "loss_result/baseline_" + label +
+        "baseline_" + label +
         "_number_of_workers:" + std::to_string(total_worker_num) + "_" +
         std::to_string(pre_level) + "-" + std::to_string(split_point) + "-" +
         std::to_string(post_level) + "_initLr-" + std::to_string(init_lr) +
         "_startIterNum-" + std::to_string(start_iter_num);
-    file_loss_stream.open(store_loss_file_path);
+    file_loss_stream.open("loss_result/" + store_loss_file_path);
+    init(store_loss_file_path);
 }
 
 inline void log(float const time,
@@ -290,12 +293,14 @@ void do_work(int const total_iter_num,
              int const split_point,
              int const post_level,
              float const init_lr,
-             int const start_iter_num) {
+             int const start_iter_num,
+             int const predict_interval) {
     log::init_log(total_worker_num, pre_level, split_point, post_level, init_lr,
                   start_iter_num);
     load_primary_model_and_init();
     int level = 0;
     float lr = init_lr;
+    std::vector<int> quantize_levels;
     for (int i = 0; i < total_iter_num; i++) {
         if (i < start_iter_num) {
             level = 2;
@@ -351,6 +356,11 @@ void do_work(int const total_iter_num,
         std::cout << "iter num is : " << i << " loss is : " << total_average
                   << " cross entropy loss is " << cross_entropy_average
                   << std::endl;
+        quantize_levels.push_back(level);
+        if (i % predict_interval == 0) {
+            predict(client::session, i, quantize_levels);
+            quantize_levels.clear();
+        }
     }
 }
 
@@ -364,10 +374,11 @@ int main(int argc, char** argv) {
     int const post_level = atoi(argv[5]);
     float const init_lr = atof(argv[6]);
     int const start_iter_num = atoi(argv[7]);
+    int const predict_interval = atoi(argv[8]);
 
     input::turn_raw_tensors_to_standard_version();
     client::do_work(total_iter_num, total_worker_num, pre_level, split_point,
-                    post_level, init_lr, start_iter_num);
+                    post_level, init_lr, start_iter_num, predict_interval);
 
     return 0;
 }

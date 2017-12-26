@@ -593,6 +593,20 @@ class Tuple : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   ::std::string* release_learning_rate_placeholder_name();
   void set_allocated_learning_rate_placeholder_name(::std::string* learning_rate_placeholder_name);
 
+  // string accuracy_name = 17;
+  void clear_accuracy_name();
+  static const int kAccuracyNameFieldNumber = 17;
+  const ::std::string& accuracy_name() const;
+  void set_accuracy_name(const ::std::string& value);
+  #if LANG_CXX11
+  void set_accuracy_name(::std::string&& value);
+  #endif
+  void set_accuracy_name(const char* value);
+  void set_accuracy_name(const char* value, size_t size);
+  ::std::string* mutable_accuracy_name();
+  ::std::string* release_accuracy_name();
+  void set_allocated_accuracy_name(::std::string* accuracy_name);
+
   // .tensorflow.GraphDef graph = 5;
   bool has_graph() const;
   void clear_graph();
@@ -670,6 +684,7 @@ class Tuple : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   ::google::protobuf::internal::ArenaStringPtr training_op_name_;
   ::google::protobuf::internal::ArenaStringPtr cross_entropy_loss_name_;
   ::google::protobuf::internal::ArenaStringPtr learning_rate_placeholder_name_;
+  ::google::protobuf::internal::ArenaStringPtr accuracy_name_;
   ::tensorflow::GraphDef* graph_;
   float lr_;
   ::google::protobuf::int32 interval_;
@@ -2105,6 +2120,58 @@ inline void Tuple::set_allocated_learning_rate_placeholder_name(::std::string* l
   }
   learning_rate_placeholder_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), learning_rate_placeholder_name);
   // @@protoc_insertion_point(field_set_allocated:adaptive_system.Tuple.learning_rate_placeholder_name)
+}
+
+// string accuracy_name = 17;
+inline void Tuple::clear_accuracy_name() {
+  accuracy_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& Tuple::accuracy_name() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.Tuple.accuracy_name)
+  return accuracy_name_.GetNoArena();
+}
+inline void Tuple::set_accuracy_name(const ::std::string& value) {
+  
+  accuracy_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:adaptive_system.Tuple.accuracy_name)
+}
+#if LANG_CXX11
+inline void Tuple::set_accuracy_name(::std::string&& value) {
+  
+  accuracy_name_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:adaptive_system.Tuple.accuracy_name)
+}
+#endif
+inline void Tuple::set_accuracy_name(const char* value) {
+  
+  accuracy_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:adaptive_system.Tuple.accuracy_name)
+}
+inline void Tuple::set_accuracy_name(const char* value, size_t size) {
+  
+  accuracy_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:adaptive_system.Tuple.accuracy_name)
+}
+inline ::std::string* Tuple::mutable_accuracy_name() {
+  
+  // @@protoc_insertion_point(field_mutable:adaptive_system.Tuple.accuracy_name)
+  return accuracy_name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* Tuple::release_accuracy_name() {
+  // @@protoc_insertion_point(field_release:adaptive_system.Tuple.accuracy_name)
+  
+  return accuracy_name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Tuple::set_allocated_accuracy_name(::std::string* accuracy_name) {
+  if (accuracy_name != NULL) {
+    
+  } else {
+    
+  }
+  accuracy_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), accuracy_name);
+  // @@protoc_insertion_point(field_set_allocated:adaptive_system.Tuple.accuracy_name)
 }
 
 // -------------------------------------------------------------------
