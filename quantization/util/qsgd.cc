@@ -1,6 +1,7 @@
 #include "quantization/util/qsgd.h"
 #include <cmath>
 #include <cstdlib>
+#include <iostream>
 #include <limits>
 #include <thread>
 #include <utility>
@@ -127,6 +128,7 @@ void quantize_gradient_according_column(uint32_t const level,
     for (int i = 0; i < dim2; i++) {
         for (int j = 0; j < dim1; j++) {
             float current_value = abs(tensor_ptr[dim2 * j + i]);
+            std::cout << current_value << std::endl;
             if (max_vector[i] < current_value) {
                 max_vector[i] = current_value;
             }
