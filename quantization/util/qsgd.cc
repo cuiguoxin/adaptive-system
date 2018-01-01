@@ -120,7 +120,7 @@ uint32_t read_value(uint8_t const* arr,
 void quantize_gradient_according_column(uint32_t const level,
                                         tensorflow::Tensor const& tensor,
                                         GradientAccordingColumn& gradient) {
-    int const now = time(NULL);
+    unsigned int now = time(NULL);
     PRINT_INFO;
     gradient.set_is_qsgd(true);
     auto dims = tensor.dims();
