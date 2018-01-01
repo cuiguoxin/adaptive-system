@@ -164,8 +164,8 @@ void quantize_gradient_according_column(uint32_t const level,
             float const value_float = multiplier * get_abs(col_ptr[j]);
             int const value_int = static_cast<int>(value_float);
             float const diff = value_float - value_int;
-            // float const r = rand() % 100 / 100.0f;
-            float const r = 0.5;
+            float const r = rand_r() % 100 / 100.0f;
+            // float const r = 0.5;
             int const value = (r > diff) ? value_int : value_int + 1;
             set_value(quantized_data, begin, level, value);
             begin += level;
@@ -209,7 +209,7 @@ void dequantize_gradient_according_column(
         uint8_t const* quantized_array = reinterpret_cast<uint8_t const*>(
             gradient.quantized_columns(i).data());
         float const multiplier = (max) / scope;
-        std::cout << multiplier << std::endl;
+        // std::cout << multiplier << std::endl;
         size_t begin = 0;
         for (size_t j = 0; j < dim1; j++) {
             uint32_t value = read_value(quantized_array, begin, level);
