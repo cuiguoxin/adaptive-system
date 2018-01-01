@@ -930,6 +930,20 @@ class GradientAccordingColumn : public ::google::protobuf::Message /* @@protoc_i
   ::google::protobuf::RepeatedField< float >*
       mutable_mins();
 
+  // bytes signs = 9;
+  void clear_signs();
+  static const int kSignsFieldNumber = 9;
+  const ::std::string& signs() const;
+  void set_signs(const ::std::string& value);
+  #if LANG_CXX11
+  void set_signs(::std::string&& value);
+  #endif
+  void set_signs(const char* value);
+  void set_signs(const void* value, size_t size);
+  ::std::string* mutable_signs();
+  ::std::string* release_signs();
+  void set_allocated_signs(::std::string* signs);
+
   // .tensorflow.TensorProto tensor = 7;
   bool has_tensor() const;
   void clear_tensor();
@@ -963,6 +977,12 @@ class GradientAccordingColumn : public ::google::protobuf::Message /* @@protoc_i
   bool is_quantized() const;
   void set_is_quantized(bool value);
 
+  // bool is_qsgd = 10;
+  void clear_is_qsgd();
+  static const int kIsQsgdFieldNumber = 10;
+  bool is_qsgd() const;
+  void set_is_qsgd(bool value);
+
   // @@protoc_insertion_point(class_scope:adaptive_system.GradientAccordingColumn)
  private:
 
@@ -972,11 +992,13 @@ class GradientAccordingColumn : public ::google::protobuf::Message /* @@protoc_i
   mutable int _maxes_cached_byte_size_;
   ::google::protobuf::RepeatedField< float > mins_;
   mutable int _mins_cached_byte_size_;
+  ::google::protobuf::internal::ArenaStringPtr signs_;
   ::tensorflow::TensorProto* tensor_;
   ::google::protobuf::int32 quantization_level_;
   ::google::protobuf::int32 dim1_;
   ::google::protobuf::int32 dim2_;
   bool is_quantized_;
+  bool is_qsgd_;
   mutable int _cached_size_;
   friend struct protobuf_rpc_5fservice_2eproto::TableStruct;
 };
@@ -2545,6 +2567,72 @@ inline void GradientAccordingColumn::set_is_quantized(bool value) {
   
   is_quantized_ = value;
   // @@protoc_insertion_point(field_set:adaptive_system.GradientAccordingColumn.is_quantized)
+}
+
+// bytes signs = 9;
+inline void GradientAccordingColumn::clear_signs() {
+  signs_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& GradientAccordingColumn::signs() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.GradientAccordingColumn.signs)
+  return signs_.GetNoArena();
+}
+inline void GradientAccordingColumn::set_signs(const ::std::string& value) {
+  
+  signs_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:adaptive_system.GradientAccordingColumn.signs)
+}
+#if LANG_CXX11
+inline void GradientAccordingColumn::set_signs(::std::string&& value) {
+  
+  signs_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:adaptive_system.GradientAccordingColumn.signs)
+}
+#endif
+inline void GradientAccordingColumn::set_signs(const char* value) {
+  
+  signs_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:adaptive_system.GradientAccordingColumn.signs)
+}
+inline void GradientAccordingColumn::set_signs(const void* value, size_t size) {
+  
+  signs_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:adaptive_system.GradientAccordingColumn.signs)
+}
+inline ::std::string* GradientAccordingColumn::mutable_signs() {
+  
+  // @@protoc_insertion_point(field_mutable:adaptive_system.GradientAccordingColumn.signs)
+  return signs_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* GradientAccordingColumn::release_signs() {
+  // @@protoc_insertion_point(field_release:adaptive_system.GradientAccordingColumn.signs)
+  
+  return signs_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void GradientAccordingColumn::set_allocated_signs(::std::string* signs) {
+  if (signs != NULL) {
+    
+  } else {
+    
+  }
+  signs_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), signs);
+  // @@protoc_insertion_point(field_set_allocated:adaptive_system.GradientAccordingColumn.signs)
+}
+
+// bool is_qsgd = 10;
+inline void GradientAccordingColumn::clear_is_qsgd() {
+  is_qsgd_ = false;
+}
+inline bool GradientAccordingColumn::is_qsgd() const {
+  // @@protoc_insertion_point(field_get:adaptive_system.GradientAccordingColumn.is_qsgd)
+  return is_qsgd_;
+}
+inline void GradientAccordingColumn::set_is_qsgd(bool value) {
+  
+  is_qsgd_ = value;
+  // @@protoc_insertion_point(field_set:adaptive_system.GradientAccordingColumn.is_qsgd)
 }
 
 // -------------------------------------------------------------------
