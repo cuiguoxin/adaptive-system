@@ -17,30 +17,32 @@
 #include "tensorflow/core/platform/types.h"
 #include "tensorflow/core/public/session.h"
 
-namespace adaptive_system{
+#include "quantization/util/helper.h"
 
-    namespace qsgd{
+namespace adaptive_system {
 
-    void quantize_gradient_according_column(uint32_t const level,
-                                            tensorflow::Tensor const& tensor,
-                                            GradientAccordingColumn& gradient);
+namespace qsgd {
 
-    void dequantize_gradient_according_column(
-        GradientAccordingColumn const& gradient,
-        tensorflow::Tensor& tensor);
+void quantize_gradient_according_column(uint32_t const level,
+                                        tensorflow::Tensor const& tensor,
+                                        GradientAccordingColumn& gradient);
 
-    void quantize_gradients_according_column(
-        std::map<std::string, tensorflow::Tensor>& map_gradient,
-        NamedGradientsAccordingColumn* named_gradients,
-        int level,
-        int threshold);
+void dequantize_gradient_according_column(
+    GradientAccordingColumn const& gradient,
+    tensorflow::Tensor& tensor);
 
-    void dequantize_gradients_according_column(
-        NamedGradientsAccordingColumn& named_gradients,
-        std::map<std::string, tensorflow::Tensor>& map_gradient);
-        
-    }
+void quantize_gradients_according_column(
+    std::map<std::string, tensorflow::Tensor>& map_gradient,
+    NamedGradientsAccordingColumn* named_gradients,
+    int level,
+    int threshold);
 
-}
+void dequantize_gradients_according_column(
+    NamedGradientsAccordingColumn& named_gradients,
+    std::map<std::string, tensorflow::Tensor>& map_gradient);
+
+}  // namespace qsgd
+
+}  // namespace adaptive_system
 
 #endif  // !ADAPTIVE_SYSTEM_QSGD
