@@ -49,7 +49,7 @@ void apply_quantized_gradient_to_model(
                                 // stuff
                 bool is_quantized = grad.is_quantized();
                 if (is_quantized) {
-                    dequantize_gradient_according_column(grad, feed_grad);
+                    qsgd::dequantize_gradient_according_column(grad, feed_grad);
                 } else {
                     feed_grad.FromProto(grad.tensor());
                 }
