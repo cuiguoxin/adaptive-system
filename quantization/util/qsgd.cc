@@ -12,18 +12,27 @@ namespace qsgd {
 
 namespace {
 
+void get_abs(float value) {
+    if (value > 0) {
+        return value;
+    } else {
+        return -value;
+    }
+}
+
 void get_abs_max(tensorflow::Tensor const& tensor, float& max) {
     float const* tensor_ptr = tensor.flat<float>().data();
     size_t size = tensor.NumElements();
-    max = abs(tensor_ptr[0]);
+    max = get_abs(tensor_ptr[0]);
     std::for_each(tensor_ptr, tensor_ptr + size, [&max](float const current) {
-        float abs_current = abs(current);
+        float abs_current = get_abs(current);
         if (max < abs_current) {
             max = abs_current;
             return;
         }
     });
 }
+
 
 // 0 <= start <= end <= 7, and assume that value is less than 2^(end - start)
 void set_byte(uint8_t* byte,
@@ -127,8 +136,8 @@ void quantize_gradient_according_column(uint32_t const level,
     // get the max and min values
     for (int i = 0; i < dim2; i++) {
         for (int j = 0; j < dim1; j++) {
-            float current_value = abs(tensor_ptr[dim2 * j + i]);
-            std::cout << current_value << std::endl;
+            float current_value = get_abs(tensor_ptr[dim2 * j + i]);
+            //std::cout << current_value << std::endl;
             if (max_vector[i] < current_value) {
                 max_vector[i] = current_value;
             }
@@ -153,7 +162,7 @@ void quantize_gradient_according_column(uint32_t const level,
         float const multiplier = scope / (max + eps);
         size_t begin = 0;
         for (size_t j = 0; j < dim1; j++) {
-            float const value_float = multiplier * abs(col_ptr[j]);
+            float const value_float = multiplier * get_abs(col_ptr[j]);
             int const value_int = static_cast<int>(value_float);
             float const diff = value_float - value_int;
             float const r = rand() % 100 / 100.0f;
