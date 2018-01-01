@@ -175,11 +175,14 @@ void quantize_gradient_according_column(uint32_t const level,
         }
         gradient.add_maxes(max);
         gradient.add_quantized_columns(quantized_data, quantized_size);
+
         delete[] quantized_data;
         delete[] col_ptr;
     }
     PRINT_INFO;
+    gradient.set_signs(signs, size_signs);
     delete[] signs;
+
     // assign to gradient
     gradient.set_dim1(dim1);
     gradient.set_dim2(dim2);
@@ -206,6 +209,7 @@ void dequantize_gradient_according_column(
         uint8_t const* quantized_array = reinterpret_cast<uint8_t const*>(
             gradient.quantized_columns(i).data());
         float const multiplier = (max) / scope;
+        std::cout << multiplier << std::endl;
         size_t begin = 0;
         for (size_t j = 0; j < dim1; j++) {
             uint32_t value = read_value(quantized_array, begin, level);
