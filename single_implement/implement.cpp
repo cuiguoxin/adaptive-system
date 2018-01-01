@@ -27,6 +27,7 @@
 #include "server/reward.h"
 #include "server/sarsa.h"
 #include "single_implement/accuracy.h"
+#include "quantization/util/qsgd.h"
 
 namespace input {
 using namespace tensorflow;
@@ -248,10 +249,10 @@ void compute_gradient_loss_and_quantize(
                                      map_gradients);
     // PRINT_INFO;
     NamedGradientsAccordingColumn named_gradients_send;
-    quantize_gradients_according_column(map_gradients, &named_gradients_send,
+    qsgd::quantize_gradients_according_column(map_gradients, &named_gradients_send,
                                         level, threshold_to_quantize);
     map_gradients.clear();
-    dequantize_gradients_according_column(named_gradients_send, map_gradients);
+    qsgd::dequantize_gradients_according_column(named_gradients_send, map_gradients);
 }
 
 namespace log {
@@ -379,7 +380,7 @@ void do_work(int const total_iter_num,
         average_gradients(total_worker_num, merged_gradient);
         NamedGradientsAccordingColumn store_named_gradient;
         PRINT_INFO;
-        quantize_gradients_according_column(merged_gradient,
+        qsgd::quantize_gradients_according_column(merged_gradient,
                                             &store_named_gradient, level,
                                             threshold_to_quantize);
         PRINT_INFO;

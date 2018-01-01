@@ -59,7 +59,10 @@ message GradientAccordingColumn {
 	int32 dim2 = 6;
 	tensorflow.TensorProto tensor = 7;
 	bool is_quantized = 8;
+    bytes signs = 9;
+    bool is_qsgd = 10;
 }
+
 
 message NamedGradients {
     map<string, Gradient> name_to_gradient = 1;
