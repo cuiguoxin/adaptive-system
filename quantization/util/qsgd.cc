@@ -111,6 +111,7 @@ uint32_t read_value(uint8_t const* arr,
 void quantize_gradient_according_column(uint32_t const level,
                                         tensorflow::Tensor const& tensor,
                                         GradientAccordingColumn& gradient) {
+    PRINT_INFO;
     gradient.set_is_qsgd(true);
     auto dims = tensor.dims();
     if (dims != 2) {
@@ -137,6 +138,7 @@ void quantize_gradient_according_column(uint32_t const level,
     float const eps = 0.000001;
     // quantize each column
     int sign_begin = 0;
+    PRINT_INFO;
     for (int i = 0; i < dim2; i++) {
         float* col_ptr = new float[dim1]();
         for (int j = 0; j < dim1; j++) {
@@ -165,6 +167,7 @@ void quantize_gradient_according_column(uint32_t const level,
         delete[] quantized_data;
         delete[] col_ptr;
     }
+    PRINT_INFO;
     delete[] signs;
     // assign to gradient
     gradient.set_dim1(dim1);
@@ -175,6 +178,7 @@ void quantize_gradient_according_column(uint32_t const level,
 void dequantize_gradient_according_column(
     GradientAccordingColumn const& gradient,
     tensorflow::Tensor& tensor) {
+    PRINT_INFO;
     int const level = gradient.quantization_level();
     unsigned long long const scope = ((long long)1) << level;
     int const dim1 = gradient.dim1();
@@ -185,6 +189,7 @@ void dequantize_gradient_according_column(
     uint8_t const* signs_ptr =
         reinterpret_cast<uint8_t const*>(gradient.signs().data());
     int sign_begin = 0;
+    PRINT_INFO;
     for (int i = 0; i < dim2; i++) {
         float const max = gradient.maxes(i);
         uint8_t const* quantized_array = reinterpret_cast<uint8_t const*>(
@@ -201,6 +206,7 @@ void dequantize_gradient_according_column(
             sign_begin++;
         }
     }
+    PRINT_INFO;
 }
 
 void quantize_gradients_according_column(
