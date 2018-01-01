@@ -1,5 +1,6 @@
 #include "quantization/util/algorithms.h"
 #include "quantization/util/helper.h"
+#include "quantization/util/qsgd.h"
 
 #include <algorithm>
 #include <chrono>

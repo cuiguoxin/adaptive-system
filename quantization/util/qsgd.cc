@@ -131,7 +131,8 @@ void quantize_gradient_according_column(uint32_t const level,
             }
         }
     }
-    uint8_t* signs = new uint8_t[std::ceil(dim1 * dim2 / 8.0f)]();
+    int size_signs = std::ceil(dim1 * dim2 / 8.0f);
+    uint8_t* signs = new uint8_t[size_signs]();
     unsigned long long const scope = ((long long)1) << level;
     float const eps = 0.000001;
     // quantize each column
