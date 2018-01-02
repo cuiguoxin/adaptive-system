@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <chrono>
+#include <cmath>
 #include <exception>
 #include <fstream>
 #include <iostream>
@@ -147,6 +148,18 @@ std::string label_placeholder_name;
 const int threshold_to_quantize = 105000;
 
 namespace {
+
+float get_norm(tensorflow::Tensor& tensor) {
+    int const size = tensor.NumElements();
+    float const* tensor_ptr = tensor.flat<float>().data();
+    float sum = 0;
+    for (int i = 0; i < size; i++) {
+        float const current_value = tensor_ptr[i];
+        sum += current_value * current_value;
+    }
+    return pow(sum / size, 0.5f);
+}
+
 std::pair<float, float> compute_gradient_and_loss(
     std::vector<std::pair<std::string, tensorflow::Tensor>> feeds,
     std::map<std::string, tensorflow::Tensor>& gradients) {
@@ -240,6 +253,17 @@ void compute_gradient_loss_and_quantize(
     loss = compute_gradient_and_loss({{batch_placeholder_name, feeds.first},
                                       {label_placeholder_name, feeds.second}},
                                      map_gradients);
+
+    // get norm
+    float norm = 0;
+    for(auto pair : map_gradients) {
+        auto& name = pair.first;
+        auto & tensor  = pair.second;
+        int const size = tensor.NumElements();
+        if(name.find("local4") != std::string::npos && size > threshold_to_quantize) {
+            norm = get_norm(tensor);
+        }
+    }
     PRINT_INFO;
     NamedGradientsAccordingColumn named_gradients_send;
     quantize_gradients_according_column(map_gradients, &named_gradients_send,
