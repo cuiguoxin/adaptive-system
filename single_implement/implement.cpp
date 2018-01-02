@@ -24,10 +24,10 @@
 #include "quantization/util/algorithms.h"
 #include "quantization/util/any_level.h"
 #include "quantization/util/helper.h"
+#include "quantization/util/qsgd.h"
 #include "server/reward.h"
 #include "server/sarsa.h"
 #include "single_implement/accuracy.h"
-#include "quantization/util/qsgd.h"
 
 namespace input {
 using namespace tensorflow;
@@ -249,10 +249,11 @@ void compute_gradient_loss_and_quantize(
                                      map_gradients);
     // PRINT_INFO;
     NamedGradientsAccordingColumn named_gradients_send;
-    qsgd::quantize_gradients_according_column(map_gradients, &named_gradients_send,
-                                        level, threshold_to_quantize);
+    qsgd::quantize_gradients_according_column(
+        map_gradients, &named_gradients_send, level, threshold_to_quantize);
     map_gradients.clear();
-    qsgd::dequantize_gradients_according_column(named_gradients_send, map_gradients);
+    qsgd::dequantize_gradients_according_column(named_gradients_send,
+                                                map_gradients);
 }
 
 namespace log {
@@ -272,14 +273,15 @@ void init_log(int const interval,
     auto init_time_t = std::chrono::system_clock::to_time_t(now);
     std::string label = std::to_string(init_time_t);
     std::string store_loss_file_path =
-        "sarsa_adaptive" + label + "_interval:" + std::to_string(interval) +
+        "qsgd_sarsa_adaptive" + label +
+        "_interval:" + std::to_string(interval) +
         "_number_of_workers:" + std::to_string(total_worker_num) + "_level" +
         std::to_string(start_level) + "-" + std::to_string(end_level) +
         "_eps_greedy-" + std::to_string(eps_greedy) + "_r-" +
         std::to_string(r) + "_initLearningRate-" + std::to_string(init_lr) +
         "_changeLrIterNum-" + std::to_string(iter_to_change_lr);
     file_loss_stream.open("loss_result/" + store_loss_file_path);
-    //init predict
+    // init predict
     init(store_loss_file_path);
 }
 
@@ -337,7 +339,7 @@ void do_work(int const total_iter_num,
              float const eps_greedy,
              float r,
              float const learning_rate_init_value,
-             int const start_iter_num, 
+             int const start_iter_num,
              int const predict_interval) {
     // init sarsa
     PRINT_INFO;
@@ -381,8 +383,8 @@ void do_work(int const total_iter_num,
         NamedGradientsAccordingColumn store_named_gradient;
         PRINT_INFO;
         qsgd::quantize_gradients_according_column(merged_gradient,
-                                            &store_named_gradient, level,
-                                            threshold_to_quantize);
+                                                  &store_named_gradient, level,
+                                                  threshold_to_quantize);
         PRINT_INFO;
         apply_quantized_gradient_to_model(store_named_gradient, session, tuple,
                                           learning_rate_value);
@@ -423,7 +425,7 @@ void do_work(int const total_iter_num,
             }
         }
         quantize_levels.push_back(level);
-        if(real_num % predict_interval == 0){
+        if (real_num % predict_interval == 0) {
             predict(client::session, real_num, quantize_levels);
             quantize_levels.clear();
         }
