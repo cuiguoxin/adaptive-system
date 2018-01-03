@@ -59,6 +59,7 @@ Session* load_graph_and_create_session(const std::string& graph_path) {
     }
     return session;
 }
+
 void read_raw_tensors_from_file(const std::string& binary_file_prefix) {
     for (int i = 1; i <= 5; i++) {
         std::ifstream input_stream(
