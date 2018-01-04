@@ -147,6 +147,7 @@ Session* session;
 std::string batch_placeholder_name;
 std::string label_placeholder_name;
 const int threshold_to_quantize = 105000;
+int base_level = 0;
 
 namespace {
 
@@ -159,6 +160,14 @@ float get_norm(tensorflow::Tensor& tensor) {
         sum += current_value * current_value;
     }
     return pow(sum / size, 0.5f);
+}
+
+int get_level_from_norm(float const norm) {
+    int l = norm / 0.0005 + base_level;
+    if (l > 8) {
+        l = 8;
+    }
+    return l;
 }
 
 std::pair<float, float> compute_gradient_and_loss(
@@ -244,7 +253,6 @@ void load_primary_model_and_init() {
 }
 
 void compute_gradient_loss_and_quantize(
-    const int level,
     std::map<std::string, tensorflow::Tensor>& map_gradients,
     std::pair<float, float>& loss) {
     PRINT_INFO;
@@ -255,16 +263,6 @@ void compute_gradient_loss_and_quantize(
                                       {label_placeholder_name, feeds.second}},
                                      map_gradients);
 
-    // get norm
-    float norm = 0;
-    for(auto pair : map_gradients) {
-        auto& name = pair.first;
-        auto & tensor  = pair.second;
-        int const size = tensor.NumElements();
-        if(name.find("local4") != std::string::npos && size > threshold_to_quantize) {
-            norm = get_norm(tensor);
-        }
-    }
     PRINT_INFO;
     NamedGradientsAccordingColumn named_gradients_send;
     quantize_gradients_according_column(map_gradients, &named_gradients_send,
@@ -278,9 +276,7 @@ namespace log {
 std::ofstream file_loss_stream;
 
 void init_log(int const total_worker_num,
-              int const pre_level,
-              int const split_point,
-              int const post_level,
+              int const base_level,
               float const init_lr,
               int const start_iter_num) {
     // init log
@@ -288,11 +284,10 @@ void init_log(int const total_worker_num,
     auto init_time_t = std::chrono::system_clock::to_time_t(now);
     std::string label = std::to_string(init_time_t);
     std::string store_loss_file_path =
-        "baseline_" + label +
-        "_number_of_workers:" + std::to_string(total_worker_num) + "_" +
-        std::to_string(pre_level) + "-" + std::to_string(split_point) + "-" +
-        std::to_string(post_level) + "_initLr-" + std::to_string(init_lr) +
-        "_startIterNum-" + std::to_string(start_iter_num);
+        "baseline_adaptive_according_norm_" + label +
+        "_number_of_workers:" + std::to_string(total_worker_num) +
+        "_baseLevel-" + std::to_string(base_level) + "_startIterNum-" +
+        std::to_string(start_iter_num);
     file_loss_stream.open("loss_result/" + store_loss_file_path);
     init(store_loss_file_path);
 }
@@ -314,26 +309,20 @@ inline void log(float const time,
 
 void do_work(int const total_iter_num,
              int const total_worker_num,
-             int const pre_level,
              int const split_point,
-             int const post_level,
              float const init_lr,
              int const start_iter_num,
              int const predict_interval) {
-    log::init_log(total_worker_num, pre_level, split_point, post_level, init_lr,
-                  start_iter_num);
+    log::init_log(total_worker_num, 0, split_point, 0, init_lr, start_iter_num);
     load_primary_model_and_init();
-    int level = 0;
     float lr = init_lr;
     std::vector<int> quantize_levels;
     for (int i = 0; i < total_iter_num; i++) {
         if (i < start_iter_num) {
             level = 2;
         } else if (i < split_point) {
-            level = pre_level;
             lr = 0.2;
         } else {
-            level = post_level;
             lr = 0.2;
         }
         std::vector<std::map<std::string, tensorflow::Tensor>> vec_grads;
@@ -357,6 +346,20 @@ void do_work(int const total_iter_num,
         average_gradients(total_worker_num, merged_gradient);
         NamedGradientsAccordingColumn store_named_gradient;
         PRINT_INFO;
+
+        // get norm
+        float norm = 0;
+        for (auto pair : map_gradients) {
+            auto& name = pair.first;
+            auto& tensor = pair.second;
+            int const size = tensor.NumElements();
+            if (name.find("local4") != std::string::npos &&
+                size > threshold_to_quantize) {
+                norm = get_norm(tensor);
+            }
+        }
+        std::cout << "norm is " << norm << std::endl;
+        level = get_level_from_norm(norm);
         quantize_gradients_according_column(merged_gradient,
                                             &store_named_gradient, level,
                                             threshold_to_quantize);
@@ -394,16 +397,13 @@ void do_work(int const total_iter_num,
 int main(int argc, char** argv) {
     int const total_iter_num = atoi(argv[1]);
     int const total_worker_num = atoi(argv[2]);
-    int const pre_level = atoi(argv[3]);
-    int const split_point = atoi(argv[4]);
-    int const post_level = atoi(argv[5]);
-    float const init_lr = atof(argv[6]);
-    int const start_iter_num = atoi(argv[7]);
-    int const predict_interval = atoi(argv[8]);
+    int const base_level = atoi(argv[3]);
+    float const init_lr = atof(argv[4]);
+    int const start_iter_num = atoi(argv[5]);
+    int const predict_interval = atoi(argv[6]);
 
     input::turn_raw_tensors_to_standard_version();
-    client::do_work(total_iter_num, total_worker_num, pre_level, split_point,
-                    post_level, init_lr, start_iter_num, predict_interval);
+    client::do_work(total_iter_num, total_worker_num, base_level, init_lr, start_iter_num, predict_interval);
 
     return 0;
 }
