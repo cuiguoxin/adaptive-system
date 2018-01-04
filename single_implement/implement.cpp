@@ -344,8 +344,6 @@ void do_work(int const total_iter_num,
     for (int i = 0; i < total_iter_num; i++) {
         if (i < start_iter_num) {
             level = 2;
-        } else if (i < split_point) {
-            lr = 0.2;
         } else {
             lr = 0.2;
         }
@@ -360,7 +358,7 @@ void do_work(int const total_iter_num,
             vec_threads.push_back(
                 std::thread(compute_gradient_loss, std::ref(vec_grads[j]),
                             std::ref(vec_losses[j]), threshold_to_quantize,
-                            std::ref(vec_level[j])));
+                            std::ref(vec_levels[j])));
         }
         for (int j = 0; j < total_worker_num; j++) {
             vec_threads[j].join();
@@ -375,7 +373,7 @@ void do_work(int const total_iter_num,
         }
 
         vec_threads.clear();
-        vec_threads.resize(total_worker_num);
+        //vec_threads.resize(total_worker_num);
         for (int j = 0; j < total_worker_num; j++) {
             vec_threads.push_back(std::thread(quantize_and_dequantize, level,
                                               threshold_to_quantize,
