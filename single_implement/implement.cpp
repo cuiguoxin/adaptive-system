@@ -370,10 +370,11 @@ void do_work(int const total_iter_num,
         }
         if (i > start_iter_num) {
             level = sum / total_worker_num;
+            std::cout << "level is " << level << std::endl;
         }
 
         vec_threads.clear();
-        //vec_threads.resize(total_worker_num);
+        // vec_threads.resize(total_worker_num);
         for (int j = 0; j < total_worker_num; j++) {
             vec_threads.push_back(std::thread(quantize_and_dequantize, level,
                                               threshold_to_quantize,
