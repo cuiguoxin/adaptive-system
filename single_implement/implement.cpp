@@ -163,7 +163,7 @@ float get_norm(tensorflow::Tensor& tensor) {
 }
 
 int get_level_from_norm(float const norm) {
-    int l = norm / 0.00005 + base_level;
+    int l = norm / 0.0005 + base_level;
     if (l > 8) {
         l = 8;
     }
