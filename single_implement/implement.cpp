@@ -163,7 +163,7 @@ float get_norm(tensorflow::Tensor& tensor) {
 }
 
 int get_level_from_norm(float const norm) {
-    int l = norm / 0.0005 + base_level;
+    int l = norm / 0.00005 + base_level;
     if (l > 8) {
         l = 8;
     }
@@ -338,6 +338,7 @@ void do_work(int const total_iter_num,
     log::init_log(total_worker_num, base_level, init_lr, start_iter_num);
     load_primary_model_and_init();
     float lr = init_lr;
+    client::base_level = base_level;
     std::vector<int> quantize_levels;
     std::vector<int> levels;
     int level = 0;
