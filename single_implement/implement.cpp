@@ -162,8 +162,8 @@ float get_norm(tensorflow::Tensor& tensor) {
     return pow(sum / size, 0.5f);
 }
 
-int get_level_from_norm(float const norm) {
-    int l = norm / 0.0005 + base_level;
+float get_level_from_norm(float const norm) {
+    float l = norm / 0.0005 + base_level;
     if (l > 8) {
         l = 8;
     }
@@ -256,7 +256,7 @@ void compute_gradient_loss(
     std::map<std::string, tensorflow::Tensor>& map_gradients,
     std::pair<float, float>& loss,
     int const threshold_to_quantize,
-    int& level) {
+    float& level) {
     PRINT_INFO;
     std::pair<tensorflow::Tensor, tensorflow::Tensor> feeds =
         input::get_next_batch();
@@ -351,7 +351,7 @@ void do_work(int const total_iter_num,
         std::vector<std::map<std::string, tensorflow::Tensor>> vec_grads;
         std::vector<std::thread> vec_threads;
         std::vector<std::pair<float, float>> vec_losses;
-        std::vector<int> vec_levels;
+        std::vector<float> vec_levels;
         vec_losses.resize(total_worker_num);
         vec_grads.resize(total_worker_num);
         vec_levels.resize(total_worker_num);
@@ -365,12 +365,12 @@ void do_work(int const total_iter_num,
             vec_threads[j].join();
         }
         PRINT_INFO;
-        int sum = 0;
-        for (int l : vec_levels) {
+        float sum = 0;
+        for (float l : vec_levels) {
             sum += l;
         }
         if (i > start_iter_num) {
-            level = sum / total_worker_num;
+            level = static_cast<int>(sum / total_worker_num);
             std::cout << "level is " << level << std::endl;
         }
 
