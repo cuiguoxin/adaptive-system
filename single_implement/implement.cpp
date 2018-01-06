@@ -419,7 +419,7 @@ void do_work(int const total_iter_num,
         if (real_num % interval == 0) {
             sarsa::adjust_rl_model(sm, level);
             if (trick) {
-                level = 2;
+                level = 1;
                 trick = false;
                 sm.set_current_level(level);
             }
