@@ -1,5 +1,5 @@
-#ifndef ADAPTIVE_SYSTEM_QSGD
-#define ADAPTIVE_SYSTEM_QSGD
+#ifndef ADAPTIVE_SYSTEM_SPLIT_BY_0
+#define ADAPTIVE_SYSTEM_SPLIT_BY_0
 #include <algorithm>
 #include <cmath>
 #include <exception>
@@ -21,7 +21,7 @@
 
 namespace adaptive_system {
 
-namespace qsgd {
+namespace split_by_0 {
 
 void quantize_gradient_according_column(uint32_t const level,
                                         tensorflow::Tensor const& tensor,
@@ -45,4 +45,4 @@ void dequantize_gradients_according_column(
 
 }  // namespace adaptive_system
 
-#endif  // !ADAPTIVE_SYSTEM_QSGD
+#endif  // !ADAPTIVE_SYSTEM_SPLIT_BY_0

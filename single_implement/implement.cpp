@@ -25,7 +25,7 @@
 #include "quantization/util/any_level.h"
 #include "quantization/util/helper.h"
 
-#include "quantization/util/qsgd.h"
+#include "quantization/util/split_by_0.h"
 #include "single_implement/accuracy.h"
 
 namespace input {
@@ -243,10 +243,10 @@ void compute_gradient_loss_and_quantize(
                                      map_gradients);
     PRINT_INFO;
     NamedGradientsAccordingColumn named_gradients_send;
-    qsgd::quantize_gradients_according_column(
+    split_by_0::quantize_gradients_according_column(
         map_gradients, &named_gradients_send, level, threshold_to_quantize);
     map_gradients.clear();
-    qsgd::dequantize_gradients_according_column(named_gradients_send,
+    split_by_0::dequantize_gradients_according_column(named_gradients_send,
                                                 map_gradients);
 }
 
@@ -265,7 +265,7 @@ void init_log(int const total_worker_num,
     auto init_time_t = std::chrono::system_clock::to_time_t(now);
     std::string label = std::to_string(init_time_t);
     std::string store_loss_file_path =
-        "qsgd_baseline_" + label +
+        "split_by_0_baseline_" + label +
         "_number_of_workers:" + std::to_string(total_worker_num) + "_" +
         std::to_string(pre_level) + "-" + std::to_string(split_point) + "-" +
         std::to_string(post_level) + "_initLr-" + std::to_string(init_lr) +
@@ -334,7 +334,7 @@ void do_work(int const total_iter_num,
         average_gradients(total_worker_num, merged_gradient);
         NamedGradientsAccordingColumn store_named_gradient;
         PRINT_INFO;
-        qsgd::quantize_gradients_according_column(merged_gradient,
+        split_by_0::quantize_gradients_according_column(merged_gradient,
                                                   &store_named_gradient, level,
                                                   threshold_to_quantize);
         PRINT_INFO;
