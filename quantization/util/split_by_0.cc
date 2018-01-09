@@ -170,7 +170,7 @@ void quantize_gradient_according_column(uint32_t const level,
             float const current_value = col_ptr[j];
             int value = -1;
             if (current_value > 0) {
-                value = positive_multiplier * current_value + scope / 2 - 1;
+                value = positive_multiplier * current_value + scope / 2;
             } else {
                 value = negative_multiplier * (-current_value);
             }
