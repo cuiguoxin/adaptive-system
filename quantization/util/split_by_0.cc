@@ -232,6 +232,7 @@ void dequantize_gradient_according_column(
             } else {
                 temp = - value * negative_multiplier;
             }
+            std::cout << temp << std::endl;
             // float temp = value * multiplier;
             // temp = (sign == 0) ? -temp : temp;
             tensor_ptr[dim2 * j + i] = temp;
