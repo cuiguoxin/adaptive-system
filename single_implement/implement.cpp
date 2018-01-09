@@ -253,7 +253,7 @@ void compute_gradient_loss_and_quantize(
         map_gradients, &named_gradients_send, level, threshold_to_quantize);
     map_gradients.clear();
     split_by_0::dequantize_gradients_according_column(named_gradients_send,
-                                                map_gradients);
+                                                      map_gradients);
 }
 
 namespace log {
@@ -382,9 +382,9 @@ void do_work(int const total_iter_num,
         average_gradients(total_worker_num, merged_gradient);
         NamedGradientsAccordingColumn store_named_gradient;
         PRINT_INFO;
-        split_by_0::quantize_gradients_according_column(merged_gradient,
-                                                  &store_named_gradient, level,
-                                                  threshold_to_quantize);
+        split_by_0::quantize_gradients_according_column(
+            merged_gradient, &store_named_gradient, level,
+            threshold_to_quantize);
         PRINT_INFO;
         apply_quantized_gradient_to_model(store_named_gradient, session, tuple,
                                           learning_rate_value);
@@ -419,7 +419,7 @@ void do_work(int const total_iter_num,
         if (real_num % interval == 0) {
             sarsa::adjust_rl_model(sm, level);
             if (trick) {
-                level = 1;
+                level = init_level;
                 trick = false;
                 sm.set_current_level(level);
             }
