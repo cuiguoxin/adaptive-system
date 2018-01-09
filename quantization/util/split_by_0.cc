@@ -1,10 +1,10 @@
+#include "quantization/util/split_by_0.h"
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
 #include <limits>
 #include <thread>
 #include <utility>
-#include "quantization/util/split_by_0.h"
 
 namespace adaptive_system {
 
@@ -221,6 +221,10 @@ void dequantize_gradient_according_column(
             gradient.quantized_columns(i).data());
         float const positive_multiplier = (max) / (scope / 2);
         float const negative_multiplier = (-min) / (scope / 2);
+        std::cout << "max : " << max << std::endl;
+        std::cout << "min : " << min << std::endl;
+        std::cout << "positive : " << positive_multiplier << std::endl;
+        std::cout << "negative : " << negative_multiplier << std::endl;
         // std::cout << multiplier << std::endl;
         size_t begin = 0;
         for (size_t j = 0; j < dim1; j++) {
@@ -230,9 +234,9 @@ void dequantize_gradient_according_column(
             if (value > (scope / 2)) {
                 temp = (value - scope / 2) * positive_multiplier;
             } else {
-                temp = - value * negative_multiplier;
+                temp = -value * negative_multiplier;
             }
-            std::cout << temp << std::endl;
+            // std::cout << temp << std::endl;
             // float temp = value * multiplier;
             // temp = (sign == 0) ? -temp : temp;
             tensor_ptr[dim2 * j + i] = temp;
