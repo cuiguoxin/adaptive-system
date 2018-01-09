@@ -221,10 +221,10 @@ void dequantize_gradient_according_column(
             gradient.quantized_columns(i).data());
         float const positive_multiplier = (max) / (scope / 2);
         float const negative_multiplier = (-min) / (scope / 2);
-        std::cout << "max : " << max << std::endl;
-        std::cout << "min : " << min << std::endl;
-        std::cout << "positive : " << positive_multiplier << std::endl;
-        std::cout << "negative : " << negative_multiplier << std::endl;
+        // std::cout << "max : " << max << std::endl;
+        // std::cout << "min : " << min << std::endl;
+        // std::cout << "positive : " << positive_multiplier << std::endl;
+        // std::cout << "negative : " << negative_multiplier << std::endl;
         // std::cout << multiplier << std::endl;
         size_t begin = 0;
         for (size_t j = 0; j < dim1; j++) {
@@ -233,7 +233,9 @@ void dequantize_gradient_according_column(
             float temp = -1;  //-1 does not mean anything
             if (value > (scope / 2)) {
                 temp = (value - scope / 2) * positive_multiplier;
+                std::cout << "temp is " << temp << std::endl;
             } else {
+                std::cout << "-value is " << -value << std::endl;
                 temp = -value * negative_multiplier;
             }
             // std::cout << temp << std::endl;
