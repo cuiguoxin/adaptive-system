@@ -24,7 +24,7 @@
 #include "quantization/util/algorithms.h"
 #include "quantization/util/any_level.h"
 #include "quantization/util/helper.h"
-#include "quantization/util/qsgd.h"
+#include "quantization/util/split_by_0.h"
 #include "server/reward.h"
 #include "server/sarsa.h"
 #include "single_implement/accuracy.h"
@@ -249,10 +249,10 @@ void compute_gradient_loss_and_quantize(
                                      map_gradients);
     // PRINT_INFO;
     NamedGradientsAccordingColumn named_gradients_send;
-    qsgd::quantize_gradients_according_column(
+    split_by_0::quantize_gradients_according_column(
         map_gradients, &named_gradients_send, level, threshold_to_quantize);
     map_gradients.clear();
-    qsgd::dequantize_gradients_according_column(named_gradients_send,
+    split_by_0::dequantize_gradients_according_column(named_gradients_send,
                                                 map_gradients);
 }
 
@@ -382,7 +382,7 @@ void do_work(int const total_iter_num,
         average_gradients(total_worker_num, merged_gradient);
         NamedGradientsAccordingColumn store_named_gradient;
         PRINT_INFO;
-        qsgd::quantize_gradients_according_column(merged_gradient,
+        split_by_0::quantize_gradients_according_column(merged_gradient,
                                                   &store_named_gradient, level,
                                                   threshold_to_quantize);
         PRINT_INFO;

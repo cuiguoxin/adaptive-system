@@ -1,14 +1,14 @@
-#include "quantization/util/qsgd.h"
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
 #include <limits>
 #include <thread>
 #include <utility>
+#include "quantization/util/qsgd.h"
 
 namespace adaptive_system {
 
-namespace qsgd {
+namespace split_by_0 {
 
 namespace {
 
@@ -130,25 +130,28 @@ void quantize_gradient_according_column(uint32_t const level,
     }
     int const dim1 = tensor.dim_size(0);
     int const dim2 = tensor.dim_size(1);
-    std::vector<float> max_vector;
+    std::vector<float> max_vector, min_vector;
     max_vector.resize(dim2, std::numeric_limits<float>::min());
+    min_vector.resize(dim2, std::numeric_limits<float>::max());
     float const* tensor_ptr = tensor.flat<float>().data();
     // get the max and min values
     for (int i = 0; i < dim2; i++) {
         for (int j = 0; j < dim1; j++) {
-            float current_value = get_abs(tensor_ptr[dim2 * j + i]);
-            // std::cout << current_value << std::endl;
+            float current_value = tensor_ptr[dim2 * j + i];
             if (max_vector[i] < current_value) {
                 max_vector[i] = current_value;
             }
+            if (min_vector[i] > current_value) {
+                min_vector[i] = current_value;
+            }
         }
     }
-    int size_signs = std::ceil(dim1 * dim2 / 8.0f);
-    uint8_t* signs = new uint8_t[size_signs]();
+    // int size_signs = std::ceil(dim1 * dim2 / 8.0f);
+    // uint8_t* signs = new uint8_t[size_signs]();
     unsigned long long const scope = ((long long)1) << level;
     float const eps = 0.000001;
     // quantize each column
-    int sign_begin = 0;
+    // int sign_begin = 0;
     PRINT_INFO;
     for (int i = 0; i < dim2; i++) {
         float* col_ptr = new float[dim1]();
@@ -159,30 +162,36 @@ void quantize_gradient_according_column(uint32_t const level,
             std::ceil(((float)dim1) * level / 8);  // number of byte
         uint8_t* quantized_data = new uint8_t[quantized_size]();
         float const max = max_vector[i];
-        float const multiplier = scope / (max + eps);
+        float const min = min_vector[i];
+        float const positive_multiplier = scope / 2 / (max + eps);
+        float const negative_multiplier = scope / 2 / (-min + eps);
         size_t begin = 0;
         for (size_t j = 0; j < dim1; j++) {
-            float const value_float = multiplier * get_abs(col_ptr[j]);
-            int const value_int = static_cast<int>(value_float);
-            float const diff = value_float - value_int;
-            float const r = rand_r(&now) % 100 / 100.0f;
+            float const current_value = col_ptr[j];
+            int value = -1;
+            if (current_value > 0) {
+                value = positive_multiplier * current_value + scope / 2 - 1;
+            } else {
+                value = negative_multiplier * (-current_value);
+            }
             // float const r = 0.5;
-            int const value = (r > diff) ? value_int : value_int + 1;
+            // int const value = (r > diff) ? value_int : value_int + 1;
             set_value(quantized_data, begin, level, value);
             begin += level;
-            int const sign = (col_ptr[j] > 0) ? 1 : 0;
-            set_value(signs, sign_begin, 1, sign);
-            sign_begin++;
+            // int const sign = (col_ptr[j] > 0) ? 1 : 0;
+            // set_value(signs, sign_begin, 1, sign);
+            // sign_begin++;
         }
         gradient.add_maxes(max);
+        gradient.add_mins(min);
         gradient.add_quantized_columns(quantized_data, quantized_size);
 
         delete[] quantized_data;
         delete[] col_ptr;
     }
     PRINT_INFO;
-    gradient.set_signs(signs, size_signs);
-    delete[] signs;
+    // gradient.set_signs(signs, size_signs);
+    // delete[] signs;
 
     // assign to gradient
     gradient.set_dim1(dim1);
@@ -201,25 +210,33 @@ void dequantize_gradient_according_column(
     tensor = tensorflow::Tensor(tensorflow::DataType::DT_FLOAT,
                                 tensorflow::TensorShape({dim1, dim2}));
     float* tensor_ptr = tensor.flat<float>().data();
-    uint8_t const* signs_ptr =
-        reinterpret_cast<uint8_t const*>(gradient.signs().data());
-    int sign_begin = 0;
+    // uint8_t const* signs_ptr =
+    //     reinterpret_cast<uint8_t const*>(gradient.signs().data());
+    // int sign_begin = 0;
     PRINT_INFO;
     for (int i = 0; i < dim2; i++) {
         float const max = gradient.maxes(i);
+        float const min = gradient.mins(i);
         uint8_t const* quantized_array = reinterpret_cast<uint8_t const*>(
             gradient.quantized_columns(i).data());
-        float const multiplier = (max) / scope;
+        float const positive_multiplier = (max) / (scope / 2);
+        float const negative_multiplier = (-min) / (scope / 2);
         // std::cout << multiplier << std::endl;
         size_t begin = 0;
         for (size_t j = 0; j < dim1; j++) {
             uint32_t value = read_value(quantized_array, begin, level);
-            int const sign = read_value(signs_ptr, sign_begin, 1);
-            float temp = value * multiplier;
-            temp = (sign == 0) ? -temp : temp;
+            // int const sign = read_value(signs_ptr, sign_begin, 1);
+            float temp = -1;  //-1 does not mean anything
+            if (value > (scope / 2)) {
+                temp = (value - scope / 2) * positive_multiplier;
+            } else {
+                temp = - value * negative_multiplier;
+            }
+            // float temp = value * multiplier;
+            // temp = (sign == 0) ? -temp : temp;
             tensor_ptr[dim2 * j + i] = temp;
             begin += level;
-            sign_begin++;
+            // sign_begin++;
         }
     }
     PRINT_INFO;
@@ -302,6 +319,6 @@ void dequantize_gradients_according_column(
     }
 }
 
-}  // namespace qsgd
+}  // namespace split_by_0
 
 }  // namespace adaptive_system

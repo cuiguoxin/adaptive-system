@@ -1,6 +1,6 @@
 #include "quantization/util/algorithms.h"
 #include "quantization/util/helper.h"
-#include "quantization/util/qsgd.h"
+#include "quantization/util/split_by_0.h"
 
 #include <algorithm>
 #include <chrono>
@@ -49,14 +49,15 @@ void apply_quantized_gradient_to_model(
                                 // tensor, dequantize function will do all
                                 // stuff
                 bool is_quantized = grad.is_quantized();
-                bool is_qsgd = grad.is_qsgd();
+                // bool is_qsgd = grad.is_qsgd();
                 if (is_quantized) {
-                    if (is_qsgd) {
-                        qsgd::dequantize_gradient_according_column(grad,
-                                                                   feed_grad);
-                    } else {
-                        dequantize_gradient_according_column(grad, feed_grad);
-                    }
+                    // if (is_qsgd) {
+                    //     qsgd::dequantize_gradient_according_column(grad,
+                    //                                                feed_grad);
+                    // } else {
+                    split_by_0::dequantize_gradient_according_column(grad,
+                                                                     feed_grad);
+                    // }
                 } else {
                     feed_grad.FromProto(grad.tensor());
                 }
