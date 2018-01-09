@@ -232,11 +232,11 @@ void dequantize_gradient_according_column(
             // int const sign = read_value(signs_ptr, sign_begin, 1);
             float temp = -1;  //-1 does not mean anything
             if (value >= (scope / 2)) {
-                temp = (value - scope / 2) * positive_multiplier;
-                std::cout << "temp is " << temp << std::endl;
+                temp = (value - scope / 2) * positive_multiplier + positive_multiplier / 2;
+                // std::cout << "temp is " << temp << std::endl;
             } else {
-                std::cout << "-value is " << -float(value) << std::endl;
-                temp = -float(value) * negative_multiplier;
+                // std::cout << "-value is " << -float(value) << std::endl;
+                temp = -float(value) * negative_multiplier - negative_multiplier / 2;
             }
             // std::cout << temp << std::endl;
             // float temp = value * multiplier;
