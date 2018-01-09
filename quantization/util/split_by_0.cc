@@ -231,12 +231,12 @@ void dequantize_gradient_according_column(
             uint32_t value = read_value(quantized_array, begin, level);
             // int const sign = read_value(signs_ptr, sign_begin, 1);
             float temp = -1;  //-1 does not mean anything
-            if (value > (scope / 2)) {
+            if (value >= (scope / 2)) {
                 temp = (value - scope / 2) * positive_multiplier;
                 std::cout << "temp is " << temp << std::endl;
             } else {
-                std::cout << "-value is " << -value << std::endl;
-                temp = -value * negative_multiplier;
+                std::cout << "-value is " << -float(value) << std::endl;
+                temp = -float(value) * negative_multiplier;
             }
             // std::cout << temp << std::endl;
             // float temp = value * multiplier;
