@@ -273,7 +273,7 @@ void init_log(int const interval,
     auto init_time_t = std::chrono::system_clock::to_time_t(now);
     std::string label = std::to_string(init_time_t);
     std::string store_loss_file_path =
-        "qsgd_sarsa_adaptive" + label +
+        "split_by_0_sarsa_adaptive" + label +
         "_interval:" + std::to_string(interval) +
         "_number_of_workers:" + std::to_string(total_worker_num) + "_level" +
         std::to_string(start_level) + "-" + std::to_string(end_level) +
