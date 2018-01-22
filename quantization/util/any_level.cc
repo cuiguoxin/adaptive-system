@@ -282,7 +282,7 @@ void quantize_gradient_according_column(uint32_t const level,
 void dequantize_gradient_according_column(
     GradientAccordingColumn const& gradient,
     tensorflow::Tensor& tensor) {
-    auto start = system_clock::now();
+    auto start = std::chrono::system_clock::now();
     int const level = gradient.quantization_level();
     unsigned long long const scope = ((long long)1) << level;
     int const dim1 = gradient.dim1();
