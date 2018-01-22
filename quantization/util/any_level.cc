@@ -2,6 +2,7 @@
 #include <limits>
 #include <thread>
 #include <utility>
+#include <chrono>
 #include "quantization/util/helper.h"
 
 namespace adaptive_system {
@@ -212,6 +213,7 @@ void dequantize_gradients(
 void quantize_gradient_according_column(uint32_t const level,
                                         tensorflow::Tensor const& tensor,
                                         GradientAccordingColumn& gradient) {
+    auto start = std::chrono::system_clock::now();
     auto dims = tensor.dims();
     if (dims != 2) {
         PRINT_ERROR_MESSAGE("dims is not 2");
@@ -267,11 +269,20 @@ void quantize_gradient_according_column(uint32_t const level,
     gradient.set_dim1(dim1);
     gradient.set_dim2(dim2);
     gradient.set_quantization_level(level);
+    auto end = std::chrono::system_clock::now();
+    auto duration =
+        std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    std::cout << "qantization spend "
+              << double(duration.count()) *
+                     std::chrono::microseconds::period::num /
+                     std::chrono::microseconds::period::den
+              << "s" << std::endl;
 }
 
 void dequantize_gradient_according_column(
     GradientAccordingColumn const& gradient,
     tensorflow::Tensor& tensor) {
+    auto start = system_clock::now();
     int const level = gradient.quantization_level();
     unsigned long long const scope = ((long long)1) << level;
     int const dim1 = gradient.dim1();
@@ -293,6 +304,14 @@ void dequantize_gradient_according_column(
             begin += level;
         }
     }
+    auto end = std::chrono::system_clock::now();
+    auto duration =
+        std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    std::cout << "qantization spend "
+              << double(duration.count()) *
+                     std::chrono::microseconds::period::num /
+                     std::chrono::microseconds::period::den
+              << "s" << std::endl;
 }
 
 void quantize_gradients_according_column(
