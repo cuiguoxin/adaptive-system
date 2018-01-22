@@ -307,7 +307,7 @@ void dequantize_gradient_according_column(
     auto end = std::chrono::system_clock::now();
     auto duration =
         std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-    std::cout << "qantization spend "
+    std::cout << "deqantization spend "
               << double(duration.count()) *
                      std::chrono::microseconds::period::num /
                      std::chrono::microseconds::period::den
