@@ -305,6 +305,8 @@ float computing_time = 0.0f;
 float one_bit_communication_time = 0.0f;
 
 void adjust_rl_model(sarsa_model& sm, int& level) {
+    auto start = std::chrono::system_clock::now();
+
     std::vector<float> moving_average_losses;
     const float r = 0.99;
     _last_loss = moving_average_from_last_loss(_last_loss, loss_history,
@@ -324,6 +326,14 @@ void adjust_rl_model(sarsa_model& sm, int& level) {
     level = new_level;
     last_state = new_state;
     loss_history.clear();
+    auto end = std::chrono::system_clock::now();
+    auto duration =
+        std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    std::cout << "RL model spend "
+              << double(duration.count()) *
+                     std::chrono::microseconds::period::num /
+                     std::chrono::microseconds::period::den
+              << "s" << std::endl;
 }
 }  // namespace sarsa
 
