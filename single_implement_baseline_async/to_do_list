@@ -1,0 +1,2 @@
+实现copy gradient between session，使worker与master之间只传递梯度， 但是只传递梯度有问题，参数同步有问题
+画图

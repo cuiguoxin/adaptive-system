@@ -29,6 +29,28 @@ void apply_quantized_gradient_to_model(
     Tuple& tuple,
     float const learnng_rate_value);
 
+void apply_quantized_gradient_to_model(
+    std::map<std::string, tensorflow::Tensor>& map_gradients,
+    tensorflow::Session* sess,
+    Tuple& tuple,
+    float const learning_rate_value);
+
+void copy_variable_between_session(tensorflow::Session* session_from,
+                                   tensorflow::Session* session_to,
+                                   Tuple& tuple);
+
+std::map<int, std::pair<std::map<std::string, tensorflow::Tensor>, int>>&
+iter_to_gradient();
+
+void copy_gradient_between_session(int const last_iter,
+                                   int const current_iter,
+                                   int const total_worker,
+                                   int const level,
+                                   float const learning_rate_value,
+                                   tensorflow::Session* session_from,
+                                   tensorflow::Session* session_to,
+                                   Tuple& tuple,
+                                   int const threshold_to_quantize);
 void moving_average(size_t length,
                     float const* previous,
                     float* current,

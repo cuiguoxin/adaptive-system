@@ -71,6 +71,196 @@ void apply_quantized_gradient_to_model(
     }
     std::cout << "finished update!!!" << std::endl;
 }
+
+void apply_quantized_gradient_to_model(
+    std::map<std::string, tensorflow::Tensor>& map_gradients,
+    tensorflow::Session* sess,
+    Tuple& tuple,
+    float const learning_rate_value) {
+    auto map_names = tuple.map_names();
+    std::vector<std::pair<std::string, tensorflow::Tensor>> feed;
+    for (auto iter = map_gradients.begin(); iter != map_gradients.end();
+         iter++) {
+        auto variable_name = iter->first;
+        auto gradient_name =
+            map_names.find(variable_name)->second.gradient_name();
+        feed.push_back({gradient_name, iter->second});
+    }
+    tensorflow::Tensor learning_rate_tensor = tensorflow::Tensor(
+        tensorflow::DataType::DT_FLOAT, tensorflow::TensorShape({}));
+    float* learning_rate_tensor_ptr = learning_rate_tensor.flat<float>().data();
+    *learning_rate_tensor_ptr = learning_rate_value;
+    auto learning_rate_tensor_name = tuple.learning_rate_placeholder_name();
+    feed.push_back({learning_rate_tensor_name, learning_rate_tensor});
+    std::vector<std::string> actions_to_do;
+    actions_to_do.push_back(tuple.training_op_name());
+    tensorflow::Status status = sess->Run(feed, {}, actions_to_do, nullptr);
+    if (!status.ok()) {
+        PRINT_ERROR_MESSAGE(status.error_message());
+        std::terminate();
+    }
+}
+void copy_variable_between_session(tensorflow::Session* session_from,
+                                   tensorflow::Session* session_to,
+                                   Tuple& tuple) {
+    auto& map_names = tuple.map_names();
+    std::vector<std::string> variable_names, assign_names,
+        placeholder_assign_names;
+    for (auto iter = map_names.begin(); iter != map_names.end(); iter++) {
+        std::string variable_name = iter->first;
+        std::string assign_name = iter->second.assign_name();
+        std::string placeholder_assign_name =
+            iter->second.placeholder_assign_name();
+        variable_names.push_back(variable_name);
+        assign_names.push_back(assign_name);
+        placeholder_assign_names.push_back(placeholder_assign_name);
+    }
+    std::vector<tensorflow::Tensor> variable_results;
+    tensorflow::Status status =
+        session_from->Run({}, variable_names, {}, &variable_results);
+    if (!status.ok()) {
+        PRINT_ERROR_MESSAGE(status.error_message());
+        std::terminate();
+    }
+    std::vector<std::pair<std::string, tensorflow::Tensor>> feeds;
+    int const size = placeholder_assign_names.size();
+    for (int i = 0; i < size; i++) {
+        auto pln = placeholder_assign_names[i];
+        feeds.push_back({pln, variable_results[i]});
+    }
+    variable_results.clear();
+    status = session_to->Run(feeds, assign_names, {}, &variable_results);
+    if (!status.ok()) {
+        PRINT_ERROR_MESSAGE(status.error_message());
+        std::terminate();
+    }
+}
+namespace {
+// all tensors in vec_gradient are in the same shape
+void sum_two_tensors(tensorflow::Tensor& first_tensor,
+                     tensorflow::Tensor& second_tensor,
+                     tensorflow::Tensor& result) {
+    int const tensor_length = first_tensor.NumElements();
+    float* first_ptr = first_tensor.flat<float>().data();
+    float* second_ptr = second_tensor.flat<float>().data();
+    result = tensorflow::Tensor(tensorflow::DataType::DT_FLOAT,
+                                first_tensor.shape());
+    float* result_ptr = result.flat<float>().data();
+    for (int i = 0; i < tensor_length; i++) {
+        result_ptr[i] = first_ptr[i] + second_ptr[i];
+    }
+}
+void sum_gradient(std::vector<tensorflow::Tensor>& vec_gradient,
+                  tensorflow::Tensor& result) {
+    int const size = vec_gradient.size();
+    if (size == 1) {
+        result = vec_gradient[0];
+        return;
+    }
+    if (size == 2) {
+        auto& first_tensor = vec_gradient[0];
+        auto& second_tensor = vec_gradient[1];
+        sum_two_tensors(first_tensor, second_tensor, result);
+        return;
+    }
+    tensorflow::Tensor first_tensor, second_tensor;
+    std::vector<tensorflow::Tensor> first_half(vec_gradient.begin(),
+                                               vec_gradient.begin() + size / 2),
+        second_half(vec_gradient.begin() + size / 2, vec_gradient.end());
+    std::thread thread_1(sum_gradient, std::ref(first_half),
+                         std::ref(first_tensor));
+    std::thread thread_2(sum_gradient, std::ref(second_half),
+                         std::ref(second_tensor));
+    thread_1.join();
+    thread_2.join();
+    sum_two_tensors(first_tensor, second_tensor, result);
+}
+
+void sum_gradient_by_multi_thread(
+    std::vector<std::map<std::string, tensorflow::Tensor>>& vec_map_gradient,
+    std::map<std::string, tensorflow::Tensor>& result) {
+    std::map<std::string, std::vector<tensorflow::Tensor>> temp_map;
+    for (auto iter = vec_map_gradient.begin(); iter != vec_map_gradient.end();
+         iter++) {
+        auto& map_gradient = *iter;
+        for (auto iter_mg = map_gradient.begin(); iter_mg != map_gradient.end();
+             iter_mg++) {
+            temp_map[iter_mg->first].push_back(iter_mg->second);
+        }
+    }
+    std::vector<std::thread> vec_thread;
+    int const size = temp_map.size();
+    for (auto iter = temp_map.begin(); iter != temp_map.end(); iter++) {
+        std::string variable_name = iter->first;
+        vec_thread.push_back(std::thread(sum_gradient,
+                                         std::ref(temp_map[variable_name]),
+                                         std::ref(result[variable_name])));
+    }
+    for (int i = 0; i < size; i++) {
+        vec_thread[i].join();
+    }
+}
+}  // namespace
+
+std::map<int, std::pair<std::map<std::string, tensorflow::Tensor>, int>>&
+iter_to_gradient() {
+    static std::map<int,
+                    std::pair<std::map<std::string, tensorflow::Tensor>, int>>
+        iter2gradient;
+    return iter2gradient;
+}
+void copy_gradient_between_session(int const last_iter,
+                                   int const current_iter,
+                                   int const total_worker,
+                                   int const level,
+                                   float const learning_rate_value,
+                                   tensorflow::Session* session_from,
+                                   tensorflow::Session* session_to,
+                                   Tuple& tuple,
+                                   int const threshold_to_quantize) {
+    auto& iter2gradient = iter_to_gradient();
+    std::vector<std::map<std::string, tensorflow::Tensor>> gradient_to_sum;
+    for (int i = last_iter + 1; i <= current_iter; i++) {
+        auto iter = iter2gradient.find(i);
+        if (iter == iter2gradient.end()) {
+            std::terminate();
+        }
+        gradient_to_sum.push_back(iter->second.first);
+        iter->second.second++;
+        if (iter->second.second == total_worker) {
+            iter2gradient.erase(iter);
+        }
+    }
+    // note that results is (variable_name, gradient_tensor)
+    std::map<std::string, tensorflow::Tensor> results;
+    sum_gradient_by_multi_thread(gradient_to_sum, results);
+    NamedGradientsAccordingColumn named_gradients_send;
+    quantize_gradients_according_column(results, &named_gradients_send, level,
+                                        threshold_to_quantize);
+    results.clear();
+    dequantize_gradients_according_column(named_gradients_send, results);
+    std::vector<std::pair<std::string, tensorflow::Tensor>> feed;
+    for (auto iter = results.begin(); iter != results.end(); iter++) {
+        std::string variable_name = iter->first;
+        std::string gradient_name =
+            tuple.map_names().find(variable_name)->second.gradient_name();
+        feed.push_back({gradient_name, iter->second});
+    }
+    tensorflow::Tensor learning_rate_tensor = tensorflow::Tensor(
+        tensorflow::DataType::DT_FLOAT, tensorflow::TensorShape({}));
+    float* learning_rate_tensor_ptr = learning_rate_tensor.flat<float>().data();
+    *learning_rate_tensor_ptr = learning_rate_value;
+    auto learning_rate_tensor_name = tuple.learning_rate_placeholder_name();
+    feed.push_back({learning_rate_tensor_name, learning_rate_tensor});
+    std::vector<std::string> actions_to_do;
+    actions_to_do.push_back(tuple.training_op_name());
+    tensorflow::Status status =
+        session_to->Run(feed, {}, actions_to_do, nullptr);
+    if (!status.ok()) {
+        PRINT_ERROR_MESSAGE(status.error_message());
+        std::terminate();
+    }
+}
 // suitable for state like statistics of gradient
 void moving_average(size_t length,
                     float const* previous,

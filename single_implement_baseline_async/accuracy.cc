@@ -14,7 +14,7 @@ void init_preprocess() {
     // init preprocess graph
     GraphDef graph_def;
     std::string graph_path =
-        "/home/cgx/git_project/adaptive-system/input/cifar10/preprocess.pb";
+        "~/git_project/adaptive-system/input/cifar10/preprocess.pb";
     Status status = ReadBinaryProto(Env::Default(), graph_path, &graph_def);
     if (!status.ok()) {
         std::cout << status.ToString() << "\n";
@@ -38,7 +38,7 @@ void init_preprocess() {
     const int image_size = 3072;
     const int batch_size = 10000;
     std::ifstream input_stream(
-        "/home/cgx/git_project/adaptive-system/resources/cifar-10-batches-bin/"
+        "~/git_project/adaptive-system/resources/cifar-10-batches-bin/"
         "test_batch.bin",
         std::ios::binary);
     TensorShape raw_tensor_shape({record_size});

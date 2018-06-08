@@ -1,8 +1,8 @@
 #include "quantization/util/any_level.h"
+#include <chrono>
 #include <limits>
 #include <thread>
 #include <utility>
-#include <chrono>
 #include "quantization/util/helper.h"
 
 namespace adaptive_system {
@@ -272,11 +272,11 @@ void quantize_gradient_according_column(uint32_t const level,
     auto end = std::chrono::system_clock::now();
     auto duration =
         std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-    std::cout << "qantization spend "
-              << double(duration.count()) *
-                     std::chrono::microseconds::period::num /
-                     std::chrono::microseconds::period::den
-              << "s" << std::endl;
+    // std::cout << "qantization spend "
+    //           << double(duration.count()) *
+    //                  std::chrono::microseconds::period::num /
+    //                  std::chrono::microseconds::period::den
+    //           << "s" << std::endl;
 }
 
 void dequantize_gradient_according_column(
@@ -307,11 +307,11 @@ void dequantize_gradient_according_column(
     auto end = std::chrono::system_clock::now();
     auto duration =
         std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-    std::cout << "deqantization spend "
-              << double(duration.count()) *
-                     std::chrono::microseconds::period::num /
-                     std::chrono::microseconds::period::den
-              << "s" << std::endl;
+    // std::cout << "deqantization spend "
+    //           << double(duration.count()) *
+    //                  std::chrono::microseconds::period::num /
+    //                  std::chrono::microseconds::period::den
+    //           << "s" << std::endl;
 }
 
 void quantize_gradients_according_column(

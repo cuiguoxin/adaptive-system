@@ -1,4 +1,6 @@
-GRPC_PLUGIN_PATH=`which grpc_cpp_plugin`
-echo $GRPC_PLUGIN_PATH
-protoc -I /home/cgx/git_project/adaptive-system/tensorflow/ --grpc_out=/home/cgx/git_project/adaptive-system/proto/ --plugin=protoc-gen-grpc=$GRPC_PLUGIN_PATH  --proto_path=/home/cgx/git_project/adaptive-system/proto/ /home/cgx/git_project/adaptive-system/proto/rpc_service.proto
-protoc -I /home/cgx/git_project/adaptive-system/tensorflow/ --cpp_out=/home/cgx/git_project/adaptive-system/proto/ --python_out=/home/cgx/git_project/adaptive-system/input/cifar10/ --proto_path=/home/cgx/git_project/adaptive-system/proto/  /home/cgx/git_project/adaptive-system/proto/rpc_service.proto
+GRPC_PLUGIN_PATH=`which grpc_cpp_plugin` 
+OUT_PATH=~/git_project/adaptive-system/proto
+PYTHON_OUT_PATH=~/git_project/adaptive-system/input/cifar10
+echo $GRPC_PLUGIN_PATH 
+protoc -I ~/git_project/adaptive-system/tensorflow/ --grpc_out=$OUT_PATH --plugin=protoc-gen-grpc=$GRPC_PLUGIN_PATH  --proto_path=$OUT_PATH $OUT_PATH/rpc_service.proto 
+protoc -I ~/git_project/adaptive-system/tensorflow/ --cpp_out=$OUT_PATH --python_out=$PYTHON_OUT_PATH --proto_path=$OUT_PATH  $OUT_PATH/rpc_service.proto 
