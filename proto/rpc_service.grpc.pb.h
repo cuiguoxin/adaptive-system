@@ -6,20 +6,19 @@
 
 #include "rpc_service.pb.h"
 
-#include <grpc++/impl/codegen/async_stream.h>
-#include <grpc++/impl/codegen/async_unary_call.h>
-#include <grpc++/impl/codegen/method_handler_impl.h>
-#include <grpc++/impl/codegen/proto_utils.h>
-#include <grpc++/impl/codegen/rpc_method.h>
-#include <grpc++/impl/codegen/service_type.h>
-#include <grpc++/impl/codegen/status.h>
-#include <grpc++/impl/codegen/stub_options.h>
-#include <grpc++/impl/codegen/sync_stream.h>
+#include <grpcpp/impl/codegen/async_stream.h>
+#include <grpcpp/impl/codegen/async_unary_call.h>
+#include <grpcpp/impl/codegen/method_handler_impl.h>
+#include <grpcpp/impl/codegen/proto_utils.h>
+#include <grpcpp/impl/codegen/rpc_method.h>
+#include <grpcpp/impl/codegen/service_type.h>
+#include <grpcpp/impl/codegen/status.h>
+#include <grpcpp/impl/codegen/stub_options.h>
+#include <grpcpp/impl/codegen/sync_stream.h>
 
 namespace grpc {
 class CompletionQueue;
 class Channel;
-class RpcService;
 class ServerCompletionQueue;
 class ServerContext;
 }  // namespace grpc
@@ -28,6 +27,9 @@ namespace adaptive_system {
 
 class SystemControl final {
  public:
+  static constexpr char const* service_full_name() {
+    return "adaptive_system.SystemControl";
+  }
   class StubInterface {
    public:
     virtual ~StubInterface() {}
@@ -35,23 +37,39 @@ class SystemControl final {
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::Tuple>> AsyncretrieveTuple(::grpc::ClientContext* context, const ::adaptive_system::Empty& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::Tuple>>(AsyncretrieveTupleRaw(context, request, cq));
     }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::Tuple>> PrepareAsyncretrieveTuple(::grpc::ClientContext* context, const ::adaptive_system::Empty& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::Tuple>>(PrepareAsyncretrieveTupleRaw(context, request, cq));
+    }
     virtual ::grpc::Status sendLoss(::grpc::ClientContext* context, const ::adaptive_system::Loss& request, ::adaptive_system::Empty* response) = 0;
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::Empty>> AsyncsendLoss(::grpc::ClientContext* context, const ::adaptive_system::Loss& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::Empty>>(AsyncsendLossRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::Empty>> PrepareAsyncsendLoss(::grpc::ClientContext* context, const ::adaptive_system::Loss& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::Empty>>(PrepareAsyncsendLossRaw(context, request, cq));
     }
     virtual ::grpc::Status sendGradient(::grpc::ClientContext* context, const ::adaptive_system::NamedGradientsAccordingColumn& request, ::adaptive_system::NamedGradientsAccordingColumn* response) = 0;
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::NamedGradientsAccordingColumn>> AsyncsendGradient(::grpc::ClientContext* context, const ::adaptive_system::NamedGradientsAccordingColumn& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::NamedGradientsAccordingColumn>>(AsyncsendGradientRaw(context, request, cq));
     }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::NamedGradientsAccordingColumn>> PrepareAsyncsendGradient(::grpc::ClientContext* context, const ::adaptive_system::NamedGradientsAccordingColumn& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::NamedGradientsAccordingColumn>>(PrepareAsyncsendGradientRaw(context, request, cq));
+    }
     virtual ::grpc::Status sendState(::grpc::ClientContext* context, const ::adaptive_system::PartialState& request, ::adaptive_system::QuantizationLevel* response) = 0;
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::QuantizationLevel>> AsyncsendState(::grpc::ClientContext* context, const ::adaptive_system::PartialState& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::QuantizationLevel>>(AsyncsendStateRaw(context, request, cq));
     }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::QuantizationLevel>> PrepareAsyncsendState(::grpc::ClientContext* context, const ::adaptive_system::PartialState& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::QuantizationLevel>>(PrepareAsyncsendStateRaw(context, request, cq));
+    }
   private:
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::Tuple>* AsyncretrieveTupleRaw(::grpc::ClientContext* context, const ::adaptive_system::Empty& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::Tuple>* PrepareAsyncretrieveTupleRaw(::grpc::ClientContext* context, const ::adaptive_system::Empty& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::Empty>* AsyncsendLossRaw(::grpc::ClientContext* context, const ::adaptive_system::Loss& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::Empty>* PrepareAsyncsendLossRaw(::grpc::ClientContext* context, const ::adaptive_system::Loss& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::NamedGradientsAccordingColumn>* AsyncsendGradientRaw(::grpc::ClientContext* context, const ::adaptive_system::NamedGradientsAccordingColumn& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::NamedGradientsAccordingColumn>* PrepareAsyncsendGradientRaw(::grpc::ClientContext* context, const ::adaptive_system::NamedGradientsAccordingColumn& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::QuantizationLevel>* AsyncsendStateRaw(::grpc::ClientContext* context, const ::adaptive_system::PartialState& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::adaptive_system::QuantizationLevel>* PrepareAsyncsendStateRaw(::grpc::ClientContext* context, const ::adaptive_system::PartialState& request, ::grpc::CompletionQueue* cq) = 0;
   };
   class Stub final : public StubInterface {
    public:
@@ -60,29 +78,45 @@ class SystemControl final {
     std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::adaptive_system::Tuple>> AsyncretrieveTuple(::grpc::ClientContext* context, const ::adaptive_system::Empty& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::adaptive_system::Tuple>>(AsyncretrieveTupleRaw(context, request, cq));
     }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::adaptive_system::Tuple>> PrepareAsyncretrieveTuple(::grpc::ClientContext* context, const ::adaptive_system::Empty& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::adaptive_system::Tuple>>(PrepareAsyncretrieveTupleRaw(context, request, cq));
+    }
     ::grpc::Status sendLoss(::grpc::ClientContext* context, const ::adaptive_system::Loss& request, ::adaptive_system::Empty* response) override;
     std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::adaptive_system::Empty>> AsyncsendLoss(::grpc::ClientContext* context, const ::adaptive_system::Loss& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::adaptive_system::Empty>>(AsyncsendLossRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::adaptive_system::Empty>> PrepareAsyncsendLoss(::grpc::ClientContext* context, const ::adaptive_system::Loss& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::adaptive_system::Empty>>(PrepareAsyncsendLossRaw(context, request, cq));
     }
     ::grpc::Status sendGradient(::grpc::ClientContext* context, const ::adaptive_system::NamedGradientsAccordingColumn& request, ::adaptive_system::NamedGradientsAccordingColumn* response) override;
     std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::adaptive_system::NamedGradientsAccordingColumn>> AsyncsendGradient(::grpc::ClientContext* context, const ::adaptive_system::NamedGradientsAccordingColumn& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::adaptive_system::NamedGradientsAccordingColumn>>(AsyncsendGradientRaw(context, request, cq));
     }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::adaptive_system::NamedGradientsAccordingColumn>> PrepareAsyncsendGradient(::grpc::ClientContext* context, const ::adaptive_system::NamedGradientsAccordingColumn& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::adaptive_system::NamedGradientsAccordingColumn>>(PrepareAsyncsendGradientRaw(context, request, cq));
+    }
     ::grpc::Status sendState(::grpc::ClientContext* context, const ::adaptive_system::PartialState& request, ::adaptive_system::QuantizationLevel* response) override;
     std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::adaptive_system::QuantizationLevel>> AsyncsendState(::grpc::ClientContext* context, const ::adaptive_system::PartialState& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::adaptive_system::QuantizationLevel>>(AsyncsendStateRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::adaptive_system::QuantizationLevel>> PrepareAsyncsendState(::grpc::ClientContext* context, const ::adaptive_system::PartialState& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::adaptive_system::QuantizationLevel>>(PrepareAsyncsendStateRaw(context, request, cq));
     }
 
    private:
     std::shared_ptr< ::grpc::ChannelInterface> channel_;
     ::grpc::ClientAsyncResponseReader< ::adaptive_system::Tuple>* AsyncretrieveTupleRaw(::grpc::ClientContext* context, const ::adaptive_system::Empty& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::adaptive_system::Tuple>* PrepareAsyncretrieveTupleRaw(::grpc::ClientContext* context, const ::adaptive_system::Empty& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::adaptive_system::Empty>* AsyncsendLossRaw(::grpc::ClientContext* context, const ::adaptive_system::Loss& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::adaptive_system::Empty>* PrepareAsyncsendLossRaw(::grpc::ClientContext* context, const ::adaptive_system::Loss& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::adaptive_system::NamedGradientsAccordingColumn>* AsyncsendGradientRaw(::grpc::ClientContext* context, const ::adaptive_system::NamedGradientsAccordingColumn& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::adaptive_system::NamedGradientsAccordingColumn>* PrepareAsyncsendGradientRaw(::grpc::ClientContext* context, const ::adaptive_system::NamedGradientsAccordingColumn& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::adaptive_system::QuantizationLevel>* AsyncsendStateRaw(::grpc::ClientContext* context, const ::adaptive_system::PartialState& request, ::grpc::CompletionQueue* cq) override;
-    const ::grpc::RpcMethod rpcmethod_retrieveTuple_;
-    const ::grpc::RpcMethod rpcmethod_sendLoss_;
-    const ::grpc::RpcMethod rpcmethod_sendGradient_;
-    const ::grpc::RpcMethod rpcmethod_sendState_;
+    ::grpc::ClientAsyncResponseReader< ::adaptive_system::QuantizationLevel>* PrepareAsyncsendStateRaw(::grpc::ClientContext* context, const ::adaptive_system::PartialState& request, ::grpc::CompletionQueue* cq) override;
+    const ::grpc::internal::RpcMethod rpcmethod_retrieveTuple_;
+    const ::grpc::internal::RpcMethod rpcmethod_sendLoss_;
+    const ::grpc::internal::RpcMethod rpcmethod_sendGradient_;
+    const ::grpc::internal::RpcMethod rpcmethod_sendState_;
   };
   static std::unique_ptr<Stub> NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options = ::grpc::StubOptions());
 
@@ -251,7 +285,7 @@ class SystemControl final {
    public:
     WithStreamedUnaryMethod_retrieveTuple() {
       ::grpc::Service::MarkMethodStreamed(0,
-        new ::grpc::StreamedUnaryHandler< ::adaptive_system::Empty, ::adaptive_system::Tuple>(std::bind(&WithStreamedUnaryMethod_retrieveTuple<BaseClass>::StreamedretrieveTuple, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler< ::adaptive_system::Empty, ::adaptive_system::Tuple>(std::bind(&WithStreamedUnaryMethod_retrieveTuple<BaseClass>::StreamedretrieveTuple, this, std::placeholders::_1, std::placeholders::_2)));
     }
     ~WithStreamedUnaryMethod_retrieveTuple() override {
       BaseClassMustBeDerivedFromService(this);
@@ -271,7 +305,7 @@ class SystemControl final {
    public:
     WithStreamedUnaryMethod_sendLoss() {
       ::grpc::Service::MarkMethodStreamed(1,
-        new ::grpc::StreamedUnaryHandler< ::adaptive_system::Loss, ::adaptive_system::Empty>(std::bind(&WithStreamedUnaryMethod_sendLoss<BaseClass>::StreamedsendLoss, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler< ::adaptive_system::Loss, ::adaptive_system::Empty>(std::bind(&WithStreamedUnaryMethod_sendLoss<BaseClass>::StreamedsendLoss, this, std::placeholders::_1, std::placeholders::_2)));
     }
     ~WithStreamedUnaryMethod_sendLoss() override {
       BaseClassMustBeDerivedFromService(this);
@@ -291,7 +325,7 @@ class SystemControl final {
    public:
     WithStreamedUnaryMethod_sendGradient() {
       ::grpc::Service::MarkMethodStreamed(2,
-        new ::grpc::StreamedUnaryHandler< ::adaptive_system::NamedGradientsAccordingColumn, ::adaptive_system::NamedGradientsAccordingColumn>(std::bind(&WithStreamedUnaryMethod_sendGradient<BaseClass>::StreamedsendGradient, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler< ::adaptive_system::NamedGradientsAccordingColumn, ::adaptive_system::NamedGradientsAccordingColumn>(std::bind(&WithStreamedUnaryMethod_sendGradient<BaseClass>::StreamedsendGradient, this, std::placeholders::_1, std::placeholders::_2)));
     }
     ~WithStreamedUnaryMethod_sendGradient() override {
       BaseClassMustBeDerivedFromService(this);
@@ -311,7 +345,7 @@ class SystemControl final {
    public:
     WithStreamedUnaryMethod_sendState() {
       ::grpc::Service::MarkMethodStreamed(3,
-        new ::grpc::StreamedUnaryHandler< ::adaptive_system::PartialState, ::adaptive_system::QuantizationLevel>(std::bind(&WithStreamedUnaryMethod_sendState<BaseClass>::StreamedsendState, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler< ::adaptive_system::PartialState, ::adaptive_system::QuantizationLevel>(std::bind(&WithStreamedUnaryMethod_sendState<BaseClass>::StreamedsendState, this, std::placeholders::_1, std::placeholders::_2)));
     }
     ~WithStreamedUnaryMethod_sendState() override {
       BaseClassMustBeDerivedFromService(this);

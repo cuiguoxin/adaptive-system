@@ -5,14 +5,14 @@
 #include "rpc_service.pb.h"
 #include "rpc_service.grpc.pb.h"
 
-#include <grpc++/impl/codegen/async_stream.h>
-#include <grpc++/impl/codegen/async_unary_call.h>
-#include <grpc++/impl/codegen/channel_interface.h>
-#include <grpc++/impl/codegen/client_unary_call.h>
-#include <grpc++/impl/codegen/method_handler_impl.h>
-#include <grpc++/impl/codegen/rpc_service_method.h>
-#include <grpc++/impl/codegen/service_type.h>
-#include <grpc++/impl/codegen/sync_stream.h>
+#include <grpcpp/impl/codegen/async_stream.h>
+#include <grpcpp/impl/codegen/async_unary_call.h>
+#include <grpcpp/impl/codegen/channel_interface.h>
+#include <grpcpp/impl/codegen/client_unary_call.h>
+#include <grpcpp/impl/codegen/method_handler_impl.h>
+#include <grpcpp/impl/codegen/rpc_service_method.h>
+#include <grpcpp/impl/codegen/service_type.h>
+#include <grpcpp/impl/codegen/sync_stream.h>
 namespace adaptive_system {
 
 static const char* SystemControl_method_names[] = {
@@ -23,69 +23,86 @@ static const char* SystemControl_method_names[] = {
 };
 
 std::unique_ptr< SystemControl::Stub> SystemControl::NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options) {
+  (void)options;
   std::unique_ptr< SystemControl::Stub> stub(new SystemControl::Stub(channel));
   return stub;
 }
 
 SystemControl::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel)
-  : channel_(channel), rpcmethod_retrieveTuple_(SystemControl_method_names[0], ::grpc::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_sendLoss_(SystemControl_method_names[1], ::grpc::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_sendGradient_(SystemControl_method_names[2], ::grpc::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_sendState_(SystemControl_method_names[3], ::grpc::RpcMethod::NORMAL_RPC, channel)
+  : channel_(channel), rpcmethod_retrieveTuple_(SystemControl_method_names[0], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_sendLoss_(SystemControl_method_names[1], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_sendGradient_(SystemControl_method_names[2], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_sendState_(SystemControl_method_names[3], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   {}
 
 ::grpc::Status SystemControl::Stub::retrieveTuple(::grpc::ClientContext* context, const ::adaptive_system::Empty& request, ::adaptive_system::Tuple* response) {
-  return ::grpc::BlockingUnaryCall(channel_.get(), rpcmethod_retrieveTuple_, context, request, response);
+  return ::grpc::internal::BlockingUnaryCall(channel_.get(), rpcmethod_retrieveTuple_, context, request, response);
 }
 
 ::grpc::ClientAsyncResponseReader< ::adaptive_system::Tuple>* SystemControl::Stub::AsyncretrieveTupleRaw(::grpc::ClientContext* context, const ::adaptive_system::Empty& request, ::grpc::CompletionQueue* cq) {
-  return new ::grpc::ClientAsyncResponseReader< ::adaptive_system::Tuple>(channel_.get(), cq, rpcmethod_retrieveTuple_, context, request);
+  return ::grpc::internal::ClientAsyncResponseReaderFactory< ::adaptive_system::Tuple>::Create(channel_.get(), cq, rpcmethod_retrieveTuple_, context, request, true);
+}
+
+::grpc::ClientAsyncResponseReader< ::adaptive_system::Tuple>* SystemControl::Stub::PrepareAsyncretrieveTupleRaw(::grpc::ClientContext* context, const ::adaptive_system::Empty& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncResponseReaderFactory< ::adaptive_system::Tuple>::Create(channel_.get(), cq, rpcmethod_retrieveTuple_, context, request, false);
 }
 
 ::grpc::Status SystemControl::Stub::sendLoss(::grpc::ClientContext* context, const ::adaptive_system::Loss& request, ::adaptive_system::Empty* response) {
-  return ::grpc::BlockingUnaryCall(channel_.get(), rpcmethod_sendLoss_, context, request, response);
+  return ::grpc::internal::BlockingUnaryCall(channel_.get(), rpcmethod_sendLoss_, context, request, response);
 }
 
 ::grpc::ClientAsyncResponseReader< ::adaptive_system::Empty>* SystemControl::Stub::AsyncsendLossRaw(::grpc::ClientContext* context, const ::adaptive_system::Loss& request, ::grpc::CompletionQueue* cq) {
-  return new ::grpc::ClientAsyncResponseReader< ::adaptive_system::Empty>(channel_.get(), cq, rpcmethod_sendLoss_, context, request);
+  return ::grpc::internal::ClientAsyncResponseReaderFactory< ::adaptive_system::Empty>::Create(channel_.get(), cq, rpcmethod_sendLoss_, context, request, true);
+}
+
+::grpc::ClientAsyncResponseReader< ::adaptive_system::Empty>* SystemControl::Stub::PrepareAsyncsendLossRaw(::grpc::ClientContext* context, const ::adaptive_system::Loss& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncResponseReaderFactory< ::adaptive_system::Empty>::Create(channel_.get(), cq, rpcmethod_sendLoss_, context, request, false);
 }
 
 ::grpc::Status SystemControl::Stub::sendGradient(::grpc::ClientContext* context, const ::adaptive_system::NamedGradientsAccordingColumn& request, ::adaptive_system::NamedGradientsAccordingColumn* response) {
-  return ::grpc::BlockingUnaryCall(channel_.get(), rpcmethod_sendGradient_, context, request, response);
+  return ::grpc::internal::BlockingUnaryCall(channel_.get(), rpcmethod_sendGradient_, context, request, response);
 }
 
 ::grpc::ClientAsyncResponseReader< ::adaptive_system::NamedGradientsAccordingColumn>* SystemControl::Stub::AsyncsendGradientRaw(::grpc::ClientContext* context, const ::adaptive_system::NamedGradientsAccordingColumn& request, ::grpc::CompletionQueue* cq) {
-  return new ::grpc::ClientAsyncResponseReader< ::adaptive_system::NamedGradientsAccordingColumn>(channel_.get(), cq, rpcmethod_sendGradient_, context, request);
+  return ::grpc::internal::ClientAsyncResponseReaderFactory< ::adaptive_system::NamedGradientsAccordingColumn>::Create(channel_.get(), cq, rpcmethod_sendGradient_, context, request, true);
+}
+
+::grpc::ClientAsyncResponseReader< ::adaptive_system::NamedGradientsAccordingColumn>* SystemControl::Stub::PrepareAsyncsendGradientRaw(::grpc::ClientContext* context, const ::adaptive_system::NamedGradientsAccordingColumn& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncResponseReaderFactory< ::adaptive_system::NamedGradientsAccordingColumn>::Create(channel_.get(), cq, rpcmethod_sendGradient_, context, request, false);
 }
 
 ::grpc::Status SystemControl::Stub::sendState(::grpc::ClientContext* context, const ::adaptive_system::PartialState& request, ::adaptive_system::QuantizationLevel* response) {
-  return ::grpc::BlockingUnaryCall(channel_.get(), rpcmethod_sendState_, context, request, response);
+  return ::grpc::internal::BlockingUnaryCall(channel_.get(), rpcmethod_sendState_, context, request, response);
 }
 
 ::grpc::ClientAsyncResponseReader< ::adaptive_system::QuantizationLevel>* SystemControl::Stub::AsyncsendStateRaw(::grpc::ClientContext* context, const ::adaptive_system::PartialState& request, ::grpc::CompletionQueue* cq) {
-  return new ::grpc::ClientAsyncResponseReader< ::adaptive_system::QuantizationLevel>(channel_.get(), cq, rpcmethod_sendState_, context, request);
+  return ::grpc::internal::ClientAsyncResponseReaderFactory< ::adaptive_system::QuantizationLevel>::Create(channel_.get(), cq, rpcmethod_sendState_, context, request, true);
+}
+
+::grpc::ClientAsyncResponseReader< ::adaptive_system::QuantizationLevel>* SystemControl::Stub::PrepareAsyncsendStateRaw(::grpc::ClientContext* context, const ::adaptive_system::PartialState& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncResponseReaderFactory< ::adaptive_system::QuantizationLevel>::Create(channel_.get(), cq, rpcmethod_sendState_, context, request, false);
 }
 
 SystemControl::Service::Service() {
-  AddMethod(new ::grpc::RpcServiceMethod(
+  AddMethod(new ::grpc::internal::RpcServiceMethod(
       SystemControl_method_names[0],
-      ::grpc::RpcMethod::NORMAL_RPC,
-      new ::grpc::RpcMethodHandler< SystemControl::Service, ::adaptive_system::Empty, ::adaptive_system::Tuple>(
+      ::grpc::internal::RpcMethod::NORMAL_RPC,
+      new ::grpc::internal::RpcMethodHandler< SystemControl::Service, ::adaptive_system::Empty, ::adaptive_system::Tuple>(
           std::mem_fn(&SystemControl::Service::retrieveTuple), this)));
-  AddMethod(new ::grpc::RpcServiceMethod(
+  AddMethod(new ::grpc::internal::RpcServiceMethod(
       SystemControl_method_names[1],
-      ::grpc::RpcMethod::NORMAL_RPC,
-      new ::grpc::RpcMethodHandler< SystemControl::Service, ::adaptive_system::Loss, ::adaptive_system::Empty>(
+      ::grpc::internal::RpcMethod::NORMAL_RPC,
+      new ::grpc::internal::RpcMethodHandler< SystemControl::Service, ::adaptive_system::Loss, ::adaptive_system::Empty>(
           std::mem_fn(&SystemControl::Service::sendLoss), this)));
-  AddMethod(new ::grpc::RpcServiceMethod(
+  AddMethod(new ::grpc::internal::RpcServiceMethod(
       SystemControl_method_names[2],
-      ::grpc::RpcMethod::NORMAL_RPC,
-      new ::grpc::RpcMethodHandler< SystemControl::Service, ::adaptive_system::NamedGradientsAccordingColumn, ::adaptive_system::NamedGradientsAccordingColumn>(
+      ::grpc::internal::RpcMethod::NORMAL_RPC,
+      new ::grpc::internal::RpcMethodHandler< SystemControl::Service, ::adaptive_system::NamedGradientsAccordingColumn, ::adaptive_system::NamedGradientsAccordingColumn>(
           std::mem_fn(&SystemControl::Service::sendGradient), this)));
-  AddMethod(new ::grpc::RpcServiceMethod(
+  AddMethod(new ::grpc::internal::RpcServiceMethod(
       SystemControl_method_names[3],
-      ::grpc::RpcMethod::NORMAL_RPC,
-      new ::grpc::RpcMethodHandler< SystemControl::Service, ::adaptive_system::PartialState, ::adaptive_system::QuantizationLevel>(
+      ::grpc::internal::RpcMethod::NORMAL_RPC,
+      new ::grpc::internal::RpcMethodHandler< SystemControl::Service, ::adaptive_system::PartialState, ::adaptive_system::QuantizationLevel>(
           std::mem_fn(&SystemControl::Service::sendState), this)));
 }
 

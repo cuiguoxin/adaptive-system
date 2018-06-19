@@ -287,14 +287,20 @@ namespace logging {
 
 std::ofstream file_loss_stream;
 
-void init_log(int const level, int const total_worker_num) {
+void init_log(int const level,
+              int const total_worker_num,
+              int const sarsa_interval,
+              int interval_to_change_variable) {
     // init log
     auto now = std::chrono::system_clock::now();
     auto init_time_t = std::chrono::system_clock::to_time_t(now);
     std::string label = std::to_string(init_time_t);
     std::string store_loss_file_path =
         "single_sarsa_async" + label + "_level:" + std::to_string(level) +
-        "_number_of_workers:" + std::to_string(total_worker_num);
+        "_number_of_workers:" + std::to_string(total_worker_num) +
+        "_sarsaInterval:" + std::to_string(sarsa_interval) +
+        "_intervalExchangeVariable:" +
+        std::to_string(interval_to_change_variable);
     file_loss_stream.open("loss_result/" + store_loss_file_path);
     // init predict
     // init(store_loss_file_path);
@@ -314,9 +320,51 @@ inline void log_to_file(float const time,
 }
 }  // namespace logging
 
-namespace sarsa{
-    
+namespace sarsa {
+tensorflow::Tensor last_state;
+std::vector<float> loss_history;
+float _last_loss = 10.0f;
+float computing_time = 0.0f;
+float one_bit_communication_time = 0.0f;
+
+volatile int& get_current_level() {
+    static volatile int level = 2;
+    return level;
 }
+
+void adjust_rl_model(adaptive_system::sarsa_model& sm, int& level) {
+    using namespace adaptive_system;
+    auto start = std::chrono::system_clock::now();
+
+    std::vector<float> moving_average_losses;
+    const float r = 0.99;
+    _last_loss = moving_average_from_last_loss(_last_loss, loss_history,
+                                               moving_average_losses, r);
+    tensorflow::Tensor new_state =
+        get_float_tensor_from_vector(moving_average_losses);
+    int new_level = sm.sample_new_action(new_state);
+    int old_level = level;
+
+    float slope = get_slope_according_loss(moving_average_losses);
+    std::cout << "slope is " << slope << " new level is " << new_level
+              << std::endl;
+    float reward =
+        get_reward_v5(slope, old_level, computing_time,
+                      one_bit_communication_time);  // -slope * 100 / level
+    sm.adjust_model(reward, last_state, old_level, new_state, new_level);
+    level = new_level;
+    last_state = new_state;
+    loss_history.clear();
+    auto end = std::chrono::system_clock::now();
+    auto duration =
+        std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    std::cout << "RL model spend "
+              << double(duration.count()) *
+                     std::chrono::microseconds::period::num /
+                     std::chrono::microseconds::period::den
+              << "s" << std::endl;
+}
+}  // namespace sarsa
 
 namespace job {
 
@@ -410,18 +458,26 @@ void do_work_for_one_worker_v2(
 void do_work_for_one_worker_v3(
     const int worker_id,
     int const total_iter_num_to_run,
-    int const level,
     int const total_worker,
     tensorflow::Session* session_local,  // has been initialized
     tensorflow::Session* session_master,
     float const learning_rate_value,
-    int const start_iter,
-    int const interval_to_change_variable) {
+    int const start_iter,  // start parallel execution, now set to 20
+    int const interval_to_change_variable,  // iter interval to exchange
+                                            // variable, now set to 5
+    int const
+        sarsa_interval,  // iter interval to run sarsa algorithm, now set to 20
+    adaptive_system::sarsa_model& sm) {
+    static bool is_first = true;
     for (int i = 0; i < total_iter_num_to_run; i++) {
         std::map<std::string, tensorflow::Tensor> gradients;
         std::pair<float, float> loss_results;
+        PRINT_INFO;
+        int level = sarsa::get_current_level();
+        PRINT_INFO;
         client::compute_gradient_loss_and_quantize(session_local, level,
                                                    gradients, loss_results);
+        PRINT_INFO;
         // mutex lock
         std::unique_lock<std::mutex> lk(job_update_mutex);
         std::cout << "iter_num: " << current_iter_num
@@ -431,8 +487,7 @@ void do_work_for_one_worker_v3(
                              current_iter_num, level);
         adaptive_system::apply_quantized_gradient_to_model(
             gradients, session_master, client::tuple, learning_rate_value);
-        // adaptive_system::copy_variable_between_session(
-        //     session_master, session_local, client::tuple);
+
         auto& id2last_iter = id_to_last_iter();
         auto& iter2gradient = adaptive_system::iter_to_gradient();
         iter2gradient[current_iter_num] = {gradients, 0};
@@ -448,13 +503,30 @@ void do_work_for_one_worker_v3(
             learning_rate_value, session_master, session_local, client::tuple,
             client::threshold_to_quantize);
         id2last_iter[worker_id] = current_iter_num;
-        current_iter_num++;
+
         auto& w2it = worker_id_to_its_iter();
         w2it[worker_id]++;
+
+        // check if it's time for exchange variables ---- not quantize
         if (w2it[worker_id] % interval_to_change_variable == 0) {
             adaptive_system::copy_variable_between_session(
                 session_master, session_local, client::tuple);
         }
+
+        // sarsa model work
+        if (current_iter_num > 100) {
+            sarsa::loss_history.push_back(loss_results.first);
+            int const real_iter_num = current_iter_num - 100;
+            if (is_first) {
+                sarsa::_last_loss = loss_results.first;
+                is_first = false;
+            }
+            if (real_iter_num % sarsa_interval == 0) {
+                sarsa::adjust_rl_model(sm, level);
+                sarsa::get_current_level() = level;
+            }
+        }
+        current_iter_num++;
         lk.unlock();
     }
 }
@@ -466,7 +538,7 @@ void do_work(int const total_iter_num,
              int const start_parallel,
              std::string const tuple_path) {
     // init log
-    logging::init_log(level, total_worker_num);
+    logging::init_log(level, total_worker_num, 0, 0);
     tensorflow::Session* session_master =
         client::load_primary_model_on_master_and_init(tuple_path);
     do_work_for_one_worker(-1, start_parallel, level, session_master,
@@ -498,7 +570,7 @@ void do_work_v2(int const total_iter_num,
                 int const start_parallel,
                 std::string const tuple_path) {
     // init log
-    logging::init_log(level, total_worker_num);
+    logging::init_log(level, total_worker_num, 0, 0);
     tensorflow::Session* session_master =
         client::load_primary_model_on_master_and_init(tuple_path);
     do_work_for_one_worker(-1, start_parallel, level, session_master,
@@ -530,9 +602,29 @@ void do_work_v3(int const total_iter_num,
                 float const learning_rate_value,
                 int const start_parallel,
                 std::string const tuple_path,
-                int const interval_to_exchange_variable) {
+                int const interval_to_exchange_variable,
+                int const sarsa_interval,
+                float const sarsa_r,
+                float const sarsa_eps_greedy,
+                int const sarsa_start_level,
+                int const sarsa_end_level,
+                int const sarsa_init_level) {
+    // init sarsa model
+    adaptive_system::sarsa_model sm(
+        "/home/cgx/git_project/adaptive-system/single_implement_sarsa_async/"
+        "sarsa_continous.pb",
+        sarsa_interval, sarsa_r, sarsa_eps_greedy, sarsa_start_level,
+        sarsa_end_level, sarsa_init_level);
+    PRINT_INFO;
+    sarsa::last_state =
+        tensorflow::Tensor(tensorflow::DataType::DT_FLOAT,
+                           tensorflow::TensorShape({sarsa_interval}));
+    float* ptr_last_state = sarsa::last_state.flat<float>().data();
+    std::fill(ptr_last_state, ptr_last_state + sarsa_interval, 10.0f);
+
     // init log
-    logging::init_log(level, total_worker_num);
+    logging::init_log(level, total_worker_num, sarsa_interval,
+                      interval_to_exchange_variable);
     tensorflow::Session* session_master =
         client::load_primary_model_on_master_and_init(tuple_path);
     do_work_for_one_worker(-1, start_parallel, level, session_master,
@@ -547,11 +639,11 @@ void do_work_v3(int const total_iter_num,
 
     std::vector<std::thread> vec_threads;
     for (int j = 0; j < total_worker_num; j++) {
-        vec_threads.push_back(
-            std::thread(do_work_for_one_worker_v3, j, total_iter_num, level,
-                        total_worker_num, session_workers[j], session_master,
-                        learning_rate_value, start_parallel,
-                        interval_to_exchange_variable));
+        vec_threads.push_back(std::thread(
+            do_work_for_one_worker_v3, j, total_iter_num, total_worker_num,
+            session_workers[j], session_master, learning_rate_value,
+            start_parallel, interval_to_exchange_variable, sarsa_interval,
+            std::ref(sm)));
     }
     for (int j = 0; j < total_worker_num; j++) {
         vec_threads[j].join();
@@ -570,11 +662,21 @@ int main(int argc, char** argv) {
     input::batch_size = atoi(argv[6]);
     std::string const tuple_local_path = argv[7];
     int const interval_to_exchange_variable = atoi(argv[8]);
+    int const sarsa_interval = atoi(argv[9]);
+    float const sarsa_r = atof(argv[10]);
+    float const sarsa_eps_greedy = atof(argv[11]);
+    int const sarsa_start_level = atoi(argv[12]);
+    int const sarsa_end_level = atoi(argv[13]);
+    int const sarsa_init_level = atoi(argv[14]);
+    sarsa::computing_time = atof(argv[15]);
+    sarsa::one_bit_communication_time = atof(argv[16]);
     PRINT_INFO;
     input::turn_raw_tensors_to_standard_version();
     job::do_work_v3(total_iter_num, total_worker_num, level,
                     learning_rate_value, start_parallel, tuple_local_path,
-                    interval_to_exchange_variable);
+                    interval_to_exchange_variable, sarsa_interval, sarsa_r,
+                    sarsa_eps_greedy, sarsa_start_level, sarsa_end_level,
+                    sarsa_init_level);
 
     return 0;
 }

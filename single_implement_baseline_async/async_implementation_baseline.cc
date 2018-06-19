@@ -405,7 +405,7 @@ void do_work_for_one_worker_v2(
 void do_work_for_one_worker_v3(
     const int worker_id,
     int const total_iter_num_to_run,
-    int const level,
+    int level,
     int const total_worker,
     tensorflow::Session* session_local,  // has been initialized
     tensorflow::Session* session_master,
@@ -415,6 +415,9 @@ void do_work_for_one_worker_v3(
     for (int i = 0; i < total_iter_num_to_run; i++) {
         std::map<std::string, tensorflow::Tensor> gradients;
         std::pair<float, float> loss_results;
+        if (i > 1000) {
+            level = 4;
+        }
         client::compute_gradient_loss_and_quantize(session_local, level,
                                                    gradients, loss_results);
         // mutex lock
