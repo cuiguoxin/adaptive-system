@@ -1,4 +1,4 @@
-#include "single_implement/accuracy.h"
+#include "accuracy/accuracy.h"
 
 using namespace tensorflow;
 using namespace adaptive_system;

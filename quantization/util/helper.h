@@ -5,8 +5,8 @@
     std::cout << "error happens in line " << __LINE__ << ", in file " \
               << __FILE__ << std::endl
 
-#define PRINT_INFO                                                            \
-    std::cout << "done here in line " << __LINE__ << ", in file " << __FILE__ \
+#define PRINT_INFO \
+    //std::cout << "done here in line " << __LINE__ << ", in file " << __FILE__ \
               << std::endl
 
 #define PRINT_ERROR_MESSAGE(message)                                      \

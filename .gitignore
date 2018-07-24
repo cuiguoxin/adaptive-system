@@ -3,6 +3,7 @@ shangwang.sh
 *.bin
 *.o
 bazel*/
+accuracy/
 tensorflow/
 resources/
 *.swp

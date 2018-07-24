@@ -21,11 +21,11 @@
 #include "tensorflow/core/platform/types.h"
 #include "tensorflow/core/public/session.h"
 
+#include "accuracy/accuracy.h"
 #include "quantization/util/algorithms.h"
 #include "quantization/util/any_level.h"
 #include "quantization/util/helper.h"
 #include "server/reward.h"
-#include "single_implement_baseline_async/accuracy.h"
 
 namespace input {
 using namespace tensorflow;
@@ -64,6 +64,7 @@ void read_raw_tensors_from_file(const std::string& binary_file_prefix) {
             binary_file_prefix + std::to_string(i) + ".bin", std::ios::binary);
         TensorShape raw_tensor_shape({record_size});
         if (input_stream.is_open()) {
+            std::cout << i << std::endl;
             for (int j = 0; j < 10000; j++) {
                 Tensor raw_tensor(DataType::DT_UINT8, raw_tensor_shape);
                 uint8* raw_tensor_ptr = raw_tensor.flat<uint8>().data();
@@ -99,7 +100,8 @@ void turn_raw_tensors_to_standard_version(
         Tensor raw_tensor = raw_tensors[i];
         std::vector<Tensor> image_and_label;
         Status status = session->Run({{"raw_tensor", raw_tensor}},
-                                     {"div", "label"}, {}, &image_and_label);
+                                     {"per_image_standardization", "label"}, {},
+                                     &image_and_label);
         if (!status.ok()) {
             std::cout << "failed in line " << __LINE__ << " in file "
                       << __FILE__ << " " << status.error_message() << std::endl;
@@ -295,6 +297,7 @@ void init_log(int const level, int const total_worker_num) {
         "single_baseline_async" + label + "_level:" + std::to_string(level) +
         "_number_of_workers:" + std::to_string(total_worker_num);
     file_loss_stream.open("loss_result/" + store_loss_file_path);
+    init(store_loss_file_path);
     // init predict
     // init(store_loss_file_path);
 }
@@ -397,6 +400,10 @@ void do_work_for_one_worker_v2(
             learning_rate_value, session_master, session_local, client::tuple,
             client::threshold_to_quantize);
         id2last_iter[worker_id] = current_iter_num;
+        if (current_iter_num % 20 == 0) {
+            predict(session_master, current_iter_num, {level});
+        }
+
         current_iter_num++;
         lk.unlock();
     }
@@ -559,7 +566,22 @@ void do_work_v3(int const total_iter_num,
 
 }  // namespace baseline
 
-int main(int argc, char** argv) {
+void do_v2(int argc, char** argv) {
+    int const total_iter_num = atoi(argv[1]);
+    int const total_worker_num = atoi(argv[2]);
+    int const level = atoi(argv[3]);
+    float const learning_rate_value = atof(argv[4]);
+    int const start_parallel = atoi(argv[5]);
+    input::batch_size = atoi(argv[6]);
+    std::string const tuple_local_path = argv[7];
+    // int const interval_to_exchange_variable = atoi(argv[8]);
+    PRINT_INFO;
+    input::turn_raw_tensors_to_standard_version();
+    baseline::do_work_v2(total_iter_num, total_worker_num, level,
+                         learning_rate_value, start_parallel, tuple_local_path);
+}
+
+void do_v3(int argc, char** argv) {
     int const total_iter_num = atoi(argv[1]);
     int const total_worker_num = atoi(argv[2]);
     int const level = atoi(argv[3]);
@@ -573,6 +595,11 @@ int main(int argc, char** argv) {
     baseline::do_work_v3(total_iter_num, total_worker_num, level,
                          learning_rate_value, start_parallel, tuple_local_path,
                          interval_to_exchange_variable);
+}
+
+int main(int argc, char** argv) {
+    //input::turn_raw_tensors_to_standard_version();
+    do_v2(argc, argv);
 
     return 0;
 }

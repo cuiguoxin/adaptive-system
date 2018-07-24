@@ -21,12 +21,12 @@
 #include "tensorflow/core/platform/types.h"
 #include "tensorflow/core/public/session.h"
 
-#include "accuracy/accuracy.h"
 #include "quantization/util/algorithms.h"
 #include "quantization/util/any_level.h"
 #include "quantization/util/helper.h"
+#include "server/q_learning.h"
 #include "server/reward.h"
-#include "server/sarsa.h"
+#include "single_implement_q_learning_async/accuracy.h"
 
 namespace input {
 using namespace tensorflow;
@@ -100,8 +100,7 @@ void turn_raw_tensors_to_standard_version(
         Tensor raw_tensor = raw_tensors[i];
         std::vector<Tensor> image_and_label;
         Status status = session->Run({{"raw_tensor", raw_tensor}},
-                                     {"per_image_standardization", "label"}, {},
-                                     &image_and_label);
+                                     {"div", "label"}, {}, &image_and_label);
         if (!status.ok()) {
             std::cout << "failed in line " << __LINE__ << " in file "
                       << __FILE__ << " " << status.error_message() << std::endl;
@@ -290,21 +289,21 @@ std::ofstream file_loss_stream;
 
 void init_log(int const level,
               int const total_worker_num,
-              int const sarsa_interval,
+              int const q_learning_interval,
               int interval_to_change_variable) {
     // init log
     auto now = std::chrono::system_clock::now();
     auto init_time_t = std::chrono::system_clock::to_time_t(now);
     std::string label = std::to_string(init_time_t);
     std::string store_loss_file_path =
-        "single_sarsa_async" + label + "_level:" + std::to_string(level) +
+        "single_q_learning_async" + label + "_level:" + std::to_string(level) +
         "_number_of_workers:" + std::to_string(total_worker_num) +
-        "_sarsaInterval:" + std::to_string(sarsa_interval) +
+        "_q_learning_Interval:" + std::to_string(q_learning_interval) +
         "_intervalExchangeVariable:" +
         std::to_string(interval_to_change_variable);
     file_loss_stream.open("loss_result/" + store_loss_file_path);
     // init predict
-    init(store_loss_file_path);
+    // init(store_loss_file_path);
 }
 
 inline void log_to_file(float const time,
@@ -321,7 +320,7 @@ inline void log_to_file(float const time,
 }
 }  // namespace logging
 
-namespace sarsa {
+namespace q_learning {
 tensorflow::Tensor last_state;
 std::vector<float> loss_history;
 float _last_loss = 11.0f;
@@ -333,7 +332,7 @@ volatile int& get_current_level() {
     return level;
 }
 
-void adjust_rl_model(adaptive_system::sarsa_model& sm, int& level) {
+void adjust_rl_model(adaptive_system::q_learning_model& qm, int& level) {
     using namespace adaptive_system;
     auto start = std::chrono::system_clock::now();
 
@@ -343,17 +342,17 @@ void adjust_rl_model(adaptive_system::sarsa_model& sm, int& level) {
                                                moving_average_losses, r);
     tensorflow::Tensor new_state =
         get_float_tensor_from_vector(moving_average_losses);
-    int new_level = sm.sample_new_action(new_state);
     int old_level = level;
-
+    // compute reward
     float slope = get_slope_according_loss(moving_average_losses);
-    std::cout << "slope is " << slope << " new level is " << new_level
-              << std::endl;
+    // std::cout << "slope is " << slope << std::endl;
     float reward =
         get_reward_v5(slope, old_level, computing_time,
                       one_bit_communication_time);  // -slope * 100 / level
-    sm.adjust_model(reward, last_state, old_level, new_state, new_level);
-    level = new_level;
+    qm.transform_state(last_state);
+    qm.adjust_model(reward, last_state, old_level, new_state);
+    level = qm.sample_new_action();
+    std::cout << "new level is " << level << std::endl;
     last_state = new_state;
     loss_history.clear();
     auto end = std::chrono::system_clock::now();
@@ -365,7 +364,7 @@ void adjust_rl_model(adaptive_system::sarsa_model& sm, int& level) {
                      std::chrono::microseconds::period::den
               << "s" << std::endl;
 }
-}  // namespace sarsa
+}  // namespace q_learning
 
 namespace job {
 std::mutex job_update_mutex;
@@ -463,15 +462,15 @@ void do_work_for_one_worker_v3(
     int const start_iter,  // start parallel execution, now set to 20
     int const interval_to_change_variable,  // iter interval to exchange
                                             // variable, now set to 5
-    int const
-        sarsa_interval,  // iter interval to run sarsa algorithm, now set to 20
-    adaptive_system::sarsa_model& sm) {
+    int const q_learning_interval,          // iter interval to run q_learning
+                                            // algorithm, now set to 20
+    adaptive_system::q_learning_model& qm) {
     static bool is_first = true;
     for (int i = 0; i < total_iter_num_to_run; i++) {
         std::map<std::string, tensorflow::Tensor> gradients;
         std::pair<float, float> loss_results;
         PRINT_INFO;
-        int level = sarsa::get_current_level();
+        int level = q_learning::get_current_level();
         PRINT_INFO;
         client::compute_gradient_loss_and_quantize(session_local, level,
                                                    gradients, loss_results);
@@ -511,25 +510,22 @@ void do_work_for_one_worker_v3(
                 session_master, session_local, client::tuple);
         }
 
-        // sarsa model work
+        // q_learning model work
         if (current_iter_num > 100) {
-            sarsa::loss_history.push_back(loss_results.first);
+            q_learning::loss_history.push_back(loss_results.first);
             int const real_iter_num = current_iter_num - 100;
             if (is_first) {
-                sarsa::_last_loss = loss_results.first;
+                q_learning::_last_loss = loss_results.first;
                 is_first = false;
             }
-            if (real_iter_num % sarsa_interval == 0) {
-                sarsa::adjust_rl_model(sm, level);
+            if (real_iter_num % q_learning_interval == 0) {
+                q_learning::adjust_rl_model(qm, level);
                 if (real_iter_num < 150) {
-                    sm.set_current_level(2);
+                    qm.set_current_level(2);
                     level = 2;
                 }
-                sarsa::get_current_level() = level;
+                q_learning::get_current_level() = level;
             }
-        }
-        if (current_iter_num % 20 == 0) {
-            predict(session_master, current_iter_num, {level});
         }
         current_iter_num++;
         lk.unlock();
@@ -555,7 +551,6 @@ void do_work(int const total_iter_num,
         session_workers.push_back(session_worker);
     }
     std::cout << "all init finish " << std::endl;
-
     std::vector<std::thread> vec_threads;
     for (int j = 0; j < total_worker_num; j++) {
         vec_threads.push_back(std::thread(
@@ -608,27 +603,28 @@ void do_work_v3(int const total_iter_num,
                 int const start_parallel,
                 std::string const tuple_path,
                 int const interval_to_exchange_variable,
-                int const sarsa_interval,
-                float const sarsa_r,
-                float const sarsa_eps_greedy,
-                int const sarsa_start_level,
-                int const sarsa_end_level,
-                int const sarsa_init_level) {
-    // init sarsa model
-    adaptive_system::sarsa_model sm(
-        "/home/cgx/git_project/adaptive-system/single_implement_sarsa_async/"
-        "sarsa_continous.pb",
-        sarsa_interval, sarsa_r, sarsa_eps_greedy, sarsa_start_level,
-        sarsa_end_level, sarsa_init_level);
+                int const q_learning_interval,
+                float const q_learning_r,
+                float const q_learning_eps_greedy,
+                int const q_learning_start_level,
+                int const q_learning_end_level,
+                int const q_learning_init_level) {
+    // init q_learning model
+    adaptive_system::q_learning_model qm(
+        "/home/cgx/git_project/adaptive-system/"
+        "single_implement_q_learning_async/"
+        "q_learning_continous.pb",
+        q_learning_interval, q_learning_r, q_learning_eps_greedy,
+        q_learning_start_level, q_learning_end_level, q_learning_init_level);
     PRINT_INFO;
-    sarsa::last_state =
+    q_learning::last_state =
         tensorflow::Tensor(tensorflow::DataType::DT_FLOAT,
-                           tensorflow::TensorShape({sarsa_interval}));
-    float* ptr_last_state = sarsa::last_state.flat<float>().data();
-    std::fill(ptr_last_state, ptr_last_state + sarsa_interval, 10.0f);
+                           tensorflow::TensorShape({q_learning_interval}));
+    float* ptr_last_state = q_learning::last_state.flat<float>().data();
+    std::fill(ptr_last_state, ptr_last_state + q_learning_interval, 10.0f);
 
     // init log
-    logging::init_log(level, total_worker_num, sarsa_interval,
+    logging::init_log(level, total_worker_num, q_learning_interval,
                       interval_to_exchange_variable);
     tensorflow::Session* session_master =
         client::load_primary_model_on_master_and_init(tuple_path);
@@ -647,8 +643,8 @@ void do_work_v3(int const total_iter_num,
         vec_threads.push_back(std::thread(
             do_work_for_one_worker_v3, j, total_iter_num, total_worker_num,
             session_workers[j], session_master, learning_rate_value,
-            start_parallel, interval_to_exchange_variable, sarsa_interval,
-            std::ref(sm)));
+            start_parallel, interval_to_exchange_variable, q_learning_interval,
+            std::ref(qm)));
     }
     for (int j = 0; j < total_worker_num; j++) {
         vec_threads[j].join();
@@ -667,21 +663,21 @@ int main(int argc, char** argv) {
     input::batch_size = atoi(argv[6]);
     std::string const tuple_local_path = argv[7];
     int const interval_to_exchange_variable = atoi(argv[8]);
-    int const sarsa_interval = atoi(argv[9]);
-    float const sarsa_r = atof(argv[10]);
-    float const sarsa_eps_greedy = atof(argv[11]);
-    int const sarsa_start_level = atoi(argv[12]);
-    int const sarsa_end_level = atoi(argv[13]);
-    int const sarsa_init_level = atoi(argv[14]);
-    sarsa::computing_time = atof(argv[15]);
-    sarsa::one_bit_communication_time = atof(argv[16]);
+    int const q_learning_interval = atoi(argv[9]);
+    float const q_learning_r = atof(argv[10]);
+    float const q_learning_eps_greedy = atof(argv[11]);
+    int const q_learning_start_level = atoi(argv[12]);
+    int const q_learning_end_level = atoi(argv[13]);
+    int const q_learning_init_level = atoi(argv[14]);
+    q_learning::computing_time = atof(argv[15]);
+    q_learning::one_bit_communication_time = atof(argv[16]);
     PRINT_INFO;
     input::turn_raw_tensors_to_standard_version();
     job::do_work_v3(total_iter_num, total_worker_num, level,
                     learning_rate_value, start_parallel, tuple_local_path,
-                    interval_to_exchange_variable, sarsa_interval, sarsa_r,
-                    sarsa_eps_greedy, sarsa_start_level, sarsa_end_level,
-                    sarsa_init_level);
+                    interval_to_exchange_variable, q_learning_interval,
+                    q_learning_r, q_learning_eps_greedy, q_learning_start_level,
+                    q_learning_end_level, q_learning_init_level);
 
     return 0;
 }
